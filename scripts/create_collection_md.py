@@ -109,9 +109,18 @@ if __name__ == '__main__':
         with open(op.join('docs', 'index.html'), 'w') as f:
             f.write(REDIRECT_HTML.format('../'))
     elif args['subdir_index'] == 'browse':
-        with open(op.join('site', 'browse_pages', 'docs', 'index.md'), 'w') as f:
-            f.write(BROWSE_MD.format(site="", sublinks="branches,pulls,releases"))
+        if op.exists(op.join('site', 'browse_pages', 'docs')):
+            # if the above check fails, then the for loop above (for site in glob)
+            # didn't have even a single iteration, so we have no built documentation
+            with open(op.join('site', 'browse_pages', 'docs', 'index.md'), 'w') as f:
+                f.write(BROWSE_MD.format(site="", sublinks="branches,pulls,releases"))
     if args['root_index_redirect']:
+        try:
+            site
+        except NameError:
+            # then the for loop above (for site in glob) didn't have even a single
+            # iteration, so we have no built documentation
+            raise RuntimeError("docs/ does not contain any contents, so cannot redirect from root index!")
         with open(op.join('site', 'index.html'), 'w') as f:
             redirect_url = redirect_pages(site, md_file, write_files=False)
             f.write(REDIRECT_HTML.format(op.join(site, redirect_url)))
