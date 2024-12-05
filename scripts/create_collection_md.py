@@ -4,6 +4,7 @@ import yaml
 import argparse
 import os
 import os.path as op
+import numpy as np
 from glob import glob
 from packaging.version import Version
 
@@ -89,6 +90,30 @@ def browse_pages(site, md_file):
         with open(op.join('site', 'browse_pages', site, 'tags', 'index.md'), 'w') as f:
             f.write(BROWSE_MD.format(site=md_file['jekyll_id'], sublinks="releases"))
 
+def check_single_source(sites=glob('docs/*/')):
+    """Check whether we have single or multiple source repos
+
+    This depends on the `built_site_name` argument given when initializing the
+    jenkinsfile template, and corresponds to whether we are building from multiple
+    source repos or just one.
+
+    """
+    pulls = ['pulls' in s for s in sites]
+    tags = ['tags' in s for s in sites]
+    branches = ['branch' in s for s in sites]
+    # if this is all True, then we have a single site. If it's all False, then we have
+    # multiple sites. If it's a mix, then we have a mix, and that's a problem.
+    single_site = np.logical_or(pulls, np.logical_or(tags, branches))
+    if all(single_site):
+        print("Site structure matches a single sources...")
+        return True
+    elif not(any(single_site)):
+        print("Site structure matches multiple sources...")
+        return False
+    else:
+        raise AssertionError("Site structure appears to mix single and multiple sources!"
+                             f" Found {sites}; subdirectories should be a subset of "
+                             "{pulls, tags, branch} or contain none of them!")
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
@@ -99,7 +124,11 @@ if __name__ == '__main__':
     parser.add_argument("--subdir_index", choices=["redirect", "browse"],
                         help="Whether the subdirectory redirects (e.g., docs/index.html) will redirect or allow users to browse.")
     args = vars(parser.parse_args())
-    for site in glob('docs/*/'):
+    if check_single_source():
+        sites = ['docs/']
+    else:
+        sites = glob('docs/*/')
+    for site in sites:
         md_file = collection_md(site)
         if args['subdir_index'] == 'redirect':
             redirect_url = redirect_pages(site, md_file)
