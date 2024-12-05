@@ -5,6 +5,7 @@ import os.path as op
 import shutil
 import subprocess
 import argparse
+from create_collection_md import check_single_source
 
 API_CALL = "curl 'https://api.github.com/repos/{repo}/pulls/{num}' | jq '.closed_at'"
 
@@ -24,10 +25,14 @@ def main(git_filter_repo=False, git_filter_repo_command=None):
         output_str = " from git history"
     if git_filter_repo_command is None:
         git_filter_repo_command = "git filter-repo"
+    if check_single_source():
+        sites = ['docs/']
+    else:
+        sites = glob('docs/*/')
     # throughout this, we do something like `op.split(variable[:-1])[-1]` to grab the folder
     # name. that's because we glob strings that end in /, so we need to drop that before
     # using op.split
-    for site in glob('docs/*/'):
+    for site in sites:
         with open(op.join(site, '.gh_path')) as f:
             repo = f.read().strip()
         for pull in glob(op.join(site, 'pulls/*/')):
