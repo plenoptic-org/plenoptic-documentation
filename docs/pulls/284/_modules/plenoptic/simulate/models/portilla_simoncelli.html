@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>plenoptic.simulate.models.portilla_simoncelli &mdash; plenoptic 1.1.1.dev87 documentation</title>
+  <title>plenoptic.simulate.models.portilla_simoncelli &mdash; plenoptic 1.1.1.dev88 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=fa44fd50" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/plot_directive.css" />
@@ -15,7 +15,7 @@
   
       <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../../_static/documentation_options.js?v=3a7287c5"></script>
+      <script src="../../../../_static/documentation_options.js?v=d2682407"></script>
       <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -143,7 +143,8 @@
     <span class="n">SteerablePyramidFreq</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="kn">from</span> <span class="nn">..canonical_computations.weighted_average</span> <span class="kn">import</span> <span class="p">(</span>
-    <span class="n">WeightedAveragePyramid</span><span class="p">,</span> <span class="n">SimpleAverage</span>
+    <span class="n">WeightedAveragePyramid</span><span class="p">,</span>
+    <span class="n">SimpleAverage</span><span class="p">,</span>
 <span class="p">)</span>
 
 <span class="n">SCALES_TYPE</span> <span class="o">=</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;pixel_statistics&quot;</span><span class="p">]</span> <span class="o">|</span> <span class="n">PYR_SCALES_TYPE</span>
@@ -158,10 +159,11 @@
 <span class="sd">        The width of the spatial cross- and auto-correlation statistics</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
-            <span class="bp">self</span><span class="p">,</span>
-            <span class="n">autocorr_masks</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Tensor</span><span class="p">],</span>
-            <span class="n">spatial_corr_width</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">9</span><span class="p">,</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">autocorr_masks</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Tensor</span><span class="p">],</span>
+        <span class="n">spatial_corr_width</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">9</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">spatial_corr_width</span> <span class="o">=</span> <span class="n">spatial_corr_width</span>
@@ -201,8 +203,10 @@
         <span class="c1"># mean needed to be unflattened to be used by skew and kurtosis</span>
         <span class="c1"># correctly, but we&#39;ll want it to be flattened like this in the final</span>
         <span class="c1"># representation tensor</span>
-        <span class="k">return</span> <span class="n">einops</span><span class="o">.</span><span class="n">rearrange</span><span class="p">([</span><span class="n">mean</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="n">var</span><span class="p">,</span> <span class="n">skew</span><span class="p">,</span> <span class="n">kurtosis</span><span class="p">,</span> <span class="n">img_min</span><span class="p">,</span> <span class="n">img_max</span><span class="p">],</span>
-                                <span class="s2">&quot;s b c -&gt; b c 1 s&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">einops</span><span class="o">.</span><span class="n">rearrange</span><span class="p">(</span>
+            <span class="p">[</span><span class="n">mean</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="n">var</span><span class="p">,</span> <span class="n">skew</span><span class="p">,</span> <span class="n">kurtosis</span><span class="p">,</span> <span class="n">img_min</span><span class="p">,</span> <span class="n">img_max</span><span class="p">],</span>
+            <span class="s2">&quot;s b c -&gt; b c 1 s&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">compute_autocorr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">coeffs_list</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Tensor</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">Tensor</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute the autocorrelation of some statistics.</span>
@@ -247,12 +251,16 @@
         <span class="n">var</span> <span class="o">=</span> <span class="n">einops</span><span class="o">.</span><span class="n">rearrange</span><span class="p">(</span><span class="n">var</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;s b c </span><span class="si">{</span><span class="n">extra_dims</span><span class="si">}</span><span class="s2"> 1 1 -&gt; b c 1 </span><span class="si">{</span><span class="n">extra_dims</span><span class="si">}</span><span class="s2"> s&quot;</span><span class="p">)</span>
         <span class="n">acs</span> <span class="o">=</span> <span class="p">[</span><span class="n">signal</span><span class="o">.</span><span class="n">center_crop</span><span class="p">(</span><span class="n">ac</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">spatial_corr_width</span><span class="p">)</span> <span class="k">for</span> <span class="n">ac</span> <span class="ow">in</span> <span class="n">acs</span><span class="p">]</span>
         <span class="n">acs</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="n">acs</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
-        <span class="n">acs</span> <span class="o">=</span> <span class="n">einops</span><span class="o">.</span><span class="n">rearrange</span><span class="p">(</span><span class="n">acs</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;b c s </span><span class="si">{</span><span class="n">extra_dims</span><span class="si">}</span><span class="s2"> a1 a2 -&gt; b c 1 a1 a2 </span><span class="si">{</span><span class="n">extra_dims</span><span class="si">}</span><span class="s2"> s&quot;</span><span class="p">)</span>
+        <span class="n">acs</span> <span class="o">=</span> <span class="n">einops</span><span class="o">.</span><span class="n">rearrange</span><span class="p">(</span>
+            <span class="n">acs</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;b c s </span><span class="si">{</span><span class="n">extra_dims</span><span class="si">}</span><span class="s2"> a1 a2 -&gt; b c 1 a1 a2 </span><span class="si">{</span><span class="n">extra_dims</span><span class="si">}</span><span class="s2"> s&quot;</span>
+        <span class="p">)</span>
         <span class="k">return</span> <span class="n">acs</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">mask</span><span class="p">],</span> <span class="n">var</span>
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">compute_skew_kurtosis_recon</span><span class="p">(</span>
-            <span class="n">reconstructed_images</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Tensor</span><span class="p">],</span> <span class="n">var_recon</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span> <span class="n">img_var</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span>
+        <span class="n">reconstructed_images</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Tensor</span><span class="p">],</span>
+        <span class="n">var_recon</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span>
+        <span class="n">img_var</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">Tensor</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute the skew and kurtosis of each lowpass reconstructed image.</span>
 
@@ -355,7 +363,7 @@
             <span class="k">else</span><span class="p">:</span>
                 <span class="c1"># coeffs_var will be shape (batch, channel, 1, ..., scales), where the 1</span>
                 <span class="c1"># is a dummy dimension for the weights</span>
-                <span class="n">coeff_var</span> <span class="o">=</span> <span class="n">coeffs_var</span><span class="p">[:,:,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">...</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span>
+                <span class="n">coeff_var</span> <span class="o">=</span> <span class="n">coeffs_var</span><span class="p">[:,</span> <span class="p">:,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">...</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span>
             <span class="k">if</span> <span class="n">coeffs_other_var</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="c1"># First, compute the variances of each coeff</span>
                 <span class="n">coeff_other_var</span> <span class="o">=</span> <span class="n">einops</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span>
@@ -365,7 +373,7 @@
             <span class="k">else</span><span class="p">:</span>
                 <span class="c1"># coeffs_other_var will be shape (batch, channel, 1, ..., scales), where</span>
                 <span class="c1"># the 1 is a dummy dimension for the weights</span>
-                <span class="n">coeff_other_var</span> <span class="o">=</span> <span class="n">coeffs_other_var</span><span class="p">[:,:,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">...</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span>
+                <span class="n">coeff_other_var</span> <span class="o">=</span> <span class="n">coeffs_other_var</span><span class="p">[:,</span> <span class="p">:,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">...</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span>
             <span class="c1"># Then compute the outer product of those variances.</span>
             <span class="n">var_outer_prod</span> <span class="o">=</span> <span class="n">einops</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span>
                 <span class="n">coeff_var</span><span class="p">,</span> <span class="n">coeff_other_var</span><span class="p">,</span> <span class="s2">&quot;b c o1, b c o2 -&gt; b c o1 o2&quot;</span>
@@ -391,12 +399,13 @@
 <span class="sd">        The width of the spatial cross- and auto-correlation statistics</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
-            <span class="bp">self</span><span class="p">,</span>
-            <span class="n">weights</span><span class="p">:</span> <span class="n">WeightedAveragePyramid</span><span class="p">,</span>
-            <span class="n">autocorr_shifts</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">NDArray</span><span class="p">,</span> <span class="n">NDArray</span><span class="p">],</span>
-            <span class="n">n_scales</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span>
-            <span class="n">n_orientations</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">weights</span><span class="p">:</span> <span class="n">WeightedAveragePyramid</span><span class="p">,</span>
+        <span class="n">autocorr_shifts</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">NDArray</span><span class="p">,</span> <span class="n">NDArray</span><span class="p">],</span>
+        <span class="n">n_scales</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span>
+        <span class="n">n_orientations</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">weights</span> <span class="o">=</span> <span class="n">weights</span>
@@ -405,10 +414,9 @@
         <span class="c1"># these are each lists of tensors of shape (batch, channel, n_autocorrs, height,</span>
         <span class="c1"># width), one per scale, where n_autocorrs is approximately</span>
         <span class="c1"># spatial_corr_width^2 / 2</span>
-        <span class="n">rolls_h</span><span class="p">,</span> <span class="n">rolls_w</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_autocorr_idx</span><span class="p">(</span><span class="n">image_shape</span><span class="p">,</span>
-                                                    <span class="n">autocorr_shifts</span><span class="p">,</span>
-                                                    <span class="n">n_scales</span><span class="p">,</span>
-                                                    <span class="n">n_orientations</span><span class="p">)</span>
+        <span class="n">rolls_h</span><span class="p">,</span> <span class="n">rolls_w</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_autocorr_idx</span><span class="p">(</span>
+            <span class="n">image_shape</span><span class="p">,</span> <span class="n">autocorr_shifts</span><span class="p">,</span> <span class="n">n_scales</span><span class="p">,</span> <span class="n">n_orientations</span>
+        <span class="p">)</span>
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">w</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">rolls_h</span><span class="p">,</span> <span class="n">rolls_w</span><span class="p">)):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">register_buffer</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;autocorr_5d_rolls_h_scale_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">h</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">register_buffer</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;autocorr_5d_rolls_w_scale_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">w</span><span class="p">)</span>
@@ -456,10 +464,10 @@
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">create_autocorr_idx</span><span class="p">(</span>
-            <span class="n">image_shape</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span>
-            <span class="n">autocorr_shifts</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">NDArray</span><span class="p">,</span> <span class="n">NDArray</span><span class="p">],</span>
-            <span class="n">n_scales</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
-            <span class="n">n_orientations</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">image_shape</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span>
+        <span class="n">autocorr_shifts</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">NDArray</span><span class="p">,</span> <span class="n">NDArray</span><span class="p">],</span>
+        <span class="n">n_scales</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">n_orientations</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="n">Tensor</span><span class="p">],</span> <span class="nb">list</span><span class="p">[</span><span class="n">Tensor</span><span class="p">]]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Create indices used to shift images when computing autocorrelation.</span>
 
@@ -558,8 +566,9 @@
         <span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">var</span><span class="o">.</span><span class="n">pow</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="n">epsilon</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">mean</span><span class="p">,</span> <span class="n">var</span><span class="p">,</span> <span class="n">skew</span><span class="p">,</span> <span class="n">kurtosis</span><span class="p">],</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">compute_autocorr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">coeffs_list</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Tensor</span><span class="p">],</span>
-                         <span class="n">epsilon</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e-6</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">Tensor</span><span class="p">]:</span>
+    <span class="k">def</span> <span class="nf">compute_autocorr</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">coeffs_list</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Tensor</span><span class="p">],</span> <span class="n">epsilon</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e-6</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">Tensor</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute the autocorrelation of some statistics.</span>
 
 <span class="sd">        Parameters</span>
@@ -626,20 +635,24 @@
             <span class="n">var</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">narrow</span><span class="p">(</span><span class="n">autocorr</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
             <span class="c1"># and then drop the variance from here</span>
             <span class="n">acs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
-                <span class="n">torch</span><span class="o">.</span><span class="n">narrow</span><span class="p">(</span><span class="n">autocorr</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_autocorrs</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
-                <span class="o">/</span> <span class="p">(</span><span class="n">var</span> <span class="o">+</span> <span class="n">epsilon</span><span class="p">)</span>
+                <span class="n">torch</span><span class="o">.</span><span class="n">narrow</span><span class="p">(</span><span class="n">autocorr</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_autocorrs</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">var</span> <span class="o">+</span> <span class="n">epsilon</span><span class="p">)</span>
             <span class="p">)</span>
             <span class="nb">vars</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">var</span><span class="p">)</span>
         <span class="n">acs</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="n">acs</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
-        <span class="nb">vars</span> <span class="o">=</span> <span class="n">einops</span><span class="o">.</span><span class="n">rearrange</span><span class="p">(</span><span class="nb">vars</span><span class="p">,</span>
-                                <span class="c1"># for vars, shift is always 1, so we&#39;re really just</span>
-                                <span class="c1"># squeezing it out here</span>
-                                <span class="sa">f</span><span class="s2">&quot;scales b c w shift </span><span class="si">{</span><span class="n">dims</span><span class="si">}</span><span class="s2"> -&gt; b c (w shift) </span><span class="si">{</span><span class="n">dims</span><span class="si">}</span><span class="s2"> scales&quot;</span>
-                                <span class="p">)</span>
+        <span class="nb">vars</span> <span class="o">=</span> <span class="n">einops</span><span class="o">.</span><span class="n">rearrange</span><span class="p">(</span>
+            <span class="nb">vars</span><span class="p">,</span>
+            <span class="c1"># for vars, shift is always 1, so we&#39;re really just</span>
+            <span class="c1"># squeezing it out here</span>
+            <span class="sa">f</span><span class="s2">&quot;scales b c w shift </span><span class="si">{</span><span class="n">dims</span><span class="si">}</span><span class="s2"> -&gt; b c (w shift) </span><span class="si">{</span><span class="n">dims</span><span class="si">}</span><span class="s2"> scales&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
         <span class="k">return</span> <span class="n">acs</span><span class="p">,</span> <span class="nb">vars</span>
 
     <span class="k">def</span> <span class="nf">compute_skew_kurtosis_recon</span><span class="p">(</span>
-            <span class="bp">self</span><span class="p">,</span> <span class="n">reconstructed_images</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Tensor</span><span class="p">],</span> <span class="n">var_recon</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span> <span class="n">img_var</span><span class="p">:</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">epsilon</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e-6</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">reconstructed_images</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Tensor</span><span class="p">],</span>
+        <span class="n">var_recon</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span>
+        <span class="n">img_var</span><span class="p">:</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">epsilon</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e-6</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">Tensor</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute the skew and kurtosis of each lowpass reconstructed image.</span>
 
@@ -719,7 +732,9 @@
         <span class="k">if</span> <span class="n">coeffs_var</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">coeffs_var</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">weights</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="n">var_expr</span><span class="p">,</span> <span class="n">coeffs_tensor</span><span class="p">,</span> <span class="n">coeffs_tensor</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">coeffs_other_var</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">coeffs_other_var</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">weights</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="n">var_expr</span><span class="p">,</span> <span class="n">coeffs_tensor_other</span><span class="p">,</span> <span class="n">coeffs_tensor_other</span><span class="p">)</span>
+            <span class="n">coeffs_other_var</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">weights</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span>
+                <span class="n">var_expr</span><span class="p">,</span> <span class="n">coeffs_tensor_other</span><span class="p">,</span> <span class="n">coeffs_tensor_other</span>
+            <span class="p">)</span>
         <span class="c1"># once we have the variances of each coefficient, we compute the outer product</span>
         <span class="c1"># of those variances.</span>
         <span class="n">var_outer_prod</span> <span class="o">=</span> <span class="n">einops</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="n">coeffs_var</span><span class="p">,</span> <span class="n">coeffs_other_var</span><span class="p">,</span> <span class="n">outer_prod_expr</span><span class="p">)</span>
@@ -827,8 +842,9 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">_stats_computer</span> <span class="o">=</span> <span class="n">_StatsComputer</span><span class="p">(</span><span class="n">autocorr_masks</span><span class="p">,</span> <span class="n">spatial_corr_width</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">weights</span> <span class="o">=</span> <span class="n">WeightedAveragePyramid</span><span class="p">(</span><span class="o">*</span><span class="n">weights</span><span class="p">,</span> <span class="n">n_scales</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_stats_computer</span> <span class="o">=</span> <span class="n">_WeightedComputer</span><span class="p">(</span><span class="n">weights</span><span class="p">,</span> <span class="n">autocorr_shifts</span><span class="p">,</span>
-                                                     <span class="n">n_scales</span><span class="p">,</span> <span class="n">n_orientations</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_stats_computer</span> <span class="o">=</span> <span class="n">_WeightedComputer</span><span class="p">(</span>
+                <span class="n">weights</span><span class="p">,</span> <span class="n">autocorr_shifts</span><span class="p">,</span> <span class="n">n_scales</span><span class="p">,</span> <span class="n">n_orientations</span>
+            <span class="p">)</span>
 
         <span class="c1"># Dictionary defining shape of the statistics and which scale they&#39;re</span>
         <span class="c1"># associated with</span>
@@ -836,14 +852,10 @@
 
         <span class="c1"># Dictionary defining necessary statistics, that is, those that are not</span>
         <span class="c1"># redundant</span>
-        <span class="n">necessary_stats_dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_necessary_stats_dict</span><span class="p">(</span>
-            <span class="n">scales_shape_dict</span>
-        <span class="p">)</span>
+        <span class="n">necessary_stats_dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_necessary_stats_dict</span><span class="p">(</span><span class="n">scales_shape_dict</span><span class="p">)</span>
         <span class="c1"># turn this into tensor we can use in forward pass. first into a</span>
         <span class="c1"># boolean mask...</span>
-        <span class="n">_necessary_stats_mask</span> <span class="o">=</span> <span class="n">einops</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span>
-            <span class="nb">list</span><span class="p">(</span><span class="n">necessary_stats_dict</span><span class="o">.</span><span class="n">values</span><span class="p">()),</span> <span class="s2">&quot;*&quot;</span>
-        <span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">_necessary_stats_mask</span> <span class="o">=</span> <span class="n">einops</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">necessary_stats_dict</span><span class="o">.</span><span class="n">values</span><span class="p">()),</span> <span class="s2">&quot;*&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
         <span class="c1"># then into a tensor of indices</span>
         <span class="n">_necessary_stats_mask</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">_necessary_stats_mask</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">register_buffer</span><span class="p">(</span><span class="s2">&quot;_necessary_stats_mask&quot;</span><span class="p">,</span> <span class="n">_necessary_stats_mask</span><span class="p">)</span>
@@ -872,8 +884,7 @@
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_compute_autocorr_shifts</span><span class="p">(</span><span class="n">spatial_corr_width</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">NDArray</span><span class="p">,</span> <span class="n">NDArray</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; &quot;&quot;&quot;</span>
         <span class="c1"># because of the symmetry of autocorrelation, in order to generate all</span>
         <span class="c1"># autocorrelations, we only need the lower triangle (so that we take the</span>
         <span class="c1"># autocorrelation between the image and itself shifted 1 pixel to the left, but</span>
@@ -908,9 +919,7 @@
         <span class="p">]</span>
 
     <span class="k">def</span> <span class="nf">_compute_autocorr_mask</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute the boolean mask for necessary autocorrelation stats.</span>
-
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute the boolean mask for necessary autocorrelation stats.&quot;&quot;&quot;</span>
         <span class="c1"># Pre-compute some necessary indices.</span>
         <span class="c1"># Lower triangular indices (including diagonal), for auto correlations</span>
         <span class="n">tril_inds</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tril_indices</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">spatial_corr_width</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">spatial_corr_width</span><span class="p">)</span>
@@ -923,10 +932,21 @@
             <span class="n">start</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">spatial_corr_width</span> <span class="o">//</span> <span class="mi">2</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">spatial_corr_width</span>
         <span class="p">)</span>
         <span class="c1"># masks for the reconstructed_lowpass and magnitude autocorrs, respectively</span>
-        <span class="n">masks</span> <span class="o">=</span> <span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">spatial_corr_width</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">spatial_corr_width</span><span class="p">,</span>
-                              <span class="bp">self</span><span class="o">.</span><span class="n">n_scales</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">bool</span><span class="p">),</span>
-                 <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">spatial_corr_width</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">spatial_corr_width</span><span class="p">,</span>
-                              <span class="bp">self</span><span class="o">.</span><span class="n">n_orientations</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_scales</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">bool</span><span class="p">)]</span>
+        <span class="n">masks</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span>
+                <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">spatial_corr_width</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">spatial_corr_width</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_scales</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span>
+                <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">bool</span><span class="p">,</span>
+            <span class="p">),</span>
+            <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span>
+                <span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">spatial_corr_width</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">spatial_corr_width</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">n_orientations</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">n_scales</span><span class="p">,</span>
+                <span class="p">),</span>
+                <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">bool</span><span class="p">,</span>
+            <span class="p">),</span>
+        <span class="p">]</span>
         <span class="k">for</span> <span class="n">mask</span> <span class="ow">in</span> <span class="n">masks</span><span class="p">:</span>
             <span class="c1"># Symmetry M_{i,j} = M_{n-i+1, n-j+1}</span>
             <span class="c1"># Start with all False, then place True in necessary stats.</span>
@@ -1180,7 +1200,9 @@
         <span class="c1"># tensor of shape (batch, channel, spatial_corr_width,</span>
         <span class="c1"># spatial_corr_width, n_scales+1), and var_recon is a tensor of shape</span>
         <span class="c1"># (batch, channel, n_scales+1)</span>
-        <span class="n">autocorr_recon</span><span class="p">,</span> <span class="n">var_recon</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_stats_computer</span><span class="o">.</span><span class="n">compute_autocorr</span><span class="p">(</span><span class="n">reconstructed_images</span><span class="p">)</span>
+        <span class="n">autocorr_recon</span><span class="p">,</span> <span class="n">var_recon</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_stats_computer</span><span class="o">.</span><span class="n">compute_autocorr</span><span class="p">(</span>
+            <span class="n">reconstructed_images</span>
+        <span class="p">)</span>
         <span class="c1"># Compute the standard deviation, skew, and kurtosis of each</span>
         <span class="c1"># reconstructed lowpass image. std_recon, skew_recon, and</span>
         <span class="c1"># kurtosis_recon will all end up as tensors of shape (batch, channel,</span>
@@ -1223,7 +1245,9 @@
 
         <span class="c1"># Compute the variance of the highpass residual. the unsqueeze is to make sure</span>
         <span class="c1"># that this is at least 3d, as required when we call einops.pack below</span>
-        <span class="n">var_highpass_residual</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_stats_computer</span><span class="o">.</span><span class="n">weights</span><span class="p">[</span><span class="mi">0</span><span class="p">](</span><span class="n">highpass</span><span class="o">.</span><span class="n">pow</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">var_highpass_residual</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_stats_computer</span><span class="o">.</span><span class="n">weights</span><span class="p">[</span><span class="mi">0</span><span class="p">](</span>
+            <span class="n">highpass</span><span class="o">.</span><span class="n">pow</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
 
         <span class="c1"># Now, combine all these stats together, first into a list</span>
         <span class="n">all_stats</span> <span class="o">=</span> <span class="p">[</span>
@@ -1716,7 +1740,7 @@
                 <span class="n">rep</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;skew_reconstructed&quot;</span><span class="p">),</span>
                 <span class="n">rep</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;kurtosis_reconstructed&quot;</span><span class="p">),</span>
             <span class="p">),</span>
-            <span class="o">-</span><span class="mi">1</span>
+            <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
         <span class="p">)</span>
 
         <span class="n">data</span><span class="p">[</span><span class="s2">&quot;magnitude_std&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">rep</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;magnitude_std&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">flatten</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>

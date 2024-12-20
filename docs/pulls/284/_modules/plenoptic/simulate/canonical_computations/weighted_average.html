@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>plenoptic.simulate.canonical_computations.weighted_average &mdash; plenoptic 1.1.1.dev87 documentation</title>
+  <title>plenoptic.simulate.canonical_computations.weighted_average &mdash; plenoptic 1.1.1.dev88 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=fa44fd50" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/plot_directive.css" />
@@ -15,7 +15,7 @@
   
       <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../../_static/documentation_options.js?v=3a7287c5"></script>
+      <script src="../../../../_static/documentation_options.js?v=d2682407"></script>
       <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -123,16 +123,15 @@
 <div class="viewcode-block" id="SimpleAverage">
 <a class="viewcode-back" href="../../../../api/plenoptic.simulate.canonical_computations.html#plenoptic.simulate.canonical_computations.weighted_average.SimpleAverage">[docs]</a>
 <span class="k">class</span> <span class="nc">SimpleAverage</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Module to average over the last two dimensions of input</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Module to average over the last two dimensions of input&quot;&quot;&quot;</span>
+
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
 
 <div class="viewcode-block" id="SimpleAverage.forward">
 <a class="viewcode-back" href="../../../../api/plenoptic.simulate.canonical_computations.html#plenoptic.simulate.canonical_computations.weighted_average.SimpleAverage.forward">[docs]</a>
     <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Average over the last two dimensions of input.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Average over the last two dimensions of input.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">))</span></div>
 </div>
 
@@ -167,6 +166,7 @@
 <span class="sd">        initialization) containing the normalized weights.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">weights_1</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span> <span class="n">weights_2</span><span class="p">:</span> <span class="n">Tensor</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_validate_weights</span><span class="p">(</span><span class="n">weights_1</span><span class="p">,</span> <span class="s2">&quot;_1&quot;</span><span class="p">)</span>
@@ -177,7 +177,9 @@
         <span class="k">if</span> <span class="n">weights_2</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_validate_weights</span><span class="p">(</span><span class="n">weights_2</span><span class="p">,</span> <span class="s2">&quot;_2&quot;</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">weights_1</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">:]</span> <span class="o">!=</span> <span class="n">weights_2</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">:]:</span>
-                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;weights_1 and weights_2 must have same height and width!&quot;</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="s2">&quot;weights_1 and weights_2 must have same height and width!&quot;</span>
+                <span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_n_weights</span> <span class="o">+=</span> <span class="mi">1</span>
             <span class="n">input_einsum</span> <span class="o">+=</span> <span class="s2">&quot;, w2 h w&quot;</span>
             <span class="n">output_einsum</span> <span class="o">+=</span> <span class="s2">&quot; w2&quot;</span>
@@ -214,11 +216,15 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">weight_sums</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sum_weights</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">isclose</span><span class="p">(</span><span class="n">weight_sums</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">weight_sums</span><span class="p">))</span><span class="o">.</span><span class="n">any</span><span class="p">():</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Some of the weights sum to zero! This will not work out well.&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;Some of the weights sum to zero! This will not work out well.&quot;</span>
+            <span class="p">)</span>
         <span class="n">var</span> <span class="o">=</span> <span class="n">weight_sums</span><span class="o">.</span><span class="n">var</span><span class="p">()</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">torch</span><span class="o">.</span><span class="n">isclose</span><span class="p">(</span><span class="n">var</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">var</span><span class="p">)):</span>
-            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Looks like there&#39;s some variation in the sums across your weights.&quot;</span>
-                          <span class="s2">&quot; That might be fine, but just wanted to make sure you knew...&quot;</span><span class="p">)</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+                <span class="s2">&quot;Looks like there&#39;s some variation in the sums across your weights.&quot;</span>
+                <span class="s2">&quot; That might be fine, but just wanted to make sure you knew...&quot;</span>
+            <span class="p">)</span>
         <span class="n">mode</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">mode</span><span class="p">(</span><span class="n">weight_sums</span><span class="o">.</span><span class="n">flatten</span><span class="p">())</span><span class="o">.</span><span class="n">values</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">torch</span><span class="o">.</span><span class="n">isclose</span><span class="p">(</span><span class="n">mode</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">mode</span><span class="p">)):</span>
             <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Weights don&#39;t sum to 1, normalizing...&quot;</span><span class="p">)</span>
@@ -229,7 +235,7 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">_weights_2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_weights_2</span> <span class="o">/</span> <span class="n">mode</span><span class="o">.</span><span class="n">sqrt</span><span class="p">()</span>
 
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">_validate_weights</span><span class="p">(</span><span class="n">weights</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span> <span class="n">idx</span><span class="p">:</span> <span class="s1">&#39;str&#39;</span> <span class="o">=</span> <span class="s1">&#39;_1&#39;</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_validate_weights</span><span class="p">(</span><span class="n">weights</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span> <span class="n">idx</span><span class="p">:</span> <span class="s2">&quot;str&quot;</span> <span class="o">=</span> <span class="s2">&quot;_1&quot;</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">weights</span><span class="o">.</span><span class="n">ndim</span> <span class="o">!=</span> <span class="mi">3</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;weights</span><span class="si">{</span><span class="n">idx</span><span class="si">}</span><span class="s2"> must be 3d!&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">weights</span><span class="o">.</span><span class="n">min</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
@@ -255,15 +261,11 @@
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">image</span><span class="o">.</span><span class="n">ndim</span> <span class="o">&lt;</span> <span class="mi">4</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="s2">&quot;image must be a tensor of 4 to 6 dimensions!&quot;</span>
-            <span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;image must be a tensor of 4 to 6 dimensions!&quot;</span><span class="p">)</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">extra_dims</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_extra_dims</span><span class="p">[</span><span class="n">image</span><span class="o">.</span><span class="n">ndim</span> <span class="o">-</span> <span class="mi">4</span><span class="p">]</span>
         <span class="k">except</span> <span class="ne">IndexError</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="s2">&quot;image must be a tensor of 4 to 6 dimensions!&quot;</span>
-            <span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;image must be a tensor of 4 to 6 dimensions!&quot;</span><span class="p">)</span>
         <span class="n">einsum_str</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_forward_einsum</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">extra_dims</span><span class="o">=</span><span class="n">extra_dims</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">einops</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">weights</span><span class="p">,</span> <span class="n">image</span><span class="p">,</span> <span class="n">einsum_str</span><span class="p">)</span><span class="o">.</span><span class="n">flatten</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span></div>
 
@@ -345,19 +347,24 @@
 <span class="sd">        ModuleList of ``WeightedAverage`` at each scale</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">weights_1</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span>
-                 <span class="n">weights_2</span><span class="p">:</span> <span class="n">Tensor</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-                 <span class="n">n_scales</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">4</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">weights_1</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span> <span class="n">weights_2</span><span class="p">:</span> <span class="n">Tensor</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">n_scales</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">4</span>
+    <span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_n_weights</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">weights_2</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="mi">2</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">n_scales</span> <span class="o">=</span> <span class="n">n_scales</span>
         <span class="n">weights</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_scales</span><span class="p">):</span>
             <span class="k">if</span> <span class="n">i</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
-                <span class="n">weights_1</span> <span class="o">=</span> <span class="n">blur_downsample</span><span class="p">(</span><span class="n">weights_1</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="mi">1</span><span class="p">,</span> <span class="n">scale_filter</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                <span class="n">weights_1</span> <span class="o">=</span> <span class="n">blur_downsample</span><span class="p">(</span>
+                    <span class="n">weights_1</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="mi">1</span><span class="p">,</span> <span class="n">scale_filter</span><span class="o">=</span><span class="kc">True</span>
+                <span class="p">)</span>
                 <span class="n">weights_1</span> <span class="o">=</span> <span class="n">weights_1</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="nb">min</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
                 <span class="k">if</span> <span class="n">weights_2</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                    <span class="n">weights_2</span> <span class="o">=</span> <span class="n">blur_downsample</span><span class="p">(</span><span class="n">weights_2</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="mi">1</span><span class="p">,</span> <span class="n">scale_filter</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                    <span class="n">weights_2</span> <span class="o">=</span> <span class="n">blur_downsample</span><span class="p">(</span>
+                        <span class="n">weights_2</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="mi">1</span><span class="p">,</span> <span class="n">scale_filter</span><span class="o">=</span><span class="kc">True</span>
+                    <span class="p">)</span>
                     <span class="n">weights_2</span> <span class="o">=</span> <span class="n">weights_2</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="nb">min</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
             <span class="c1"># it&#39;s possible negative values will get introduced by the downsampling</span>
             <span class="c1"># above, in which case we remove them</span>
@@ -414,7 +421,9 @@
 <span class="sd">            The result of this einsum. Scales are stacked along last dimension.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">w</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="n">einsum_str</span><span class="p">,</span> <span class="o">*</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="o">*</span><span class="n">x</span><span class="p">,</span> <span class="n">w</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="n">tensors</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">weights</span><span class="p">)],</span> <span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span>
+            <span class="p">[</span><span class="n">w</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="n">einsum_str</span><span class="p">,</span> <span class="o">*</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="o">*</span><span class="n">x</span><span class="p">,</span> <span class="n">w</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="n">tensors</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">weights</span><span class="p">)],</span> <span class="n">dim</span><span class="o">=-</span><span class="mi">1</span>
+        <span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="WeightedAveragePyramid.sum_weights">
