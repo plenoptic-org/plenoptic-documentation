@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>plenoptic.simulate.models.portilla_simoncelli_masked &mdash; plenoptic 1.1.1.dev83 documentation</title>
+  <title>plenoptic.simulate.models.portilla_simoncelli_masked &mdash; plenoptic 1.1.1.dev87 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=fa44fd50" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/plot_directive.css" />
@@ -15,7 +15,7 @@
   
       <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../../_static/documentation_options.js?v=c6039d62"></script>
+      <script src="../../../../_static/documentation_options.js?v=3a7287c5"></script>
       <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -188,8 +188,8 @@
 <span class="sd">    .. [1] J Portilla and E P Simoncelli. A Parametric Texture Model based on</span>
 <span class="sd">       Joint Statistics of Complex Wavelet Coefficients. Int&#39;l Journal of</span>
 <span class="sd">       Computer Vision. 40(1):49-71, October, 2000.</span>
-<span class="sd">       http://www.cns.nyu.edu/~eero/ABSTRACTS/portilla99-abstract.html</span>
-<span class="sd">       http://www.cns.nyu.edu/~lcv/texture/</span>
+<span class="sd">       https://www.cns.nyu.edu/~eero/ABSTRACTS/portilla99-abstract.html</span>
+<span class="sd">       https://www.cns.nyu.edu/~lcv/texture/</span>
 <span class="sd">    .. [2] E P Simoncelli and W T Freeman, &quot;The Steerable Pyramid: A Flexible</span>
 <span class="sd">       Architecture for Multi-Scale Derivative Computation,&quot; Second Int&#39;l Conf</span>
 <span class="sd">       on Image Processing, Washington, DC, Oct 1995.</span>
@@ -310,6 +310,10 @@
         <span class="c1"># In both cases, adding a small epsilon avoids a NaN or (for division) an</span>
         <span class="c1"># unreasonably large number.</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_stability_epsilon</span> <span class="o">=</span> <span class="mf">1e-6</span>
+        <span class="c1"># this (much larger) epsilon is used when computing the pixel stats skew and</span>
+        <span class="c1"># kurtosis, which involve a division by the variance to the 1.5 and 2 powers,</span>
+        <span class="c1"># respectively, and have much greater problems with very small values.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_pixel_epsilon</span> <span class="o">=</span> <span class="mf">1e-1</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">mask</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -958,13 +962,13 @@
         <span class="c1"># for var and skew here can be found on their respective wikipedia pages, and</span>
         <span class="c1"># the one for kurtosis comes from Eero working through the algebra</span>
         <span class="n">var</span> <span class="o">=</span> <span class="n">moment_2</span> <span class="o">-</span> <span class="n">mean</span><span class="o">.</span><span class="n">pow</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
-        <span class="n">skew</span> <span class="o">=</span> <span class="p">(</span><span class="n">moment_3</span> <span class="o">-</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">mean</span> <span class="o">*</span> <span class="n">var</span> <span class="o">-</span> <span class="n">mean</span><span class="o">.</span><span class="n">pow</span><span class="p">(</span><span class="mi">3</span><span class="p">))</span> <span class="o">/</span> <span class="p">(</span><span class="n">var</span><span class="o">.</span><span class="n">pow</span><span class="p">(</span><span class="mf">1.5</span><span class="p">))</span>
+        <span class="n">skew</span> <span class="o">=</span> <span class="p">(</span><span class="n">moment_3</span> <span class="o">-</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">mean</span> <span class="o">*</span> <span class="n">var</span> <span class="o">-</span> <span class="n">mean</span><span class="o">.</span><span class="n">pow</span><span class="p">(</span><span class="mi">3</span><span class="p">))</span> <span class="o">/</span> <span class="p">(</span><span class="n">var</span><span class="o">.</span><span class="n">pow</span><span class="p">(</span><span class="mf">1.5</span><span class="p">)</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pixel_epsilon</span><span class="p">)</span>
         <span class="n">kurtosis</span> <span class="o">=</span> <span class="p">(</span>
             <span class="n">moment_4</span>
             <span class="o">-</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">mean</span> <span class="o">*</span> <span class="n">moment_3</span>
             <span class="o">+</span> <span class="mi">6</span> <span class="o">*</span> <span class="n">mean</span><span class="o">.</span><span class="n">pow</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">moment_2</span>
             <span class="o">-</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">mean</span><span class="o">.</span><span class="n">pow</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
-        <span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">var</span><span class="o">.</span><span class="n">pow</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
+        <span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">var</span><span class="o">.</span><span class="n">pow</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pixel_epsilon</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">einops</span><span class="o">.</span><span class="n">rearrange</span><span class="p">(</span>
             <span class="p">[</span><span class="n">mean</span><span class="p">,</span> <span class="n">var</span><span class="p">,</span> <span class="n">skew</span><span class="p">,</span> <span class="n">kurtosis</span><span class="p">],</span>
             <span class="sa">f</span><span class="s2">&quot;stats b c </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_mask_output_idx</span><span class="si">}</span><span class="s2"> -&gt; b c (</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_mask_output_idx</span><span class="si">}</span><span class="s2">) stats&quot;</span><span class="p">,</span>
