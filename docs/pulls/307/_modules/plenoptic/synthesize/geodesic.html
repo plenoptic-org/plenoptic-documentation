@@ -6,7 +6,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>plenoptic.synthesize.geodesic &mdash; plenoptic 1.1.1.dev52 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/plot_directive.css" />
       <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
@@ -109,28 +109,28 @@
            <div itemprop="articleBody">
              
   <h1>Source code for plenoptic.synthesize.geodesic</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">warnings</span>
-<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">OrderedDict</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Literal</span>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections</span><span class="w"> </span><span class="kn">import</span> <span class="n">OrderedDict</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Literal</span>
 
-<span class="kn">import</span> <span class="nn">matplotlib</span> <span class="k">as</span> <span class="nn">mpl</span>
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-<span class="kn">import</span> <span class="nn">torch</span>
-<span class="kn">import</span> <span class="nn">torch.autograd</span> <span class="k">as</span> <span class="nn">autograd</span>
-<span class="kn">from</span> <span class="nn">deprecated.sphinx</span> <span class="kn">import</span> <span class="n">deprecated</span>
-<span class="kn">from</span> <span class="nn">torch</span> <span class="kn">import</span> <span class="n">Tensor</span>
-<span class="kn">from</span> <span class="nn">tqdm.auto</span> <span class="kn">import</span> <span class="n">tqdm</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">mpl</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch.autograd</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">autograd</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">deprecated.sphinx</span><span class="w"> </span><span class="kn">import</span> <span class="n">deprecated</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">torch</span><span class="w"> </span><span class="kn">import</span> <span class="n">Tensor</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tqdm.auto</span><span class="w"> </span><span class="kn">import</span> <span class="n">tqdm</span>
 
-<span class="kn">from</span> <span class="nn">..tools.convergence</span> <span class="kn">import</span> <span class="n">pixel_change_convergence</span>
-<span class="kn">from</span> <span class="nn">..tools.data</span> <span class="kn">import</span> <span class="n">to_numpy</span>
-<span class="kn">from</span> <span class="nn">..tools.optim</span> <span class="kn">import</span> <span class="n">penalize_range</span>
-<span class="kn">from</span> <span class="nn">..tools.straightness</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..tools.convergence</span><span class="w"> </span><span class="kn">import</span> <span class="n">pixel_change_convergence</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..tools.data</span><span class="w"> </span><span class="kn">import</span> <span class="n">to_numpy</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..tools.optim</span><span class="w"> </span><span class="kn">import</span> <span class="n">penalize_range</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..tools.straightness</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">deviation_from_line</span><span class="p">,</span>
     <span class="n">make_straight_line</span><span class="p">,</span>
     <span class="n">sample_brownian_bridge</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">..tools.validate</span> <span class="kn">import</span> <span class="n">validate_input</span><span class="p">,</span> <span class="n">validate_model</span>
-<span class="kn">from</span> <span class="nn">.synthesis</span> <span class="kn">import</span> <span class="n">OptimizedSynthesis</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..tools.validate</span><span class="w"> </span><span class="kn">import</span> <span class="n">validate_input</span><span class="p">,</span> <span class="n">validate_model</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.synthesis</span><span class="w"> </span><span class="kn">import</span> <span class="n">OptimizedSynthesis</span>
 
 
 <div class="viewcode-block" id="Geodesic">
@@ -139,7 +139,7 @@
     <span class="s2">&quot;Geodesic is not robust enough yet, see https://github.com/plenoptic-org/geodesics for ongoing development&quot;</span><span class="p">,</span>  <span class="c1"># noqa: E501</span>
     <span class="s2">&quot;1.1.0&quot;</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="k">class</span> <span class="nc">Geodesic</span><span class="p">(</span><span class="n">OptimizedSynthesis</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Geodesic</span><span class="p">(</span><span class="n">OptimizedSynthesis</span><span class="p">):</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Synthesize an approximate geodesic between two images according to a model.</span>
 
 <span class="sd">    This method can be used to visualize and refine the invariances of a</span>
@@ -218,7 +218,7 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">image_a</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span>
         <span class="n">image_b</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span>
@@ -247,7 +247,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_dev_from_line</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_step_energy</span> <span class="o">=</span> <span class="p">[]</span>
 
-    <span class="k">def</span> <span class="nf">_initialize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">initial_sequence</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">stop</span><span class="p">,</span> <span class="n">n_steps</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_initialize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">initial_sequence</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">stop</span><span class="p">,</span> <span class="n">n_steps</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;initialize the geodesic</span>
 
 <span class="sd">        Parameters</span>
@@ -272,7 +272,7 @@
 
 <div class="viewcode-block" id="Geodesic.synthesize">
 <a class="viewcode-back" href="../../../api/plenoptic.synthesize.html#plenoptic.synthesize.geodesic.Geodesic.synthesize">[docs]</a>
-    <span class="k">def</span> <span class="nf">synthesize</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">synthesize</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">max_iter</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">,</span>
         <span class="n">optimizer</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">Optimizer</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -339,7 +339,7 @@
 
 <div class="viewcode-block" id="Geodesic.objective_function">
 <a class="viewcode-back" href="../../../api/plenoptic.synthesize.html#plenoptic.synthesize.geodesic.Geodesic.objective_function">[docs]</a>
-    <span class="k">def</span> <span class="nf">objective_function</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">geodesic</span><span class="p">:</span> <span class="n">Tensor</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">objective_function</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">geodesic</span><span class="p">:</span> <span class="n">Tensor</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute geodesic synthesis loss.</span>
 
 <span class="sd">        This is the path energy (i.e., squared L2 norm of each step) of the</span>
@@ -376,13 +376,13 @@
         <span class="k">return</span> <span class="n">loss</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">range_penalty_lambda</span> <span class="o">*</span> <span class="n">range_penalty</span></div>
 
 
-    <span class="k">def</span> <span class="nf">_calculate_step_energy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">z</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_calculate_step_energy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">z</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;calculate the energy (i.e. squared l2 norm) of each step in `z`.&quot;&quot;&quot;</span>
         <span class="n">velocity</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">z</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
         <span class="n">step_energy</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">vector_norm</span><span class="p">(</span><span class="n">velocity</span><span class="p">,</span> <span class="nb">ord</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span> <span class="o">**</span> <span class="mi">2</span>
         <span class="k">return</span> <span class="n">step_energy</span>
 
-    <span class="k">def</span> <span class="nf">_optimizer_step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pbar</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_optimizer_step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pbar</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        At each step of the optimization, the following is done:</span>
 <span class="sd">        - compute the representation</span>
@@ -419,7 +419,7 @@
         <span class="p">)</span>
         <span class="k">return</span> <span class="n">loss</span>
 
-    <span class="k">def</span> <span class="nf">_check_convergence</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_check_convergence</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">stop_criterion</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">stop_iters_to_check</span><span class="p">:</span> <span class="nb">int</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Check whether the pixel change norm has stabilized and, if so, return True.</span>
@@ -455,7 +455,7 @@
 
 <div class="viewcode-block" id="Geodesic.calculate_jerkiness">
 <a class="viewcode-back" href="../../../api/plenoptic.synthesize.html#plenoptic.synthesize.geodesic.Geodesic.calculate_jerkiness">[docs]</a>
-    <span class="k">def</span> <span class="nf">calculate_jerkiness</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">geodesic</span><span class="p">:</span> <span class="n">Tensor</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">calculate_jerkiness</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">geodesic</span><span class="p">:</span> <span class="n">Tensor</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Compute the alignment of representation&#39;s acceleration to model local curvature.</span>
 
@@ -492,7 +492,7 @@
         <span class="k">return</span> <span class="n">step_jerkiness</span></div>
 
 
-    <span class="k">def</span> <span class="nf">_vector_jacobian_product</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">a</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_vector_jacobian_product</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">a</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;compute vector-jacobian product: $a^T dy/dx = dy/dx^T a$,</span>
 <span class="sd">        and allow for further gradient computations by retaining,</span>
 <span class="sd">        and creating the graph.</span>
@@ -500,7 +500,7 @@
         <span class="n">accJac</span> <span class="o">=</span> <span class="n">autograd</span><span class="o">.</span><span class="n">grad</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">retain_graph</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">create_graph</span><span class="o">=</span><span class="kc">True</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
         <span class="k">return</span> <span class="n">accJac</span>
 
-    <span class="k">def</span> <span class="nf">_store</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_store</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Store step_energy and dev_from_line, if appropriate.</span>
 
 <span class="sd">        if it&#39;s the right iteration, we update ``step_energy`` and</span>
@@ -548,7 +548,7 @@
 
 <div class="viewcode-block" id="Geodesic.save">
 <a class="viewcode-back" href="../../../api/plenoptic.synthesize.html#plenoptic.synthesize.geodesic.Geodesic.save">[docs]</a>
-    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
 <span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Save all relevant variables in .pt file.</span>
 
 <span class="sd">        See ``load`` docstring for an example of use.</span>
@@ -568,7 +568,7 @@
 
 <div class="viewcode-block" id="Geodesic.to">
 <a class="viewcode-back" href="../../../api/plenoptic.synthesize.html#plenoptic.synthesize.geodesic.Geodesic.to">[docs]</a>
-    <span class="k">def</span> <span class="nf">to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Moves and/or casts the parameters and buffers.</span>
 
 <span class="sd">        This can be called as</span>
@@ -616,7 +616,7 @@
 
 <div class="viewcode-block" id="Geodesic.load">
 <a class="viewcode-back" href="../../../api/plenoptic.synthesize.html#plenoptic.synthesize.geodesic.Geodesic.load">[docs]</a>
-    <span class="k">def</span> <span class="nf">load</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">load</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
         <span class="n">map_location</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -694,25 +694,25 @@
 
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">model</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">model</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_model</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">image_a</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">image_a</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_image_a</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">image_b</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">image_b</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_image_b</span>
 
     <span class="c1"># self._geodesic contains the portion we&#39;re optimizing, but self.geodesic</span>
     <span class="c1"># combines this with the end points</span>
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">geodesic</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">geodesic</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">image_a</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_geodesic</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">image_b</span><span class="p">])</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">step_energy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">step_energy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Squared L2 norm of transition between geodesic frames in representation space.</span>
 
@@ -724,7 +724,7 @@
         <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_step_energy</span><span class="p">)</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">dev_from_line</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">dev_from_line</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Deviation of representation each from of ``self.geodesic`` from a straight</span>
 <span class="sd">        line.</span>
 
@@ -745,7 +745,7 @@
     <span class="s2">&quot;Geodesic is not robust enough yet, see https://github.com/plenoptic-org/geodesics for ongoing development&quot;</span><span class="p">,</span>  <span class="c1"># noqa: E501</span>
     <span class="s2">&quot;1.1.0&quot;</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="k">def</span> <span class="nf">plot_loss</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">plot_loss</span><span class="p">(</span>
     <span class="n">geodesic</span><span class="p">:</span> <span class="n">Geodesic</span><span class="p">,</span> <span class="n">ax</span><span class="p">:</span> <span class="n">mpl</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">Axes</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">mpl</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">Axes</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Plot synthesis loss.</span>
@@ -783,7 +783,7 @@
     <span class="s2">&quot;Geodesic is not robust enough yet, see https://github.com/plenoptic-org/geodesics for ongoing development&quot;</span><span class="p">,</span>  <span class="c1"># noqa: E501</span>
     <span class="s2">&quot;1.1.0&quot;</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="k">def</span> <span class="nf">plot_deviation_from_line</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">plot_deviation_from_line</span><span class="p">(</span>
     <span class="n">geodesic</span><span class="p">:</span> <span class="n">Geodesic</span><span class="p">,</span>
     <span class="n">natural_video</span><span class="p">:</span> <span class="n">Tensor</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">ax</span><span class="p">:</span> <span class="n">mpl</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">Axes</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>

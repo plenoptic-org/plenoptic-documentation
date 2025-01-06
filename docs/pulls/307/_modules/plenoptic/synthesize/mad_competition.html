@@ -6,7 +6,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>plenoptic.synthesize.mad_competition &mdash; plenoptic 1.1.1.dev52 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/plot_directive.css" />
       <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
@@ -111,29 +111,29 @@
   <h1>Source code for plenoptic.synthesize.mad_competition</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;Run MAD Competition.&quot;&quot;&quot;</span>
 
-<span class="kn">import</span> <span class="nn">contextlib</span>
-<span class="kn">import</span> <span class="nn">warnings</span>
-<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">OrderedDict</span>
-<span class="kn">from</span> <span class="nn">collections.abc</span> <span class="kn">import</span> <span class="n">Callable</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Literal</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">contextlib</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections</span><span class="w"> </span><span class="kn">import</span> <span class="n">OrderedDict</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Callable</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Literal</span>
 
-<span class="kn">import</span> <span class="nn">matplotlib</span> <span class="k">as</span> <span class="nn">mpl</span>
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">torch</span>
-<span class="kn">from</span> <span class="nn">pyrtools.tools.display</span> <span class="kn">import</span> <span class="n">make_figure</span> <span class="k">as</span> <span class="n">pt_make_figure</span>
-<span class="kn">from</span> <span class="nn">torch</span> <span class="kn">import</span> <span class="n">Tensor</span>
-<span class="kn">from</span> <span class="nn">tqdm.auto</span> <span class="kn">import</span> <span class="n">tqdm</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">mpl</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyrtools.tools.display</span><span class="w"> </span><span class="kn">import</span> <span class="n">make_figure</span> <span class="k">as</span> <span class="n">pt_make_figure</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">torch</span><span class="w"> </span><span class="kn">import</span> <span class="n">Tensor</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tqdm.auto</span><span class="w"> </span><span class="kn">import</span> <span class="n">tqdm</span>
 
-<span class="kn">from</span> <span class="nn">..tools</span> <span class="kn">import</span> <span class="n">data</span><span class="p">,</span> <span class="n">display</span><span class="p">,</span> <span class="n">optim</span>
-<span class="kn">from</span> <span class="nn">..tools.convergence</span> <span class="kn">import</span> <span class="n">loss_convergence</span>
-<span class="kn">from</span> <span class="nn">..tools.validate</span> <span class="kn">import</span> <span class="n">validate_input</span><span class="p">,</span> <span class="n">validate_metric</span>
-<span class="kn">from</span> <span class="nn">.synthesis</span> <span class="kn">import</span> <span class="n">OptimizedSynthesis</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..tools</span><span class="w"> </span><span class="kn">import</span> <span class="n">data</span><span class="p">,</span> <span class="n">display</span><span class="p">,</span> <span class="n">optim</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..tools.convergence</span><span class="w"> </span><span class="kn">import</span> <span class="n">loss_convergence</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..tools.validate</span><span class="w"> </span><span class="kn">import</span> <span class="n">validate_input</span><span class="p">,</span> <span class="n">validate_metric</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.synthesis</span><span class="w"> </span><span class="kn">import</span> <span class="n">OptimizedSynthesis</span>
 
 
 <div class="viewcode-block" id="MADCompetition">
 <a class="viewcode-back" href="../../../api/plenoptic.synthesize.html#plenoptic.synthesize.mad_competition.MADCompetition">[docs]</a>
-<span class="k">class</span> <span class="nc">MADCompetition</span><span class="p">(</span><span class="n">OptimizedSynthesis</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">MADCompetition</span><span class="p">(</span><span class="n">OptimizedSynthesis</span><span class="p">):</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Synthesize a single maximally-differentiating image for two metrics.</span>
 
 <span class="sd">    Following the basic idea in [1]_, this class synthesizes a</span>
@@ -215,7 +215,7 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">image</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span>
         <span class="n">optimized_metric</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span> <span class="o">|</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">Tensor</span><span class="p">],</span> <span class="n">Tensor</span><span class="p">],</span>
@@ -272,7 +272,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_store_progress</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_saved_mad_image</span> <span class="o">=</span> <span class="p">[]</span>
 
-    <span class="k">def</span> <span class="nf">_initialize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">initial_noise</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.1</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_initialize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">initial_noise</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.1</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize the synthesized image.</span>
 
 <span class="sd">        Initialize ``self.mad_image`` attribute to be ``image`` plus</span>
@@ -300,7 +300,7 @@
 
 <div class="viewcode-block" id="MADCompetition.synthesize">
 <a class="viewcode-back" href="../../../api/plenoptic.synthesize.html#plenoptic.synthesize.mad_competition.MADCompetition.synthesize">[docs]</a>
-    <span class="k">def</span> <span class="nf">synthesize</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">synthesize</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">max_iter</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span>
         <span class="n">optimizer</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">Optimizer</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -373,7 +373,7 @@
 
 <div class="viewcode-block" id="MADCompetition.objective_function">
 <a class="viewcode-back" href="../../../api/plenoptic.synthesize.html#plenoptic.synthesize.mad_competition.MADCompetition.objective_function">[docs]</a>
-    <span class="k">def</span> <span class="nf">objective_function</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">objective_function</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">mad_image</span><span class="p">:</span> <span class="n">Tensor</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">image</span><span class="p">:</span> <span class="n">Tensor</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -428,7 +428,7 @@
         <span class="p">)</span></div>
 
 
-    <span class="k">def</span> <span class="nf">_optimizer_step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pbar</span><span class="p">:</span> <span class="n">tqdm</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_optimizer_step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pbar</span><span class="p">:</span> <span class="n">tqdm</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
 <span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Compute and propagate gradients, then step the optimizer to update</span>
 <span class="sd">        mad_image.</span>
 
@@ -479,7 +479,7 @@
         <span class="p">)</span>
         <span class="k">return</span> <span class="n">loss</span>
 
-    <span class="k">def</span> <span class="nf">_check_convergence</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stop_criterion</span><span class="p">,</span> <span class="n">stop_iters_to_check</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_check_convergence</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stop_criterion</span><span class="p">,</span> <span class="n">stop_iters_to_check</span><span class="p">):</span>
 <span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Check whether the loss has stabilized and, if so, return True.</span>
 
 <span class="sd">         Have we been synthesizing for ``stop_iters_to_check`` iterations?</span>
@@ -510,12 +510,12 @@
 <span class="sd">        &quot;&quot;&quot;</span>  <span class="c1"># noqa: E501</span>
         <span class="k">return</span> <span class="n">loss_convergence</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stop_criterion</span><span class="p">,</span> <span class="n">stop_iters_to_check</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_initialize_optimizer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">optimizer</span><span class="p">,</span> <span class="n">scheduler</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_initialize_optimizer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">optimizer</span><span class="p">,</span> <span class="n">scheduler</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize optimizer and scheduler.&quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">_initialize_optimizer</span><span class="p">(</span><span class="n">optimizer</span><span class="p">,</span> <span class="s2">&quot;mad_image&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">scheduler</span> <span class="o">=</span> <span class="n">scheduler</span>
 
-    <span class="k">def</span> <span class="nf">_store</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_store</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Store mad_image anbd model response, if appropriate.</span>
 
 <span class="sd">        if it&#39;s the right iteration, we update ``saved_mad_image``</span>
@@ -541,7 +541,7 @@
 
 <div class="viewcode-block" id="MADCompetition.save">
 <a class="viewcode-back" href="../../../api/plenoptic.synthesize.html#plenoptic.synthesize.mad_competition.MADCompetition.save">[docs]</a>
-    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
 <span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Save all relevant variables in .pt file.</span>
 
 <span class="sd">        Note that if store_progress is True, this will probably be very</span>
@@ -569,7 +569,7 @@
 
 <div class="viewcode-block" id="MADCompetition.to">
 <a class="viewcode-back" href="../../../api/plenoptic.synthesize.html#plenoptic.synthesize.mad_competition.MADCompetition.to">[docs]</a>
-    <span class="k">def</span> <span class="nf">to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Moves and/or casts the parameters and buffers.</span>
 
 <span class="sd">        This can be called as</span>
@@ -615,7 +615,7 @@
 
 <div class="viewcode-block" id="MADCompetition.load">
 <a class="viewcode-back" href="../../../api/plenoptic.synthesize.html#plenoptic.synthesize.mad_competition.MADCompetition.load">[docs]</a>
-    <span class="k">def</span> <span class="nf">load</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">load</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
         <span class="n">map_location</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -682,50 +682,50 @@
 
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">mad_image</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">mad_image</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mad_image</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">optimized_metric</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">optimized_metric</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_optimized_metric</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">reference_metric</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">reference_metric</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_reference_metric</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">image</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">image</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_image</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">initial_image</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">initial_image</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_initial_image</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">reference_metric_loss</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">reference_metric_loss</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">as_tensor</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_reference_metric_loss</span><span class="p">)</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">optimized_metric_loss</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">optimized_metric_loss</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">as_tensor</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_optimized_metric_loss</span><span class="p">)</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">metric_tradeoff_lambda</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">metric_tradeoff_lambda</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_metric_tradeoff_lambda</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">minmax</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">minmax</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_minmax</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">saved_mad_image</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">saved_mad_image</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_saved_mad_image</span><span class="p">)</span></div>
 
 
 
 <div class="viewcode-block" id="plot_loss">
 <a class="viewcode-back" href="../../../api/plenoptic.synthesize.html#plenoptic.synthesize.mad_competition.plot_loss">[docs]</a>
-<span class="k">def</span> <span class="nf">plot_loss</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">plot_loss</span><span class="p">(</span>
     <span class="n">mad</span><span class="p">:</span> <span class="n">MADCompetition</span><span class="p">,</span>
     <span class="n">iteration</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">axes</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">mpl</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">Axes</span><span class="p">]</span> <span class="o">|</span> <span class="n">mpl</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">Axes</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -792,7 +792,7 @@
 
 <div class="viewcode-block" id="display_mad_image">
 <a class="viewcode-back" href="../../../api/plenoptic.synthesize.html#plenoptic.synthesize.mad_competition.display_mad_image">[docs]</a>
-<span class="k">def</span> <span class="nf">display_mad_image</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">display_mad_image</span><span class="p">(</span>
     <span class="n">mad</span><span class="p">:</span> <span class="n">MADCompetition</span><span class="p">,</span>
     <span class="n">batch_idx</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
     <span class="n">channel_idx</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -868,7 +868,7 @@
 
 <div class="viewcode-block" id="plot_pixel_values">
 <a class="viewcode-back" href="../../../api/plenoptic.synthesize.html#plenoptic.synthesize.mad_competition.plot_pixel_values">[docs]</a>
-<span class="k">def</span> <span class="nf">plot_pixel_values</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">plot_pixel_values</span><span class="p">(</span>
     <span class="n">mad</span><span class="p">:</span> <span class="n">MADCompetition</span><span class="p">,</span>
     <span class="n">batch_idx</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
     <span class="n">channel_idx</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -909,7 +909,7 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">_freedman_diaconis_bins</span><span class="p">(</span><span class="n">a</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_freedman_diaconis_bins</span><span class="p">(</span><span class="n">a</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculate number of hist bins using Freedman-Diaconis rule. copied from</span>
 <span class="sd">        seaborn.&quot;&quot;&quot;</span>
         <span class="c1"># From https://stats.stackexchange.com/questions/798/</span>
@@ -957,7 +957,7 @@
 
 
 
-<span class="k">def</span> <span class="nf">_check_included_plots</span><span class="p">(</span><span class="n">to_check</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="n">to_check_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_check_included_plots</span><span class="p">(</span><span class="n">to_check</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="n">to_check_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Check whether the user wanted us to create plots that we can&#39;t.</span>
 
 <span class="sd">    Helper function for plot_synthesis_status and animate.</span>
@@ -992,7 +992,7 @@
         <span class="p">)</span>
 
 
-<span class="k">def</span> <span class="nf">_setup_synthesis_fig</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_setup_synthesis_fig</span><span class="p">(</span>
     <span class="n">fig</span><span class="p">:</span> <span class="n">mpl</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">Figure</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">axes_idx</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">{},</span>
     <span class="n">figsize</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -1105,7 +1105,7 @@
 
 <div class="viewcode-block" id="plot_synthesis_status">
 <a class="viewcode-back" href="../../../api/plenoptic.synthesize.html#plenoptic.synthesize.mad_competition.plot_synthesis_status">[docs]</a>
-<span class="k">def</span> <span class="nf">plot_synthesis_status</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">plot_synthesis_status</span><span class="p">(</span>
     <span class="n">mad</span><span class="p">:</span> <span class="n">MADCompetition</span><span class="p">,</span>
     <span class="n">batch_idx</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
     <span class="n">channel_idx</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -1245,7 +1245,7 @@
 
 <div class="viewcode-block" id="animate">
 <a class="viewcode-back" href="../../../api/plenoptic.synthesize.html#plenoptic.synthesize.mad_competition.animate">[docs]</a>
-<span class="k">def</span> <span class="nf">animate</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">animate</span><span class="p">(</span>
     <span class="n">mad</span><span class="p">:</span> <span class="n">MADCompetition</span><span class="p">,</span>
     <span class="n">framerate</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
     <span class="n">batch_idx</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
@@ -1366,7 +1366,7 @@
         <span class="n">scat</span> <span class="o">=</span> <span class="p">[</span><span class="n">fig</span><span class="o">.</span><span class="n">axes</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">collections</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">axes_idx</span><span class="p">[</span><span class="s2">&quot;plot_loss&quot;</span><span class="p">]]</span>
     <span class="c1"># can also have multiple plots</span>
 
-    <span class="k">def</span> <span class="nf">movie_plot</span><span class="p">(</span><span class="n">i</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">movie_plot</span><span class="p">(</span><span class="n">i</span><span class="p">):</span>
         <span class="n">artists</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">if</span> <span class="s2">&quot;display_mad_image&quot;</span> <span class="ow">in</span> <span class="n">included_plots</span><span class="p">:</span>
             <span class="n">artists</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span>
@@ -1415,7 +1415,7 @@
 
 <div class="viewcode-block" id="display_mad_image_all">
 <a class="viewcode-back" href="../../../api/plenoptic.synthesize.html#plenoptic.synthesize.mad_competition.display_mad_image_all">[docs]</a>
-<span class="k">def</span> <span class="nf">display_mad_image_all</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">display_mad_image_all</span><span class="p">(</span>
     <span class="n">mad_metric1_min</span><span class="p">:</span> <span class="n">MADCompetition</span><span class="p">,</span>
     <span class="n">mad_metric2_min</span><span class="p">:</span> <span class="n">MADCompetition</span><span class="p">,</span>
     <span class="n">mad_metric1_max</span><span class="p">:</span> <span class="n">MADCompetition</span><span class="p">,</span>
@@ -1515,7 +1515,7 @@
 
 <div class="viewcode-block" id="plot_loss_all">
 <a class="viewcode-back" href="../../../api/plenoptic.synthesize.html#plenoptic.synthesize.mad_competition.plot_loss_all">[docs]</a>
-<span class="k">def</span> <span class="nf">plot_loss_all</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">plot_loss_all</span><span class="p">(</span>
     <span class="n">mad_metric1_min</span><span class="p">:</span> <span class="n">MADCompetition</span><span class="p">,</span>
     <span class="n">mad_metric2_min</span><span class="p">:</span> <span class="n">MADCompetition</span><span class="p">,</span>
     <span class="n">mad_metric1_max</span><span class="p">:</span> <span class="n">MADCompetition</span><span class="p">,</span>
