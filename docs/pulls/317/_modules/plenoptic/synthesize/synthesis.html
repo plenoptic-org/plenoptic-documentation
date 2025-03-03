@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>plenoptic.synthesize.synthesis &mdash; plenoptic 1.1.1.dev67 documentation</title>
+  <title>plenoptic.synthesize.synthesis &mdash; plenoptic 1.1.1.dev68 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/plot_directive.css" />
@@ -15,7 +15,7 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=2b3feebe"></script>
+      <script src="../../../_static/documentation_options.js?v=c3254d7c"></script>
       <script src="../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -305,6 +305,27 @@
                 <span class="sa">f</span><span class="s2">&quot;Saved object was a </span><span class="si">{</span><span class="n">metadata</span><span class="p">[</span><span class="s1">&#39;synthesis_object&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
                 <span class="sa">f</span><span class="s2">&quot;, but initialized object is </span><span class="si">{</span><span class="n">_get_name</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="si">}</span><span class="s2">! &quot;</span>
                 <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">check_str</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+        <span class="c1"># all attributes set at initialization should be present in the saved dictionary</span>
+        <span class="n">init_not_save</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="nb">vars</span><span class="p">(</span><span class="bp">self</span><span class="p">))</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="n">tmp_dict</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">init_not_save</span><span class="p">):</span>
+            <span class="n">init_not_save_str</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2"> &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">k</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">init_not_save</span><span class="p">]</span>
+            <span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Initialized object has </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">init_not_save</span><span class="p">)</span><span class="si">}</span><span class="s2"> attribute(s) &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;not present in the saved object!</span><span class="se">\n</span><span class="s2"> </span><span class="si">{</span><span class="n">init_not_save_str</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+        <span class="c1"># there shouldn&#39;t be any extra keys in the saved dictionary (we removed</span>
+        <span class="c1"># save_metadata abov)</span>
+        <span class="n">save_not_init</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">tmp_dict</span><span class="p">)</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="nb">vars</span><span class="p">(</span><span class="bp">self</span><span class="p">))</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">save_not_init</span><span class="p">):</span>
+            <span class="n">save_not_init_str</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2"> &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">tmp_dict</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">save_not_init</span><span class="p">]</span>
+            <span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Saved object has </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">save_not_init</span><span class="p">)</span><span class="si">}</span><span class="s2"> attribute(s) &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;not present in the initialized object!</span><span class="se">\n</span><span class="s2"> </span><span class="si">{</span><span class="n">save_not_init_str</span><span class="si">}</span><span class="s2">&quot;</span>
             <span class="p">)</span>
         <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">check_attributes</span><span class="p">:</span>
             <span class="c1"># The only hidden attributes we&#39;d check are those like</span>
