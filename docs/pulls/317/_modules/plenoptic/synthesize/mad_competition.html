@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>plenoptic.synthesize.mad_competition &mdash; plenoptic 1.1.1.dev68 documentation</title>
+  <title>plenoptic.synthesize.mad_competition &mdash; plenoptic 1.1.1.dev71 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/plot_directive.css" />
@@ -15,7 +15,7 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=c3254d7c"></script>
+      <script src="../../../_static/documentation_options.js?v=20012a2e"></script>
       <script src="../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -244,7 +244,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_reference_metric</span> <span class="o">=</span> <span class="n">reference_metric</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_image</span> <span class="o">=</span> <span class="n">image</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_image_shape</span> <span class="o">=</span> <span class="n">image</span><span class="o">.</span><span class="n">shape</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">scheduler</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_scheduler</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_scheduler_step_arg</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_optimized_metric_loss</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_reference_metric_loss</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">if</span> <span class="n">minmax</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;min&quot;</span><span class="p">,</span> <span class="s2">&quot;max&quot;</span><span class="p">]:</span>
@@ -457,9 +458,12 @@
         <span class="n">sm</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">optimized_metric</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">mad_image</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_optimized_metric_loss</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sm</span><span class="o">.</span><span class="n">item</span><span class="p">())</span>
 
-        <span class="c1"># optionally step the scheduler</span>
+        <span class="c1"># optionally step the scheduler, passing loss if needed</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">scheduler</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">scheduler</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">loss</span><span class="o">.</span><span class="n">item</span><span class="p">())</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_scheduler_step_arg</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">scheduler</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">loss</span><span class="o">.</span><span class="n">item</span><span class="p">())</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">scheduler</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
 
         <span class="n">pixel_change_norm</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">vector_norm</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">mad_image</span> <span class="o">-</span> <span class="n">last_iter_mad_image</span><span class="p">,</span> <span class="nb">ord</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="kc">None</span>
@@ -513,7 +517,7 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">_initialize_optimizer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">optimizer</span><span class="p">,</span> <span class="n">scheduler</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize optimizer and scheduler.&quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">_initialize_optimizer</span><span class="p">(</span><span class="n">optimizer</span><span class="p">,</span> <span class="s2">&quot;mad_image&quot;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">scheduler</span> <span class="o">=</span> <span class="n">scheduler</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">_initialize_scheduler</span><span class="p">(</span><span class="n">scheduler</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_store</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Store mad_image anbd model response, if appropriate.</span>
@@ -559,7 +563,7 @@
             <span class="p">(</span><span class="s2">&quot;_optimized_metric&quot;</span><span class="p">,</span> <span class="p">(</span><span class="s2">&quot;_image&quot;</span><span class="p">,</span> <span class="s2">&quot;_mad_image&quot;</span><span class="p">)),</span>
             <span class="p">(</span><span class="s2">&quot;_reference_metric&quot;</span><span class="p">,</span> <span class="p">(</span><span class="s2">&quot;_image&quot;</span><span class="p">,</span> <span class="s2">&quot;_mad_image&quot;</span><span class="p">)),</span>
         <span class="p">]</span>
-        <span class="n">save_state_dict_attrs</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;_optimizer&quot;</span><span class="p">,</span> <span class="s2">&quot;scheduler&quot;</span><span class="p">]</span>
+        <span class="n">save_state_dict_attrs</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;_optimizer&quot;</span><span class="p">,</span> <span class="s2">&quot;_scheduler&quot;</span><span class="p">]</span>
         <span class="n">save_attrs</span> <span class="o">=</span> <span class="p">[</span>
             <span class="n">k</span>
             <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">vars</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
@@ -681,7 +685,7 @@
             <span class="n">map_location</span><span class="o">=</span><span class="n">map_location</span><span class="p">,</span>
             <span class="n">check_attributes</span><span class="o">=</span><span class="n">check_attributes</span><span class="p">,</span>
             <span class="n">check_io_attributes</span><span class="o">=</span><span class="n">check_io_attrs</span><span class="p">,</span>
-            <span class="n">state_dict_attributes</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;_optimizer&quot;</span><span class="p">,</span> <span class="s2">&quot;scheduler&quot;</span><span class="p">],</span>
+            <span class="n">state_dict_attributes</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;_optimizer&quot;</span><span class="p">,</span> <span class="s2">&quot;_scheduler&quot;</span><span class="p">],</span>
             <span class="o">**</span><span class="n">pickle_load_args</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="c1"># make this require a grad again</span>
