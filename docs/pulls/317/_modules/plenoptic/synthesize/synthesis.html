@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>plenoptic.synthesize.synthesis &mdash; plenoptic 1.1.1.dev75 documentation</title>
+  <title>plenoptic.synthesize.synthesis &mdash; plenoptic 1.1.1.dev80 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/plot_directive.css" />
@@ -15,7 +15,7 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=dc703089"></script>
+      <script src="../../../_static/documentation_options.js?v=f1fb1708"></script>
       <script src="../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -340,8 +340,8 @@
             <span class="n">display_k</span> <span class="o">=</span> <span class="n">k</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="k">if</span> <span class="n">k</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">)</span> <span class="k">else</span> <span class="n">k</span>
             <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="p">),</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">):</span>
                 <span class="n">_check_tensor_equality</span><span class="p">(</span>
-                    <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="p">),</span>
                     <span class="n">tmp_dict</span><span class="p">[</span><span class="n">k</span><span class="p">],</span>
+                    <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="p">),</span>
                     <span class="s2">&quot;Saved&quot;</span><span class="p">,</span>
                     <span class="s2">&quot;Initialized&quot;</span><span class="p">,</span>
                     <span class="n">rtol</span><span class="o">=</span><span class="mf">5e-2</span><span class="p">,</span>
@@ -396,22 +396,15 @@
                 <span class="c1"># the behavior, keep going (don&#39;t update the object&#39;s attribute)</span>
                 <span class="k">if</span> <span class="n">init_attr</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                     <span class="n">init_name</span> <span class="o">=</span> <span class="n">_get_name</span><span class="p">(</span><span class="n">init_attr</span><span class="p">)</span>
-                    <span class="k">try</span><span class="p">:</span>
-                        <span class="n">saved_name</span> <span class="o">=</span> <span class="n">v</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-                        <span class="k">if</span> <span class="n">init_name</span> <span class="o">!=</span> <span class="n">saved_name</span><span class="p">:</span>
-                            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                                <span class="sa">f</span><span class="s2">&quot;Saved and initialized </span><span class="si">{</span><span class="n">display_k</span><span class="si">}</span><span class="s2"> &quot;</span>
-                                <span class="s2">&quot;have different names!&quot;</span>
-                                <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Saved: </span><span class="si">{</span><span class="n">saved_name</span><span class="si">}</span><span class="s2">&quot;</span>
-                                <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Initialized: </span><span class="si">{</span><span class="n">init_name</span><span class="si">}</span><span class="s2">&quot;</span>
-                                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">check_str</span><span class="si">}</span><span class="s2">&quot;</span>
-                            <span class="p">)</span>
-                    <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
-                        <span class="c1"># then we don&#39;t have a name to check because we had saved the</span>
-                        <span class="c1"># actual object</span>
-                        <span class="k">pass</span>
-                    <span class="k">if</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">state_dict_attributes</span><span class="p">:</span>
-                        <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span><span class="o">.</span><span class="n">load_state_dict</span><span class="p">(</span><span class="n">v</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+                    <span class="n">saved_name</span> <span class="o">=</span> <span class="n">v</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                    <span class="k">if</span> <span class="n">init_name</span> <span class="o">!=</span> <span class="n">saved_name</span><span class="p">:</span>
+                        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                            <span class="sa">f</span><span class="s2">&quot;Saved and initialized </span><span class="si">{</span><span class="n">display_k</span><span class="si">}</span><span class="s2"> &quot;</span>
+                            <span class="s2">&quot;have different names!&quot;</span>
+                            <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Saved: </span><span class="si">{</span><span class="n">saved_name</span><span class="si">}</span><span class="s2">&quot;</span>
+                            <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Initialized: </span><span class="si">{</span><span class="n">init_name</span><span class="si">}</span><span class="s2">&quot;</span>
+                            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">check_str</span><span class="si">}</span><span class="s2">&quot;</span>
+                        <span class="p">)</span>
                     <span class="k">continue</span>
                 <span class="c1"># if init_attr is None, then we haven&#39;t set it yet, so we set the saved</span>
                 <span class="c1"># tuple as the attribute, and handle this later</span>
