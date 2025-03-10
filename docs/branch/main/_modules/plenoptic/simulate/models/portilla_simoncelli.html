@@ -5,8 +5,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>plenoptic.simulate.models.portilla_simoncelli &mdash; plenoptic 1.1.1.dev51 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=fa44fd50" />
+  <title>plenoptic.simulate.models.portilla_simoncelli &mdash; plenoptic 1.1.1.dev93 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/plot_directive.css" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css?v=76b2166b" />
@@ -15,7 +15,7 @@
   
       <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../../_static/documentation_options.js?v=e99e8aa6"></script>
+      <script src="../../../../_static/documentation_options.js?v=a2cc4d26"></script>
       <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -118,26 +118,26 @@
 <span class="sd">consider them as members of the same family of textures.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">OrderedDict</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Literal</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections</span><span class="w"> </span><span class="kn">import</span> <span class="n">OrderedDict</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Literal</span>
 
-<span class="kn">import</span> <span class="nn">einops</span>
-<span class="kn">import</span> <span class="nn">matplotlib</span> <span class="k">as</span> <span class="nn">mpl</span>
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">torch</span>
-<span class="kn">import</span> <span class="nn">torch.fft</span>
-<span class="kn">import</span> <span class="nn">torch.nn</span> <span class="k">as</span> <span class="nn">nn</span>
-<span class="kn">from</span> <span class="nn">torch</span> <span class="kn">import</span> <span class="n">Tensor</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">einops</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">mpl</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch.fft</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch.nn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">nn</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">torch</span><span class="w"> </span><span class="kn">import</span> <span class="n">Tensor</span>
 
-<span class="kn">from</span> <span class="nn">...tools</span> <span class="kn">import</span> <span class="n">signal</span><span class="p">,</span> <span class="n">stats</span>
-<span class="kn">from</span> <span class="nn">...tools.data</span> <span class="kn">import</span> <span class="n">to_numpy</span>
-<span class="kn">from</span> <span class="nn">...tools.display</span> <span class="kn">import</span> <span class="n">clean_stem_plot</span><span class="p">,</span> <span class="n">clean_up_axes</span><span class="p">,</span> <span class="n">update_stem</span>
-<span class="kn">from</span> <span class="nn">...tools.validate</span> <span class="kn">import</span> <span class="n">validate_input</span>
-<span class="kn">from</span> <span class="nn">..canonical_computations.steerable_pyramid_freq</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">...tools</span><span class="w"> </span><span class="kn">import</span> <span class="n">signal</span><span class="p">,</span> <span class="n">stats</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">...tools.data</span><span class="w"> </span><span class="kn">import</span> <span class="n">to_numpy</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">...tools.display</span><span class="w"> </span><span class="kn">import</span> <span class="n">clean_stem_plot</span><span class="p">,</span> <span class="n">clean_up_axes</span><span class="p">,</span> <span class="n">update_stem</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">...tools.validate</span><span class="w"> </span><span class="kn">import</span> <span class="n">validate_input</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..canonical_computations.steerable_pyramid_freq</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">SCALES_TYPE</span> <span class="k">as</span> <span class="n">PYR_SCALES_TYPE</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">..canonical_computations.steerable_pyramid_freq</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..canonical_computations.steerable_pyramid_freq</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">SteerablePyramidFreq</span><span class="p">,</span>
 <span class="p">)</span>
 
@@ -146,7 +146,7 @@
 
 <div class="viewcode-block" id="PortillaSimoncelli">
 <a class="viewcode-back" href="../../../../api/plenoptic.simulate.models.html#plenoptic.simulate.models.portilla_simoncelli.PortillaSimoncelli">[docs]</a>
-<span class="k">class</span> <span class="nc">PortillaSimoncelli</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">PortillaSimoncelli</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Portila-Simoncelli texture statistics.</span>
 
 <span class="sd">    The Portilla-Simoncelli (PS) texture statistics are a set of image</span>
@@ -193,7 +193,7 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">image_shape</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span>
         <span class="n">n_scales</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span>
@@ -260,7 +260,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">_necessary_stats_mask</span>
         <span class="p">]</span>
 
-    <span class="k">def</span> <span class="nf">_create_scales_shape_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">OrderedDict</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_create_scales_shape_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">OrderedDict</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Create dictionary defining scales and shape of each stat.</span>
 
 <span class="sd">        This dictionary functions as metadata which is used for two main</span>
@@ -377,7 +377,7 @@
 
         <span class="k">return</span> <span class="n">shape_dict</span>
 
-    <span class="k">def</span> <span class="nf">_create_necessary_stats_dict</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_create_necessary_stats_dict</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">scales_shape_dict</span><span class="p">:</span> <span class="n">OrderedDict</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">OrderedDict</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Create mask specifying the necessary statistics.</span>
@@ -448,7 +448,7 @@
 
 <div class="viewcode-block" id="PortillaSimoncelli.forward">
 <a class="viewcode-back" href="../../../../api/plenoptic.simulate.models.html#plenoptic.simulate.models.portilla_simoncelli.PortillaSimoncelli.forward">[docs]</a>
-    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">image</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span> <span class="n">scales</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">SCALES_TYPE</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">image</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span> <span class="n">scales</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">SCALES_TYPE</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
 <span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Generate Texture Statistics representation of an image.</span>
 
 <span class="sd">        Note that separate batches and channels are analyzed in parallel.</span>
@@ -612,7 +612,7 @@
 
 <div class="viewcode-block" id="PortillaSimoncelli.remove_scales">
 <a class="viewcode-back" href="../../../../api/plenoptic.simulate.models.html#plenoptic.simulate.models.portilla_simoncelli.PortillaSimoncelli.remove_scales">[docs]</a>
-    <span class="k">def</span> <span class="nf">remove_scales</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">remove_scales</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">representation_tensor</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span> <span class="n">scales_to_keep</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">SCALES_TYPE</span><span class="p">]</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Remove statistics not associated with scales.</span>
@@ -652,7 +652,7 @@
 
 <div class="viewcode-block" id="PortillaSimoncelli.convert_to_tensor">
 <a class="viewcode-back" href="../../../../api/plenoptic.simulate.models.html#plenoptic.simulate.models.portilla_simoncelli.PortillaSimoncelli.convert_to_tensor">[docs]</a>
-    <span class="k">def</span> <span class="nf">convert_to_tensor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">representation_dict</span><span class="p">:</span> <span class="n">OrderedDict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">convert_to_tensor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">representation_dict</span><span class="p">:</span> <span class="n">OrderedDict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
 <span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Convert dictionary of statistics to a tensor.</span>
 
 <span class="sd">        Parameters</span>
@@ -677,7 +677,7 @@
 
 <div class="viewcode-block" id="PortillaSimoncelli.convert_to_dict">
 <a class="viewcode-back" href="../../../../api/plenoptic.simulate.models.html#plenoptic.simulate.models.portilla_simoncelli.PortillaSimoncelli.convert_to_dict">[docs]</a>
-    <span class="k">def</span> <span class="nf">convert_to_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">representation_tensor</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">OrderedDict</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">convert_to_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">representation_tensor</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">OrderedDict</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Convert tensor of statistics to a dictionary.</span>
 
 <span class="sd">        While the tensor representation is required by plenoptic&#39;s synthesis</span>
@@ -733,7 +733,7 @@
         <span class="k">return</span> <span class="n">rep</span></div>
 
 
-    <span class="k">def</span> <span class="nf">_compute_pyr_coeffs</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_compute_pyr_coeffs</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">image</span><span class="p">:</span> <span class="n">Tensor</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">OrderedDict</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="n">Tensor</span><span class="p">],</span> <span class="n">Tensor</span><span class="p">,</span> <span class="n">Tensor</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute pyramid coefficients of image.</span>
@@ -783,7 +783,7 @@
         <span class="k">return</span> <span class="n">pyr_coeffs</span><span class="p">,</span> <span class="n">coeffs_list</span><span class="p">,</span> <span class="n">highpass</span><span class="p">,</span> <span class="n">lowpass</span>
 
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">_compute_pixel_stats</span><span class="p">(</span><span class="n">image</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_compute_pixel_stats</span><span class="p">(</span><span class="n">image</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute the pixel stats: first four moments, min, and max.</span>
 
 <span class="sd">        Parameters</span>
@@ -817,7 +817,7 @@
         <span class="k">return</span> <span class="n">einops</span><span class="o">.</span><span class="n">pack</span><span class="p">([</span><span class="n">mean</span><span class="p">,</span> <span class="n">var</span><span class="p">,</span> <span class="n">skew</span><span class="p">,</span> <span class="n">kurtosis</span><span class="p">,</span> <span class="n">img_min</span><span class="p">,</span> <span class="n">img_max</span><span class="p">],</span> <span class="s2">&quot;b c *&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
 
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">_compute_intermediate_representations</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_compute_intermediate_representations</span><span class="p">(</span>
         <span class="n">pyr_coeffs</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="n">Tensor</span><span class="p">],</span> <span class="nb">list</span><span class="p">[</span><span class="n">Tensor</span><span class="p">]]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute useful intermediate representations.</span>
@@ -859,7 +859,7 @@
         <span class="n">real_pyr_coeffs</span> <span class="o">=</span> <span class="p">[</span><span class="n">coeff</span><span class="o">.</span><span class="n">real</span> <span class="k">for</span> <span class="n">coeff</span> <span class="ow">in</span> <span class="n">pyr_coeffs</span><span class="p">]</span>
         <span class="k">return</span> <span class="n">magnitude_pyr_coeffs</span><span class="p">,</span> <span class="n">real_pyr_coeffs</span>
 
-    <span class="k">def</span> <span class="nf">_reconstruct_lowpass_at_each_scale</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_reconstruct_lowpass_at_each_scale</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">pyr_coeffs_dict</span><span class="p">:</span> <span class="n">OrderedDict</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Tensor</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Reconstruct the lowpass unoriented image at each scale.</span>
@@ -901,7 +901,7 @@
         <span class="p">]</span>
         <span class="k">return</span> <span class="n">reconstructed_images</span>
 
-    <span class="k">def</span> <span class="nf">_compute_autocorr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">coeffs_list</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Tensor</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">Tensor</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_compute_autocorr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">coeffs_list</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Tensor</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">Tensor</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute the autocorrelation of some statistics.</span>
 
 <span class="sd">        Parameters</span>
@@ -944,7 +944,7 @@
         <span class="k">return</span> <span class="n">einops</span><span class="o">.</span><span class="n">rearrange</span><span class="p">(</span><span class="n">acs</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;b c s </span><span class="si">{</span><span class="n">dims</span><span class="si">}</span><span class="s2"> a1 a2 -&gt; b c a1 a2 </span><span class="si">{</span><span class="n">dims</span><span class="si">}</span><span class="s2"> s&quot;</span><span class="p">),</span> <span class="n">var</span>
 
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">_compute_skew_kurtosis_recon</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_compute_skew_kurtosis_recon</span><span class="p">(</span>
         <span class="n">reconstructed_images</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Tensor</span><span class="p">],</span> <span class="n">var_recon</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span> <span class="n">img_var</span><span class="p">:</span> <span class="n">Tensor</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">Tensor</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute the skew and kurtosis of each lowpass reconstructed image.</span>
@@ -997,7 +997,7 @@
         <span class="n">kurtosis_recon</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">unstable_locs</span><span class="p">,</span> <span class="n">kurtosis_default</span><span class="p">,</span> <span class="n">kurtosis_recon</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">skew_recon</span><span class="p">,</span> <span class="n">kurtosis_recon</span>
 
-    <span class="k">def</span> <span class="nf">_compute_cross_correlation</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_compute_cross_correlation</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">coeffs_tensor</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Tensor</span><span class="p">],</span>
         <span class="n">coeffs_tensor_other</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Tensor</span><span class="p">],</span>
@@ -1065,7 +1065,7 @@
         <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="n">covars</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
 
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">_double_phase_pyr_coeffs</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_double_phase_pyr_coeffs</span><span class="p">(</span>
         <span class="n">pyr_coeffs</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Tensor</span><span class="p">],</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="n">Tensor</span><span class="p">],</span> <span class="nb">list</span><span class="p">[</span><span class="n">Tensor</span><span class="p">]]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Upsample and double the phase of pyramid coefficients.</span>
@@ -1114,7 +1114,7 @@
 
 <div class="viewcode-block" id="PortillaSimoncelli.plot_representation">
 <a class="viewcode-back" href="../../../../api/plenoptic.simulate.models.html#plenoptic.simulate.models.portilla_simoncelli.PortillaSimoncelli.plot_representation">[docs]</a>
-    <span class="k">def</span> <span class="nf">plot_representation</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">plot_representation</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">data</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span>
         <span class="n">ax</span><span class="p">:</span> <span class="n">plt</span><span class="o">.</span><span class="n">Axes</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -1240,7 +1240,7 @@
         <span class="k">return</span> <span class="n">fig</span><span class="p">,</span> <span class="n">axes</span></div>
 
 
-    <span class="k">def</span> <span class="nf">_representation_for_plotting</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rep</span><span class="p">:</span> <span class="n">OrderedDict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">OrderedDict</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_representation_for_plotting</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rep</span><span class="p">:</span> <span class="n">OrderedDict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">OrderedDict</span><span class="p">:</span>
 <span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Convert the data into a dictionary representation that is more convenient</span>
 <span class="sd">        for plotting.</span>
 
@@ -1288,7 +1288,7 @@
 
 <div class="viewcode-block" id="PortillaSimoncelli.update_plot">
 <a class="viewcode-back" href="../../../../api/plenoptic.simulate.models.html#plenoptic.simulate.models.portilla_simoncelli.PortillaSimoncelli.update_plot">[docs]</a>
-    <span class="k">def</span> <span class="nf">update_plot</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">update_plot</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">axes</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">plt</span><span class="o">.</span><span class="n">Axes</span><span class="p">],</span>
         <span class="n">data</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span>
