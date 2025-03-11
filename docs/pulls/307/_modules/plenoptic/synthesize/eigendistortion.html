@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>plenoptic.synthesize.eigendistortion &mdash; plenoptic 1.1.1.dev53 documentation</title>
+  <title>plenoptic.synthesize.eigendistortion &mdash; plenoptic 1.1.1.dev113 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/plot_directive.css" />
@@ -15,7 +15,7 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=7a1e84d5"></script>
+      <script src="../../../_static/documentation_options.js?v=6fbe7545"></script>
       <script src="../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -632,7 +632,8 @@
 <span class="sd">            The path to save the Eigendistortion object to</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="n">attrs</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></div>
+        <span class="n">save_io_attrs</span> <span class="o">=</span> <span class="p">[(</span><span class="s2">&quot;_model&quot;</span><span class="p">,</span> <span class="p">(</span><span class="s2">&quot;_image&quot;</span><span class="p">,))]</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="n">save_io_attrs</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Eigendistortion.to">
@@ -703,10 +704,14 @@
     <span class="p">):</span>
 <span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Load all relevant stuff from a .pt file.</span>
 
-<span class="sd">        This should be called by an initialized ``Eigendistortion`` object --</span>
-<span class="sd">        we will ensure that ``image`` and ``model`` are identical.</span>
+<span class="sd">        This must be called by a ``Eigendistortion`` object initialized just like the</span>
+<span class="sd">        saved object.</span>
 
 <span class="sd">        Note this operates in place and so doesn&#39;t return anything.</span>
+
+<span class="sd">        .. versionchanged:: 1.2</span>
+<span class="sd">           load behavior changed in a backwards-incompatible manner in order to</span>
+<span class="sd">           compatible with breaking changes in torch 2.6.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -722,6 +727,12 @@
 <span class="sd">            any additional kwargs will be added to ``pickle_module.load`` via</span>
 <span class="sd">            ``torch.load``, see that function&#39;s docstring for details.</span>
 
+<span class="sd">        See Also</span>
+<span class="sd">        --------</span>
+<span class="sd">        examine_saved_synthesis :</span>
+<span class="sd">            Examine metadata from saved object: pytorch and plenoptic versions, name of</span>
+<span class="sd">            the synthesis object, shapes of tensors, etc.</span>
+
 <span class="sd">        Examples</span>
 <span class="sd">        --------</span>
 <span class="sd">        &gt;&gt;&gt; eig = po.synth.Eigendistortion(img, model)</span>
@@ -734,13 +745,14 @@
 <span class="sd">        *then* load.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">check_attributes</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;_image&quot;</span><span class="p">,</span> <span class="s2">&quot;_representation_flat&quot;</span><span class="p">]</span>
-        <span class="n">check_loss_functions</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">check_attributes</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;_image&quot;</span><span class="p">]</span>
+        <span class="n">check_io_attrs</span> <span class="o">=</span> <span class="p">[(</span><span class="s2">&quot;_model&quot;</span><span class="p">,</span> <span class="p">(</span><span class="s2">&quot;_image&quot;</span><span class="p">,))]</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">load</span><span class="p">(</span>
             <span class="n">file_path</span><span class="p">,</span>
+            <span class="s2">&quot;eigenindex&quot;</span><span class="p">,</span>
             <span class="n">map_location</span><span class="o">=</span><span class="n">map_location</span><span class="p">,</span>
             <span class="n">check_attributes</span><span class="o">=</span><span class="n">check_attributes</span><span class="p">,</span>
-            <span class="n">check_loss_functions</span><span class="o">=</span><span class="n">check_loss_functions</span><span class="p">,</span>
+            <span class="n">check_io_attributes</span><span class="o">=</span><span class="n">check_io_attrs</span><span class="p">,</span>
             <span class="o">**</span><span class="n">pickle_load_args</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="c1"># make these require a grad again</span>
