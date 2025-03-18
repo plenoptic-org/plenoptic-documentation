@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Portilla-Simoncelli Texture Metamer &mdash; plenoptic 1.1.1.dev127 documentation</title>
+  <title>Portilla-Simoncelli Texture Metamer &mdash; plenoptic 1.1.1.dev131 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
@@ -17,7 +17,7 @@
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=3e9f1f2e"></script>
+      <script src="../../_static/documentation_options.js?v=35a1dbbe"></script>
       <script src="../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -399,10 +399,9 @@ tensor([[[ 0.4350,  0.0407,  0.1622,  ..., -0.0078, -0.2282,  0.0023]]])
     <span class="n">img</span><span class="p">,</span>
     <span class="n">model</span><span class="p">,</span>
     <span class="n">loss_function</span><span class="o">=</span><span class="n">po</span><span class="o">.</span><span class="n">tools</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">l2_norm</span><span class="p">,</span>
-    <span class="n">initial_image</span><span class="o">=</span><span class="n">im_init</span><span class="p">,</span>
     <span class="n">coarse_to_fine</span><span class="o">=</span><span class="s2">&quot;together&quot;</span><span class="p">,</span>
 <span class="p">)</span>
-
+<span class="n">met</span><span class="o">.</span><span class="n">setup</span><span class="p">(</span><span class="n">im_init</span><span class="p">)</span>
 <span class="n">o</span> <span class="o">=</span> <span class="n">met</span><span class="o">.</span><span class="n">synthesize</span><span class="p">(</span>
     <span class="n">max_iter</span><span class="o">=</span><span class="n">short_synth_max_iter</span><span class="p">,</span>
     <span class="n">store_progress</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
@@ -501,9 +500,9 @@ tensor([[[ 0.4350,  0.0407,  0.1622,  ..., -0.0078, -0.2282,  0.0023]]])
         <span class="n">img</span><span class="p">,</span>
         <span class="n">model</span><span class="p">,</span>
         <span class="n">loss_function</span><span class="o">=</span><span class="n">po</span><span class="o">.</span><span class="n">tools</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">l2_norm</span><span class="p">,</span>
-        <span class="n">initial_image</span><span class="o">=</span><span class="n">im_init</span><span class="p">,</span>
         <span class="n">coarse_to_fine</span><span class="o">=</span><span class="s2">&quot;together&quot;</span><span class="p">,</span>
     <span class="p">)</span>
+    <span class="n">met</span><span class="o">.</span><span class="n">setup</span><span class="p">(</span><span class="n">im_init</span><span class="p">)</span>
     <span class="n">met</span><span class="o">.</span><span class="n">synthesize</span><span class="p">(</span>
         <span class="n">max_iter</span><span class="o">=</span><span class="n">long_synth_max_iter</span><span class="p">,</span>
         <span class="n">store_progress</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
@@ -1378,14 +1377,11 @@ synthetic images are seamlessly periodic (due to circular boundary-handling with
     <span class="n">img</span><span class="p">,</span>
     <span class="n">model</span><span class="p">,</span>
     <span class="n">loss_function</span><span class="o">=</span><span class="n">po</span><span class="o">.</span><span class="n">tools</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">l2_norm</span><span class="p">,</span>
-    <span class="n">initial_image</span><span class="o">=</span><span class="n">im_init</span><span class="p">,</span>
     <span class="n">coarse_to_fine</span><span class="o">=</span><span class="s2">&quot;together&quot;</span><span class="p">,</span>
 <span class="p">)</span>
-
-<span class="n">optimizer</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">Adam</span><span class="p">([</span><span class="n">met</span><span class="o">.</span><span class="n">metamer</span><span class="p">],</span> <span class="n">lr</span><span class="o">=</span><span class="mf">0.02</span><span class="p">,</span> <span class="n">amsgrad</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">met</span><span class="o">.</span><span class="n">setup</span><span class="p">(</span><span class="n">im_init</span><span class="p">,</span> <span class="n">optimizer_kwargs</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;lr&quot;</span><span class="p">:</span> <span class="mf">0.02</span><span class="p">,</span> <span class="s2">&quot;amsgrad&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">})</span>
 
 <span class="n">met</span><span class="o">.</span><span class="n">synthesize</span><span class="p">(</span>
-    <span class="n">optimizer</span><span class="o">=</span><span class="n">optimizer</span><span class="p">,</span>
     <span class="n">max_iter</span><span class="o">=</span><span class="n">short_synth_max_iter</span><span class="p">,</span>
     <span class="n">store_progress</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
     <span class="n">change_scale_criterion</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
@@ -1484,7 +1480,9 @@ synthetic images are seamlessly periodic (due to circular boundary-handling with
 <span class="sd">    differentiable models, for mixing two images.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">_initialize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">initial_image</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setup</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">initial_image</span><span class="p">,</span> <span class="n">optimizer</span><span class="p">,</span> <span class="n">optimizer_kwargs</span><span class="p">,</span> <span class="n">scheduler</span><span class="p">,</span> <span class="n">scheduler_kwargs</span>
+    <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize the metamer.</span>
 
 <span class="sd">        Set the ``self.metamer`` attribute to be a parameter with</span>
@@ -1512,6 +1510,10 @@ synthetic images are seamlessly periodic (due to circular boundary-handling with
         <span class="n">metamer</span> <span class="o">=</span> <span class="n">metamer</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">dtype</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
         <span class="n">metamer</span><span class="o">.</span><span class="n">requires_grad_</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_metamer</span> <span class="o">=</span> <span class="n">metamer</span>
+        <span class="c1"># initialize the optimizer</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_initialize_optimizer</span><span class="p">(</span><span class="n">optimizer</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">metamer</span><span class="p">,</span> <span class="n">optimizer_kwargs</span><span class="p">)</span>
+        <span class="c1"># and scheduler</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_initialize_scheduler</span><span class="p">(</span><span class="n">scheduler</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span><span class="p">,</span> <span class="n">scheduler_kwargs</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1533,14 +1535,11 @@ synthetic images are seamlessly periodic (due to circular boundary-handling with
     <span class="n">imgs</span><span class="p">,</span>
     <span class="n">model</span><span class="p">,</span>
     <span class="n">loss_function</span><span class="o">=</span><span class="n">po</span><span class="o">.</span><span class="n">tools</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">l2_norm</span><span class="p">,</span>
-    <span class="n">initial_image</span><span class="o">=</span><span class="n">im_init</span><span class="p">,</span>
     <span class="n">coarse_to_fine</span><span class="o">=</span><span class="s2">&quot;together&quot;</span><span class="p">,</span>
 <span class="p">)</span>
-
-<span class="n">optimizer</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">Adam</span><span class="p">([</span><span class="n">met</span><span class="o">.</span><span class="n">metamer</span><span class="p">],</span> <span class="n">lr</span><span class="o">=</span><span class="mf">0.02</span><span class="p">,</span> <span class="n">amsgrad</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">met</span><span class="o">.</span><span class="n">setup</span><span class="p">(</span><span class="n">im_init</span><span class="p">,</span> <span class="n">optimizer_kwargs</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;lr&quot;</span><span class="p">:</span> <span class="mf">0.02</span><span class="p">,</span> <span class="s2">&quot;amsgrad&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">})</span>
 
 <span class="n">met</span><span class="o">.</span><span class="n">synthesize</span><span class="p">(</span>
-    <span class="n">optimizer</span><span class="o">=</span><span class="n">optimizer</span><span class="p">,</span>
     <span class="n">max_iter</span><span class="o">=</span><span class="n">longest_synth_max_iter</span><span class="p">,</span>
     <span class="n">store_progress</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
     <span class="n">change_scale_criterion</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
@@ -1990,8 +1989,11 @@ means are constrained by the other statistics (though not perfectly), and thus i
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Set the RNG seed to make the two synthesis procedures as similar as possible.</span>
 <span class="n">po</span><span class="o">.</span><span class="n">tools</span><span class="o">.</span><span class="n">set_seed</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
 <span class="n">met</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">synth</span><span class="o">.</span><span class="n">MetamerCTF</span><span class="p">(</span>
-    <span class="n">img</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">loss_function</span><span class="o">=</span><span class="n">po</span><span class="o">.</span><span class="n">tools</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">l2_norm</span><span class="p">,</span> <span class="n">initial_image</span><span class="o">=</span><span class="n">im_init</span>
+    <span class="n">img</span><span class="p">,</span>
+    <span class="n">model</span><span class="p">,</span>
+    <span class="n">loss_function</span><span class="o">=</span><span class="n">po</span><span class="o">.</span><span class="n">tools</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">l2_norm</span><span class="p">,</span>
 <span class="p">)</span>
+<span class="n">met</span><span class="o">.</span><span class="n">setup</span><span class="p">(</span><span class="n">im_init</span><span class="p">)</span>
 <span class="n">met</span><span class="o">.</span><span class="n">synthesize</span><span class="p">(</span>
     <span class="n">store_progress</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
     <span class="n">max_iter</span><span class="o">=</span><span class="n">short_synth_max_iter</span><span class="p">,</span>
@@ -2004,8 +2006,8 @@ means are constrained by the other statistics (though not perfectly), and thus i
     <span class="n">img</span><span class="p">,</span>
     <span class="n">model_mag_means</span><span class="p">,</span>
     <span class="n">loss_function</span><span class="o">=</span><span class="n">po</span><span class="o">.</span><span class="n">tools</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">l2_norm</span><span class="p">,</span>
-    <span class="n">initial_image</span><span class="o">=</span><span class="n">im_init</span><span class="p">,</span>
 <span class="p">)</span>
+<span class="n">met_mag_means</span><span class="o">.</span><span class="n">setup</span><span class="p">(</span><span class="n">im_init</span><span class="p">)</span>
 <span class="n">met_mag_means</span><span class="o">.</span><span class="n">synthesize</span><span class="p">(</span>
     <span class="n">store_progress</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
     <span class="n">max_iter</span><span class="o">=</span><span class="n">short_synth_max_iter</span><span class="p">,</span>
