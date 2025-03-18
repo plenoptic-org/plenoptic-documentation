@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>plenoptic.synthesize.mad_competition &mdash; plenoptic 1.1.1.dev134 documentation</title>
+  <title>plenoptic.synthesize.mad_competition &mdash; plenoptic 1.1.1.dev135 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/plot_directive.css" />
@@ -15,7 +15,7 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=6da84500"></script>
+      <script src="../../../_static/documentation_options.js?v=c9d0c119"></script>
       <script src="../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -280,16 +280,17 @@
         <span class="n">scheduler</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">lr_scheduler</span><span class="o">.</span><span class="n">LRScheduler</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">scheduler_kwargs</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize the synthesized image.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize the MAD image, optimizer, and scheduler.</span>
 
-<span class="sd">        Initialize ``self.mad_image`` attribute to be ``image`` plus</span>
-<span class="sd">        Gaussian noise with user-specified standard deviation.</span>
+<span class="sd">        Can only be called once. If ``load()`` has been called, ``initial_noise`` must</span>
+<span class="sd">        be None.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        initial_noise :</span>
-<span class="sd">            Standard deviation of the Gaussian noise used to initialize</span>
-<span class="sd">            ``mad_image`` from ``image``. If None, we use a value of 0.1.</span>
+<span class="sd">            ``mad_image`` is initialized to ``self.image + initial_noise *</span>
+<span class="sd">            torch.randn_like(self.image)``, so this gives the standard deviation of the</span>
+<span class="sd">            Gaussian noise. If None, we use a value of 0.1.</span>
 <span class="sd">        optimizer :</span>
 <span class="sd">            The un-initialized optimizer object to use. If None, we use Adam(lr=.01,</span>
 <span class="sd">            amsgrad=True).</span>

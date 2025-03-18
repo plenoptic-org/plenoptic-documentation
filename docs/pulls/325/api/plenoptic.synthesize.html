@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>plenoptic.synthesize package &mdash; plenoptic 1.1.1.dev134 documentation</title>
+  <title>plenoptic.synthesize package &mdash; plenoptic 1.1.1.dev135 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css" />
@@ -16,7 +16,7 @@
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../_static/documentation_options.js?v=6da84500"></script>
+      <script src="../_static/documentation_options.js?v=c9d0c119"></script>
       <script src="../_static/doctools.js?v=9bcbadda"></script>
       <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -839,7 +839,7 @@ development</p>
 <td><p>Save all relevant variables in .pt file.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#plenoptic.synthesize.geodesic.Geodesic.setup" title="plenoptic.synthesize.geodesic.Geodesic.setup"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setup</span></code></a>([initial_sequence, n_steps, ...])</p></td>
-<td><p>initialize the geodesic</p></td>
+<td><p>Initialize the geodesic and optimizer.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#plenoptic.synthesize.geodesic.Geodesic.synthesize" title="plenoptic.synthesize.geodesic.Geodesic.synthesize"><code class="xref py py-obj docutils literal notranslate"><span class="pre">synthesize</span></code></a>([max_iter, optimizer, ...])</p></td>
 <td><p>Synthesize a geodesic via optimization.</p></td>
@@ -977,13 +977,15 @@ geodesic’s model representation, with the weighted range penalty.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="plenoptic.synthesize.geodesic.Geodesic.setup">
 <span class="sig-name descname"><span class="pre">setup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">initial_sequence</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_steps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">optimizer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">optimizer_kwargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/plenoptic/synthesize/geodesic.html#Geodesic.setup"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#plenoptic.synthesize.geodesic.Geodesic.setup" title="Link to this definition"></a></dt>
-<dd><p>initialize the geodesic</p>
+<dd><p>Initialize the geodesic and optimizer.</p>
+<p>Can only be called once. If <code class="docutils literal notranslate"><span class="pre">load()</span></code> has been called, <code class="docutils literal notranslate"><span class="pre">initial_sequence</span></code>
+must be None.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>initial_sequence</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Literal</span></code>[<code class="docutils literal notranslate"><span class="pre">'straight'</span></code>, <code class="docutils literal notranslate"><span class="pre">'bridge'</span></code>]]</span>) – initialize the geodesic with pixel linear interpolation
 (<code class="docutils literal notranslate"><span class="pre">'straight'</span></code>), or with a brownian bridge between the two anchors
-(<code class="docutils literal notranslate"><span class="pre">'bridge'</span></code>).</p></li>
+(<code class="docutils literal notranslate"><span class="pre">'bridge'</span></code>). If None, use <code class="docutils literal notranslate"><span class="pre">'straight'</span></code>.</p></li>
 <li><p><strong>n_steps</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – the number of steps (i.e., transitions) in the trajectory between the
 two anchor points.</p></li>
 <li><p><strong>optimizer</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Optimizer</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span>) – The un-initialized optimizer object to use. If None, we use Adam(lr=.001,
@@ -1339,7 +1341,7 @@ perceptual discriminability. Journal of Vision, 8(12), 1–13.
 <td><p>Save all relevant variables in .pt file.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#plenoptic.synthesize.mad_competition.MADCompetition.setup" title="plenoptic.synthesize.mad_competition.MADCompetition.setup"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setup</span></code></a>([initial_noise, optimizer, ...])</p></td>
-<td><p>Initialize the synthesized image.</p></td>
+<td><p>Initialize the MAD image, optimizer, and scheduler.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#plenoptic.synthesize.mad_competition.MADCompetition.synthesize" title="plenoptic.synthesize.mad_competition.MADCompetition.synthesize"><code class="xref py py-obj docutils literal notranslate"><span class="pre">synthesize</span></code></a>([max_iter, store_progress, ...])</p></td>
 <td><p>Synthesize a MAD image.</p></td>
@@ -1491,14 +1493,15 @@ large.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="plenoptic.synthesize.mad_competition.MADCompetition.setup">
 <span class="sig-name descname"><span class="pre">setup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">initial_noise</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">optimizer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">optimizer_kwargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scheduler</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scheduler_kwargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/plenoptic/synthesize/mad_competition.html#MADCompetition.setup"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#plenoptic.synthesize.mad_competition.MADCompetition.setup" title="Link to this definition"></a></dt>
-<dd><p>Initialize the synthesized image.</p>
-<p>Initialize <code class="docutils literal notranslate"><span class="pre">self.mad_image</span></code> attribute to be <code class="docutils literal notranslate"><span class="pre">image</span></code> plus
-Gaussian noise with user-specified standard deviation.</p>
+<dd><p>Initialize the MAD image, optimizer, and scheduler.</p>
+<p>Can only be called once. If <code class="docutils literal notranslate"><span class="pre">load()</span></code> has been called, <code class="docutils literal notranslate"><span class="pre">initial_noise</span></code> must
+be None.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>initial_noise</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span>) – Standard deviation of the Gaussian noise used to initialize
-<code class="docutils literal notranslate"><span class="pre">mad_image</span></code> from <code class="docutils literal notranslate"><span class="pre">image</span></code>. If None, we use a value of 0.1.</p></li>
+<li><p><strong>initial_noise</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span>) – <code class="docutils literal notranslate"><span class="pre">mad_image</span></code> is initialized to <code class="docutils literal notranslate"><span class="pre">self.image</span> <span class="pre">+</span> <span class="pre">initial_noise</span> <span class="pre">*</span>
+<span class="pre">torch.randn_like(self.image)</span></code>, so this gives the standard deviation of the
+Gaussian noise. If None, we use a value of 0.1.</p></li>
 <li><p><strong>optimizer</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Optimizer</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span>) – The un-initialized optimizer object to use. If None, we use Adam(lr=.01,
 amsgrad=True).</p></li>
 <li><p><strong>optimizer_kwargs</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span>) – The keyword arguments to pass to the optimizer on initialization.</p></li>
