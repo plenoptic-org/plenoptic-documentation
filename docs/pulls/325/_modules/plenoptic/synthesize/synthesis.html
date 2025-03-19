@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>plenoptic.synthesize.synthesis &mdash; plenoptic 1.1.1.dev138 documentation</title>
+  <title>plenoptic.synthesize.synthesis &mdash; plenoptic 1.1.1.dev141 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/plot_directive.css" />
@@ -15,7 +15,7 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=b24a6ca8"></script>
+      <script src="../../../_static/documentation_options.js?v=d0bfec23"></script>
       <script src="../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -574,18 +574,16 @@
     <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize optimizer.</span>
 
-<span class="sd">        First time this is called, optimizer can be:</span>
+<span class="sd">        optimizer can be:</span>
 
 <span class="sd">        - None, in which case we create an Adam optimizer with amsgrad=True and</span>
-<span class="sd">          ``lr=learning_rate`` with a single parameter, the synthesis attribute</span>
+<span class="sd">          ``lr=learning_rate``</span>
 
-<span class="sd">        - torch.optim.Optimizer, in which case it must already have the</span>
+<span class="sd">        - uninitialized torch.optim.Optimizer, in which case it must already have the</span>
 <span class="sd">          synthesis attribute (e.g., metamer) as its only parameter.</span>
 
-<span class="sd">        The synthesis attribute is the one with the name ``synth_name``</span>
-
-<span class="sd">        Every subsequent time (so, when resuming synthesis), optimizer must be</span>
-<span class="sd">        None (and we use the original optimizer object).</span>
+<span class="sd">        In either case, we then initialize the optimizer with a single parameter, the</span>
+<span class="sd">        synthesis attribute, ``synth_attr``</span>
 
 <span class="sd">        If we have loaded from a save state, self.optimizer will be a tuple with the</span>
 <span class="sd">        name of the optimizer class (e.g., torch.optim.adam.Adam) and the</span>
@@ -595,7 +593,7 @@
 <span class="sd">          state_dict.</span>
 
 <span class="sd">        - else, the saved and user-specified optimizers must have the same class name</span>
-<span class="sd">          and we load the state_dict.</span>
+<span class="sd">          and we load the state_dict. in this case, ``optimizer_kwargs`` must be None</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
@@ -645,15 +643,12 @@
     <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize scheduler.</span>
 
-<span class="sd">        First time this is called, scheduler can be:</span>
+<span class="sd">        scheduler can be:</span>
 
 <span class="sd">        - None, in which case we do nothing.</span>
 
-<span class="sd">        - torch.optim.lr_scheduler.LRScheduler in which case its optimizer must match</span>
-<span class="sd">          self.optimizer.</span>
-
-<span class="sd">        Every subsequent time (so, when resuming synthesis), scheduler must be None (and</span>
-<span class="sd">        we use the original scheduler object).</span>
+<span class="sd">        - uninitialized torch.optim.lr_scheduler.LRScheduler in which case we initialize</span>
+<span class="sd">          it using self.optimizer.</span>
 
 <span class="sd">        If we have loaded from a save state, self.scheduler will be a tuple with the</span>
 <span class="sd">        name of the scheduler class (e.g., torch.optim.lr_scheduler.ConstantLR) and the</span>
@@ -662,11 +657,12 @@
 <span class="sd">        - If scheduler is None, we raise a ValueError.</span>
 
 <span class="sd">        - else, the saved and user-specified schedulers must have the same class name</span>
-<span class="sd">          and we load the state_dict.</span>
+<span class="sd">          and we load the state_dict. In this case, ``scheduler_kwargs`` must be None</span>
 
 <span class="sd">        We also check if scheduler.step takes any arguments beyond self and epoch. If</span>
-<span class="sd">        so, we set the `_scheduler_step_arg` flag to True (it was set to False at object</span>
-<span class="sd">        initialization). Then, we will pass the loss to scheduler.step when we call it.</span>
+<span class="sd">        so, we set the `self._scheduler_step_arg` flag to True (it was set to False at</span>
+<span class="sd">        object initialization). Then, we will pass the loss to scheduler.step when we</span>
+<span class="sd">        call it.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">scheduler</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
