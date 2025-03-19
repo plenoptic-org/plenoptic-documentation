@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>plenoptic.simulate.canonical_computations.steerable_pyramid_freq &mdash; plenoptic 1.1.1.dev127 documentation</title>
+  <title>plenoptic.simulate.canonical_computations.steerable_pyramid_freq &mdash; plenoptic 1.1.1.dev128 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/plot_directive.css" />
@@ -15,7 +15,7 @@
   
       <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../../_static/documentation_options.js?v=3e9f1f2e"></script>
+      <script src="../../../../_static/documentation_options.js?v=d685bcec"></script>
       <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -840,7 +840,6 @@
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">levels</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;all&quot;</span><span class="p">]</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="n">SCALES_TYPE</span><span class="p">],</span>
         <span class="n">bands</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;all&quot;</span><span class="p">]</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span>
-        <span class="n">max_orientations</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">KEYS_TYPE</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Make a list of all the relevant keys from `pyr_coeffs` to use in pyramid</span>
 <span class="sd">        reconstruction</span>
@@ -862,10 +861,6 @@
 <span class="sd">            If list, should contain some subset of integers from `0` to</span>
 <span class="sd">            `self.num_orientations-1`. If `&#39;all&#39;`, returned value will contain</span>
 <span class="sd">            all valid orientations.</span>
-<span class="sd">        max_orientations:</span>
-<span class="sd">            The maximum number of orientations we allow in the reconstruction.</span>
-<span class="sd">            when we determine which ints are allowed for bands, we ignore all</span>
-<span class="sd">            those greater than max_orientations.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -876,15 +871,6 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">levels</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_recon_levels_check</span><span class="p">(</span><span class="n">levels</span><span class="p">)</span>
         <span class="n">bands</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_recon_bands_check</span><span class="p">(</span><span class="n">bands</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">max_orientations</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">bands</span><span class="p">:</span>
-                <span class="k">if</span> <span class="n">i</span> <span class="o">&gt;=</span> <span class="n">max_orientations</span><span class="p">:</span>
-                    <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
-                        <span class="sa">f</span><span class="s2">&quot;You wanted band </span><span class="si">{</span><span class="n">i</span><span class="si">:</span><span class="s2">d</span><span class="si">}</span><span class="s2"> in the reconstruction but&quot;</span>
-                        <span class="sa">f</span><span class="s2">&quot; max_orientation is </span><span class="si">{</span><span class="n">max_orientations</span><span class="si">:</span><span class="s2">d</span><span class="si">}</span><span class="s2">, so &quot;</span>
-                        <span class="s2">&quot;we&#39;re ignoring that band&quot;</span>
-                    <span class="p">)</span>
-            <span class="n">bands</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">bands</span> <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">max_orientations</span><span class="p">]</span>
         <span class="n">recon_keys</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">level</span> <span class="ow">in</span> <span class="n">levels</span><span class="p">:</span>
             <span class="c1"># residual highpass and lowpass</span>
