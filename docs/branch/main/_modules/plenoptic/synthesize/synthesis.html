@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>plenoptic.synthesize.synthesis &mdash; plenoptic 1.1.1.dev117 documentation</title>
+  <title>plenoptic.synthesize.synthesis &mdash; plenoptic 1.1.1.dev143 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/plot_directive.css" />
@@ -15,7 +15,7 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=93cf6fe2"></script>
+      <script src="../../../_static/documentation_options.js?v=433fe250"></script>
       <script src="../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -114,6 +114,7 @@
 <span class="kn">import</span><span class="w"> </span><span class="nn">abc</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">importlib</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">inspect</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
@@ -147,6 +148,10 @@
 <span class="sd">    sub-class and thus are marked as abstract methods here</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># flag to raise more informative error message if setup and load are both called</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_loaded</span> <span class="o">=</span> <span class="kc">False</span>
 
 <div class="viewcode-block" id="Synthesis.synthesize">
 <a class="viewcode-back" href="../../../api/plenoptic.synthesize.html#plenoptic.synthesize.synthesis.Synthesis.synthesize">[docs]</a>
@@ -280,12 +285,12 @@
 <span class="sd">            ``torch.load``, see that function&#39;s docstring for details.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">empty_on_init_attr</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">empty_on_init_attr</span><span class="p">)</span>
         <span class="n">check_str</span> <span class="o">=</span> <span class="p">(</span>
             <span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">If this is confusing, try calling &quot;</span>
             <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">_get_name</span><span class="p">(</span><span class="n">examine_saved_synthesis</span><span class="p">)</span><span class="si">}</span><span class="s2">(&#39;</span><span class="si">{</span><span class="n">file_path</span><span class="si">}</span><span class="s2">&#39;),&quot;</span>
             <span class="s2">&quot; to examine saved object&quot;</span>
         <span class="p">)</span>
+        <span class="n">empty_on_init_attr</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">empty_on_init_attr</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">empty_on_init_attr</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">empty_on_init_attr</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
                 <span class="s2">&quot;load can only be called with a just-initialized&quot;</span>
@@ -401,7 +406,20 @@
                     <span class="k">continue</span>
                 <span class="c1"># if init_attr is None, then we haven&#39;t set it yet, so we set the saved</span>
                 <span class="c1"># tuple as the attribute, and handle this later</span>
-            <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span></div>
+            <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
+        <span class="n">setup_attrs</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">optim</span> <span class="o">=</span> <span class="n">tmp_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;_optimizer&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">optim</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)</span> <span class="ow">and</span> <span class="n">optim</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="n">_get_name</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">Adam</span><span class="p">):</span>
+            <span class="n">setup_attrs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;optimizer&quot;</span><span class="p">)</span>
+        <span class="n">sched</span> <span class="o">=</span> <span class="n">tmp_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;_scheduler&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">sched</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)</span> <span class="ow">and</span> <span class="n">sched</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">setup_attrs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;scheduler&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">setup_attrs</span><span class="p">:</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;You will need to call setup() to instantiate </span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">setup_attrs</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+        <span class="c1"># Make sure we specify that we have loaded and setup has not been called</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_loaded</span> <span class="o">=</span> <span class="kc">True</span></div>
 
 
 <div class="viewcode-block" id="Synthesis.to">
@@ -488,6 +506,7 @@
         <span class="n">allowed_range</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
     <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize the properties of OptimizedSynthesis.&quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_losses</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_gradient_norm</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_pixel_change_norm</span> <span class="o">=</span> <span class="p">[]</span>
@@ -498,10 +517,13 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_range_penalty_lambda</span> <span class="o">=</span> <span class="n">range_penalty_lambda</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_allowed_range</span> <span class="o">=</span> <span class="n">allowed_range</span>
 
+<div class="viewcode-block" id="OptimizedSynthesis.setup">
+<a class="viewcode-back" href="../../../api/plenoptic.synthesize.html#plenoptic.synthesize.synthesis.OptimizedSynthesis.setup">[docs]</a>
     <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">_initialize</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;What to start synthesis with.&quot;&quot;&quot;</span>
-        <span class="k">pass</span>
+        <span class="k">pass</span></div>
+
 
 <div class="viewcode-block" id="OptimizedSynthesis.objective_function">
 <a class="viewcode-back" href="../../../api/plenoptic.synthesize.html#plenoptic.synthesize.synthesis.OptimizedSynthesis.objective_function">[docs]</a>
@@ -546,23 +568,22 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">_initialize_optimizer</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">optimizer</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">Optimizer</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">synth_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">synth_attr</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
+        <span class="n">optimizer_kwargs</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">learning_rate</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.01</span><span class="p">,</span>
     <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize optimizer.</span>
 
-<span class="sd">        First time this is called, optimizer can be:</span>
+<span class="sd">        optimizer can be:</span>
 
 <span class="sd">        - None, in which case we create an Adam optimizer with amsgrad=True and</span>
-<span class="sd">          ``lr=learning_rate`` with a single parameter, the synthesis attribute</span>
+<span class="sd">          ``lr=learning_rate``</span>
 
-<span class="sd">        - torch.optim.Optimizer, in which case it must already have the</span>
+<span class="sd">        - uninitialized torch.optim.Optimizer, in which case it must already have the</span>
 <span class="sd">          synthesis attribute (e.g., metamer) as its only parameter.</span>
 
-<span class="sd">        The synthesis attribute is the one with the name ``synth_name``</span>
-
-<span class="sd">        Every subsequent time (so, when resuming synthesis), optimizer must be</span>
-<span class="sd">        None (and we use the original optimizer object).</span>
+<span class="sd">        In either case, we then initialize the optimizer with a single parameter, the</span>
+<span class="sd">        synthesis attribute, ``synth_attr``</span>
 
 <span class="sd">        If we have loaded from a save state, self.optimizer will be a tuple with the</span>
 <span class="sd">        name of the optimizer class (e.g., torch.optim.adam.Adam) and the</span>
@@ -572,76 +593,62 @@
 <span class="sd">          state_dict.</span>
 
 <span class="sd">        - else, the saved and user-specified optimizers must have the same class name</span>
-<span class="sd">          and we load the state_dict.</span>
+<span class="sd">          and we load the state_dict. in this case, ``optimizer_kwargs`` must be None</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">synth_attr</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">synth_name</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">optimizer</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_optimizer</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">Adam</span><span class="p">(</span>
-                    <span class="p">[</span><span class="n">synth_attr</span><span class="p">],</span> <span class="n">lr</span><span class="o">=</span><span class="n">learning_rate</span><span class="p">,</span> <span class="n">amsgrad</span><span class="o">=</span><span class="kc">True</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
+            <span class="c1"># then we&#39;re calling this after load()</span>
+            <span class="k">if</span> <span class="n">optimizer_kwargs</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="s2">&quot;When initializing optimizer after load, optimizer_kwargs&quot;</span>
+                    <span class="s2">&quot; must be None!&quot;</span>
                 <span class="p">)</span>
-            <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
-                <span class="c1"># then this comes from loading</span>
-                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_optimizer</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="n">_get_name</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">Adam</span><span class="p">):</span>
-                    <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
-                        <span class="s2">&quot;Don&#39;t know how to initialize saved optimizer &quot;</span>
-                        <span class="sa">f</span><span class="s2">&quot;&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_optimizer</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">&#39;! Pass an initialized version of &quot;</span>
-                        <span class="s2">&quot;this optimizer to `synthesize`, and we will update its &quot;</span>
-                        <span class="s2">&quot;state_dict.&quot;</span>
-                    <span class="p">)</span>
-                <span class="n">state_dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_optimizer</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">Adam</span><span class="p">([</span><span class="n">synth_attr</span><span class="p">])</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_optimizer</span><span class="o">.</span><span class="n">load_state_dict</span><span class="p">(</span><span class="n">state_dict</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">optimizer</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">optimizer</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">Adam</span>
+                <span class="n">err_str</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="s2">&quot;Don&#39;t know how to initialize saved optimizer &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_optimizer</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">&#39;! Pass an un-initialized version of &quot;</span>
+                    <span class="s2">&quot;this optimizer to `setup`, and we will update its &quot;</span>
+                    <span class="s2">&quot;state_dict.&quot;</span>
+                <span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">err_str</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="s2">&quot;User-specified optimizer must have same type as saved &quot;</span>
+                    <span class="s2">&quot;optimizer, but got:&quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Saved: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">, &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">User-specified: </span><span class="si">{</span><span class="n">_get_name</span><span class="p">(</span><span class="n">optimizer</span><span class="p">)</span><span class="si">}</span><span class="s2">.&quot;</span>
+                <span class="p">)</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_optimizer</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="n">_get_name</span><span class="p">(</span><span class="n">optimizer</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">err_str</span><span class="p">)</span>
+            <span class="n">state_dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_optimizer</span> <span class="o">=</span> <span class="n">optimizer</span><span class="p">([</span><span class="n">synth_attr</span><span class="p">])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_optimizer</span><span class="o">.</span><span class="n">load_state_dict</span><span class="p">(</span><span class="n">state_dict</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
-                <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;When resuming synthesis, optimizer arg must be None!&quot;</span><span class="p">)</span>
-            <span class="n">params</span> <span class="o">=</span> <span class="n">optimizer</span><span class="o">.</span><span class="n">param_groups</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;params&quot;</span><span class="p">]</span>
-            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">params</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">torch</span><span class="o">.</span><span class="n">equal</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">synth_attr</span><span class="p">):</span>
-                <span class="c1"># then the optimizer is not updating the right target, which means they</span>
-                <span class="c1"># initialized it wrong.</span>
-                <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
-                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                        <span class="sa">f</span><span class="s2">&quot;For </span><span class="si">{</span><span class="n">synth_name</span><span class="si">}</span><span class="s2"> synthesis, optimizer must have one &quot;</span>
-                        <span class="sa">f</span><span class="s2">&quot;parameter, the </span><span class="si">{</span><span class="n">synth_name</span><span class="si">}</span><span class="s2"> we&#39;re synthesizing.&quot;</span>
-                    <span class="p">)</span>
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="c1"># a totally possible way this could happen is they initialized the</span>
-                    <span class="c1"># synthesis object, initialized the optimizer, then called load. if</span>
-                    <span class="c1"># you do it in that order, the optimizer target is incorrect</span>
-                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                        <span class="sa">f</span><span class="s2">&quot;Optimizer parameter does not match self.</span><span class="si">{</span><span class="n">synth_name</span><span class="si">}</span><span class="s2">. Did &quot;</span>
-                        <span class="s2">&quot;you initialize this optimizer object before calling load? &quot;</span>
-                        <span class="s2">&quot;Optimizer objects must be initialized after calling load&quot;</span>
-                    <span class="p">)</span>
-            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
-                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_optimizer</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="n">_get_name</span><span class="p">(</span><span class="n">optimizer</span><span class="p">):</span>
-                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                        <span class="s2">&quot;User-specified optimizer must have same type as saved &quot;</span>
-                        <span class="s2">&quot;optimizer, but got:&quot;</span>
-                        <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Saved: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">, &quot;</span>
-                        <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">User-specified: </span><span class="si">{</span><span class="n">_get_name</span><span class="p">(</span><span class="n">optimizer</span><span class="p">)</span><span class="si">}</span><span class="s2">.&quot;</span>
-                    <span class="p">)</span>
-                <span class="n">state_dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_optimizer</span> <span class="o">=</span> <span class="n">optimizer</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_optimizer</span><span class="o">.</span><span class="n">load_state_dict</span><span class="p">(</span><span class="n">state_dict</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_optimizer</span> <span class="o">=</span> <span class="n">optimizer</span>
+            <span class="k">if</span> <span class="n">optimizer_kwargs</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">optimizer_kwargs</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;lr&quot;</span><span class="p">:</span> <span class="n">learning_rate</span><span class="p">}</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">optimizer_kwargs</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;lr&quot;</span><span class="p">,</span> <span class="n">learning_rate</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">optimizer</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">optimizer_kwargs</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;amsgrad&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_optimizer</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">Adam</span><span class="p">([</span><span class="n">synth_attr</span><span class="p">],</span> <span class="o">**</span><span class="n">optimizer_kwargs</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_optimizer</span> <span class="o">=</span> <span class="n">optimizer</span><span class="p">([</span><span class="n">synth_attr</span><span class="p">],</span> <span class="o">**</span><span class="n">optimizer_kwargs</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_initialize_scheduler</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">scheduler</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">lr_scheduler</span><span class="o">.</span><span class="n">LRScheduler</span><span class="p">,</span>
+        <span class="n">scheduler</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">lr_scheduler</span><span class="o">.</span><span class="n">LRScheduler</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">optimizer</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">Optimizer</span><span class="p">,</span>
+        <span class="n">scheduler_kwargs</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize scheduler.</span>
 
-<span class="sd">        First time this is called, scheduler can be:</span>
+<span class="sd">        scheduler can be:</span>
 
 <span class="sd">        - None, in which case we do nothing.</span>
 
-<span class="sd">        - torch.optim.lr_scheduler.LRScheduler in which case its optimizer must match</span>
-<span class="sd">          self.optimizer.</span>
-
-<span class="sd">        Every subsequent time (so, when resuming synthesis), scheduler must be None (and</span>
-<span class="sd">        we use the original scheduler object).</span>
+<span class="sd">        - uninitialized torch.optim.lr_scheduler.LRScheduler in which case we initialize</span>
+<span class="sd">          it using self.optimizer.</span>
 
 <span class="sd">        If we have loaded from a save state, self.scheduler will be a tuple with the</span>
 <span class="sd">        name of the scheduler class (e.g., torch.optim.lr_scheduler.ConstantLR) and the</span>
@@ -650,15 +657,22 @@
 <span class="sd">        - If scheduler is None, we raise a ValueError.</span>
 
 <span class="sd">        - else, the saved and user-specified schedulers must have the same class name</span>
-<span class="sd">          and we load the state_dict.</span>
+<span class="sd">          and we load the state_dict. In this case, ``scheduler_kwargs`` must be None</span>
 
 <span class="sd">        We also check if scheduler.step takes any arguments beyond self and epoch. If</span>
-<span class="sd">        so, we set the `_scheduler_step_arg` flag to True (it was set to False at object</span>
-<span class="sd">        initialization). Then, we will pass the loss to scheduler.step when we call it.</span>
+<span class="sd">        so, we set the `self._scheduler_step_arg` flag to True (it was set to False at</span>
+<span class="sd">        object initialization). Then, we will pass the loss to scheduler.step when we</span>
+<span class="sd">        call it.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="n">scheduler</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">scheduler</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">scheduler</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
+            <span class="c1"># then we&#39;re calling this after load()</span>
+            <span class="k">if</span> <span class="n">scheduler_kwargs</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="s2">&quot;When initializing scheduler after load, scheduler_kwargs&quot;</span>
+                    <span class="s2">&quot; must be None!&quot;</span>
+                <span class="p">)</span>
+            <span class="k">if</span> <span class="n">scheduler</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">scheduler</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                     <span class="c1"># then this comes from loading, and we don&#39;t know how to initialize</span>
                     <span class="c1"># the scheduler</span>
@@ -667,10 +681,8 @@
                         <span class="sa">f</span><span class="s2">&quot;&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">scheduler</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">&#39;! Pass an initialized version of this &quot;</span>
                         <span class="s2">&quot;scheduler to `synthesize`, and we will update its state_dict.&quot;</span>
                     <span class="p">)</span>
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">_scheduler</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">scheduler</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_scheduler</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="k">else</span><span class="p">:</span>
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">scheduler</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="n">_get_name</span><span class="p">(</span><span class="n">scheduler</span><span class="p">):</span>
                     <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
                         <span class="s2">&quot;User-specified scheduler must have same type as saved &quot;</span>
@@ -678,22 +690,17 @@
                         <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">User-specified: </span><span class="si">{</span><span class="n">_get_name</span><span class="p">(</span><span class="n">scheduler</span><span class="p">)</span><span class="si">}</span><span class="s2">.&quot;</span>
                     <span class="p">)</span>
                 <span class="n">state_dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">scheduler</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_scheduler</span> <span class="o">=</span> <span class="n">scheduler</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_scheduler</span> <span class="o">=</span> <span class="n">scheduler</span><span class="p">(</span><span class="n">optimizer</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_scheduler</span><span class="o">.</span><span class="n">load_state_dict</span><span class="p">(</span><span class="n">state_dict</span><span class="p">)</span>
-            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">scheduler</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;When resuming synthesis, scheduler arg must be None!&quot;</span><span class="p">)</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">scheduler</span><span class="o">.</span><span class="n">optimizer</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                    <span class="s2">&quot;Scheduler&#39;s optimizer must match that of this &quot;</span>
-                    <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> but got two different optimizers! Did &quot;</span>
-                    <span class="s2">&quot;you initialize this scheduler object before calling load? &quot;</span>
-                    <span class="s2">&quot;Schedulers and optimizers must be optimized after calling load&quot;</span>
-                <span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_scheduler</span> <span class="o">=</span> <span class="n">scheduler</span>
-            <span class="n">step_args</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">inspect</span><span class="o">.</span><span class="n">getfullargspec</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">scheduler</span><span class="o">.</span><span class="n">step</span><span class="p">)</span><span class="o">.</span><span class="n">args</span><span class="p">)</span>
-            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">step_args</span> <span class="o">-</span> <span class="p">{</span><span class="s2">&quot;self&quot;</span><span class="p">,</span> <span class="s2">&quot;epoch&quot;</span><span class="p">}):</span>
-                <span class="c1"># then we do want to pass the loss to scheduler.step</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_scheduler_step_arg</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">scheduler_kwargs</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">scheduler_kwargs</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="k">if</span> <span class="n">scheduler</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_scheduler</span> <span class="o">=</span> <span class="n">scheduler</span><span class="p">(</span><span class="n">optimizer</span><span class="p">,</span> <span class="o">**</span><span class="n">scheduler_kwargs</span><span class="p">)</span>
+                <span class="n">step_args</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">inspect</span><span class="o">.</span><span class="n">getfullargspec</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">scheduler</span><span class="o">.</span><span class="n">step</span><span class="p">)</span><span class="o">.</span><span class="n">args</span><span class="p">)</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">step_args</span> <span class="o">-</span> <span class="p">{</span><span class="s2">&quot;self&quot;</span><span class="p">,</span> <span class="s2">&quot;epoch&quot;</span><span class="p">}):</span>
+                    <span class="c1"># then we do want to pass the loss to scheduler.step</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_scheduler_step_arg</span> <span class="o">=</span> <span class="kc">True</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">range_penalty_lambda</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>

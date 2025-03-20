@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Extending existing synthesis objects &mdash; plenoptic 1.1.1.dev117 documentation</title>
+  <title>Extending existing synthesis objects &mdash; plenoptic 1.1.1.dev143 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
@@ -17,7 +17,7 @@
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=93cf6fe2"></script>
+      <script src="../../_static/documentation_options.js?v=433fe250"></script>
       <script src="../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -119,12 +119,10 @@
 you wish to modify and over-writes some of its existing methods.</p>
 <p>For example, you could create a version of <code class="docutils literal notranslate"><span class="pre">po.synth.MADCompetition</span></code> that starts with a different natural image (rather than with <code class="docutils literal notranslate"><span class="pre">image</span></code> argument plus normally-distributed noise) by creating the following object:</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Callable</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Literal</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
@@ -141,37 +139,20 @@ you wish to modify and over-writes some of its existing methods.</p>
 </div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">MADCompetitionVariant</span><span class="p">(</span><span class="n">po</span><span class="o">.</span><span class="n">synth</span><span class="o">.</span><span class="n">MADCompetition</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Initialize MADCompetition with an image instead!&quot;&quot;&quot;</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setup</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">image</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span>
-        <span class="n">optimized_metric</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span> <span class="o">|</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">Tensor</span><span class="p">],</span> <span class="n">Tensor</span><span class="p">],</span>
-        <span class="n">reference_metric</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span> <span class="o">|</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">Tensor</span><span class="p">],</span> <span class="n">Tensor</span><span class="p">],</span>
-        <span class="n">minmax</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;min&quot;</span><span class="p">,</span> <span class="s2">&quot;max&quot;</span><span class="p">],</span>
-        <span class="n">initial_image</span><span class="p">:</span> <span class="n">Tensor</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">metric_tradeoff_lambda</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">range_penalty_lambda</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.1</span><span class="p">,</span>
-        <span class="n">allowed_range</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+        <span class="n">initial_image</span><span class="p">:</span> <span class="n">Tensor</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">optimizer</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">Optimizer</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">optimizer_kwargs</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">scheduler</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">lr_scheduler</span><span class="o">.</span><span class="n">LRScheduler</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">scheduler_kwargs</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">):</span>
-        <span class="k">if</span> <span class="n">initial_image</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">initial_image</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">rand_like</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
-            <span class="n">image</span><span class="p">,</span>
-            <span class="n">optimized_metric</span><span class="p">,</span>
-            <span class="n">reference_metric</span><span class="p">,</span>
-            <span class="n">minmax</span><span class="p">,</span>
-            <span class="n">initial_image</span><span class="p">,</span>
-            <span class="n">metric_tradeoff_lambda</span><span class="p">,</span>
-            <span class="n">range_penalty_lambda</span><span class="p">,</span>
-            <span class="n">allowed_range</span><span class="p">,</span>
-        <span class="p">)</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">_initialize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">initial_image</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">):</span>
         <span class="n">mad_image</span> <span class="o">=</span> <span class="n">initial_image</span><span class="o">.</span><span class="n">clamp</span><span class="p">(</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">allowed_range</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_initial_image</span> <span class="o">=</span> <span class="n">mad_image</span><span class="o">.</span><span class="n">clone</span><span class="p">()</span>
         <span class="n">mad_image</span><span class="o">.</span><span class="n">requires_grad_</span><span class="p">()</span>
@@ -183,23 +164,31 @@ you wish to modify and over-writes some of its existing methods.</p>
         <span class="bp">self</span><span class="o">.</span><span class="n">_optimized_metric_loss</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">optimized_metric</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">mad_image</span><span class="p">)</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
         <span class="p">)</span>
+        <span class="c1"># initialize the optimizer</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_initialize_optimizer</span><span class="p">(</span><span class="n">optimizer</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">mad_image</span><span class="p">,</span> <span class="n">optimizer_kwargs</span><span class="p">)</span>
+        <span class="c1"># and scheduler</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_initialize_scheduler</span><span class="p">(</span><span class="n">scheduler</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span><span class="p">,</span> <span class="n">scheduler_kwargs</span><span class="p">)</span>
+        <span class="c1"># reset _loaded, if everything ran successfully</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_loaded</span> <span class="o">=</span> <span class="kc">False</span>
 </pre></div>
 </div>
 </div>
-<p>We can then interact with this new object in the same way as the original <code class="docutils literal notranslate"><span class="pre">MADCompetition</span></code> object, the only difference being how it’s initialized:</p>
+<p>We can then interact with this new object in the same way as the original <code class="docutils literal notranslate"><span class="pre">MADCompetition</span></code> object, the only difference being how <code class="docutils literal notranslate"><span class="pre">setup()</span></code> is called:</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">image</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">einstein</span><span class="p">()</span>
 <span class="n">curie</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">curie</span><span class="p">()</span>
 
 <span class="n">new_mad</span> <span class="o">=</span> <span class="n">MADCompetitionVariant</span><span class="p">(</span>
-    <span class="n">image</span><span class="p">,</span> <span class="n">po</span><span class="o">.</span><span class="n">metric</span><span class="o">.</span><span class="n">mse</span><span class="p">,</span> <span class="k">lambda</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">po</span><span class="o">.</span><span class="n">metric</span><span class="o">.</span><span class="n">ssim</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">),</span> <span class="s2">&quot;min&quot;</span><span class="p">,</span> <span class="n">curie</span>
+    <span class="n">image</span><span class="p">,</span> <span class="n">po</span><span class="o">.</span><span class="n">metric</span><span class="o">.</span><span class="n">mse</span><span class="p">,</span> <span class="k">lambda</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">po</span><span class="o">.</span><span class="n">metric</span><span class="o">.</span><span class="n">ssim</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">),</span> <span class="s2">&quot;min&quot;</span>
 <span class="p">)</span>
+<span class="n">new_mad</span><span class="o">.</span><span class="n">setup</span><span class="p">(</span><span class="n">curie</span><span class="p">)</span>
 <span class="n">old_mad</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">synth</span><span class="o">.</span><span class="n">MADCompetition</span><span class="p">(</span>
-    <span class="n">image</span><span class="p">,</span> <span class="n">po</span><span class="o">.</span><span class="n">metric</span><span class="o">.</span><span class="n">mse</span><span class="p">,</span> <span class="k">lambda</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">po</span><span class="o">.</span><span class="n">metric</span><span class="o">.</span><span class="n">ssim</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">),</span> <span class="s2">&quot;min&quot;</span><span class="p">,</span> <span class="mf">0.1</span>
+    <span class="n">image</span><span class="p">,</span> <span class="n">po</span><span class="o">.</span><span class="n">metric</span><span class="o">.</span><span class="n">mse</span><span class="p">,</span> <span class="k">lambda</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">po</span><span class="o">.</span><span class="n">metric</span><span class="o">.</span><span class="n">ssim</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">),</span> <span class="s2">&quot;min&quot;</span>
 <span class="p">)</span>
+<span class="n">old_mad</span><span class="o">.</span><span class="n">setup</span><span class="p">(</span><span class="mf">0.1</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -208,21 +197,17 @@ you wish to modify and over-writes some of its existing methods.</p>
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-/home/billbrod/Documents/plenoptic/plenoptic/tools/data.py:126: UserWarning: Creating a tensor from a list of numpy.ndarrays is extremely slow. Please consider converting the list to a single numpy.ndarray with numpy.array() before converting to a tensor. (Triggered internally at ../torch/csrc/utils/tensor_new.cpp:230.)
-  images = torch.tensor(images, dtype=torch.float32)
-/home/billbrod/miniconda3/envs/plenoptic/lib/python3.9/site-packages/torch/functional.py:504: UserWarning: torch.meshgrid: in an upcoming release, it will be required to pass the indexing argument. (Triggered internally at ../aten/src/ATen/native/TensorShape.cpp:3190.)
+/home/billbrod/miniforge3/envs/plenoptic/lib/python3.11/site-packages/torch/functional.py:539: UserWarning: torch.meshgrid: in an upcoming release, it will be required to pass the indexing argument. (Triggered internally at /pytorch/aten/src/ATen/native/TensorShape.cpp:3637.)
   return _VF.meshgrid(tensors, **kwargs)  # type: ignore[attr-defined]
-/home/billbrod/Documents/plenoptic/plenoptic/synthesize/mad_competition.py:130: UserWarning: To copy construct from a tensor, it is recommended to use sourceTensor.clone().detach() or sourceTensor.clone().detach().requires_grad_(True), rather than torch.tensor(sourceTensor).
-  loss_ratio = torch.tensor(self.optimized_metric_loss[-1] / self.reference_metric_loss[-1],
-/home/billbrod/Documents/plenoptic/plenoptic/synthesize/mad_competition.py:134: UserWarning: Since metric_tradeoff_lamda was None, automatically set to 0.10000000149011612 to roughly balance metrics.
-  warnings.warn(&#34;Since metric_tradeoff_lamda was None, automatically set&#34;
-/home/billbrod/Documents/plenoptic/plenoptic/synthesize/mad_competition.py:134: UserWarning: Since metric_tradeoff_lamda was None, automatically set to 0.009999999776482582 to roughly balance metrics.
-  warnings.warn(&#34;Since metric_tradeoff_lamda was None, automatically set&#34;
+/home/billbrod/Documents/plenoptic-org/plenoptic/src/plenoptic/synthesize/mad_competition.py:151: UserWarning: Since metric_tradeoff_lamda was None, automatically set to 0.10000000149011612 to roughly balance metrics.
+  warnings.warn(
+/home/billbrod/Documents/plenoptic-org/plenoptic/src/plenoptic/synthesize/mad_competition.py:151: UserWarning: Since metric_tradeoff_lamda was None, automatically set to 0.10000000149011612 to roughly balance metrics.
+  warnings.warn(
 </pre></div></div>
 </div>
 <p>We can see below that the two versions have the same <code class="docutils literal notranslate"><span class="pre">image</span></code> whose representation they’re trying to match, but very different initial images.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">po</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span>
@@ -233,7 +218,7 @@ you wish to modify and over-writes some of its existing methods.</p>
         <span class="n">new_mad</span><span class="o">.</span><span class="n">initial_image</span><span class="p">,</span>
     <span class="p">],</span>
     <span class="n">col_wrap</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
-<span class="p">)</span>
+<span class="p">);</span>
 </pre></div>
 </div>
 </div>
