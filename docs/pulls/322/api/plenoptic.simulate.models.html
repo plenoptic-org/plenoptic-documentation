@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>plenoptic.simulate.models package &mdash; plenoptic 1.1.1.dev52 documentation</title>
+  <title>plenoptic.simulate.models package &mdash; plenoptic 1.1.1.dev166 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css" />
@@ -16,7 +16,7 @@
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../_static/documentation_options.js?v=de6600cc"></script>
+      <script src="../_static/documentation_options.js?v=d2a9dc66"></script>
       <script src="../_static/doctools.js?v=9bcbadda"></script>
       <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -92,8 +92,6 @@
 <li class="toctree-l4"><a class="reference internal" href="plenoptic.tools.html">plenoptic.tools package</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="plenoptic.html#submodules">Submodules</a></li>
-<li class="toctree-l3"><a class="reference internal" href="plenoptic.html#module-plenoptic.version">plenoptic.version module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="plenoptic.html#module-plenoptic">Module contents</a></li>
 </ul>
 </li>
@@ -1278,8 +1276,17 @@ to be all on-off or off-on.</p></li>
 forward pass. Cached to <cite>self._filt</cite></p></li>
 </ul>
 </dd>
-<dt class="field-even">Attributes<span class="colon">:</span></dt>
-<dd class="field-even"><dl class="simple">
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">plenoptic</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">po</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cs_model</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">simulate</span><span class="o">.</span><span class="n">CenterSurround</span><span class="p">(</span><span class="n">kernel_size</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cs_model</span>
+<span class="go">CenterSurround()</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Attributes<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
 <dt><a class="reference internal" href="#plenoptic.simulate.models.naive.CenterSurround.filt" title="plenoptic.simulate.models.naive.CenterSurround.filt"><code class="xref py py-obj docutils literal notranslate"><span class="pre">filt</span></code></a></dt><dd><p>Creates an on center/off surround, or off center/on surround conv filter</p>
 </dd>
 </dl>
@@ -1325,7 +1332,7 @@ forward pass. Cached to <cite>self._filt</cite></p></li>
 <td><p>Casts all floating point parameters and buffers to <code class="docutils literal notranslate"><span class="pre">float</span></code> datatype.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#plenoptic.simulate.models.naive.CenterSurround.forward" title="plenoptic.simulate.models.naive.CenterSurround.forward"><code class="xref py py-obj docutils literal notranslate"><span class="pre">forward</span></code></a>(x)</p></td>
-<td><p>Define the computation performed at every call.</p></td>
+<td><p>Return a difference of Gaussians (DoG) filter model of the image</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_buffer</span></code>(target)</p></td>
 <td><p>Return the buffer given by <code class="docutils literal notranslate"><span class="pre">target</span></code> if it exists, otherwise throw an error.</p></td>
@@ -1456,16 +1463,31 @@ forward pass. Cached to <cite>self._filt</cite></p></li>
 <dl class="py method">
 <dt class="sig sig-object py" id="plenoptic.simulate.models.naive.CenterSurround.forward">
 <span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/plenoptic/simulate/models/naive.html#CenterSurround.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#plenoptic.simulate.models.naive.CenterSurround.forward" title="Link to this definition"></a></dt>
-<dd><p>Define the computation performed at every call.</p>
-<p>Should be overridden by all subclasses.
-:rtype: <span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tensor</span></code></span></p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Although the recipe for forward pass needs to be defined within
-this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
-instead of this since the former takes care of running the
-registered hooks while the latter silently ignores them.</p>
+<dd><p>Return a difference of Gaussians (DoG) filter model of the image</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>x</strong> (<em>torch.Tensor</em>) – The image to return (4D tensor)</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>img</strong></p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>torch.Tensor</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">plenoptic</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">po</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cs_model</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">simulate</span><span class="o">.</span><span class="n">CenterSurround</span><span class="p">(</span><span class="n">kernel_size</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">img</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">curie</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="n">cs_model</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">po</span><span class="o">.</span><span class="n">imshow</span><span class="p">([</span><span class="n">img</span><span class="p">,</span> <span class="n">y</span><span class="p">],</span> <span class="n">title</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Input image&quot;</span><span class="p">,</span> <span class="s2">&quot;Output&quot;</span><span class="p">])</span> 
+<span class="go">&lt;PyrFigure size...&gt;</span>
+</pre></div>
 </div>
+<p>(<a class="reference download internal" download="" href="../_downloads/f5012130599448f14578c48fc28b2a1c/plenoptic-simulate-models-1.png"><code class="xref download docutils literal notranslate"><span class="pre">png</span></code></a>, <a class="reference download internal" download="" href="../_downloads/de115e9e61ecc7a95b6844fda949e241/plenoptic-simulate-models-1.hires.png"><code class="xref download docutils literal notranslate"><span class="pre">hires.png</span></code></a>, <a class="reference download internal" download="" href="../_downloads/068ad3c62aff77ebf9103454303abde7/plenoptic-simulate-models-1.pdf"><code class="xref download docutils literal notranslate"><span class="pre">pdf</span></code></a>)</p>
+<figure class="align-default">
+<img alt="../_images/plenoptic-simulate-models-1.png" class="plot-directive" src="../_images/plenoptic-simulate-models-1.png" />
+</figure>
 </dd></dl>
 
 </dd></dl>
@@ -1487,8 +1509,17 @@ Kernel elements are normalized and sum to one.</p>
 forward pass. Cached to <cite>self._filt</cite>.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Attributes<span class="colon">:</span></dt>
-<dd class="field-even"><dl class="simple">
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">plenoptic</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">po</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">gaussian_model</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">simulate</span><span class="o">.</span><span class="n">Gaussian</span><span class="p">(</span><span class="n">kernel_size</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">gaussian_model</span>
+<span class="go">Gaussian()</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Attributes<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
 <dt><strong>filt</strong></dt><dd></dd>
 </dl>
 </dd>
@@ -1533,7 +1564,7 @@ forward pass. Cached to <cite>self._filt</cite>.</p></li>
 <td><p>Casts all floating point parameters and buffers to <code class="docutils literal notranslate"><span class="pre">float</span></code> datatype.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#plenoptic.simulate.models.naive.Gaussian.forward" title="plenoptic.simulate.models.naive.Gaussian.forward"><code class="xref py py-obj docutils literal notranslate"><span class="pre">forward</span></code></a>(x, **conv2d_kwargs)</p></td>
-<td><p>Define the computation performed at every call.</p></td>
+<td><p>Return an isotropic gaussian convolutional filter of the image</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_buffer</span></code>(target)</p></td>
 <td><p>Return the buffer given by <code class="docutils literal notranslate"><span class="pre">target</span></code> if it exists, otherwise throw an error.</p></td>
@@ -1663,16 +1694,31 @@ forward pass. Cached to <cite>self._filt</cite>.</p></li>
 <dl class="py method">
 <dt class="sig sig-object py" id="plenoptic.simulate.models.naive.Gaussian.forward">
 <span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">conv2d_kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/plenoptic/simulate/models/naive.html#Gaussian.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#plenoptic.simulate.models.naive.Gaussian.forward" title="Link to this definition"></a></dt>
-<dd><p>Define the computation performed at every call.</p>
-<p>Should be overridden by all subclasses.
-:rtype: <span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tensor</span></code></span></p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Although the recipe for forward pass needs to be defined within
-this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
-instead of this since the former takes care of running the
-registered hooks while the latter silently ignores them.</p>
+<dd><p>Return an isotropic gaussian convolutional filter of the image</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>x</strong> (<em>torch.Tensor</em>) – The image to return (4D tensor)</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>img</strong></p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>torch.Tensor</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">plenoptic</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">po</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">gaussian_model</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">simulate</span><span class="o">.</span><span class="n">Gaussian</span><span class="p">(</span><span class="n">kernel_size</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">img</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">curie</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="n">gaussian_model</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">po</span><span class="o">.</span><span class="n">imshow</span><span class="p">([</span><span class="n">img</span><span class="p">,</span> <span class="n">y</span><span class="p">],</span> <span class="n">title</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Input image&quot;</span><span class="p">,</span> <span class="s2">&quot;Output&quot;</span><span class="p">])</span> 
+<span class="go">&lt;PyrFigure size...&gt;</span>
+</pre></div>
 </div>
+<p>(<a class="reference download internal" download="" href="../_downloads/ecf85ddfd6ead377acdda3038d04f9b5/plenoptic-simulate-models-2.png"><code class="xref download docutils literal notranslate"><span class="pre">png</span></code></a>, <a class="reference download internal" download="" href="../_downloads/c6db7c53c9bb370bb616730a45751ba9/plenoptic-simulate-models-2.hires.png"><code class="xref download docutils literal notranslate"><span class="pre">hires.png</span></code></a>, <a class="reference download internal" download="" href="../_downloads/a996b8208de6d34d1d57de505e096689/plenoptic-simulate-models-2.pdf"><code class="xref download docutils literal notranslate"><span class="pre">pdf</span></code></a>)</p>
+<figure class="align-default">
+<img alt="../_images/plenoptic-simulate-models-2.png" class="plot-directive" src="../_images/plenoptic-simulate-models-2.png" />
+</figure>
 </dd></dl>
 
 </dd></dl>
@@ -1685,6 +1731,13 @@ registered hooks while the latter silently ignores them.</p>
 <p>We use this as a “dummy model” for metrics that we don’t have the
 representation for. We use this as the model and then just change
 the objective function.</p>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">plenoptic</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">po</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">identity_model</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">simulate</span><span class="o">.</span><span class="n">Identity</span><span class="p">(</span><span class="s2">&quot;my_model&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">identity_model</span>
+<span class="go">Identity()</span>
+</pre></div>
+</div>
 <p class="rubric">Methods</p>
 <table class="autosummary longtable docutils align-default">
 <tbody>
@@ -1862,6 +1915,13 @@ the objective function.</p>
 <dd class="field-odd"><p>torch.Tensor</p>
 </dd>
 </dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">plenoptic</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">po</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">identity_model</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">simulate</span><span class="o">.</span><span class="n">Identity</span><span class="p">(</span><span class="s2">&quot;my_model&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">img</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">curie</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="n">identity_model</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
+</pre></div>
+</div>
 </dd></dl>
 
 </dd></dl>
@@ -1881,6 +1941,23 @@ It splits the input greyscale image into low and high frequencies.</p>
 </ul>
 </dd>
 </dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">plenoptic</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">po</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">linear_model</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">simulate</span><span class="o">.</span><span class="n">Linear</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">linear_model</span>
+<span class="go">Linear(</span>
+<span class="go">  (conv): Conv2d(1, 2, kernel_size=(3, 3), stride=(1, 1), bias=False)</span>
+<span class="go">)</span>
+</pre></div>
+</div>
+<p>To specify the kernel size :</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">linear_model</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">simulate</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">kernel_size</span><span class="o">=</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="mi">5</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">linear_model</span>
+<span class="go">Linear(</span>
+<span class="go">  (conv): Conv2d(1, 2, kernel_size=(5, 5), stride=(1, 1), bias=False)</span>
+<span class="go">)</span>
+</pre></div>
+</div>
 <p class="rubric">Methods</p>
 <table class="autosummary longtable docutils align-default">
 <tbody>
@@ -1921,7 +1998,7 @@ It splits the input greyscale image into low and high frequencies.</p>
 <td><p>Casts all floating point parameters and buffers to <code class="docutils literal notranslate"><span class="pre">float</span></code> datatype.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#plenoptic.simulate.models.naive.Linear.forward" title="plenoptic.simulate.models.naive.Linear.forward"><code class="xref py py-obj docutils literal notranslate"><span class="pre">forward</span></code></a>(x)</p></td>
-<td><p>Define the computation performed at every call.</p></td>
+<td><p>Return a linear convolution of the image</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_buffer</span></code>(target)</p></td>
 <td><p>Return the buffer given by <code class="docutils literal notranslate"><span class="pre">target</span></code> if it exists, otherwise throw an error.</p></td>
@@ -2046,16 +2123,32 @@ It splits the input greyscale image into low and high frequencies.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="plenoptic.simulate.models.naive.Linear.forward">
 <span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/plenoptic/simulate/models/naive.html#Linear.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#plenoptic.simulate.models.naive.Linear.forward" title="Link to this definition"></a></dt>
-<dd><p>Define the computation performed at every call.</p>
-<p>Should be overridden by all subclasses.
-:rtype: <span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tensor</span></code></span></p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Although the recipe for forward pass needs to be defined within
-this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
-instead of this since the former takes care of running the
-registered hooks while the latter silently ignores them.</p>
+<dd><p>Return a linear convolution of the image</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>x</strong> (<em>torch.Tensor</em>) – The image to return (4D tensor)</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>img</strong> – a linear convolution of the input image</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>torch.Tensor</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">plenoptic</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">po</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">linear_model</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">simulate</span><span class="o">.</span><span class="n">Linear</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">img</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">curie</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="n">linear_model</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">po</span><span class="o">.</span><span class="n">imshow</span><span class="p">([</span><span class="n">img</span><span class="p">,</span> <span class="n">y</span><span class="p">],</span> <span class="n">title</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Input image&quot;</span><span class="p">,</span> <span class="s2">&quot;Output channel 0&quot;</span><span class="p">,</span>
+<span class="gp">... </span>                           <span class="s2">&quot;Output channel 1&quot;</span><span class="p">])</span> 
+<span class="go">&lt;PyrFigure size...&gt;</span>
+</pre></div>
 </div>
+<p>(<a class="reference download internal" download="" href="../_downloads/e916a888ae2988b22d721ed4a11ae6b6/plenoptic-simulate-models-3.png"><code class="xref download docutils literal notranslate"><span class="pre">png</span></code></a>, <a class="reference download internal" download="" href="../_downloads/f5b4cf0e6bdb0b1f503876a53a179b7e/plenoptic-simulate-models-3.hires.png"><code class="xref download docutils literal notranslate"><span class="pre">hires.png</span></code></a>, <a class="reference download internal" download="" href="../_downloads/07edefe570e4c1aa23d3ff3b73961d12/plenoptic-simulate-models-3.pdf"><code class="xref download docutils literal notranslate"><span class="pre">pdf</span></code></a>)</p>
+<figure class="align-default">
+<img alt="../_images/plenoptic-simulate-models-3.png" class="plot-directive" src="../_images/plenoptic-simulate-models-3.png" />
+</figure>
 </dd></dl>
 
 </dd></dl>

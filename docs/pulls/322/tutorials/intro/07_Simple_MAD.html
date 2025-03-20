@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>MAD Competition Conceptual Introduction &mdash; plenoptic 1.1.1.dev52 documentation</title>
+  <title>MAD Competition Conceptual Introduction &mdash; plenoptic 1.1.1.dev166 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
@@ -17,7 +17,7 @@
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=de6600cc"></script>
+      <script src="../../_static/documentation_options.js?v=d2a9dc66"></script>
       <script src="../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -167,15 +167,14 @@
 <span class="k">for</span> <span class="n">t</span><span class="p">,</span> <span class="p">(</span><span class="n">m1</span><span class="p">,</span> <span class="n">m2</span><span class="p">)</span> <span class="ow">in</span> <span class="n">itertools</span><span class="o">.</span><span class="n">product</span><span class="p">([</span><span class="s2">&quot;min&quot;</span><span class="p">,</span> <span class="s2">&quot;max&quot;</span><span class="p">],</span> <span class="nb">zip</span><span class="p">(</span><span class="n">metrics</span><span class="p">,</span> <span class="n">metrics</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">])):</span>
     <span class="n">name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">m1</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">t</span><span class="si">}</span><span class="s2">&quot;</span>
     <span class="c1"># we set the seed like this to ensure that all four MADCompetition instances have</span>
-    <span class="c1"># the same initial_signal. Try different seed values!</span>
+    <span class="c1"># the same initial_image. Try different seed values!</span>
     <span class="n">po</span><span class="o">.</span><span class="n">tools</span><span class="o">.</span><span class="n">set_seed</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
     <span class="n">all_mad</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">synth</span><span class="o">.</span><span class="n">MADCompetition</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">m1</span><span class="p">,</span> <span class="n">m2</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">metric_tradeoff_lambda</span><span class="o">=</span><span class="mf">1e4</span><span class="p">)</span>
-    <span class="n">optim</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">Adam</span><span class="p">([</span><span class="n">all_mad</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">mad_image</span><span class="p">],</span> <span class="n">lr</span><span class="o">=</span><span class="mf">0.0001</span><span class="p">)</span>
+    <span class="n">all_mad</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">setup</span><span class="p">(</span><span class="n">optimizer_kwargs</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;lr&quot;</span><span class="p">:</span> <span class="mf">0.0001</span><span class="p">})</span>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Synthesizing </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
     <span class="n">all_mad</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">synthesize</span><span class="p">(</span>
         <span class="n">store_progress</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
         <span class="n">max_iter</span><span class="o">=</span><span class="mi">2000</span><span class="p">,</span>
-        <span class="n">optimizer</span><span class="o">=</span><span class="n">optim</span><span class="p">,</span>
         <span class="n">stop_criterion</span><span class="o">=</span><span class="mf">1e-10</span><span class="p">,</span>
     <span class="p">)</span>
 
@@ -462,7 +461,7 @@ towards the reference point in the center). In this case, all four values took t
 <span class="k">for</span> <span class="n">t</span><span class="p">,</span> <span class="p">(</span><span class="n">m1</span><span class="p">,</span> <span class="n">m2</span><span class="p">)</span> <span class="ow">in</span> <span class="n">itertools</span><span class="o">.</span><span class="n">product</span><span class="p">([</span><span class="s2">&quot;min&quot;</span><span class="p">,</span> <span class="s2">&quot;max&quot;</span><span class="p">],</span> <span class="nb">zip</span><span class="p">(</span><span class="n">metrics</span><span class="p">,</span> <span class="n">metrics</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">])):</span>
     <span class="n">name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">m1</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">t</span><span class="si">}</span><span class="s2">&quot;</span>
     <span class="c1"># we set the seed like this to ensure that all four MADCompetition instances have</span>
-    <span class="c1"># the same initial_signal. Try different seed values!</span>
+    <span class="c1"># the same initial_image. Try different seed values!</span>
     <span class="n">po</span><span class="o">.</span><span class="n">tools</span><span class="o">.</span><span class="n">set_seed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
     <span class="n">all_mad</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">synth</span><span class="o">.</span><span class="n">MADCompetition</span><span class="p">(</span>
         <span class="n">img</span><span class="p">,</span>
@@ -470,16 +469,14 @@ towards the reference point in the center). In this case, all four values took t
         <span class="n">m2</span><span class="p">,</span>
         <span class="n">t</span><span class="p">,</span>
         <span class="n">metric_tradeoff_lambda</span><span class="o">=</span><span class="n">tradeoffs</span><span class="p">[</span><span class="n">name</span><span class="p">],</span>
-        <span class="n">initial_noise</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>
         <span class="n">allowed_range</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">),</span>
         <span class="n">range_penalty_lambda</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
     <span class="p">)</span>
-    <span class="n">optim</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">Adam</span><span class="p">([</span><span class="n">all_mad</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">mad_image</span><span class="p">],</span> <span class="n">lr</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+    <span class="n">all_mad</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">setup</span><span class="p">(</span><span class="n">initial_noise</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">optimizer_kwargs</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;lr&quot;</span><span class="p">:</span> <span class="mf">0.1</span><span class="p">})</span>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Synthesizing </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
     <span class="n">all_mad</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">synthesize</span><span class="p">(</span>
         <span class="n">store_progress</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
         <span class="n">max_iter</span><span class="o">=</span><span class="mi">30000</span><span class="p">,</span>
-        <span class="n">optimizer</span><span class="o">=</span><span class="n">optim</span><span class="p">,</span>
         <span class="n">stop_criterion</span><span class="o">=</span><span class="mf">1e-10</span><span class="p">,</span>
     <span class="p">)</span>
 

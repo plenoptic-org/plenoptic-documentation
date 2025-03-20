@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Metamers &mdash; plenoptic 1.1.1.dev52 documentation</title>
+  <title>Metamers &mdash; plenoptic 1.1.1.dev166 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
@@ -17,7 +17,7 @@
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=de6600cc"></script>
+      <script src="../../_static/documentation_options.js?v=d2a9dc66"></script>
       <script src="../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -305,8 +305,8 @@ tensor([[[[0.6907, 0.6915, 0.6930,  ..., 0.6935, 0.6935, 0.6937],
 </div>
 </div>
 <p>The loss is decreasing, but clearly there’s much more to go. So let’s continue.</p>
-<p>You can resume synthesis as long as you pass the same argument to <code class="docutils literal notranslate"><span class="pre">store_progress</span></code> on each run (several other arguments, such as <code class="docutils literal notranslate"><span class="pre">optimizer</span></code> and <code class="docutils literal notranslate"><span class="pre">scheduler</span></code>, must be None on any run except the first).</p>
-<p>Everything that stores the progress of the optimization (<code class="docutils literal notranslate"><span class="pre">loss</span></code>, <code class="docutils literal notranslate"><span class="pre">saved_model_response</span></code>, <code class="docutils literal notranslate"><span class="pre">saved_signal</span></code>) will persist between calls and so potentially get very large.</p>
+<p>You can resume synthesis as long as you pass the same argument to <code class="docutils literal notranslate"><span class="pre">store_progress</span></code> on each run.</p>
+<p>Everything that stores the progress of the optimization (<code class="docutils literal notranslate"><span class="pre">losses</span></code>, <code class="docutils literal notranslate"><span class="pre">saved_metamer</span></code>) will persist between calls and so potentially get very large.</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
 </pre></div>
@@ -10336,27 +10336,26 @@ tensor(True)
 </section>
 <section id="Reproducibility">
 <h2>Reproducibility<a class="headerlink" href="#Reproducibility" title="Link to this heading"></a></h2>
-<p>You can set the seed before you call <code class="docutils literal notranslate"><span class="pre">synthesize()</span></code> for reproducibility by using <code class="docutils literal notranslate"><span class="pre">po.tools.set_seed()</span></code>. This will set both the <code class="docutils literal notranslate"><span class="pre">pytorch</span></code> and <code class="docutils literal notranslate"><span class="pre">numpy</span></code> seeds, but note that we can’t guarantee complete reproducibility: see <a class="reference external" href="https://pytorch.org/docs/stable/notes/randomness.html">pytroch docs</a> for some caveats (we currently do not do the stuff described under CuDNN), as well as <a class="reference external" href="https://github.com/LabForComputationalVision/plenoptic/issues/16">this issue</a> about resuming state after
-saving.</p>
+<p>You can set the seed before you call <code class="docutils literal notranslate"><span class="pre">synthesize()</span></code> for reproducibility by using <code class="docutils literal notranslate"><span class="pre">po.tools.set_seed()</span></code>. This will set both the <code class="docutils literal notranslate"><span class="pre">pytorch</span></code> and <code class="docutils literal notranslate"><span class="pre">numpy</span></code> seeds, but note that we can’t guarantee complete reproducibility: see <a class="reference external" href="https://pytorch.org/docs/stable/notes/randomness.html">pytroch docs</a> for some caveats.</p>
 <p>Also note that pytorch does not guarantee identical results between CPU and GPU, even with the same seed.</p>
 </section>
 <section id="More-Advanced-Options">
 <h2>More Advanced Options<a class="headerlink" href="#More-Advanced-Options" title="Link to this heading"></a></h2>
-<p>The solution found by the end of the <a class="reference internal" href="#Basic-usage"><span class="std std-ref">Basic usage section</span></a> is only one possible metamer. <strong>UNTRUE</strong>: For this model, it was relatively easy to find a decent metamer (as seen by the relatively low loss and representation error), but that’s not always the case. Optimization in a high-dimensional space with non-linear models is inherently challenging and so we can’t guarantee you’ll find a model metamer, but we do provide some tools / extra functionality to help.</p>
+<p>The solution found by the end of the <a class="reference internal" href="#Basic-usage"><span class="std std-ref">Basic usage section</span></a> is only one possible metamer. In general, optimization in a high-dimensional space with non-linear models is inherently challenging and so we can’t guarantee you’ll find a model metamer, but we do provide some tools / extra functionality to help.</p>
 <section id="Initialization">
 <h3>Initialization<a class="headerlink" href="#Initialization" title="Link to this heading"></a></h3>
-<p>By default, the <code class="docutils literal notranslate"><span class="pre">initial_image</span></code> arg when initializing <code class="docutils literal notranslate"><span class="pre">Metamer</span></code> is <code class="docutils literal notranslate"><span class="pre">None</span></code>, in which case we initialize with uniformly-distributed random noise between 0 and 1. If you wish to use some other image for initialization, you can initialize it yourself (it must be the same shape as <code class="docutils literal notranslate"><span class="pre">target_signal</span></code>) and pass it as the <code class="docutils literal notranslate"><span class="pre">initial_image</span></code> arg.</p>
+<p>By default, we initialize the <code class="docutils literal notranslate"><span class="pre">metamer</span></code> attribute with with uniformly-distributed random noise between 0 and 1. If you wish to use some other image for initialization, you can initialize it yourself (it must be the same shape as <code class="docutils literal notranslate"><span class="pre">target_signal</span></code>) and pass to the optional <code class="docutils literal notranslate"><span class="pre">setup()</span></code> method before calling <code class="docutils literal notranslate"><span class="pre">synthesize()</span></code>.</p>
 </section>
 <section id="Optimization-basics">
 <h3>Optimization basics<a class="headerlink" href="#Optimization-basics" title="Link to this heading"></a></h3>
-<p>You can set all the various optimization parameters you’d expect. <code class="docutils literal notranslate"><span class="pre">synthesize()</span></code> has an <code class="docutils literal notranslate"><span class="pre">optimizer</span></code> arg, which accepts a pytorch optimizer. You can therefore initialize your own optimizer after initializing <code class="docutils literal notranslate"><span class="pre">Metamer</span></code> like so</p>
+<p>You can set all the various optimization parameters you’d expect. <code class="docutils literal notranslate"><span class="pre">setup()</span></code> has an <code class="docutils literal notranslate"><span class="pre">optimizer</span></code> arg, which accepts an uninitialized pytorch optimizer, and an <code class="docutils literal notranslate"><span class="pre">optimizer_kwargs</span></code> arg, which accepts a dictionary. You can therefore change the optimizer from the default <code class="docutils literal notranslate"><span class="pre">Adam</span></code> and/or specify any of the arguments you would like:</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">met</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">synth</span><span class="o">.</span><span class="n">Metamer</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">model</span><span class="p">)</span>
-<span class="n">opt</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">Adam</span><span class="p">([</span><span class="n">met</span><span class="o">.</span><span class="n">metamer</span><span class="p">],</span> <span class="n">lr</span><span class="o">=</span><span class="mf">0.001</span><span class="p">,</span> <span class="n">amsgrad</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="n">met</span><span class="o">.</span><span class="n">synthesize</span><span class="p">(</span><span class="n">optimizer</span><span class="o">=</span><span class="n">opt</span><span class="p">)</span>
+<span class="n">met</span><span class="o">.</span><span class="n">setup</span><span class="p">(</span><span class="n">optimizer</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">SGD</span><span class="p">,</span> <span class="n">optimizer_kwargs</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;lr&quot;</span><span class="p">:</span> <span class="mf">0.001</span><span class="p">})</span>
+<span class="n">met</span><span class="o">.</span><span class="n">synthesize</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
@@ -10451,9 +10450,9 @@ we always shift scales after <code class="docutils literal notranslate"><span cl
     <span class="n">img</span><span class="p">,</span>
     <span class="n">ps</span><span class="p">,</span>
     <span class="n">loss_function</span><span class="o">=</span><span class="n">po</span><span class="o">.</span><span class="n">tools</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">l2_norm</span><span class="p">,</span>
-    <span class="n">initial_image</span><span class="o">=</span><span class="n">im_init</span><span class="p">,</span>
     <span class="n">coarse_to_fine</span><span class="o">=</span><span class="s2">&quot;together&quot;</span><span class="p">,</span>
 <span class="p">)</span>
+<span class="n">met</span><span class="o">.</span><span class="n">setup</span><span class="p">(</span><span class="n">im_init</span><span class="p">)</span>
 <span class="n">met</span><span class="o">.</span><span class="n">synthesize</span><span class="p">(</span>
     <span class="n">store_progress</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
     <span class="n">max_iter</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span>
