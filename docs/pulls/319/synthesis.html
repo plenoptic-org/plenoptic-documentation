@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Synthesis object design &mdash; plenoptic 1.1.1.dev62 documentation</title>
+  <title>Synthesis object design &mdash; plenoptic 1.1.1.dev160 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="_static/plot_directive.css" />
@@ -16,7 +16,7 @@
   
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="_static/documentation_options.js?v=73367000"></script>
+      <script src="_static/documentation_options.js?v=bd58c8b2"></script>
       <script src="_static/doctools.js?v=9bcbadda"></script>
       <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="_static/clipboard.min.js?v=a7894cd8"></script>
@@ -196,6 +196,11 @@ write-only or differentiate between the public and private views. For example,
 of the reference metric in a list, <code class="docutils literal notranslate"><span class="pre">_reference_metric_loss</span></code>, but the
 <code class="docutils literal notranslate"><span class="pre">reference_metric_loss</span></code> attribute converts this list to a tensor before
 returning it, as that’s how the user will most often want to interact with it.</p></li>
+<li><p>All attributes should be initialized at object initialization, though they can
+be “False-y” (e.g., an empty list, <code class="docutils literal notranslate"><span class="pre">None</span></code>). At least one attribute should be
+<code class="docutils literal notranslate"><span class="pre">None</span></code> or an empty list at initialization, which we use when loading to
+check if the object has just been initialized. All attributes will be saved
+using the <code class="docutils literal notranslate"><span class="pre">save()</span></code> method, inherited from the <code class="docutils literal notranslate"><span class="pre">Synthesis</span></code> superclass.</p></li>
 </ul>
 <p>The above are the only requirements that all synthesis methods must meet.</p>
 </section>

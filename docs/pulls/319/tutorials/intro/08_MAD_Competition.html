@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>MAD Competition Usage &mdash; plenoptic 1.1.1.dev62 documentation</title>
+  <title>MAD Competition Usage &mdash; plenoptic 1.1.1.dev160 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
@@ -17,7 +17,7 @@
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=73367000"></script>
+      <script src="../../_static/documentation_options.js?v=bd58c8b2"></script>
       <script src="../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -197,7 +197,7 @@ means completely different and 1 means identical), but <code class="docutils lit
 <p>To intitialize the method, we only need to specify the target image, the two metrics, and the target. To start, we will hold MSE constant, while minimizing SSIM.</p>
 <p>Note that, as described in the first block, we synthesize these images by optimizing a tradeoff between the loss of these two metrics, weighted by the <code class="docutils literal notranslate"><span class="pre">metric_tradeoff_lambda</span></code>. If that argument is unset, we default to something we think is reasonable, but in practice, we often need to experiment and find the appropriate value, trying out different values until the fixed metric stays constant while the synthesis metric decreases or increases as desired.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mad</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">synth</span><span class="o">.</span><span class="n">MADCompetition</span><span class="p">(</span>
@@ -205,19 +205,32 @@ means completely different and 1 means identical), but <code class="docutils lit
     <span class="n">optimized_metric</span><span class="o">=</span><span class="n">model1</span><span class="p">,</span>
     <span class="n">reference_metric</span><span class="o">=</span><span class="n">model2</span><span class="p">,</span>
     <span class="n">minmax</span><span class="o">=</span><span class="s2">&quot;min&quot;</span><span class="p">,</span>
-    <span class="n">initial_noise</span><span class="o">=</span><span class="mf">0.04</span><span class="p">,</span>
     <span class="n">metric_tradeoff_lambda</span><span class="o">=</span><span class="mi">10000</span><span class="p">,</span>
 <span class="p">)</span>
+<span class="c1"># optionally, set a different initial noise value:</span>
+<span class="n">mad</span><span class="o">.</span><span class="n">setup</span><span class="p">(</span><span class="mf">0.04</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
-<div class="output_area stderr docutils container">
+<div class="output_area docutils container">
 <div class="highlight"><pre>
-/home/billbrod/miniconda3/envs/plenoptic/lib/python3.9/site-packages/torch/functional.py:504: UserWarning: torch.meshgrid: in an upcoming release, it will be required to pass the indexing argument. (Triggered internally at ../aten/src/ATen/native/TensorShape.cpp:3190.)
-  return _VF.meshgrid(tensors, **kwargs)  # type: ignore[attr-defined]
+<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
+<span class="ansi-red-fg">NameError</span>                                 Traceback (most recent call last)
+Cell <span class="ansi-green-fg">In[1], line 1</span>
+<span class="ansi-green-fg">----&gt; 1</span> mad <span style="color: rgb(98,98,98)">=</span> <span class="ansi-yellow-bg">po</span><span style="color: rgb(98,98,98)">.</span>synth<span style="color: rgb(98,98,98)">.</span>MADCompetition(
+<span class="ansi-green-intense-fg ansi-bold">      2</span>     img,
+<span class="ansi-green-intense-fg ansi-bold">      3</span>     optimized_metric<span style="color: rgb(98,98,98)">=</span>model1,
+<span class="ansi-green-intense-fg ansi-bold">      4</span>     reference_metric<span style="color: rgb(98,98,98)">=</span>model2,
+<span class="ansi-green-intense-fg ansi-bold">      5</span>     minmax<span style="color: rgb(98,98,98)">=</span><span style="color: rgb(175,0,0)">&#34;</span><span style="color: rgb(175,0,0)">min</span><span style="color: rgb(175,0,0)">&#34;</span>,
+<span class="ansi-green-intense-fg ansi-bold">      6</span>     metric_tradeoff_lambda<span style="color: rgb(98,98,98)">=</span><span style="color: rgb(98,98,98)">10000</span>,
+<span class="ansi-green-intense-fg ansi-bold">      7</span> )
+<span class="ansi-green-intense-fg ansi-bold">      8</span> <span style="color: rgb(95,135,135)"># optionally, set a different initial noise value:</span>
+<span class="ansi-green-intense-fg ansi-bold">      9</span> mad<span style="color: rgb(98,98,98)">.</span>setup(<span style="color: rgb(98,98,98)">.04</span>)
+
+<span class="ansi-red-fg">NameError</span>: name &#39;po&#39; is not defined
 </pre></div></div>
 </div>
 <p>At the most basic, all we need to do is call <code class="docutils literal notranslate"><span class="pre">mad.synthesize()</span></code>. Let’s do that and then view the outcome. There are several additional arguments to <code class="docutils literal notranslate"><span class="pre">synthesize()</span></code> but none are required.</p>
@@ -260,9 +273,9 @@ means completely different and 1 means identical), but <code class="docutils lit
     <span class="n">optimized_metric</span><span class="o">=</span><span class="n">model1</span><span class="p">,</span>
     <span class="n">reference_metric</span><span class="o">=</span><span class="n">model2</span><span class="p">,</span>
     <span class="n">minmax</span><span class="o">=</span><span class="s2">&quot;max&quot;</span><span class="p">,</span>
-    <span class="n">initial_noise</span><span class="o">=</span><span class="mf">0.04</span><span class="p">,</span>
     <span class="n">metric_tradeoff_lambda</span><span class="o">=</span><span class="mf">1e6</span><span class="p">,</span>
 <span class="p">)</span>
+<span class="n">mad_ssim_max</span><span class="o">.</span><span class="n">setup</span><span class="p">(</span><span class="mf">0.04</span><span class="p">)</span>
 <span class="k">with</span> <span class="n">warnings</span><span class="o">.</span><span class="n">catch_warnings</span><span class="p">():</span>
     <span class="c1"># we suppress the warning telling us that our image falls outside of the</span>
     <span class="c1"># (0, 1) range, which will happen briefly during synthesis.</span>
@@ -288,7 +301,7 @@ means completely different and 1 means identical), but <code class="docutils lit
 </div>
 </div>
 <p>We’re making progress, but it doesn’t look like <code class="docutils literal notranslate"><span class="pre">SSIM</span></code> has quite saturated. Let’s see if we can make more progress!</p>
-<p>To continue synthesis, we can simply call <code class="docutils literal notranslate"><span class="pre">mad.synthesize()</span></code> again (<code class="docutils literal notranslate"><span class="pre">optimizer</span></code> and <code class="docutils literal notranslate"><span class="pre">scheduler</span></code> will both need to be <code class="docutils literal notranslate"><span class="pre">None</span></code>, the default, so we reuse the ones from the initial call), and we then pick up right where we left off.</p>
+<p>To continue synthesis, we can simply call <code class="docutils literal notranslate"><span class="pre">mad.synthesize()</span></code> again, and we then pick up right where we left off.</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
 </pre></div>
@@ -327,9 +340,9 @@ means completely different and 1 means identical), but <code class="docutils lit
     <span class="n">optimized_metric</span><span class="o">=</span><span class="n">model2</span><span class="p">,</span>
     <span class="n">reference_metric</span><span class="o">=</span><span class="n">model1</span><span class="p">,</span>
     <span class="n">minmax</span><span class="o">=</span><span class="s2">&quot;min&quot;</span><span class="p">,</span>
-    <span class="n">initial_noise</span><span class="o">=</span><span class="mf">0.04</span><span class="p">,</span>
     <span class="n">metric_tradeoff_lambda</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
 <span class="p">)</span>
+<span class="n">mad_mse_min</span><span class="o">.</span><span class="n">setup</span><span class="p">(</span><span class="mf">0.04</span><span class="p">)</span>
 <span class="k">with</span> <span class="n">warnings</span><span class="o">.</span><span class="n">catch_warnings</span><span class="p">():</span>
     <span class="c1"># we suppress the warning telling us that our image falls outside of the (0, 1)</span>
     <span class="c1"># range, which will happen briefly during synthesis.</span>
@@ -365,9 +378,9 @@ means completely different and 1 means identical), but <code class="docutils lit
     <span class="n">optimized_metric</span><span class="o">=</span><span class="n">model2</span><span class="p">,</span>
     <span class="n">reference_metric</span><span class="o">=</span><span class="n">model1</span><span class="p">,</span>
     <span class="n">minmax</span><span class="o">=</span><span class="s2">&quot;max&quot;</span><span class="p">,</span>
-    <span class="n">initial_noise</span><span class="o">=</span><span class="mf">0.04</span><span class="p">,</span>
     <span class="n">metric_tradeoff_lambda</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
 <span class="p">)</span>
+<span class="n">mad_mse_max</span><span class="o">.</span><span class="n">setup</span><span class="p">(</span><span class="mf">0.04</span><span class="p">)</span>
 <span class="k">with</span> <span class="n">warnings</span><span class="o">.</span><span class="n">catch_warnings</span><span class="p">():</span>
     <span class="c1"># we suppress the warning telling us that our image falls outside of the (0, 1)</span>
     <span class="c1"># range, which will happen briefly during synthesis.</span>

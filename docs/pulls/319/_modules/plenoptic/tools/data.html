@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>plenoptic.tools.data &mdash; plenoptic 1.1.1.dev62 documentation</title>
+  <title>plenoptic.tools.data &mdash; plenoptic 1.1.1.dev160 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/plot_directive.css" />
@@ -15,7 +15,7 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=73367000"></script>
+      <script src="../../../_static/documentation_options.js?v=bd58c8b2"></script>
       <script src="../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -227,8 +227,7 @@
             <span class="n">im</span> <span class="o">=</span> <span class="n">imageio</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
             <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;Unable to load in file </span><span class="si">{</span><span class="n">p</span><span class="si">}</span><span class="s2">, it&#39;s probably not &quot;</span>
-                <span class="s2">&quot;an image, skipping...&quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;Unable to load in file </span><span class="si">{</span><span class="n">p</span><span class="si">}</span><span class="s2">, it&#39;s probably not an image, skipping...&quot;</span>
             <span class="p">)</span>
             <span class="k">continue</span>
         <span class="c1"># make it a float32 array with values between 0 and 1</span>
@@ -259,7 +258,7 @@
     <span class="k">if</span> <span class="n">as_gray</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">images</span><span class="o">.</span><span class="n">ndimension</span><span class="p">()</span> <span class="o">!=</span> <span class="mi">3</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="s2">&quot;For loading in images as grayscale, this should be a 3d&quot;</span> <span class="s2">&quot; tensor!&quot;</span>
+                <span class="s2">&quot;For loading in images as grayscale, this should be a 3d tensor!&quot;</span>
             <span class="p">)</span>
         <span class="n">images</span> <span class="o">=</span> <span class="n">images</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
@@ -271,7 +270,7 @@
             <span class="n">images</span> <span class="o">=</span> <span class="n">images</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">paths</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="k">else</span> <span class="n">images</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">images</span><span class="o">.</span><span class="n">ndimension</span><span class="p">()</span> <span class="o">!=</span> <span class="mi">4</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-            <span class="s2">&quot;Somehow ended up with other than 4 dimensions! Not sure how we&quot;</span> <span class="s2">&quot; got here&quot;</span>
+            <span class="s2">&quot;Somehow ended up with other than 4 dimensions! Not sure how we got here&quot;</span>
         <span class="p">)</span>
     <span class="k">return</span> <span class="n">images</span></div>
 
@@ -577,6 +576,68 @@
     <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
         <span class="n">min_int</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">flat_vals</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
     <span class="k">return</span> <span class="n">min_int</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_check_tensor_equality</span><span class="p">(</span>
+    <span class="n">x</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span>
+    <span class="n">y</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span>
+    <span class="n">xname</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;x&quot;</span><span class="p">,</span>
+    <span class="n">yname</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;y&quot;</span><span class="p">,</span>
+    <span class="n">rtol</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e-5</span><span class="p">,</span>
+    <span class="n">atol</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e-8</span><span class="p">,</span>
+    <span class="n">error_prepend_str</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;Different </span><span class="si">{error_type}</span><span class="s2">&quot;</span><span class="p">,</span>
+    <span class="n">error_append_str</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Check two tensors for equality: device, size, dtype, and values.</span>
+
+<span class="sd">    Raises a ValueError (with informative error messages) if any of the above are not</span>
+<span class="sd">    equal.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    x, y :</span>
+<span class="sd">        The tensors to compare</span>
+<span class="sd">    xname, yname :</span>
+<span class="sd">        Names of the tensors, used in error messages.</span>
+<span class="sd">    rtol, atol :</span>
+<span class="sd">        Relative and absolute tolerance for value comparison, passed to</span>
+<span class="sd">        ``torch.allclose``</span>
+<span class="sd">    error_prepend_str :</span>
+<span class="sd">        String to start error message with, should contain the string-formatting field</span>
+<span class="sd">        &quot;{error_type}&quot;</span>
+<span class="sd">    error_append_str :</span>
+<span class="sd">        String to finish error message with</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">error_str</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">error_prepend_str</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="si">{</span><span class="n">xname</span><span class="si">}</span><span class="s2">: </span><span class="se">{{</span><span class="s2">xvalue</span><span class="se">}}</span><span class="s2">&quot;</span>
+        <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="si">{</span><span class="n">yname</span><span class="si">}</span><span class="s2">: </span><span class="se">{{</span><span class="s2">yvalue</span><span class="se">}}</span><span class="s2">&quot;</span>
+        <span class="sa">f</span><span class="s2">&quot;</span><span class="se">{{</span><span class="s2">difference</span><span class="se">}}</span><span class="s2">&quot;</span>
+        <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">error_append_str</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="p">)</span>
+    <span class="k">if</span> <span class="n">x</span><span class="o">.</span><span class="n">device</span> <span class="o">!=</span> <span class="n">y</span><span class="o">.</span><span class="n">device</span><span class="p">:</span>
+        <span class="n">error_str</span> <span class="o">=</span> <span class="n">error_str</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="n">error_type</span><span class="o">=</span><span class="s2">&quot;device&quot;</span><span class="p">,</span> <span class="n">xvalue</span><span class="o">=</span><span class="n">x</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="n">yvalue</span><span class="o">=</span><span class="n">y</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="n">difference</span><span class="o">=</span><span class="s2">&quot;&quot;</span>
+        <span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">error_str</span><span class="p">)</span>
+    <span class="c1"># they&#39;re allowed to be different shapes if they both have 1 element (e.g., a scalar</span>
+    <span class="c1"># and a 1-element tensor)</span>
+    <span class="k">if</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span> <span class="o">!=</span> <span class="n">y</span><span class="o">.</span><span class="n">shape</span> <span class="ow">and</span> <span class="ow">not</span> <span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">nelement</span><span class="p">()</span> <span class="o">==</span> <span class="n">y</span><span class="o">.</span><span class="n">nelement</span><span class="p">()</span> <span class="o">==</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="n">error_str</span> <span class="o">=</span> <span class="n">error_str</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="n">error_type</span><span class="o">=</span><span class="s2">&quot;shape&quot;</span><span class="p">,</span> <span class="n">xvalue</span><span class="o">=</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">yvalue</span><span class="o">=</span><span class="n">y</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">difference</span><span class="o">=</span><span class="s2">&quot;&quot;</span>
+        <span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">error_str</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">x</span><span class="o">.</span><span class="n">dtype</span> <span class="o">!=</span> <span class="n">y</span><span class="o">.</span><span class="n">dtype</span><span class="p">:</span>
+        <span class="n">error_str</span> <span class="o">=</span> <span class="n">error_str</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="n">error_type</span><span class="o">=</span><span class="s2">&quot;dtype&quot;</span><span class="p">,</span> <span class="n">xvalue</span><span class="o">=</span><span class="n">x</span><span class="o">.</span><span class="n">dtype</span><span class="p">,</span> <span class="n">yvalue</span><span class="o">=</span><span class="n">y</span><span class="o">.</span><span class="n">dtype</span><span class="p">,</span> <span class="n">difference</span><span class="o">=</span><span class="s2">&quot;&quot;</span>
+        <span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">error_str</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="ow">not</span> <span class="n">torch</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">rtol</span><span class="o">=</span><span class="n">rtol</span><span class="p">,</span> <span class="n">atol</span><span class="o">=</span><span class="n">atol</span><span class="p">):</span>
+        <span class="n">error_str</span> <span class="o">=</span> <span class="n">error_str</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="n">error_type</span><span class="o">=</span><span class="s2">&quot;values&quot;</span><span class="p">,</span> <span class="n">xvalue</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">yvalue</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">difference</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Difference: </span><span class="si">{</span><span class="n">x</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">y</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">error_str</span><span class="p">)</span>
 </pre></div>
 
            </div>
