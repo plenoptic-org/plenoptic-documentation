@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Steerable Pyramid &mdash; plenoptic 1.1.1.dev169 documentation</title>
+  <title>Steerable Pyramid &mdash; plenoptic 1.1.1.dev182 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
@@ -17,7 +17,7 @@
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=3ab37fa4"></script>
+      <script src="../../_static/documentation_options.js?v=3f95afba"></script>
       <script src="../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -127,7 +127,6 @@ steerable pyramids and how they are built, see the pyrtools tutorial at: <a clas
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">torch.nn.functional</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">F</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">torchvision.transforms</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">transforms</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">torch</span><span class="w"> </span><span class="kn">import</span> <span class="n">nn</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">tqdm.auto</span><span class="w"> </span><span class="kn">import</span> <span class="n">tqdm</span>
 
@@ -146,7 +145,7 @@ steerable pyramids and how they are built, see the pyrtools tutorial at: <a clas
         <span class="s2">&quot; please install it in your plenoptic environment &quot;</span>
         <span class="s2">&quot;and restart the notebook kernel&quot;</span>
     <span class="p">)</span>
-
+<span class="kn">import</span><span class="w"> </span><span class="nn">torchvision.transforms</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">transforms</span>
 
 <span class="n">dtype</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">float32</span>
 <span class="n">device</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s2">&quot;cuda&quot;</span> <span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">()</span> <span class="k">else</span> <span class="s2">&quot;cpu&quot;</span><span class="p">)</span>
@@ -210,11 +209,19 @@ interested, the first benefit of this implementation is that we have access to a
 </pre></div>
 </div>
 </div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/tutorials_models_03_Steerable_Pyramid_4_0.png" src="../../_images/tutorials_models_03_Steerable_Pyramid_4_0.png" />
+</div>
+</div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../../_images/tutorials_models_03_Steerable_Pyramid_4_0.png" src="../../_images/tutorials_models_03_Steerable_Pyramid_4_0.png" />
+<img alt="../../_images/tutorials_models_03_Steerable_Pyramid_4_1.png" src="../../_images/tutorials_models_03_Steerable_Pyramid_4_1.png" />
 </div>
 </div>
 <p>We can see that this pyramid is representing a 3 scale 4 orientation decomposition: each row represents a single scale, which we can see because each filter is the same size. As the filter increases in size, we describe the scale as getting “coarser”, and its spatial frequency selectivity moves to lower and lower frequencies (conversely, smaller filters are operating at finer scales, with selectivity to higher spatial frequencies). In a given column, all filters have the same orientation: the
@@ -311,17 +318,25 @@ odict_keys([&#39;residual_highpass&#39;, (0, 0), (0, 1), (0, 2), (0, 3), (1, 0),
 </pre></div></div>
 </div>
 <div class="nboutput docutils container">
-<div class="prompt empty docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
 </div>
 <div class="output_area docutils container">
 <img alt="../../_images/tutorials_models_03_Steerable_Pyramid_11_1.png" src="../../_images/tutorials_models_03_Steerable_Pyramid_11_1.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/tutorials_models_03_Steerable_Pyramid_11_2.png" src="../../_images/tutorials_models_03_Steerable_Pyramid_11_2.png" />
 </div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../../_images/tutorials_models_03_Steerable_Pyramid_11_2.png" src="../../_images/tutorials_models_03_Steerable_Pyramid_11_2.png" />
+<img alt="../../_images/tutorials_models_03_Steerable_Pyramid_11_3.png" src="../../_images/tutorials_models_03_Steerable_Pyramid_11_3.png" />
 </div>
 </div>
 <p>The above pyramid was the real pyramid but in many applications we might want the full complex pyramid output ). This can be set using the <code class="docutils literal notranslate"><span class="pre">is_complex</span></code> argument. When this is true, the pyramid uses a complex-valued filter, resulting in a complex-valued output. The real and imaginary components can be understood as the outputs of filters with identical scale and orientation, but different phases: the imaginary component is phase-shifted 90 degrees from the real (we refer to this matched pair of
@@ -354,28 +369,138 @@ filters as a “quadrature pair”). This can be useful if you wish to construct
 </div>
 </div>
 <div class="nboutput docutils container">
-<div class="prompt empty docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+</pre></div>
 </div>
 <div class="output_area docutils container">
 <img alt="../../_images/tutorials_models_03_Steerable_Pyramid_14_0.png" src="../../_images/tutorials_models_03_Steerable_Pyramid_14_0.png" />
 </div>
 </div>
-<div class="nboutput nblast docutils container">
+<div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
 <img alt="../../_images/tutorials_models_03_Steerable_Pyramid_14_1.png" src="../../_images/tutorials_models_03_Steerable_Pyramid_14_1.png" />
 </div>
 </div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/tutorials_models_03_Steerable_Pyramid_14_2.png" src="../../_images/tutorials_models_03_Steerable_Pyramid_14_2.png" />
+</div>
+</div>
 <p>Now that we have seen the basics of using the pyramid, it’s worth noting the following: an important property of the steerable pyramid is that it should respect the generalized parseval theorem (i.e. the energy of the pyramid coefficients should equal the energy of the original image). The <a class="reference external" href="https://github.com/LabForComputationalVision/matlabPyrTools">matlabpyrtools</a> and <a class="reference external" href="https://pyrtools.readthedocs.io/en/latest/">pyrtools</a> versions of the SteerablePyramid DO NOT respect this, so in our
 version, we have provided a fix that normalizes the FFTs such that energy is preserved. This is set using the <code class="docutils literal notranslate"><span class="pre">tight_frame=True</span></code> when instantiating the pyramidhowever, if you require matching the outputs to the matlabPyrTools or PyrTools versions, please note that you will need to set this argument to <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p>
 </section>
+</section>
+<section id="Boundary-handling">
+<h2>Boundary handling<a class="headerlink" href="#Boundary-handling" title="Link to this heading"></a></h2>
+<p>The steerable pyramid included in plenoptic operates in the frequency domain and thus can only use circular boundary-handling. If you would like, you can use <a class="reference external" href="https://pytorch.org/docs/stable/nn.html#padding-layers">PyTorch’s padding layers</a> to build a single plenoptic-compliant module that pads your input:</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">PaddedSteerPyr</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">image_shape</span><span class="p">,</span> <span class="n">padding_pixels</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="mi">3</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pyr</span> <span class="o">=</span> <span class="n">SteerablePyramidFreq</span><span class="p">(</span>
+            <span class="p">[</span><span class="n">s</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">padding_pixels</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">image_shape</span><span class="p">],</span> <span class="n">height</span><span class="o">=</span><span class="n">height</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="n">order</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">padder</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">ZeroPad2d</span><span class="p">(</span><span class="n">padding_pixels</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">scales</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">padded_x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">padder</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">coeffs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pyr</span><span class="p">(</span><span class="n">padded_x</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">coeffs</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ppyr</span> <span class="o">=</span> <span class="n">PaddedSteerPyr</span><span class="p">(</span><span class="n">im_batch</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">:],</span> <span class="n">height</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">ppyr_coeffs</span> <span class="o">=</span> <span class="n">ppyr</span><span class="p">(</span><span class="n">im_batch</span><span class="p">)</span>
+<span class="n">po</span><span class="o">.</span><span class="n">pyrshow</span><span class="p">(</span><span class="n">ppyr_coeffs</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/tutorials_models_03_Steerable_Pyramid_18_0.png" src="../../_images/tutorials_models_03_Steerable_Pyramid_18_0.png" />
+</div>
+</div>
+<p>You can see the boundary effect in the above coefficients, as a faint “frame”. For that reason, you may want to make use of <a class="reference external" href="https://pytorch.org/vision/master/generated/torchvision.transforms.CenterCrop.html">Torchvision’s CenterCrop module</a> to build a similar module that pads your input and crops your output, so that the returned tensors are the same shape as they would be without padding:</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">PaddedCroppedSteerPyr</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">image_shape</span><span class="p">,</span> <span class="n">padding_pixels</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="mi">3</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pyr</span> <span class="o">=</span> <span class="n">SteerablePyramidFreq</span><span class="p">(</span>
+            <span class="p">[</span><span class="n">s</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">padding_pixels</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">image_shape</span><span class="p">],</span> <span class="n">height</span><span class="o">=</span><span class="n">height</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="n">order</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">padder</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">ZeroPad2d</span><span class="p">(</span><span class="n">padding_pixels</span><span class="p">)</span>
+        <span class="c1"># keep track of what the shape would be without padding</span>
+        <span class="n">scale_shapes</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">ceil</span><span class="p">((</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">image_shape</span><span class="p">)</span> <span class="o">-</span> <span class="mf">0.5</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="o">**</span><span class="n">i</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pyr</span><span class="o">.</span><span class="n">num_scales</span><span class="p">)</span>
+        <span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">croppers</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">i</span><span class="p">:</span> <span class="n">torchvision</span><span class="o">.</span><span class="n">transforms</span><span class="o">.</span><span class="n">CenterCrop</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">scale_shapes</span><span class="p">)</span>
+        <span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">croppers</span><span class="p">[</span><span class="s2">&quot;residual_highpass&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">torchvision</span><span class="o">.</span><span class="n">transforms</span><span class="o">.</span><span class="n">CenterCrop</span><span class="p">(</span>
+            <span class="n">image_shape</span>
+        <span class="p">)</span>
+        <span class="n">lowpass_shape</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ceil</span><span class="p">((</span><span class="n">scale_shapes</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="mf">0.5</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">croppers</span><span class="p">[</span><span class="s2">&quot;residual_lowpass&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">torchvision</span><span class="o">.</span><span class="n">transforms</span><span class="o">.</span><span class="n">CenterCrop</span><span class="p">(</span>
+            <span class="n">lowpass_shape</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">scales</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">padded_x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">padder</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">coeffs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pyr</span><span class="p">(</span><span class="n">padded_x</span><span class="p">)</span>
+        <span class="n">to_return</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">coeffs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+                <span class="n">to_return</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">croppers</span><span class="p">[</span><span class="n">k</span><span class="p">](</span><span class="n">v</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">to_return</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">croppers</span><span class="p">[</span><span class="n">k</span><span class="p">[</span><span class="mi">0</span><span class="p">]](</span><span class="n">v</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">to_return</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pcpyr</span> <span class="o">=</span> <span class="n">PaddedCroppedSteerPyr</span><span class="p">(</span><span class="n">im_batch</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">:],</span> <span class="n">height</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">pyr</span> <span class="o">=</span> <span class="n">SteerablePyramidFreq</span><span class="p">(</span><span class="n">im_batch</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">:],</span> <span class="n">height</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="c1"># check that the coefficients are the same shape as when you have no padding</span>
+<span class="n">pcpyr_coeffs</span> <span class="o">=</span> <span class="n">pcpyr</span><span class="p">(</span><span class="n">im_batch</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">pyr</span><span class="p">(</span><span class="n">im_batch</span><span class="p">)</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="k">assert</span> <span class="n">v</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="n">pcpyr_coeffs</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span>
+<span class="n">po</span><span class="o">.</span><span class="n">pyrshow</span><span class="p">(</span><span class="n">pcpyr_coeffs</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/tutorials_models_03_Steerable_Pyramid_21_0.png" src="../../_images/tutorials_models_03_Steerable_Pyramid_21_0.png" />
+</div>
+</div>
 </section>
 <section id="Putting-the-%22Steer%22-in-Steerable-Pyramid">
 <h2>Putting the “Steer” in Steerable Pyramid<a class="headerlink" href="#Putting-the-%22Steer%22-in-Steerable-Pyramid" title="Link to this heading"></a></h2>
 <p>As we have seen, steerable pyramids decompose images into a fixed set of orientation bands (at several spatial scales). However given the responses at this fixed set of orientation bands, the pyramid coefficents for any arbitrary intermediate orientation can be calculated from a linear interpolation of the original bands. This property is known as “steerability.” Below we steer a set of coefficients through a series of angles and visualize how the represeted features rotate.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># note that steering is currently only implemeted for real pyramids, so the `is_complex`</span>
@@ -409,19 +534,19 @@ version, we have provided a fix that normalizes the FFTs such that energy is pre
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-/home/billbrod/micromamba/envs/plenoptic/lib/python3.10/site-packages/pyrtools/tools/display.py:119: UserWarning: Ignoring dpi argument: with PyrFigure, we do not use the dpi argument for saving, use dpi_multiple instead (this is done to prevent aliasing)
+/home/billbrod/miniforge3/envs/plenoptic/lib/python3.11/site-packages/pyrtools/tools/display.py:119: UserWarning: Ignoring dpi argument: with PyrFigure, we do not use the dpi argument for saving, use dpi_multiple instead (this is done to prevent aliasing)
   warnings.warn(&#34;Ignoring dpi argument: with PyrFigure, we do not use the dpi argument&#34;
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
 </pre></div>
 </div>
 <div class="output_area rendered_html docutils container">
 <video width="256" height="320" controls autoplay loop>
   <source type="video/mp4" src="data:video/mp4;base64,AAAAIGZ0eXBNNFYgAAACAE00ViBpc29taXNvMmF2YzEAAAAIZnJlZQABiMdtZGF0AAACrQYF//+p
-3EXpvebZSLeWLNgg2SPu73gyNjQgLSBjb3JlIDE2MyByMzA2MCA1ZGI2YWE2IC0gSC4yNjQvTVBF
-Ry00IEFWQyBjb2RlYyAtIENvcHlsZWZ0IDIwMDMtMjAyMSAtIGh0dHA6Ly93d3cudmlkZW9sYW4u
+3EXpvebZSLeWLNgg2SPu73gyNjQgLSBjb3JlIDE2NCByMzEwOCAzMWUxOWY5IC0gSC4yNjQvTVBF
+Ry00IEFWQyBjb2RlYyAtIENvcHlsZWZ0IDIwMDMtMjAyMyAtIGh0dHA6Ly93d3cudmlkZW9sYW4u
 b3JnL3gyNjQuaHRtbCAtIG9wdGlvbnM6IGNhYmFjPTEgcmVmPTMgZGVibG9jaz0xOjA6MCBhbmFs
 eXNlPTB4MzoweDExMyBtZT1oZXggc3VibWU9NyBwc3k9MSBwc3lfcmQ9MS4wMDowLjAwIG1peGVk
 X3JlZj0xIG1lX3JhbmdlPTE2IGNocm9tYV9tZT0xIHRyZWxsaXM9MSA4eDhkY3Q9MSBjcW09MCBk
@@ -2202,7 +2327,7 @@ AAAGGgAABeAAAAXcAAAF0wAABd0AAAW2AAAFwQAABcQAAAXIAAAFuAAABe8AAAZHAAAGEgAABhIA
 AAYiAAAGHAAABZgAAAX0AAAGCAAABgYAAAYBAAAGBwAABckAAAWcAAAF4QAABdYAAAXGAAAGAAAA
 BeAAAAYpAAAGMgAABgIAAAW8AAAF5wAABdkAAAVtAAAFXgAABFwAAAAUc3RjbwAAAAAAAAABAAAA
 MAAAAGJ1ZHRhAAAAWm1ldGEAAAAAAAAAIWhkbHIAAAAAAAAAAG1kaXJhcHBsAAAAAAAAAAAAAAAA
-LWlsc3QAAAAlqXRvbwAAAB1kYXRhAAAAAQAAAABMYXZmNTkuMTYuMTAw
+LWlsc3QAAAAlqXRvbwAAAB1kYXRhAAAAAQAAAABMYXZmNjAuMTYuMTAw
 ">
   Your browser does not support the video tag.
 </video></div>
@@ -2218,7 +2343,7 @@ been demonstrated that using a V1-like front end attached to a CNN trained on cl
 <p>Most standard model architectures only accept channels with fixed shape, but each scale of the pyramid coefficients has a different shape (because each scale is downsampled by a factor of 2). In order to obtain an output amenable to downstream processing by standard torch nn modules, we have created an argument to the pyramid (<code class="docutils literal notranslate"><span class="pre">downsample=False</span></code>) that does not downsample the frequency masks at each scale and thus maintains output feature maps that all have a fixed size. Once you have done
 this, you can then convert the dictionary into a tensor of size <code class="docutils literal notranslate"><span class="pre">(batch,</span> <span class="pre">channel,</span> <span class="pre">height,</span> <span class="pre">width)</span></code> so that it can easily be passed to a downstream <code class="docutils literal notranslate"><span class="pre">nn.Module</span></code>. The details of how to do this are provided in the the <code class="docutils literal notranslate"><span class="pre">convert_pyr_to_tensor</span></code> function within the SteerablePyramidFreq class. Let’s try this and look at the first image both in the downsampled and not downsampled versions:</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">height</span> <span class="o">=</span> <span class="mi">3</span>
@@ -2256,7 +2381,7 @@ torch.Size([2, 14, 256, 256]) torch.complex64
 <p>We can see that in this complex pyramid with 4 scales and 3 orientations there will be 26 channels: 4 scales x 3 orientations x 2 (for real and imaginary featuremaps) + 2 (for the residual bands). NOTE: you can change what scales/residuals get included in this output tensor again using the <code class="docutils literal notranslate"><span class="pre">scales</span></code> argument to the forward method.</p>
 <p>In order to display the coefficients, we need to convert the tensor coefficients back to a dictionary. We can do this either by directly accessing the dictionary version (through the <code class="docutils literal notranslate"><span class="pre">pyr_coeffs</span></code> attribute in the pyramid object) or by using the internal <code class="docutils literal notranslate"><span class="pre">convert_tensor_to_pyr</span></code> function. We can check that these are equal.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pyr_coeffs_fixed_1</span> <span class="o">=</span> <span class="n">pyr_fixed</span><span class="p">(</span><span class="n">im_batch</span><span class="p">)</span>
@@ -2292,13 +2417,13 @@ True
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-/home/billbrod/Documents/plenoptic/src/plenoptic/simulate/canonical_computations/steerable_pyramid_freq.py:476: UserWarning: Casting complex values to real discards the imaginary part (Triggered internally at ../aten/src/ATen/native/Copy.cpp:299.)
-  band = pyr_tensor[:,i,...].unsqueeze(1).type(torch.float)
+/home/billbrod/Documents/plenoptic/src/plenoptic/simulate/canonical_computations/steerable_pyramid_freq.py:556: UserWarning: Casting complex values to real discards the imaginary part (Triggered internally at ../aten/src/ATen/native/Copy.cpp:308.)
+  band = pyr_tensor[:, i, ...].unsqueeze(1).type(torch.float)
 </pre></div></div>
 </div>
 <p>We can now plot the coefficients for the not downsampled version (<code class="docutils literal notranslate"><span class="pre">pyr_coeffs_complex</span></code> from the last section) and the downsampled version <code class="docutils literal notranslate"><span class="pre">pyr_coeffs_fixed_1</span></code> from above and see how they compare visually.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">po</span><span class="o">.</span><span class="n">pyrshow</span><span class="p">(</span><span class="n">pyr_coeffs_complex</span><span class="p">,</span> <span class="n">zoom</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
@@ -2307,23 +2432,31 @@ True
 </div>
 </div>
 <div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/tutorials_models_03_Steerable_Pyramid_30_0.png" src="../../_images/tutorials_models_03_Steerable_Pyramid_30_0.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../../_images/tutorials_models_03_Steerable_Pyramid_24_0.png" src="../../_images/tutorials_models_03_Steerable_Pyramid_24_0.png" />
+<img alt="../../_images/tutorials_models_03_Steerable_Pyramid_30_1.png" src="../../_images/tutorials_models_03_Steerable_Pyramid_30_1.png" />
 </div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../../_images/tutorials_models_03_Steerable_Pyramid_24_1.png" src="../../_images/tutorials_models_03_Steerable_Pyramid_24_1.png" />
+<img alt="../../_images/tutorials_models_03_Steerable_Pyramid_30_2.png" src="../../_images/tutorials_models_03_Steerable_Pyramid_30_2.png" />
 </div>
 </div>
 <p>We can see that the not downsampled version maintains the same features as the original pyramid, but with fixed feature maps that have spatial dimensions equal to the original image (256x256). However, the pixel magnitudes in the bands are different due to the fact that we are not downsampling in the frequency domain anymore. This can equivalently be thought of as the inverse operation of blurring and downsampling. Therefore the upsampled versions of each scale are not simply zero interpolated
 versions of the downsampled versions and thus the pixel values are non-trivially changed. However, the energy in each band should be preserved between the two pyramids and we can check this by computing the energy in each band for the two pyramids and checking if they are the same.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># the following passes with tight_frame=True or tight_frame=False, either way.</span>
@@ -2413,8 +2546,8 @@ True
 <section id="Model-Training">
 <h2>Model Training<a class="headerlink" href="#Model-Training" title="Link to this heading"></a></h2>
 <p>We are now ready to demonstrate how the steerable pyramid can be used as a fixed frontend for further stages of (learnable) processing!</p>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># First we define/download the dataset</span>
@@ -2428,99 +2561,8 @@ True
 </pre></div>
 </div>
 </div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-Downloading http://fashion-mnist.s3-website.eu-central-1.amazonaws.com/train-images-idx3-ubyte.gz
-Downloading http://fashion-mnist.s3-website.eu-central-1.amazonaws.com/train-images-idx3-ubyte.gz to /home/billbrod/Documents/plenoptic/data/images/FashionMNIST/raw/train-images-idx3-ubyte.gz
-</pre></div></div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area stderr docutils container">
-<div class="highlight"><pre>
-100%|█████████████████████████████████████████████████████████████████| 26421880/26421880 [00:25&lt;00:00, 1021172.29it/s]
-</pre></div></div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-Extracting /home/billbrod/Documents/plenoptic/data/images/FashionMNIST/raw/train-images-idx3-ubyte.gz to /home/billbrod/Documents/plenoptic/data/images/FashionMNIST/raw
-
-Downloading http://fashion-mnist.s3-website.eu-central-1.amazonaws.com/train-labels-idx1-ubyte.gz
-Downloading http://fashion-mnist.s3-website.eu-central-1.amazonaws.com/train-labels-idx1-ubyte.gz to /home/billbrod/Documents/plenoptic/data/images/FashionMNIST/raw/train-labels-idx1-ubyte.gz
-</pre></div></div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area stderr docutils container">
-<div class="highlight"><pre>
-100%|████████████████████████████████████████████████████████████████████████| 29515/29515 [00:00&lt;00:00, 316479.83it/s]
-</pre></div></div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-Extracting /home/billbrod/Documents/plenoptic/data/images/FashionMNIST/raw/train-labels-idx1-ubyte.gz to /home/billbrod/Documents/plenoptic/data/images/FashionMNIST/raw
-
-Downloading http://fashion-mnist.s3-website.eu-central-1.amazonaws.com/t10k-images-idx3-ubyte.gz
-Downloading http://fashion-mnist.s3-website.eu-central-1.amazonaws.com/t10k-images-idx3-ubyte.gz to /home/billbrod/Documents/plenoptic/data/images/FashionMNIST/raw/t10k-images-idx3-ubyte.gz
-</pre></div></div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area stderr docutils container">
-<div class="highlight"><pre>
-100%|███████████████████████████████████████████████████████████████████| 4422102/4422102 [00:01&lt;00:00, 3325433.77it/s]
-</pre></div></div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-Extracting /home/billbrod/Documents/plenoptic/data/images/FashionMNIST/raw/t10k-images-idx3-ubyte.gz to /home/billbrod/Documents/plenoptic/data/images/FashionMNIST/raw
-
-Downloading http://fashion-mnist.s3-website.eu-central-1.amazonaws.com/t10k-labels-idx1-ubyte.gz
-Downloading http://fashion-mnist.s3-website.eu-central-1.amazonaws.com/t10k-labels-idx1-ubyte.gz to /home/billbrod/Documents/plenoptic/data/images/FashionMNIST/raw/t10k-labels-idx1-ubyte.gz
-</pre></div></div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area stderr docutils container">
-<div class="highlight"><pre>
-100%|█████████████████████████████████████████████████████████████████████████| 5148/5148 [00:00&lt;00:00, 6730759.66it/s]
-</pre></div></div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-Extracting /home/billbrod/Documents/plenoptic/data/images/FashionMNIST/raw/t10k-labels-idx1-ubyte.gz to /home/billbrod/Documents/plenoptic/data/images/FashionMNIST/raw
-
-</pre></div></div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area stderr docutils container">
-<div class="highlight"><pre>
-
-</pre></div></div>
-</div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Define a simple model: SteerPyr --&gt; ConvLayer --&gt; Fully Connected</span>
@@ -2586,7 +2628,7 @@ Extracting /home/billbrod/Documents/plenoptic/data/images/FashionMNIST/raw/t10k-
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Training Pyramid Model</span>
@@ -2628,16 +2670,16 @@ Extracting /home/billbrod/Documents/plenoptic/data/images/FashionMNIST/raw/t10k-
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<script type="application/vnd.jupyter.widget-view+json">{"model_id": "870f344345bb446898df3f9e2efa5a57", "version_major": 2, "version_minor": 0}</script></div>
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "3f9368397fe542949de30604caccad37", "version_major": 2, "version_minor": 0}</script></div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<script type="application/vnd.jupyter.widget-view+json">{"model_id": "5bd3a6048ad04fc797ce59fe4b65ca2d", "version_major": 2, "version_minor": 0}</script></div>
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "e309fe2c83c1437dacbe2575ba4c261c", "version_major": 2, "version_minor": 0}</script></div>
 </div>
 <div class="nboutput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
@@ -2649,7 +2691,7 @@ Text(0, 0.5, &#39;Classification Performance&#39;)
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../../_images/tutorials_models_03_Steerable_Pyramid_30_3.png" src="../../_images/tutorials_models_03_Steerable_Pyramid_30_3.png" />
+<img alt="../../_images/tutorials_models_03_Steerable_Pyramid_36_3.png" src="../../_images/tutorials_models_03_Steerable_Pyramid_36_3.png" />
 </div>
 </div>
 <p>The steerable pyramid can be smoothly integrated with standard torch modules and autograd, so the impact of including such a frontend could be probed using the sythesis techniques provided by Plenoptic.</p>

@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>plenoptic.simulate.canonical_computations package &mdash; plenoptic 1.1.1.dev169 documentation</title>
+  <title>plenoptic.simulate.canonical_computations package &mdash; plenoptic 1.1.1.dev182 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css" />
@@ -16,7 +16,7 @@
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../_static/documentation_options.js?v=3ab37fa4"></script>
+      <script src="../_static/documentation_options.js?v=3f95afba"></script>
       <script src="../_static/doctools.js?v=9bcbadda"></script>
       <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -607,11 +607,11 @@ Fourier domain.</p>
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">plenoptic.simulate.canonical_computations.steerable_pyramid_freq.</span></span><span class="sig-name descname"><span class="pre">SteerablePyramidFreq</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">image_shape</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'auto'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">order</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">twidth</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_complex</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">downsample</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tight_frame</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/plenoptic/simulate/canonical_computations/steerable_pyramid_freq.html#SteerablePyramidFreq"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#plenoptic.simulate.canonical_computations.steerable_pyramid_freq.SteerablePyramidFreq" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code></p>
 <p>Steerable frequency pyramid in Torch</p>
-<p>Construct a steerable pyramid on matrix two dimensional signals, in the
-Fourier domain. Boundary-handling is circular. Reconstruction is exact
-(within floating point errors). However, if the image has an odd-shape,
-the reconstruction will not be exact due to boundary-handling issues
-that have not been resolved.</p>
+<p>Construct a steerable pyramid on matrix two dimensional signals, in the Fourier
+domain. Boundary-handling is circular. Reconstruction is exact (within floating
+point errors). However, if the image has an odd-shape, the reconstruction will not
+be exact due to boundary-handling issues that have not been resolved. Similarly,
+a complex pyramid of order=0 has non-exact reconstruction and cannot be tight-frame.</p>
 <p>The squared radial functions tile the Fourier plane with a raised-cosine
 falloff. Angular functions are cos(theta-k*pi/order+1)^(order).</p>
 <p class="rubric">Notes</p>
@@ -625,7 +625,7 @@ For further information see the project <a href="#id4"><span class="problematic"
 size of <cite>image</cite>. If an int, must be non-negative and less than
 log2(min(image_shape[1], image_shape[1]))-2. If height=0, this only returns the
 residuals.</p></li>
-<li><p><strong>order</strong> (<cite>int</cite>.) – The Gaussian derivative order used for the steerable filters, in [1,
+<li><p><strong>order</strong> (<cite>int</cite>.) – The Gaussian derivative order used for the steerable filters, in [0,
 15]. Note that to achieve steerability the minimum number of
 orientation is <cite>order</cite> + 1, and is used here. To get more orientations
 at the same order, use the method <cite>steer_coeffs</cite></p></li>
@@ -913,7 +913,8 @@ output.</p></li>
 <li><p><em>pyr_tensor</em> – shape (batch, channel, height, width). pyramid coefficients
 reshaped into tensor. The first channel will be the residual
 highpass and the last will be the residual lowpass. Each band is
-then a separate channel.</p></li>
+then a separate channel, going from fine to coarse (i.e., starting with all
+of scale 0’s orientations, then scale 1’s, etc.).</p></li>
 <li><p><em>pyr_info</em> – Information required to recreate the dictionary, containing the
 number of channels, if split_complex was used in this function
 call, and the list of pyramid keys for the dictionary</p></li>
@@ -990,7 +991,17 @@ within the list does not matter.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Pyramid coefficients</p>
+<dd class="field-even"><p>Pyramid coefficients. These will be stored in an ordered dictionary with
+keys that are “residual_highpass”, “residual_lowpass”, or tuples of form
+<code class="docutils literal notranslate"><span class="pre">(scale,</span> <span class="pre">orientation)</span></code>, where <code class="docutils literal notranslate"><span class="pre">scale</span></code> runs from 0 to
+<code class="docutils literal notranslate"><span class="pre">self.num_scales-1</span></code> and <code class="docutils literal notranslate"><span class="pre">orientation</span></code> runs from 0 to <code class="docutils literal notranslate"><span class="pre">self.order</span></code>.
+Coefficients have shape <code class="docutils literal notranslate"><span class="pre">(*x.shape[:2],</span> <span class="pre">x.shape[2]</span> <span class="pre">/</span> <span class="pre">2**scale,</span> <span class="pre">x.shape[3]</span> <span class="pre">/</span>
+<span class="pre">2**scale)</span></code>, with the residual_highpass height and width matching that of
+<code class="docutils literal notranslate"><span class="pre">x</span></code>, and residual_lowpass having height and width <code class="docutils literal notranslate"><span class="pre">(x.shape[2]</span> <span class="pre">/</span>
+<span class="pre">2**self.num_scales,</span> <span class="pre">x.shape[3]</span> <span class="pre">/</span> <span class="pre">2**self.num_scales)</span></code>. They are ordered
+from fine to coarse: residual_highpass, (scale 0, orientation 0), (scale 0,
+orientation 1), …, (scale num_scales-1, orientation order-1),
+residual_lowpass.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>representation</p>
