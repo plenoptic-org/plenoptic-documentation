@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>plenoptic.metric package &mdash; plenoptic 1.1.1.dev161 documentation</title>
+  <title>plenoptic.metric package &mdash; plenoptic 1.1.1.dev169 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css" />
@@ -16,7 +16,7 @@
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../_static/documentation_options.js?v=19204cab"></script>
+      <script src="../_static/documentation_options.js?v=3ab37fa4"></script>
       <script src="../_static/doctools.js?v=9bcbadda"></script>
       <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -356,9 +356,9 @@ channel size 1</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>x</strong> (<em>torch.Tensor</em>) – image, (B x C x H x W)</p></li>
-<li><p><strong>y</strong> (<em>torch.Tensor</em>) – image, (B x C x H x W)</p></li>
-<li><p><strong>model</strong> (<em>torch class</em>) – torch model with defined forward and backward operations</p></li>
+<li><p><strong>x</strong> – images with shape (batch, channel, height, width)</p></li>
+<li><p><strong>y</strong> – images with shape (batch, channel, height, width)</p></li>
+<li><p><strong>model</strong> – torch model with defined forward and backward operations</p></li>
 </ul>
 </dd>
 </dl>
@@ -369,6 +369,9 @@ channel size 1</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">simul</span><span class="o">.</span><span class="n">Gaussian</span><span class="p">(</span><span class="mi">30</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">model_metric</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">metric</span><span class="o">.</span><span class="n">model_metric</span><span class="p">(</span><span class="n">einstein_img</span><span class="p">,</span> <span class="n">curie_img</span><span class="p">,</span> <span class="n">model</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">model_metric</span>
+<span class="go">tensor(0.3128, grad_fn=&lt;SqrtBackward0&gt;)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># calculate this model metric manually:</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">torch</span><span class="o">.</span><span class="n">mean</span><span class="p">((</span><span class="n">model</span><span class="p">(</span><span class="n">einstein_img</span><span class="p">)</span> <span class="o">-</span> <span class="n">model</span><span class="p">(</span><span class="n">curie_img</span><span class="p">))</span><span class="o">.</span><span class="n">pow</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span><span class="o">.</span><span class="n">sqrt</span><span class="p">()</span>
 <span class="go">tensor(0.3128, grad_fn=&lt;SqrtBackward0&gt;)</span>
 </pre></div>
 </div>
