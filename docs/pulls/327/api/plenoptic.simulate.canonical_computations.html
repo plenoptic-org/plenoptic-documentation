@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>plenoptic.simulate.canonical_computations package &mdash; plenoptic 1.1.1.dev176 documentation</title>
+  <title>plenoptic.simulate.canonical_computations package &mdash; plenoptic 1.1.1.dev195 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css" />
@@ -16,7 +16,7 @@
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../_static/documentation_options.js?v=b6660c22"></script>
+      <script src="../_static/documentation_options.js?v=90d3ef33"></script>
       <script src="../_static/doctools.js?v=9bcbadda"></script>
       <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -142,19 +142,43 @@
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>kernel_size</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code> | <code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>]</span>) – Filter kernel size. Recommended to be odd so that kernel is properly centered.</p></li>
+<li><p><strong>kernel_size</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code> | <code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>]</span>) – Filter kernel size. Recommended to be odd so that kernel is properly centered.
+If you use same-padding, convolution with an odd-length kernel will also be
+faster, see
+<a class="reference external" href="https://pytorch.org/docs/stable/generated/torch.nn.functional.conv2d.html">https://pytorch.org/docs/stable/generated/torch.nn.functional.conv2d.html</a></p></li>
 <li><p><strong>std</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code> | <code class="xref py py-class docutils literal notranslate"><span class="pre">Tensor</span></code></span>) – Standard deviation of 2D circular Gaussian.</p></li>
 <li><p><strong>out_channels</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – Number of channels with same kernel repeated along channel dim.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>Circular gaussian kernel, normalized by total pixel-sum (_not_ by 2pi*std).
-<cite>filt</cite> has <cite>Size([out_channels=n_channels, in_channels=1, height, width])</cite>.</p>
+<code class="docutils literal notranslate"><span class="pre">filt</span></code> has shape <code class="docutils literal notranslate"><span class="pre">(out_channels=n_channels,</span> <span class="pre">in_channels=1,</span> <span class="pre">height,</span> <span class="pre">width)</span></code></p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>filt</p>
 </dd>
 </dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">plenoptic</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">po</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">plenoptic.simulate</span><span class="w"> </span><span class="kn">import</span> <span class="n">circular_gaussian2d</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">torch.nn.functional</span><span class="w"> </span><span class="kn">import</span> <span class="n">conv2d</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">kernel_size</span> <span class="o">=</span> <span class="mi">32</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">filt_2d</span> <span class="o">=</span> <span class="n">circular_gaussian2d</span><span class="p">(</span><span class="n">kernel_size</span><span class="o">=</span><span class="n">kernel_size</span><span class="p">,</span> <span class="n">std</span><span class="o">=</span><span class="mf">2.</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">einstein_img</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">einstein</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">blurred_einstein</span> <span class="o">=</span> <span class="n">conv2d</span><span class="p">(</span><span class="n">einstein_img</span><span class="p">,</span> <span class="n">filt_2d</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="s2">&quot;same&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">po</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="p">[</span><span class="n">filt_2d</span><span class="p">,</span> <span class="n">einstein_img</span><span class="p">,</span> <span class="n">blurred_einstein</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="n">title</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;2D Gaussian Filter&quot;</span><span class="p">,</span> <span class="s2">&quot;Einstein&quot;</span><span class="p">,</span> <span class="s2">&quot;Blurred Einstein&quot;</span><span class="p">]</span>
+<span class="gp">... </span><span class="p">)</span>  
+<span class="go">&lt;PyrFigure ...&gt;</span>
+</pre></div>
+</div>
+<p>(<a class="reference download internal" download="" href="../_downloads/89770886052c86939dda8465a9492ed7/plenoptic-simulate-canonical_computations-1.png"><code class="xref download docutils literal notranslate"><span class="pre">png</span></code></a>, <a class="reference download internal" download="" href="../_downloads/d25a020b38237e678ed03e4d87b8e117/plenoptic-simulate-canonical_computations-1.hires.png"><code class="xref download docutils literal notranslate"><span class="pre">hires.png</span></code></a>, <a class="reference download internal" download="" href="../_downloads/edc0ab91eb1065bc68840751da0618f7/plenoptic-simulate-canonical_computations-1.pdf"><code class="xref download docutils literal notranslate"><span class="pre">pdf</span></code></a>)</p>
+<figure class="align-default">
+<img alt="../_images/plenoptic-simulate-canonical_computations-1.png" class="plot-directive" src="../_images/plenoptic-simulate-canonical_computations-1.png" />
+</figure>
 </dd></dl>
 
 </section>
@@ -583,11 +607,11 @@ Fourier domain.</p>
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">plenoptic.simulate.canonical_computations.steerable_pyramid_freq.</span></span><span class="sig-name descname"><span class="pre">SteerablePyramidFreq</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">image_shape</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'auto'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">order</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">twidth</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_complex</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">downsample</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tight_frame</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/plenoptic/simulate/canonical_computations/steerable_pyramid_freq.html#SteerablePyramidFreq"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#plenoptic.simulate.canonical_computations.steerable_pyramid_freq.SteerablePyramidFreq" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code></p>
 <p>Steerable frequency pyramid in Torch</p>
-<p>Construct a steerable pyramid on matrix two dimensional signals, in the
-Fourier domain. Boundary-handling is circular. Reconstruction is exact
-(within floating point errors). However, if the image has an odd-shape,
-the reconstruction will not be exact due to boundary-handling issues
-that have not been resolved.</p>
+<p>Construct a steerable pyramid on matrix two dimensional signals, in the Fourier
+domain. Boundary-handling is circular. Reconstruction is exact (within floating
+point errors). However, if the image has an odd-shape, the reconstruction will not
+be exact due to boundary-handling issues that have not been resolved. Similarly,
+a complex pyramid of order=0 has non-exact reconstruction and cannot be tight-frame.</p>
 <p>The squared radial functions tile the Fourier plane with a raised-cosine
 falloff. Angular functions are cos(theta-k*pi/order+1)^(order).</p>
 <p class="rubric">Notes</p>
@@ -601,7 +625,7 @@ For further information see the project <a href="#id4"><span class="problematic"
 size of <cite>image</cite>. If an int, must be non-negative and less than
 log2(min(image_shape[1], image_shape[1]))-2. If height=0, this only returns the
 residuals.</p></li>
-<li><p><strong>order</strong> (<cite>int</cite>.) – The Gaussian derivative order used for the steerable filters, in [1,
+<li><p><strong>order</strong> (<cite>int</cite>.) – The Gaussian derivative order used for the steerable filters, in [0,
 15]. Note that to achieve steerability the minimum number of
 orientation is <cite>order</cite> + 1, and is used here. To get more orientations
 at the same order, use the method <cite>steer_coeffs</cite></p></li>
@@ -889,7 +913,8 @@ output.</p></li>
 <li><p><em>pyr_tensor</em> – shape (batch, channel, height, width). pyramid coefficients
 reshaped into tensor. The first channel will be the residual
 highpass and the last will be the residual lowpass. Each band is
-then a separate channel.</p></li>
+then a separate channel, going from fine to coarse (i.e., starting with all
+of scale 0’s orientations, then scale 1’s, etc.).</p></li>
 <li><p><em>pyr_info</em> – Information required to recreate the dictionary, containing the
 number of channels, if split_complex was used in this function
 call, and the list of pyramid keys for the dictionary</p></li>
@@ -966,7 +991,17 @@ within the list does not matter.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Pyramid coefficients</p>
+<dd class="field-even"><p>Pyramid coefficients. These will be stored in an ordered dictionary with
+keys that are “residual_highpass”, “residual_lowpass”, or tuples of form
+<code class="docutils literal notranslate"><span class="pre">(scale,</span> <span class="pre">orientation)</span></code>, where <code class="docutils literal notranslate"><span class="pre">scale</span></code> runs from 0 to
+<code class="docutils literal notranslate"><span class="pre">self.num_scales-1</span></code> and <code class="docutils literal notranslate"><span class="pre">orientation</span></code> runs from 0 to <code class="docutils literal notranslate"><span class="pre">self.order</span></code>.
+Coefficients have shape <code class="docutils literal notranslate"><span class="pre">(*x.shape[:2],</span> <span class="pre">x.shape[2]</span> <span class="pre">/</span> <span class="pre">2**scale,</span> <span class="pre">x.shape[3]</span> <span class="pre">/</span>
+<span class="pre">2**scale)</span></code>, with the residual_highpass height and width matching that of
+<code class="docutils literal notranslate"><span class="pre">x</span></code>, and residual_lowpass having height and width <code class="docutils literal notranslate"><span class="pre">(x.shape[2]</span> <span class="pre">/</span>
+<span class="pre">2**self.num_scales,</span> <span class="pre">x.shape[3]</span> <span class="pre">/</span> <span class="pre">2**self.num_scales)</span></code>. They are ordered
+from fine to coarse: residual_highpass, (scale 0, orientation 0), (scale 0,
+orientation 1), …, (scale num_scales-1, orientation order-1),
+residual_lowpass.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>representation</p>
