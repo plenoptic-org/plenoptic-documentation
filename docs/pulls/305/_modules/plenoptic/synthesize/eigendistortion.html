@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>plenoptic.synthesize.eigendistortion &mdash; plenoptic 1.1.1.dev128 documentation</title>
+  <title>plenoptic.synthesize.eigendistortion &mdash; plenoptic 1.1.1.dev181 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/plot_directive.css" />
@@ -15,7 +15,7 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=d685bcec"></script>
+      <script src="../../../_static/documentation_options.js?v=086d25d0"></script>
       <script src="../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -248,6 +248,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">image</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="n">validate_input</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">no_batch</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="n">validate_model</span><span class="p">(</span>
             <span class="n">model</span><span class="p">,</span>
@@ -267,12 +268,6 @@
         <span class="c1"># flatten and attach gradient and reshape to image</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_image_flat</span> <span class="o">=</span> <span class="n">image</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">requires_grad_</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_init_representation</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
-
-        <span class="nb">print</span><span class="p">(</span>
-            <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Initializing Eigendistortion -- Input dim:&quot;</span>
-            <span class="sa">f</span><span class="s2">&quot; </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_image_flat</span><span class="o">.</span><span class="n">squeeze</span><span class="p">())</span><span class="si">}</span><span class="s2"> | Output dim:&quot;</span>
-            <span class="sa">f</span><span class="s2">&quot; </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_representation_flat</span><span class="o">.</span><span class="n">squeeze</span><span class="p">())</span><span class="si">}</span><span class="s2">&quot;</span>
-        <span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_jacobian</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_eigendistortions</span> <span class="o">=</span> <span class="kc">None</span>
@@ -348,13 +343,11 @@
             <span class="p">)</span>
 
         <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;exact&quot;</span><span class="p">:</span>  <span class="c1"># compute exact Jacobian</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Computing all eigendistortions&quot;</span><span class="p">)</span>
             <span class="n">eig_vals</span><span class="p">,</span> <span class="n">eig_vecs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_synthesize_exact</span><span class="p">()</span>
             <span class="n">eig_vecs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_vector_to_image</span><span class="p">(</span><span class="n">eig_vecs</span><span class="o">.</span><span class="n">detach</span><span class="p">())</span>
             <span class="n">eig_vecs_ind</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">eig_vecs</span><span class="p">))</span>
 
         <span class="k">elif</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;randomized_svd&quot;</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Estimating top k=</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2"> eigendistortions using randomized SVD&quot;</span><span class="p">)</span>
             <span class="n">lmbda_new</span><span class="p">,</span> <span class="n">v_new</span><span class="p">,</span> <span class="n">error_approx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_synthesize_randomized_svd</span><span class="p">(</span>
                 <span class="n">k</span><span class="o">=</span><span class="n">k</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="n">p</span><span class="p">,</span> <span class="n">q</span><span class="o">=</span><span class="n">q</span>
             <span class="p">)</span>
@@ -363,7 +356,7 @@
             <span class="n">eig_vecs_ind</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">k</span><span class="p">)</span>
 
             <span class="c1"># display the approximate estimation error of the range space</span>
-            <span class="nb">print</span><span class="p">(</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
                 <span class="s2">&quot;Randomized SVD complete! Estimated spectral approximation&quot;</span>
                 <span class="sa">f</span><span class="s2">&quot; error = </span><span class="si">{</span><span class="n">error_approx</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">&quot;</span>
             <span class="p">)</span>
@@ -428,7 +421,7 @@
             <span class="n">J</span> <span class="o">=</span> <span class="n">jacobian</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_representation_flat</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_image_flat</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_jacobian</span> <span class="o">=</span> <span class="n">J</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Jacobian already computed, returning self.jacobian&quot;</span><span class="p">)</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Jacobian already computed, returning self.jacobian&quot;</span><span class="p">)</span>
             <span class="n">J</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">jacobian</span>
 
         <span class="k">return</span> <span class="n">J</span></div>
@@ -735,14 +728,15 @@
 
 <span class="sd">        Examples</span>
 <span class="sd">        --------</span>
+<span class="sd">        &gt;&gt;&gt; import plenoptic as po</span>
+<span class="sd">        &gt;&gt;&gt; img = po.data.einstein()</span>
+<span class="sd">        &gt;&gt;&gt; model = po.simul.Gaussian(30)</span>
+<span class="sd">        &gt;&gt;&gt; po.tools.remove_grad(model)</span>
 <span class="sd">        &gt;&gt;&gt; eig = po.synth.Eigendistortion(img, model)</span>
-<span class="sd">        &gt;&gt;&gt; eig.synthesize(max_iter=10)</span>
+<span class="sd">        &gt;&gt;&gt; eig.synthesize(max_iter=5)</span>
 <span class="sd">        &gt;&gt;&gt; eig.save(&#39;eig.pt&#39;)</span>
 <span class="sd">        &gt;&gt;&gt; eig_copy = po.synth.Eigendistortion(img, model)</span>
 <span class="sd">        &gt;&gt;&gt; eig_copy.load(&#39;eig.pt&#39;)</span>
-
-<span class="sd">        Note that you must create a new instance of the Synthesis object and</span>
-<span class="sd">        *then* load.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">check_attributes</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;_image&quot;</span><span class="p">]</span>

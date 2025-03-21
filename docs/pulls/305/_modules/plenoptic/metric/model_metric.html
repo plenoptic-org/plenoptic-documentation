@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>plenoptic.metric.model_metric &mdash; plenoptic 1.1.1.dev128 documentation</title>
+  <title>plenoptic.metric.model_metric &mdash; plenoptic 1.1.1.dev181 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/plot_directive.css" />
@@ -15,7 +15,7 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=d685bcec"></script>
+      <script src="../../../_static/documentation_options.js?v=086d25d0"></script>
       <script src="../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -120,15 +120,23 @@
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    image: torch.Tensor</span>
-<span class="sd">        image, (B x C x H x W)</span>
-<span class="sd">    model: torch class</span>
+<span class="sd">    x, y:</span>
+<span class="sd">        images with shape (batch, channel, height, width)</span>
+<span class="sd">    model:</span>
 <span class="sd">        torch model with defined forward and backward operations</span>
 
-<span class="sd">    Notes</span>
-<span class="sd">    -----</span>
-
-
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; import plenoptic as po</span>
+<span class="sd">    &gt;&gt;&gt; einstein_img = po.data.einstein()</span>
+<span class="sd">    &gt;&gt;&gt; curie_img = po.data.curie()</span>
+<span class="sd">    &gt;&gt;&gt; model = po.simul.Gaussian(30)</span>
+<span class="sd">    &gt;&gt;&gt; model_metric = po.metric.model_metric(einstein_img, curie_img, model)</span>
+<span class="sd">    &gt;&gt;&gt; model_metric</span>
+<span class="sd">    tensor(0.3128, grad_fn=&lt;SqrtBackward0&gt;)</span>
+<span class="sd">    &gt;&gt;&gt; # calculate this model metric manually:</span>
+<span class="sd">    &gt;&gt;&gt; torch.mean((model(einstein_img) - model(curie_img)).pow(2)).sqrt()</span>
+<span class="sd">    tensor(0.3128, grad_fn=&lt;SqrtBackward0&gt;)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">repx</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>

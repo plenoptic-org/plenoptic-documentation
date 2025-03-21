@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>plenoptic.synthesize.metamer &mdash; plenoptic 1.1.1.dev128 documentation</title>
+  <title>plenoptic.synthesize.metamer &mdash; plenoptic 1.1.1.dev181 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/plot_directive.css" />
@@ -15,7 +15,7 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=d685bcec"></script>
+      <script src="../../../_static/documentation_options.js?v=086d25d0"></script>
       <script src="../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -136,10 +136,9 @@
 <span class="k">class</span><span class="w"> </span><span class="nc">Metamer</span><span class="p">(</span><span class="n">OptimizedSynthesis</span><span class="p">):</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Synthesize metamers for image-computable differentiable models.</span>
 
-<span class="sd">    Following the basic idea in [1]_, this class creates a metamer for a given</span>
-<span class="sd">    model on a given image. We start with ``initial_image`` and iteratively</span>
-<span class="sd">    adjust the pixel values so as to match the representation of the</span>
-<span class="sd">    ``metamer`` and ``image``.</span>
+<span class="sd">    Following the basic idea in [1]_, this class creates a metamer for a given model on</span>
+<span class="sd">    a given image. We iteratively adjust the pixel values so as to match the</span>
+<span class="sd">    representation of the ``metamer`` and ``image``.</span>
 
 <span class="sd">    All ``saved_`` attributes are initialized as empty lists and will be</span>
 <span class="sd">    non-empty if the ``store_progress`` arg to ``synthesize()`` is not</span>
@@ -166,9 +165,6 @@
 <span class="sd">    allowed_range :</span>
 <span class="sd">        Range (inclusive) of allowed pixel values. Any values outside this</span>
 <span class="sd">        range will be penalized.</span>
-<span class="sd">    initial_image :</span>
-<span class="sd">        4d Tensor to initialize our metamer with. If None, will draw a sample</span>
-<span class="sd">        of uniform noise within ``allowed_range``.</span>
 
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
@@ -206,7 +202,6 @@
         <span class="n">loss_function</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">Tensor</span><span class="p">],</span> <span class="n">Tensor</span><span class="p">]</span> <span class="o">=</span> <span class="n">optim</span><span class="o">.</span><span class="n">mse</span><span class="p">,</span>
         <span class="n">range_penalty_lambda</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.1</span><span class="p">,</span>
         <span class="n">allowed_range</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
-        <span class="n">initial_image</span><span class="p">:</span> <span class="n">Tensor</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">range_penalty_lambda</span><span class="p">,</span> <span class="n">allowed_range</span><span class="p">)</span>
         <span class="n">validate_input</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">allowed_range</span><span class="o">=</span><span class="n">allowed_range</span><span class="p">)</span>
@@ -223,59 +218,135 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_scheduler</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_scheduler_step_arg</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">loss_function</span> <span class="o">=</span> <span class="n">loss_function</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_initialize</span><span class="p">(</span><span class="n">initial_image</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_saved_metamer</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_store_progress</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_metamer</span> <span class="o">=</span> <span class="kc">None</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">_initialize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">initial_image</span><span class="p">:</span> <span class="n">Tensor</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize the metamer.</span>
+<div class="viewcode-block" id="Metamer.setup">
+<a class="viewcode-back" href="../../../api/plenoptic.synthesize.html#plenoptic.synthesize.metamer.Metamer.setup">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setup</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">initial_image</span><span class="p">:</span> <span class="n">Tensor</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">optimizer</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">Optimizer</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">optimizer_kwargs</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">scheduler</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">lr_scheduler</span><span class="o">.</span><span class="n">LRScheduler</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">scheduler_kwargs</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize the metamer, optimizer, and scheduler.</span>
 
-<span class="sd">        Set the ``self.metamer`` attribute to be an attribute with the</span>
-<span class="sd">        user-supplied data, making sure it&#39;s the right shape.</span>
+<span class="sd">        Can only be called once. If ``load()`` has been called, ``initial_image`` must</span>
+<span class="sd">        be None.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        initial_image :</span>
-<span class="sd">            The tensor we use to initialize the metamer. If None (the default),</span>
-<span class="sd">            we initialize with uniformly-distributed random noise lying between</span>
-<span class="sd">            0 and 1.</span>
+<span class="sd">            The tensor we use to initialize the metamer. If None, we initialize with</span>
+<span class="sd">            uniformly-distributed random noise lying within ``self.allowed_range``.</span>
+<span class="sd">        optimizer :</span>
+<span class="sd">            The un-initialized optimizer object to use. If None, we use Adam(lr=.01,</span>
+<span class="sd">            amsgrad=True).</span>
+<span class="sd">        optimizer_kwargs :</span>
+<span class="sd">            The keyword arguments to pass to the optimizer on initialization.</span>
+<span class="sd">        scheduler :</span>
+<span class="sd">            The learning rate scheduler to use. If None, we don&#39;t use one.</span>
+<span class="sd">        scheduler_kwargs :</span>
+<span class="sd">            The keyword arguments to pass to the scheduler on initialization.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        ValueError :</span>
+<span class="sd">            If ``initial_image`` is the wrong shape.</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        Set initial image:</span>
+
+<span class="sd">        &gt;&gt;&gt; import plenoptic as po</span>
+<span class="sd">        &gt;&gt;&gt; img = po.data.einstein()</span>
+<span class="sd">        &gt;&gt;&gt; model = po.simul.Gaussian(30)</span>
+<span class="sd">        &gt;&gt;&gt; po.tools.remove_grad(model)</span>
+<span class="sd">        &gt;&gt;&gt; met = po.synth.Metamer(img, model)</span>
+<span class="sd">        &gt;&gt;&gt; met.setup(po.data.curie())</span>
+<span class="sd">        &gt;&gt;&gt; met.synthesize(10)</span>
+
+<span class="sd">        Set optimizer:</span>
+
+<span class="sd">        &gt;&gt;&gt; import plenoptic as po</span>
+<span class="sd">        &gt;&gt;&gt; img = po.data.einstein()</span>
+<span class="sd">        &gt;&gt;&gt; model = po.simul.Gaussian(30)</span>
+<span class="sd">        &gt;&gt;&gt; po.tools.remove_grad(model)</span>
+<span class="sd">        &gt;&gt;&gt; met = po.synth.Metamer(img, model)</span>
+<span class="sd">        &gt;&gt;&gt; met.setup(optimizer=torch.optim.SGD, optimizer_kwargs={&quot;lr&quot;: 0.01})</span>
+<span class="sd">        &gt;&gt;&gt; met.synthesize(10)</span>
+
+<span class="sd">        Use with save/load. Only the optimizer object is necessary, its kwargs and the</span>
+<span class="sd">        initial image are handled by load.</span>
+
+<span class="sd">        &gt;&gt;&gt; import plenoptic as po</span>
+<span class="sd">        &gt;&gt;&gt; img = po.data.einstein()</span>
+<span class="sd">        &gt;&gt;&gt; model = po.simul.Gaussian(30)</span>
+<span class="sd">        &gt;&gt;&gt; po.tools.remove_grad(model)</span>
+<span class="sd">        &gt;&gt;&gt; met = po.synth.Metamer(img, model)</span>
+<span class="sd">        &gt;&gt;&gt; met.setup(po.data.curie(), optimizer=torch.optim.SGD,</span>
+<span class="sd">        ...           optimizer_kwargs={&quot;lr&quot;: 0.01})</span>
+<span class="sd">        &gt;&gt;&gt; met.synthesize(10)</span>
+<span class="sd">        &gt;&gt;&gt; met.save(&quot;test.pt&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; met = po.synth.Metamer(img, model)</span>
+<span class="sd">        &gt;&gt;&gt; met.load(&quot;test.pt&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; met.setup(optimizer=torch.optim.SGD)</span>
+<span class="sd">        &gt;&gt;&gt; met.synthesize(10)</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="n">initial_image</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">metamer</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">rand_like</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="p">)</span>
-            <span class="c1"># rescale metamer to lie within the interval</span>
-            <span class="c1"># self.allowed_range</span>
-            <span class="n">metamer</span> <span class="o">=</span> <span class="n">signal</span><span class="o">.</span><span class="n">rescale</span><span class="p">(</span><span class="n">metamer</span><span class="p">,</span> <span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">allowed_range</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_metamer</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">initial_image</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">metamer</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">rand_like</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="p">)</span>
+                <span class="c1"># rescale metamer to lie within the interval</span>
+                <span class="c1"># self.allowed_range</span>
+                <span class="n">metamer</span> <span class="o">=</span> <span class="n">signal</span><span class="o">.</span><span class="n">rescale</span><span class="p">(</span><span class="n">metamer</span><span class="p">,</span> <span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">allowed_range</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">initial_image</span><span class="o">.</span><span class="n">ndimension</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mi">4</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                        <span class="s2">&quot;initial_image must be torch.Size([n_batch&quot;</span>
+                        <span class="s2">&quot;, n_channels, im_height, im_width]) but got &quot;</span>
+                        <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">initial_image</span><span class="o">.</span><span class="n">size</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span>
+                    <span class="p">)</span>
+                <span class="k">if</span> <span class="n">initial_image</span><span class="o">.</span><span class="n">size</span><span class="p">()</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">size</span><span class="p">():</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;initial_image and image must be same size!&quot;</span><span class="p">)</span>
+                <span class="n">metamer</span> <span class="o">=</span> <span class="n">initial_image</span><span class="o">.</span><span class="n">clone</span><span class="p">()</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span>
+                <span class="n">metamer</span> <span class="o">=</span> <span class="n">metamer</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">dtype</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
             <span class="n">metamer</span><span class="o">.</span><span class="n">requires_grad_</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_metamer</span> <span class="o">=</span> <span class="n">metamer</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">initial_image</span><span class="o">.</span><span class="n">ndimension</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mi">4</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_loaded</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">initial_image</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Cannot set initial_image after calling load()!&quot;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                    <span class="s2">&quot;initial_image must be torch.Size([n_batch&quot;</span>
-                    <span class="s2">&quot;, n_channels, im_height, im_width]) but got &quot;</span>
-                    <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">initial_image</span><span class="o">.</span><span class="n">size</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span>
+                    <span class="s2">&quot;setup() can only be called once and must be called&quot;</span>
+                    <span class="s2">&quot; before synthesize()!&quot;</span>
                 <span class="p">)</span>
-            <span class="k">if</span> <span class="n">initial_image</span><span class="o">.</span><span class="n">size</span><span class="p">()</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">size</span><span class="p">():</span>
-                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;initial_image and image must be same size!&quot;</span><span class="p">)</span>
-            <span class="n">metamer</span> <span class="o">=</span> <span class="n">initial_image</span><span class="o">.</span><span class="n">clone</span><span class="p">()</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span>
-            <span class="n">metamer</span> <span class="o">=</span> <span class="n">metamer</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">dtype</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
-            <span class="n">metamer</span><span class="o">.</span><span class="n">requires_grad_</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_metamer</span> <span class="o">=</span> <span class="n">metamer</span>
+
+        <span class="c1"># initialize the optimizer</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_initialize_optimizer</span><span class="p">(</span><span class="n">optimizer</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">metamer</span><span class="p">,</span> <span class="n">optimizer_kwargs</span><span class="p">)</span>
+        <span class="c1"># and scheduler</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_initialize_scheduler</span><span class="p">(</span><span class="n">scheduler</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span><span class="p">,</span> <span class="n">scheduler_kwargs</span><span class="p">)</span>
+        <span class="c1"># reset _loaded, if everything ran successfully</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_loaded</span> <span class="o">=</span> <span class="kc">False</span></div>
+
 
 <div class="viewcode-block" id="Metamer.synthesize">
 <a class="viewcode-back" href="../../../api/plenoptic.synthesize.html#plenoptic.synthesize.metamer.Metamer.synthesize">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">synthesize</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">max_iter</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span>
-        <span class="n">optimizer</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">Optimizer</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">scheduler</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">lr_scheduler</span><span class="o">.</span><span class="n">LRScheduler</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">store_progress</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
         <span class="n">stop_criterion</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e-4</span><span class="p">,</span>
         <span class="n">stop_iters_to_check</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">50</span><span class="p">,</span>
     <span class="p">):</span>
 <span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Synthesize a metamer.</span>
 
-<span class="sd">        Update the pixels of ``initial_image`` until its representation matches</span>
-<span class="sd">        that of ``image``.</span>
+<span class="sd">        Update the pixels of ``metamer`` until its representation matches that of</span>
+<span class="sd">        ``image``.</span>
 
 <span class="sd">        We run this until either we reach ``max_iter`` or the change over the</span>
 <span class="sd">        past ``stop_iters_to_check`` iterations is less than</span>
@@ -286,13 +357,6 @@
 <span class="sd">        max_iter :</span>
 <span class="sd">            The maximum number of iterations to run before we end synthesis</span>
 <span class="sd">            (unless we hit the stop criterion).</span>
-<span class="sd">        optimizer :</span>
-<span class="sd">            The optimizer to use. If None and this is the first time calling</span>
-<span class="sd">            synthesize, we use Adam(lr=.01, amsgrad=True); if synthesize has</span>
-<span class="sd">            been called before, this must be None and we reuse the previous</span>
-<span class="sd">            optimizer.</span>
-<span class="sd">        scheduler :</span>
-<span class="sd">            The learning rate scheduler to use. If None, we don&#39;t use one.</span>
 <span class="sd">        store_progress :</span>
 <span class="sd">            Whether we should store the metamer image in progress on every</span>
 <span class="sd">            iteration. If False, we don&#39;t save anything. If True, we save every</span>
@@ -306,8 +370,9 @@
 <span class="sd">            loss has stopped decreasing (for ``stop_criterion``).</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="c1"># initialize the optimizer and scheduler</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_initialize_optimizer</span><span class="p">(</span><span class="n">optimizer</span><span class="p">,</span> <span class="n">scheduler</span><span class="p">)</span>
+        <span class="c1"># if setup hasn&#39;t been called manually, call it now.</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_metamer</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_scheduler</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">setup</span><span class="p">()</span>
 
         <span class="c1"># get ready to store progress</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">store_progress</span> <span class="o">=</span> <span class="n">store_progress</span>
@@ -442,22 +507,6 @@
 
 <span class="sd">        &quot;&quot;&quot;</span>  <span class="c1"># noqa: E501</span>
         <span class="k">return</span> <span class="n">loss_convergence</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stop_criterion</span><span class="p">,</span> <span class="n">stop_iters_to_check</span><span class="p">)</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">_initialize_optimizer</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span>
-        <span class="n">optimizer</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">Optimizer</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">scheduler</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">lr_scheduler</span><span class="o">.</span><span class="n">LRScheduler</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize optimizer and scheduler.&quot;&quot;&quot;</span>
-        <span class="c1"># this uses the OptimizedSynthesis setter</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">_initialize_optimizer</span><span class="p">(</span><span class="n">optimizer</span><span class="p">,</span> <span class="s2">&quot;metamer&quot;</span><span class="p">)</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">_initialize_scheduler</span><span class="p">(</span><span class="n">scheduler</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">pg</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span><span class="o">.</span><span class="n">param_groups</span><span class="p">:</span>
-            <span class="c1"># initialize initial_lr if it&#39;s not here. Scheduler should add it if it&#39;s</span>
-            <span class="c1"># not None. This is used by coarse-to-fine optimization so we know how to</span>
-            <span class="c1"># reset across scales.</span>
-            <span class="k">if</span> <span class="s2">&quot;initial_lr&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">pg</span><span class="p">:</span>
-                <span class="n">pg</span><span class="p">[</span><span class="s2">&quot;initial_lr&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pg</span><span class="p">[</span><span class="s2">&quot;lr&quot;</span><span class="p">]</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_store</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Store metamer, if appropriate.</span>
@@ -594,14 +643,15 @@
 
 <span class="sd">        Examples</span>
 <span class="sd">        --------</span>
+<span class="sd">        &gt;&gt;&gt; import plenoptic as po</span>
+<span class="sd">        &gt;&gt;&gt; img = po.data.einstein()</span>
+<span class="sd">        &gt;&gt;&gt; model = po.simul.Gaussian(30)</span>
+<span class="sd">        &gt;&gt;&gt; po.tools.remove_grad(model)</span>
 <span class="sd">        &gt;&gt;&gt; metamer = po.synth.Metamer(img, model)</span>
-<span class="sd">        &gt;&gt;&gt; metamer.synthesize(max_iter=10, store_progress=True)</span>
+<span class="sd">        &gt;&gt;&gt; metamer.synthesize(max_iter=5, store_progress=True)</span>
 <span class="sd">        &gt;&gt;&gt; metamer.save(&#39;metamers.pt&#39;)</span>
 <span class="sd">        &gt;&gt;&gt; metamer_copy = po.synth.Metamer(img, model)</span>
 <span class="sd">        &gt;&gt;&gt; metamer_copy.load(&#39;metamers.pt&#39;)</span>
-
-<span class="sd">        Note that you must create a new instance of the Synthesis object and</span>
-<span class="sd">        *then* load.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_load</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="n">map_location</span><span class="p">,</span> <span class="o">**</span><span class="n">pickle_load_args</span><span class="p">)</span></div>
@@ -634,7 +684,7 @@
         <span class="n">check_io_attrs</span> <span class="o">+=</span> <span class="n">additional_check_io_attributes</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">load</span><span class="p">(</span>
             <span class="n">file_path</span><span class="p">,</span>
-            <span class="s2">&quot;losses&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;_metamer&quot;</span><span class="p">,</span>
             <span class="n">map_location</span><span class="o">=</span><span class="n">map_location</span><span class="p">,</span>
             <span class="n">check_attributes</span><span class="o">=</span><span class="n">check_attributes</span><span class="p">,</span>
             <span class="n">check_io_attributes</span><span class="o">=</span><span class="n">check_io_attrs</span><span class="p">,</span>
@@ -705,9 +755,6 @@
 <span class="sd">    allowed_range :</span>
 <span class="sd">        Range (inclusive) of allowed pixel values. Any values outside this</span>
 <span class="sd">        range will be penalized.</span>
-<span class="sd">    initial_image :</span>
-<span class="sd">        4d Tensor to initialize our metamer with. If None, will draw a sample</span>
-<span class="sd">        of uniform noise within ``allowed_range``.</span>
 <span class="sd">    coarse_to_fine :</span>
 <span class="sd">        - &#39;together&#39;: start with the coarsest scale, then gradually</span>
 <span class="sd">          add each finer scale.</span>
@@ -753,7 +800,6 @@
         <span class="n">loss_function</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">Tensor</span><span class="p">],</span> <span class="n">Tensor</span><span class="p">]</span> <span class="o">=</span> <span class="n">optim</span><span class="o">.</span><span class="n">mse</span><span class="p">,</span>
         <span class="n">range_penalty_lambda</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.1</span><span class="p">,</span>
         <span class="n">allowed_range</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
-        <span class="n">initial_image</span><span class="p">:</span> <span class="n">Tensor</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">coarse_to_fine</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;together&quot;</span><span class="p">,</span> <span class="s2">&quot;separate&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;together&quot;</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
@@ -762,7 +808,6 @@
             <span class="n">loss_function</span><span class="p">,</span>
             <span class="n">range_penalty_lambda</span><span class="p">,</span>
             <span class="n">allowed_range</span><span class="p">,</span>
-            <span class="n">initial_image</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_init_ctf</span><span class="p">(</span><span class="n">coarse_to_fine</span><span class="p">)</span>
 
@@ -790,14 +835,23 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_scales_loss</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_scales_finished</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_coarse_to_fine</span> <span class="o">=</span> <span class="n">coarse_to_fine</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_initial_lr</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_initialize_optimizer</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">optimizer</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">Optimizer</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">synth_attr</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
+        <span class="n">optimizer_kwargs</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">_initialize_optimizer</span><span class="p">(</span><span class="n">optimizer</span><span class="p">,</span> <span class="n">synth_attr</span><span class="p">,</span> <span class="n">optimizer_kwargs</span><span class="p">)</span>
+        <span class="c1"># save the initial learning rate so we can reset it when we change scales</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_initial_lr</span> <span class="o">=</span> <span class="p">[</span><span class="n">pg</span><span class="p">[</span><span class="s2">&quot;lr&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">pg</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span><span class="o">.</span><span class="n">param_groups</span><span class="p">]</span>
 
 <div class="viewcode-block" id="MetamerCTF.synthesize">
 <a class="viewcode-back" href="../../../api/plenoptic.synthesize.html#plenoptic.synthesize.metamer.MetamerCTF.synthesize">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">synthesize</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">max_iter</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span>
-        <span class="n">optimizer</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">Optimizer</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">scheduler</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">lr_scheduler</span><span class="o">.</span><span class="n">LRScheduler</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">store_progress</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
         <span class="n">stop_criterion</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e-4</span><span class="p">,</span>
         <span class="n">stop_iters_to_check</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">50</span><span class="p">,</span>
@@ -806,7 +860,7 @@
     <span class="p">):</span>
 <span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Synthesize a metamer.</span>
 
-<span class="sd">        Update the pixels of ``initial_image`` until its representation matches</span>
+<span class="sd">        Update the pixels of ``metamer`` until its representation matches</span>
 <span class="sd">        that of ``image``.</span>
 
 <span class="sd">        We run this until either we reach ``max_iter`` or the change over the</span>
@@ -818,13 +872,6 @@
 <span class="sd">        max_iter :</span>
 <span class="sd">            The maximum number of iterations to run before we end synthesis</span>
 <span class="sd">            (unless we hit the stop criterion).</span>
-<span class="sd">        optimizer :</span>
-<span class="sd">            The optimizer to use. If None and this is the first time calling</span>
-<span class="sd">            synthesize, we use Adam(lr=.01, amsgrad=True); if synthesize has</span>
-<span class="sd">            been called before, this must be None and we reuse the previous</span>
-<span class="sd">            optimizer.</span>
-<span class="sd">        scheduler :</span>
-<span class="sd">            The learning rate scheduler to use. If None, we don&#39;t use one.</span>
 <span class="sd">        store_progress :</span>
 <span class="sd">            Whether we should store the metamer image in progress on every</span>
 <span class="sd">            iteration. If False, we don&#39;t save anything. If True, we save every</span>
@@ -856,8 +903,9 @@
                 <span class="s2">&quot;change_scale_criterion, or things get weird!&quot;</span>
             <span class="p">)</span>
 
-        <span class="c1"># initialize the optimizer and scheduler</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_initialize_optimizer</span><span class="p">(</span><span class="n">optimizer</span><span class="p">,</span> <span class="n">scheduler</span><span class="p">)</span>
+        <span class="c1"># if setup hasn&#39;t been called manually, call it now.</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_metamer</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_scheduler</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">setup</span><span class="p">()</span>
 
         <span class="c1"># get ready to store progress</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">store_progress</span> <span class="o">=</span> <span class="n">store_progress</span>
@@ -942,8 +990,8 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">_scales_timing</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">scales</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">losses</span><span class="p">))</span>
 
             <span class="c1"># Reset optimizer&#39;s learning rate</span>
-            <span class="k">for</span> <span class="n">pg</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span><span class="o">.</span><span class="n">param_groups</span><span class="p">:</span>
-                <span class="n">pg</span><span class="p">[</span><span class="s2">&quot;lr&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pg</span><span class="p">[</span><span class="s2">&quot;initial_lr&quot;</span><span class="p">]</span>
+            <span class="k">for</span> <span class="n">pg</span><span class="p">,</span> <span class="n">lr</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span><span class="o">.</span><span class="n">param_groups</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_initial_lr</span><span class="p">):</span>
+                <span class="n">pg</span><span class="p">[</span><span class="s2">&quot;lr&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">lr</span>
 
             <span class="c1"># Reset ctf target representation for the next update</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_ctf_target_representation</span> <span class="o">=</span> <span class="kc">None</span>
@@ -1117,14 +1165,14 @@
 
 <span class="sd">        Examples</span>
 <span class="sd">        --------</span>
-<span class="sd">        &gt;&gt;&gt; metamer = po.synth.Metamer(img, model)</span>
-<span class="sd">        &gt;&gt;&gt; metamer.synthesize(max_iter=10, store_progress=True)</span>
+<span class="sd">        &gt;&gt;&gt; import plenoptic as po</span>
+<span class="sd">        &gt;&gt;&gt; img = po.data.einstein()</span>
+<span class="sd">        &gt;&gt;&gt; model = po.simul.PortillaSimoncelli(img.shape[-2:])</span>
+<span class="sd">        &gt;&gt;&gt; metamer = po.synth.MetamerCTF(img, model)</span>
+<span class="sd">        &gt;&gt;&gt; metamer.synthesize(max_iter=5, store_progress=True)</span>
 <span class="sd">        &gt;&gt;&gt; metamer.save(&#39;metamers.pt&#39;)</span>
-<span class="sd">        &gt;&gt;&gt; metamer_copy = po.synth.Metamer(img, model)</span>
+<span class="sd">        &gt;&gt;&gt; metamer_copy = po.synth.MetamerCTF(img, model)</span>
 <span class="sd">        &gt;&gt;&gt; metamer_copy.load(&#39;metamers.pt&#39;)</span>
-
-<span class="sd">        Note that you must create a new instance of the Synthesis object and</span>
-<span class="sd">        *then* load.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">_load</span><span class="p">(</span>
