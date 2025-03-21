@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>plenoptic.synthesize.geodesic &mdash; plenoptic 1.1.1.dev53 documentation</title>
+  <title>plenoptic.synthesize.geodesic &mdash; plenoptic 1.1.1.dev187 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/plot_directive.css" />
@@ -15,7 +15,7 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=7a1e84d5"></script>
+      <script src="../../../_static/documentation_options.js?v=679c3104"></script>
       <script src="../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -158,10 +158,6 @@
 <span class="sd">    n_steps</span>
 <span class="sd">        the number of steps (i.e., transitions) in the trajectory between the</span>
 <span class="sd">        two anchor points.</span>
-<span class="sd">    initial_sequence</span>
-<span class="sd">        initialize the geodesic with pixel linear interpolation</span>
-<span class="sd">        (``&#39;straight&#39;``), or with a brownian bridge between the two anchors</span>
-<span class="sd">        (``&#39;bridge&#39;``).</span>
 <span class="sd">    range_penalty_lambda</span>
 <span class="sd">        strength of the regularizer that enforces the allowed_range. Must be</span>
 <span class="sd">        non-negative.</span>
@@ -224,7 +220,6 @@
         <span class="n">image_b</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span>
         <span class="n">model</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">,</span>
         <span class="n">n_steps</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
-        <span class="n">initial_sequence</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;straight&quot;</span><span class="p">,</span> <span class="s2">&quot;bridge&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;straight&quot;</span><span class="p">,</span>
         <span class="n">range_penalty_lambda</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.1</span><span class="p">,</span>
         <span class="n">allowed_range</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
     <span class="p">):</span>
@@ -243,32 +238,112 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_image_a</span> <span class="o">=</span> <span class="n">image_a</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_image_b</span> <span class="o">=</span> <span class="n">image_b</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">pixelfade</span> <span class="o">=</span> <span class="n">make_straight_line</span><span class="p">(</span><span class="n">image_a</span><span class="p">,</span> <span class="n">image_b</span><span class="p">,</span> <span class="n">n_steps</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_initialize</span><span class="p">(</span><span class="n">initial_sequence</span><span class="p">,</span> <span class="n">image_a</span><span class="p">,</span> <span class="n">image_b</span><span class="p">,</span> <span class="n">n_steps</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_geodesic</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_dev_from_line</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_step_energy</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_step_energy_dims</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_geodesic_representation</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_most_recent_step_energy</span> <span class="o">=</span> <span class="kc">None</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">_initialize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">initial_sequence</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">stop</span><span class="p">,</span> <span class="n">n_steps</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;initialize the geodesic</span>
+<div class="viewcode-block" id="Geodesic.setup">
+<a class="viewcode-back" href="../../../api/plenoptic.synthesize.html#plenoptic.synthesize.geodesic.Geodesic.setup">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setup</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">initial_sequence</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;straight&quot;</span><span class="p">,</span> <span class="s2">&quot;bridge&quot;</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">n_steps</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
+        <span class="n">optimizer</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">Optimizer</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">optimizer_kwargs</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize the geodesic and optimizer.</span>
+
+<span class="sd">        Can only be called once. If ``load()`` has been called, ``initial_sequence``</span>
+<span class="sd">        must be None.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        initial_sequence</span>
 <span class="sd">            initialize the geodesic with pixel linear interpolation</span>
 <span class="sd">            (``&#39;straight&#39;``), or with a brownian bridge between the two anchors</span>
-<span class="sd">            (``&#39;bridge&#39;``).</span>
+<span class="sd">            (``&#39;bridge&#39;``). If None, use ``&#39;straight&#39;``.</span>
+<span class="sd">        n_steps</span>
+<span class="sd">            the number of steps (i.e., transitions) in the trajectory between the</span>
+<span class="sd">            two anchor points.</span>
+<span class="sd">        optimizer :</span>
+<span class="sd">            The un-initialized optimizer object to use. If None, we use Adam(lr=.001,</span>
+<span class="sd">            amsgrad=True).</span>
+<span class="sd">        optimizer_kwargs :</span>
+<span class="sd">            The keyword arguments to pass to the optimizer on initialization.</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        Set initial sequence:</span>
+
+<span class="sd">        &gt;&gt;&gt; import plenoptic as po</span>
+<span class="sd">        &gt;&gt;&gt; img = po.data.einstein()</span>
+<span class="sd">        &gt;&gt;&gt; model = po.simul.Gaussian(30)</span>
+<span class="sd">        &gt;&gt;&gt; po.tools.remove_grad(model)</span>
+<span class="sd">        &gt;&gt;&gt; geod = po.synth.Geodesic(img, img/2, model)</span>
+<span class="sd">        &gt;&gt;&gt; geod.setup(&quot;bridge&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; geod.synthesize(10)</span>
+
+<span class="sd">        Set optimizer:</span>
+
+<span class="sd">        &gt;&gt;&gt; import plenoptic as po</span>
+<span class="sd">        &gt;&gt;&gt; img = po.data.einstein()</span>
+<span class="sd">        &gt;&gt;&gt; model = po.simul.Gaussian(30)</span>
+<span class="sd">        &gt;&gt;&gt; po.tools.remove_grad(model)</span>
+<span class="sd">        &gt;&gt;&gt; geod = po.synth.Geodesic(img, img/2, model)</span>
+<span class="sd">        &gt;&gt;&gt; geod.setup(optimizer=torch.optim.SGD, optimizer_kwargs={&quot;lr&quot;: 0.01})</span>
+<span class="sd">        &gt;&gt;&gt; geod.synthesize(10)</span>
+
+<span class="sd">        Use with save/load. Only the optimizer object is necessary, its kwargs and the</span>
+<span class="sd">        initial sequence are handled by load.</span>
+
+<span class="sd">        &gt;&gt;&gt; import plenoptic as po</span>
+<span class="sd">        &gt;&gt;&gt; img = po.data.einstein()</span>
+<span class="sd">        &gt;&gt;&gt; model = po.simul.Gaussian(30)</span>
+<span class="sd">        &gt;&gt;&gt; po.tools.remove_grad(model)</span>
+<span class="sd">        &gt;&gt;&gt; geod = po.synth.Geodesic(img, img/2, model)</span>
+<span class="sd">        &gt;&gt;&gt; geod.setup(&quot;bridge&quot;, optimizer=torch.optim.SGD,</span>
+<span class="sd">        ...            optimizer_kwargs={&quot;lr&quot;: 0.01})</span>
+<span class="sd">        &gt;&gt;&gt; geod.synthesize(10)</span>
+<span class="sd">        &gt;&gt;&gt; geod.save(&quot;test.pt&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; geod = po.synth.Geodesic(img, img/2, model)</span>
+<span class="sd">        &gt;&gt;&gt; geod.load(&quot;test.pt&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; geod.setup(optimizer=torch.optim.SGD)</span>
+<span class="sd">        &gt;&gt;&gt; geod.synthesize(10)</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="n">initial_sequence</span> <span class="o">==</span> <span class="s2">&quot;bridge&quot;</span><span class="p">:</span>
-            <span class="n">geodesic</span> <span class="o">=</span> <span class="n">sample_brownian_bridge</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">stop</span><span class="p">,</span> <span class="n">n_steps</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="n">initial_sequence</span> <span class="o">==</span> <span class="s2">&quot;straight&quot;</span><span class="p">:</span>
-            <span class="n">geodesic</span> <span class="o">=</span> <span class="n">make_straight_line</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">stop</span><span class="p">,</span> <span class="n">n_steps</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_geodesic</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">initial_sequence</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">initial_sequence</span> <span class="o">=</span> <span class="s2">&quot;straight&quot;</span>
+            <span class="k">if</span> <span class="n">initial_sequence</span> <span class="o">==</span> <span class="s2">&quot;bridge&quot;</span><span class="p">:</span>
+                <span class="n">geodesic</span> <span class="o">=</span> <span class="n">sample_brownian_bridge</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_image_a</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_image_b</span><span class="p">,</span> <span class="n">n_steps</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">initial_sequence</span> <span class="o">==</span> <span class="s2">&quot;straight&quot;</span><span class="p">:</span>
+                <span class="n">geodesic</span> <span class="o">=</span> <span class="n">make_straight_line</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_image_a</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_image_b</span><span class="p">,</span> <span class="n">n_steps</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;Don&#39;t know how to handle initial_sequence=</span><span class="si">{</span><span class="n">initial_sequence</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="p">)</span>
+            <span class="n">_</span><span class="p">,</span> <span class="n">geodesic</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">geodesic</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_steps</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+            <span class="n">geodesic</span><span class="o">.</span><span class="n">requires_grad_</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_geodesic</span> <span class="o">=</span> <span class="n">geodesic</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;Don&#39;t know how to handle initial_sequence=</span><span class="si">{</span><span class="n">initial_sequence</span><span class="si">}</span><span class="s2">&quot;</span>
-            <span class="p">)</span>
-        <span class="n">_</span><span class="p">,</span> <span class="n">geodesic</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">geodesic</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_steps</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_initial_sequence</span> <span class="o">=</span> <span class="n">initial_sequence</span>
-        <span class="n">geodesic</span><span class="o">.</span><span class="n">requires_grad_</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_geodesic</span> <span class="o">=</span> <span class="n">geodesic</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_loaded</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">initial_sequence</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                        <span class="s2">&quot;Cannot set initial_sequence after calling load()!&quot;</span>
+                    <span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="s2">&quot;setup() can only be called once and must be called&quot;</span>
+                    <span class="s2">&quot; before synthesize()!&quot;</span>
+                <span class="p">)</span>
+        <span class="c1"># initialize the optimizer</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_initialize_optimizer</span><span class="p">(</span><span class="n">optimizer</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_geodesic</span><span class="p">,</span> <span class="n">optimizer_kwargs</span><span class="p">,</span> <span class="mf">0.001</span><span class="p">)</span>
+        <span class="c1"># reset _loaded, if everything ran successfully</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_loaded</span> <span class="o">=</span> <span class="kc">False</span></div>
+
 
 <div class="viewcode-block" id="Geodesic.synthesize">
 <a class="viewcode-back" href="../../../api/plenoptic.synthesize.html#plenoptic.synthesize.geodesic.Geodesic.synthesize">[docs]</a>
@@ -314,9 +389,14 @@
             <span class="n">stop_criterion</span> <span class="o">=</span> <span class="p">(</span>
                 <span class="n">torch</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">vector_norm</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pixelfade</span><span class="p">,</span> <span class="nb">ord</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="mf">1e4</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="mi">5</span><span class="o">**</span><span class="mf">0.5</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span>
             <span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2"> Stop criterion for pixel_change_norm = </span><span class="si">{</span><span class="n">stop_criterion</span><span class="si">:</span><span class="s2">.5e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+                <span class="s2">&quot;Since stop_criterion was None, automatically set to &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">stop_criterion</span><span class="si">:</span><span class="s2">.5e</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">_initialize_optimizer</span><span class="p">(</span><span class="n">optimizer</span><span class="p">,</span> <span class="s2">&quot;_geodesic&quot;</span><span class="p">,</span> <span class="mf">0.001</span><span class="p">)</span>
+        <span class="c1"># if setup hasn&#39;t been called manually, call it now.</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_geodesic</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_optimizer</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">setup</span><span class="p">()</span>
 
         <span class="c1"># get ready to store progress</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">store_progress</span> <span class="o">=</span> <span class="n">store_progress</span>
@@ -379,7 +459,13 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">_calculate_step_energy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">z</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;calculate the energy (i.e. squared l2 norm) of each step in `z`.&quot;&quot;&quot;</span>
         <span class="n">velocity</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">z</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-        <span class="n">step_energy</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">vector_norm</span><span class="p">(</span><span class="n">velocity</span><span class="p">,</span> <span class="nb">ord</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span> <span class="o">**</span> <span class="mi">2</span>
+        <span class="c1"># the first time we call calculate_step_energy, we cache this info for later</span>
+        <span class="c1"># use. this allows us to work with representations of 3 or 4 dims</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_step_energy_dims</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_step_energy_dims</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">z</span><span class="o">.</span><span class="n">ndim</span><span class="p">))</span>
+        <span class="n">step_energy</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">torch</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">vector_norm</span><span class="p">(</span><span class="n">velocity</span><span class="p">,</span> <span class="nb">ord</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_step_energy_dims</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span>
+        <span class="p">)</span>
         <span class="k">return</span> <span class="n">step_energy</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_optimizer_step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pbar</span><span class="p">):</span>
@@ -559,11 +645,11 @@
 <span class="sd">            The path to save the Geodesic object to</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="c1"># I don&#39;t think any of our existing attributes can be used to check</span>
-        <span class="c1"># whether model has changed (unlike Metamer, which stores</span>
-        <span class="c1"># target_representation), so we use the following as a proxy</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_save_check</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">objective_function</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pixelfade</span><span class="p">)</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="n">attrs</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></div>
+        <span class="n">save_io_attrs</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="p">(</span><span class="s2">&quot;_model&quot;</span><span class="p">,</span> <span class="p">(</span><span class="s2">&quot;_geodesic&quot;</span><span class="p">,)),</span>
+        <span class="p">]</span>
+        <span class="n">save_state_dict_attrs</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;_optimizer&quot;</span><span class="p">]</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="n">save_io_attrs</span><span class="p">,</span> <span class="n">save_state_dict_attrs</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Geodesic.to">
@@ -624,12 +710,14 @@
     <span class="p">):</span>
 <span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Load all relevant stuff from a .pt file.</span>
 
-<span class="sd">        This should be called by an initialized ``Geodesic`` object -- we will</span>
-<span class="sd">        ensure that ``image_a``, ``image_b``, ``model``, ``n_steps``,</span>
-<span class="sd">        ``initial_sequence``, ``range_penalty_lambda``, ``allowed_range``, and</span>
-<span class="sd">        ``pixelfade`` are all identical.</span>
+<span class="sd">        This must be called by a ``Geodesic`` object initialized just like the saved</span>
+<span class="sd">        object.</span>
 
 <span class="sd">        Note this operates in place and so doesn&#39;t return anything.</span>
+
+<span class="sd">        .. versionchanged:: 1.2</span>
+<span class="sd">           load behavior changed in a backwards-incompatible manner in order to</span>
+<span class="sd">           compatible with breaking changes in torch 2.6.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -647,41 +735,36 @@
 
 <span class="sd">        Examples</span>
 <span class="sd">        --------</span>
+<span class="sd">        &gt;&gt;&gt; import plenoptic as po</span>
+<span class="sd">        &gt;&gt;&gt; img_a = po.data.einstein()</span>
+<span class="sd">        &gt;&gt;&gt; img_b = po.data.curie()</span>
+<span class="sd">        &gt;&gt;&gt; model = po.simul.Gaussian(30)</span>
+<span class="sd">        &gt;&gt;&gt; po.tools.remove_grad(model)</span>
 <span class="sd">        &gt;&gt;&gt; geo = po.synth.Geodesic(img_a, img_b, model)</span>
-<span class="sd">        &gt;&gt;&gt; geo.synthesize(max_iter=10, store_progress=True)</span>
+<span class="sd">        &gt;&gt;&gt; geo.synthesize(max_iter=5, store_progress=True)</span>
 <span class="sd">        &gt;&gt;&gt; geo.save(&#39;geo.pt&#39;)</span>
 <span class="sd">        &gt;&gt;&gt; geo_copy = po.synth.Geodesic(img_a, img_b, model)</span>
 <span class="sd">        &gt;&gt;&gt; geo_copy.load(&#39;geo.pt&#39;)</span>
-
-<span class="sd">        Note that you must create a new instance of the Synthesis object and</span>
-<span class="sd">        *then* load.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">check_attributes</span> <span class="o">=</span> <span class="p">[</span>
             <span class="s2">&quot;_image_a&quot;</span><span class="p">,</span>
             <span class="s2">&quot;_image_b&quot;</span><span class="p">,</span>
             <span class="s2">&quot;n_steps&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;_initial_sequence&quot;</span><span class="p">,</span>
             <span class="s2">&quot;_range_penalty_lambda&quot;</span><span class="p">,</span>
             <span class="s2">&quot;_allowed_range&quot;</span><span class="p">,</span>
             <span class="s2">&quot;pixelfade&quot;</span><span class="p">,</span>
         <span class="p">]</span>
-        <span class="n">check_loss_functions</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="n">new_loss</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">objective_function</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pixelfade</span><span class="p">)</span>
+        <span class="n">check_io_attrs</span> <span class="o">=</span> <span class="p">[(</span><span class="s2">&quot;_model&quot;</span><span class="p">,</span> <span class="p">(</span><span class="s2">&quot;_geodesic&quot;</span><span class="p">,))]</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">load</span><span class="p">(</span>
             <span class="n">file_path</span><span class="p">,</span>
+            <span class="s2">&quot;_geodesic&quot;</span><span class="p">,</span>
             <span class="n">map_location</span><span class="o">=</span><span class="n">map_location</span><span class="p">,</span>
             <span class="n">check_attributes</span><span class="o">=</span><span class="n">check_attributes</span><span class="p">,</span>
-            <span class="n">check_loss_functions</span><span class="o">=</span><span class="n">check_loss_functions</span><span class="p">,</span>
+            <span class="n">check_io_attributes</span><span class="o">=</span><span class="n">check_io_attrs</span><span class="p">,</span>
+            <span class="n">state_dict_attributes</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;_optimizer&quot;</span><span class="p">],</span>
             <span class="o">**</span><span class="n">pickle_load_args</span><span class="p">,</span>
         <span class="p">)</span>
-        <span class="n">old_loss</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;_save_check&quot;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">torch</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">new_loss</span><span class="p">,</span> <span class="n">old_loss</span><span class="p">,</span> <span class="n">rtol</span><span class="o">=</span><span class="mf">1e-2</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="s2">&quot;objective_function on pixelfade of saved and initialized&quot;</span>
-                <span class="s2">&quot; Geodesic object are different! Do they use the same model?&quot;</span>
-                <span class="sa">f</span><span class="s2">&quot; Self: </span><span class="si">{</span><span class="n">new_loss</span><span class="si">}</span><span class="s2">, Saved: </span><span class="si">{</span><span class="n">old_loss</span><span class="si">}</span><span class="s2">&quot;</span>
-            <span class="p">)</span>
         <span class="c1"># make this require a grad again</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_geodesic</span><span class="o">.</span><span class="n">requires_grad_</span><span class="p">()</span>
         <span class="c1"># these are always supposed to be on cpu, but may get copied over to</span>
@@ -709,6 +792,10 @@
     <span class="c1"># combines this with the end points</span>
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">geodesic</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_geodesic</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># in this case, setup() hasn&#39;t been called yet. returning None matches the</span>
+            <span class="c1"># behavior of other synthesis objects</span>
+            <span class="k">return</span> <span class="kc">None</span>
         <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">image_a</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_geodesic</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">image_b</span><span class="p">])</span>
 
     <span class="nd">@property</span>
