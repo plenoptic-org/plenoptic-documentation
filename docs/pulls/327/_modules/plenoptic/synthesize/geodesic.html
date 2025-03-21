@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>plenoptic.synthesize.geodesic &mdash; plenoptic 1.1.1.dev149 documentation</title>
+  <title>plenoptic.synthesize.geodesic &mdash; plenoptic 1.1.1.dev176 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/plot_directive.css" />
@@ -15,7 +15,7 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=f32cdf2c"></script>
+      <script src="../../../_static/documentation_options.js?v=b6660c22"></script>
       <script src="../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -278,6 +278,7 @@
 <span class="sd">        --------</span>
 <span class="sd">        Set initial sequence:</span>
 
+<span class="sd">        &gt;&gt;&gt; import plenoptic as po</span>
 <span class="sd">        &gt;&gt;&gt; img = po.data.einstein()</span>
 <span class="sd">        &gt;&gt;&gt; model = po.simul.Gaussian(30)</span>
 <span class="sd">        &gt;&gt;&gt; po.tools.remove_grad(model)</span>
@@ -287,6 +288,7 @@
 
 <span class="sd">        Set optimizer:</span>
 
+<span class="sd">        &gt;&gt;&gt; import plenoptic as po</span>
 <span class="sd">        &gt;&gt;&gt; img = po.data.einstein()</span>
 <span class="sd">        &gt;&gt;&gt; model = po.simul.Gaussian(30)</span>
 <span class="sd">        &gt;&gt;&gt; po.tools.remove_grad(model)</span>
@@ -297,6 +299,7 @@
 <span class="sd">        Use with save/load. Only the optimizer object is necessary, its kwargs and the</span>
 <span class="sd">        initial sequence are handled by load.</span>
 
+<span class="sd">        &gt;&gt;&gt; import plenoptic as po</span>
 <span class="sd">        &gt;&gt;&gt; img = po.data.einstein()</span>
 <span class="sd">        &gt;&gt;&gt; model = po.simul.Gaussian(30)</span>
 <span class="sd">        &gt;&gt;&gt; po.tools.remove_grad(model)</span>
@@ -386,7 +389,10 @@
             <span class="n">stop_criterion</span> <span class="o">=</span> <span class="p">(</span>
                 <span class="n">torch</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">vector_norm</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pixelfade</span><span class="p">,</span> <span class="nb">ord</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="mf">1e4</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="mi">5</span><span class="o">**</span><span class="mf">0.5</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span>
             <span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2"> Stop criterion for pixel_change_norm = </span><span class="si">{</span><span class="n">stop_criterion</span><span class="si">:</span><span class="s2">.5e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+                <span class="s2">&quot;Since stop_criterion was None, automatically set to &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">stop_criterion</span><span class="si">:</span><span class="s2">.5e</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
 
         <span class="c1"># if setup hasn&#39;t been called manually, call it now.</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_geodesic</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_optimizer</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
@@ -729,14 +735,16 @@
 
 <span class="sd">        Examples</span>
 <span class="sd">        --------</span>
+<span class="sd">        &gt;&gt;&gt; import plenoptic as po</span>
+<span class="sd">        &gt;&gt;&gt; img_a = po.data.einstein()</span>
+<span class="sd">        &gt;&gt;&gt; img_b = po.data.curie()</span>
+<span class="sd">        &gt;&gt;&gt; model = po.simul.Gaussian(30)</span>
+<span class="sd">        &gt;&gt;&gt; po.tools.remove_grad(model)</span>
 <span class="sd">        &gt;&gt;&gt; geo = po.synth.Geodesic(img_a, img_b, model)</span>
-<span class="sd">        &gt;&gt;&gt; geo.synthesize(max_iter=10, store_progress=True)</span>
+<span class="sd">        &gt;&gt;&gt; geo.synthesize(max_iter=5, store_progress=True)</span>
 <span class="sd">        &gt;&gt;&gt; geo.save(&#39;geo.pt&#39;)</span>
 <span class="sd">        &gt;&gt;&gt; geo_copy = po.synth.Geodesic(img_a, img_b, model)</span>
 <span class="sd">        &gt;&gt;&gt; geo_copy.load(&#39;geo.pt&#39;)</span>
-
-<span class="sd">        Note that you must create a new instance of the Synthesis object and</span>
-<span class="sd">        *then* load.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">check_attributes</span> <span class="o">=</span> <span class="p">[</span>

@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>plenoptic.synthesize.metamer &mdash; plenoptic 1.1.1.dev149 documentation</title>
+  <title>plenoptic.synthesize.metamer &mdash; plenoptic 1.1.1.dev176 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/plot_directive.css" />
@@ -15,7 +15,7 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=f32cdf2c"></script>
+      <script src="../../../_static/documentation_options.js?v=b6660c22"></script>
       <script src="../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -261,6 +261,7 @@
 <span class="sd">        --------</span>
 <span class="sd">        Set initial image:</span>
 
+<span class="sd">        &gt;&gt;&gt; import plenoptic as po</span>
 <span class="sd">        &gt;&gt;&gt; img = po.data.einstein()</span>
 <span class="sd">        &gt;&gt;&gt; model = po.simul.Gaussian(30)</span>
 <span class="sd">        &gt;&gt;&gt; po.tools.remove_grad(model)</span>
@@ -270,6 +271,7 @@
 
 <span class="sd">        Set optimizer:</span>
 
+<span class="sd">        &gt;&gt;&gt; import plenoptic as po</span>
 <span class="sd">        &gt;&gt;&gt; img = po.data.einstein()</span>
 <span class="sd">        &gt;&gt;&gt; model = po.simul.Gaussian(30)</span>
 <span class="sd">        &gt;&gt;&gt; po.tools.remove_grad(model)</span>
@@ -280,6 +282,7 @@
 <span class="sd">        Use with save/load. Only the optimizer object is necessary, its kwargs and the</span>
 <span class="sd">        initial image are handled by load.</span>
 
+<span class="sd">        &gt;&gt;&gt; import plenoptic as po</span>
 <span class="sd">        &gt;&gt;&gt; img = po.data.einstein()</span>
 <span class="sd">        &gt;&gt;&gt; model = po.simul.Gaussian(30)</span>
 <span class="sd">        &gt;&gt;&gt; po.tools.remove_grad(model)</span>
@@ -640,14 +643,15 @@
 
 <span class="sd">        Examples</span>
 <span class="sd">        --------</span>
+<span class="sd">        &gt;&gt;&gt; import plenoptic as po</span>
+<span class="sd">        &gt;&gt;&gt; img = po.data.einstein()</span>
+<span class="sd">        &gt;&gt;&gt; model = po.simul.Gaussian(30)</span>
+<span class="sd">        &gt;&gt;&gt; po.tools.remove_grad(model)</span>
 <span class="sd">        &gt;&gt;&gt; metamer = po.synth.Metamer(img, model)</span>
-<span class="sd">        &gt;&gt;&gt; metamer.synthesize(max_iter=10, store_progress=True)</span>
+<span class="sd">        &gt;&gt;&gt; metamer.synthesize(max_iter=5, store_progress=True)</span>
 <span class="sd">        &gt;&gt;&gt; metamer.save(&#39;metamers.pt&#39;)</span>
 <span class="sd">        &gt;&gt;&gt; metamer_copy = po.synth.Metamer(img, model)</span>
 <span class="sd">        &gt;&gt;&gt; metamer_copy.load(&#39;metamers.pt&#39;)</span>
-
-<span class="sd">        Note that you must create a new instance of the Synthesis object and</span>
-<span class="sd">        *then* load.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_load</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="n">map_location</span><span class="p">,</span> <span class="o">**</span><span class="n">pickle_load_args</span><span class="p">)</span></div>
@@ -1161,14 +1165,14 @@
 
 <span class="sd">        Examples</span>
 <span class="sd">        --------</span>
-<span class="sd">        &gt;&gt;&gt; metamer = po.synth.Metamer(img, model)</span>
-<span class="sd">        &gt;&gt;&gt; metamer.synthesize(max_iter=10, store_progress=True)</span>
+<span class="sd">        &gt;&gt;&gt; import plenoptic as po</span>
+<span class="sd">        &gt;&gt;&gt; img = po.data.einstein()</span>
+<span class="sd">        &gt;&gt;&gt; model = po.simul.PortillaSimoncelli(img.shape[-2:])</span>
+<span class="sd">        &gt;&gt;&gt; metamer = po.synth.MetamerCTF(img, model)</span>
+<span class="sd">        &gt;&gt;&gt; metamer.synthesize(max_iter=5, store_progress=True)</span>
 <span class="sd">        &gt;&gt;&gt; metamer.save(&#39;metamers.pt&#39;)</span>
-<span class="sd">        &gt;&gt;&gt; metamer_copy = po.synth.Metamer(img, model)</span>
+<span class="sd">        &gt;&gt;&gt; metamer_copy = po.synth.MetamerCTF(img, model)</span>
 <span class="sd">        &gt;&gt;&gt; metamer_copy.load(&#39;metamers.pt&#39;)</span>
-
-<span class="sd">        Note that you must create a new instance of the Synthesis object and</span>
-<span class="sd">        *then* load.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">_load</span><span class="p">(</span>
