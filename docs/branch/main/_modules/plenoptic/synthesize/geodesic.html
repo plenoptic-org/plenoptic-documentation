@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>plenoptic.synthesize.geodesic &mdash; plenoptic 1.1.1.dev211 documentation</title>
+  <title>plenoptic.synthesize.geodesic &mdash; plenoptic 1.1.1.dev213 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/plot_directive.css" />
@@ -15,7 +15,7 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=6e41a5dd"></script>
+      <script src="../../../_static/documentation_options.js?v=fdc1abae"></script>
       <script src="../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -250,7 +250,6 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">setup</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">initial_sequence</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;straight&quot;</span><span class="p">,</span> <span class="s2">&quot;bridge&quot;</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">n_steps</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
         <span class="n">optimizer</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">Optimizer</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">optimizer_kwargs</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">):</span>
@@ -265,9 +264,6 @@
 <span class="sd">            initialize the geodesic with pixel linear interpolation</span>
 <span class="sd">            (``&#39;straight&#39;``), or with a brownian bridge between the two anchors</span>
 <span class="sd">            (``&#39;bridge&#39;``). If None, use ``&#39;straight&#39;``.</span>
-<span class="sd">        n_steps</span>
-<span class="sd">            the number of steps (i.e., transitions) in the trajectory between the</span>
-<span class="sd">            two anchor points.</span>
 <span class="sd">        optimizer :</span>
 <span class="sd">            The un-initialized optimizer object to use. If None, we use Adam(lr=.001,</span>
 <span class="sd">            amsgrad=True).</span>
@@ -318,14 +314,18 @@
             <span class="k">if</span> <span class="n">initial_sequence</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">initial_sequence</span> <span class="o">=</span> <span class="s2">&quot;straight&quot;</span>
             <span class="k">if</span> <span class="n">initial_sequence</span> <span class="o">==</span> <span class="s2">&quot;bridge&quot;</span><span class="p">:</span>
-                <span class="n">geodesic</span> <span class="o">=</span> <span class="n">sample_brownian_bridge</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_image_a</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_image_b</span><span class="p">,</span> <span class="n">n_steps</span><span class="p">)</span>
+                <span class="n">geodesic</span> <span class="o">=</span> <span class="n">sample_brownian_bridge</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_image_a</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_image_b</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_steps</span>
+                <span class="p">)</span>
             <span class="k">elif</span> <span class="n">initial_sequence</span> <span class="o">==</span> <span class="s2">&quot;straight&quot;</span><span class="p">:</span>
-                <span class="n">geodesic</span> <span class="o">=</span> <span class="n">make_straight_line</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_image_a</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_image_b</span><span class="p">,</span> <span class="n">n_steps</span><span class="p">)</span>
+                <span class="n">geodesic</span> <span class="o">=</span> <span class="n">make_straight_line</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_image_a</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_image_b</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_steps</span>
+                <span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
                     <span class="sa">f</span><span class="s2">&quot;Don&#39;t know how to handle initial_sequence=</span><span class="si">{</span><span class="n">initial_sequence</span><span class="si">}</span><span class="s2">&quot;</span>
                 <span class="p">)</span>
-            <span class="n">_</span><span class="p">,</span> <span class="n">geodesic</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">geodesic</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_steps</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+            <span class="n">_</span><span class="p">,</span> <span class="n">geodesic</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">geodesic</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_steps</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
             <span class="n">geodesic</span><span class="o">.</span><span class="n">requires_grad_</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_geodesic</span> <span class="o">=</span> <span class="n">geodesic</span>
         <span class="k">else</span><span class="p">:</span>
@@ -350,7 +350,6 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">synthesize</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">max_iter</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">,</span>
-        <span class="n">optimizer</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">Optimizer</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">store_progress</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
         <span class="n">stop_criterion</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">stop_iters_to_check</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">50</span><span class="p">,</span>
@@ -362,11 +361,6 @@
 <span class="sd">        max_iter</span>
 <span class="sd">            The maximum number of iterations to run before we end synthesis</span>
 <span class="sd">            (unless we hit the stop criterion).</span>
-<span class="sd">        optimizer</span>
-<span class="sd">            The optimizer to use. If None and this is the first time calling</span>
-<span class="sd">            synthesize, we use Adam(lr=.001, amsgrad=True); if synthesize has</span>
-<span class="sd">            been called before, this must be None and we reuse the previous</span>
-<span class="sd">            optimizer.</span>
 <span class="sd">        store_progress</span>
 <span class="sd">            Whether we should store the step energy and deviation of the</span>
 <span class="sd">            representation from a straight line. If False, we don&#39;t save</span>
@@ -388,7 +382,7 @@
             <span class="c1"># semi arbitrary default choice of tolerance</span>
             <span class="n">stop_criterion</span> <span class="o">=</span> <span class="p">(</span>
                 <span class="n">torch</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">vector_norm</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pixelfade</span><span class="p">,</span> <span class="nb">ord</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="mf">1e4</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="mi">5</span><span class="o">**</span><span class="mf">0.5</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span>
-            <span class="p">)</span>
+            <span class="p">)</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
             <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
                 <span class="s2">&quot;Since stop_criterion was None, automatically set to &quot;</span>
                 <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">stop_criterion</span><span class="si">:</span><span class="s2">.5e</span><span class="si">}</span><span class="s2">&quot;</span>
@@ -462,7 +456,7 @@
         <span class="c1"># the first time we call calculate_step_energy, we cache this info for later</span>
         <span class="c1"># use. this allows us to work with representations of 3 or 4 dims</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_step_energy_dims</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_step_energy_dims</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">z</span><span class="o">.</span><span class="n">ndim</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_step_energy_dims</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">z</span><span class="o">.</span><span class="n">ndim</span><span class="p">))</span>
         <span class="n">step_energy</span> <span class="o">=</span> <span class="p">(</span>
             <span class="n">torch</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">vector_norm</span><span class="p">(</span><span class="n">velocity</span><span class="p">,</span> <span class="nb">ord</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_step_energy_dims</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span>
         <span class="p">)</span>
