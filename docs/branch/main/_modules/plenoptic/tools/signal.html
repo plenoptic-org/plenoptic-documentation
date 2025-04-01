@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>plenoptic.tools.signal &mdash; plenoptic 1.1.1.dev218 documentation</title>
+  <title>plenoptic.tools.signal &mdash; plenoptic 1.2.1.dev4 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/plot_directive.css" />
@@ -15,7 +15,7 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=e9aa12cb"></script>
+      <script src="../../../_static/documentation_options.js?v=fa216f22"></script>
       <script src="../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -111,83 +111,8 @@
   <h1>Source code for plenoptic.tools.signal</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">deprecated.sphinx</span><span class="w"> </span><span class="kn">import</span> <span class="n">deprecated</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pyrtools.pyramids.steer</span><span class="w"> </span><span class="kn">import</span> <span class="n">steer_to_harmonics_mtx</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">torch</span><span class="w"> </span><span class="kn">import</span> <span class="n">Tensor</span>
-
-
-<div class="viewcode-block" id="minimum">
-<a class="viewcode-back" href="../../../api/plenoptic.tools.html#plenoptic.tools.signal.minimum">[docs]</a>
-<span class="nd">@deprecated</span><span class="p">(</span>
-    <span class="s2">&quot;Use :py:func:`einops.reduce` instead: https://einops.rocks/1-einops-basics/#meet-einopsreduce&quot;</span><span class="p">,</span>
-    <span class="n">version</span><span class="o">=</span><span class="s2">&quot;1.1.0&quot;</span><span class="p">,</span>
-<span class="p">)</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">minimum</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span> <span class="n">dim</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">keepdim</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
-<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Compute minimum in torch over any axis or combination of axes in tensor.</span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    x</span>
-<span class="sd">        Input tensor.</span>
-<span class="sd">    dim</span>
-<span class="sd">        Dimensions over which you would like to compute the minimum.</span>
-<span class="sd">    keepdim</span>
-<span class="sd">        Keep original dimensions of tensor when returning result.</span>
-
-<span class="sd">    Returns</span>
-<span class="sd">    -------</span>
-<span class="sd">    min_x</span>
-<span class="sd">        Minimum value of x.</span>
-
-<span class="sd">    Notes</span>
-<span class="sd">    -----</span>
-
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">dim</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">dim</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">ndim</span><span class="p">))</span>
-    <span class="n">dim</span> <span class="o">=</span> <span class="nb">reversed</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">dim</span><span class="p">))</span>
-    <span class="n">min_x</span> <span class="o">=</span> <span class="n">x</span>
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">dim</span><span class="p">:</span>
-        <span class="n">min_x</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">min_x</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">keepdim</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">min_x</span></div>
-
-
-
-<div class="viewcode-block" id="maximum">
-<a class="viewcode-back" href="../../../api/plenoptic.tools.html#plenoptic.tools.signal.maximum">[docs]</a>
-<span class="nd">@deprecated</span><span class="p">(</span>
-    <span class="s2">&quot;Use :py:func:`einops.reduce` instead: https://einops.rocks/1-einops-basics/#meet-einopsreduce&quot;</span><span class="p">,</span>
-    <span class="n">version</span><span class="o">=</span><span class="s2">&quot;1.1.0&quot;</span><span class="p">,</span>
-<span class="p">)</span>  <span class="c1"># noqa: E501</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">maximum</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span> <span class="n">dim</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">keepdim</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
-<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Compute maximum in torch over any dim or combination of axes in tensor.</span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    x</span>
-<span class="sd">        Input tensor</span>
-<span class="sd">    dim</span>
-<span class="sd">        Dimensions over which you would like to compute the minimum</span>
-<span class="sd">    keepdim</span>
-<span class="sd">        Keep original dimensions of tensor when returning result</span>
-
-<span class="sd">    Returns</span>
-<span class="sd">    -------</span>
-<span class="sd">    max_x</span>
-<span class="sd">        Maximum value of x.</span>
-
-<span class="sd">    Notes</span>
-<span class="sd">    -----</span>
-
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">dim</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">dim</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">ndim</span><span class="p">))</span>
-    <span class="n">dim</span> <span class="o">=</span> <span class="nb">reversed</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">dim</span><span class="p">))</span>
-    <span class="n">max_x</span> <span class="o">=</span> <span class="n">x</span>
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">dim</span><span class="p">:</span>
-        <span class="n">max_x</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">max_x</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">keepdim</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">max_x</span></div>
-
 
 
 <div class="viewcode-block" id="rescale">

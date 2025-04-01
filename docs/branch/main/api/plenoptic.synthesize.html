@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>plenoptic.synthesize package &mdash; plenoptic 1.1.1.dev218 documentation</title>
+  <title>plenoptic.synthesize package &mdash; plenoptic 1.2.1.dev4 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css" />
@@ -16,7 +16,7 @@
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../_static/documentation_options.js?v=e9aa12cb"></script>
+      <script src="../_static/documentation_options.js?v=fa216f22"></script>
       <script src="../_static/doctools.js?v=9bcbadda"></script>
       <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -661,536 +661,6 @@ of Jacobian transpose and Jacobian:
 </dd></dl>
 
 </section>
-<section id="module-plenoptic.synthesize.geodesic">
-<span id="plenoptic-synthesize-geodesic-module"></span><h2>plenoptic.synthesize.geodesic module<a class="headerlink" href="#module-plenoptic.synthesize.geodesic" title="Link to this heading"></a></h2>
-<dl class="py class">
-<dt class="sig sig-object py" id="plenoptic.synthesize.geodesic.Geodesic">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">plenoptic.synthesize.geodesic.</span></span><span class="sig-name descname"><span class="pre">Geodesic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">image_a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">image_b</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_steps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">range_penalty_lambda</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allowed_range</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(0,</span> <span class="pre">1)</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/plenoptic/synthesize/geodesic.html#Geodesic"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#plenoptic.synthesize.geodesic.Geodesic" title="Link to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="#plenoptic.synthesize.synthesis.OptimizedSynthesis" title="plenoptic.synthesize.synthesis.OptimizedSynthesis"><code class="xref py py-class docutils literal notranslate"><span class="pre">OptimizedSynthesis</span></code></a></p>
-<p>Synthesize an approximate geodesic between two images according to a model.</p>
-<p>This method can be used to visualize and refine the invariances of a
-model’s representation as described in <a class="reference internal" href="#ra15ff52749c2-1" id="id7">[1]</a>.</p>
-<p>NOTE: This synthesis method is still under construction. It will run, but
-it might not find the most informative geodesic.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>image_a</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tensor</span></code></span>) – Start and stop anchor points of the geodesic, of shape (1, channel,
-height, width).</p></li>
-<li><p><strong>image_b</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tensor</span></code></span>) – Start and stop anchor points of the geodesic, of shape (1, channel,
-height, width).</p></li>
-<li><p><strong>model</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code></span>) – an analysis model that computes representations on signals like <cite>image_a</cite>.</p></li>
-<li><p><strong>n_steps</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – the number of steps (i.e., transitions) in the trajectory between the
-two anchor points.</p></li>
-<li><p><strong>range_penalty_lambda</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – strength of the regularizer that enforces the allowed_range. Must be
-non-negative.</p></li>
-<li><p><strong>allowed_range</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>]</span>) – Range (inclusive) of allowed pixel values. Any values outside this
-range will be penalized.</p></li>
-</ul>
-</dd>
-</dl>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="plenoptic.synthesize.geodesic.Geodesic.geodesic">
-<span class="sig-name descname"><span class="pre">geodesic</span></span><a class="headerlink" href="#plenoptic.synthesize.geodesic.Geodesic.geodesic" title="Link to this definition"></a></dt>
-<dd><p>the synthesized sequence of images between the two anchor points that
-minimizes representation path energy, of shape <code class="docutils literal notranslate"><span class="pre">(n_steps+1,</span> <span class="pre">channel,</span>
-<span class="pre">height,</span> <span class="pre">width)</span></code>. It starts with image_a and ends with image_b.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Tensor</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="plenoptic.synthesize.geodesic.Geodesic.pixelfade">
-<span class="sig-name descname"><span class="pre">pixelfade</span></span><a class="headerlink" href="#plenoptic.synthesize.geodesic.Geodesic.pixelfade" title="Link to this definition"></a></dt>
-<dd><p>the straight interpolation between the two anchor points,
-used as reference</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Tensor</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="plenoptic.synthesize.geodesic.Geodesic.losses">
-<span class="sig-name descname"><span class="pre">losses</span></span><a class="headerlink" href="#plenoptic.synthesize.geodesic.Geodesic.losses" title="Link to this definition"></a></dt>
-<dd><p>A list of our loss over iterations.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Tensor</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="plenoptic.synthesize.geodesic.Geodesic.gradient_norm">
-<span class="sig-name descname"><span class="pre">gradient_norm</span></span><a class="headerlink" href="#plenoptic.synthesize.geodesic.Geodesic.gradient_norm" title="Link to this definition"></a></dt>
-<dd><p>A list of the gradient’s L2 norm over iterations.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>list</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="plenoptic.synthesize.geodesic.Geodesic.pixel_change_norm">
-<span class="sig-name descname"><span class="pre">pixel_change_norm</span></span><a class="headerlink" href="#plenoptic.synthesize.geodesic.Geodesic.pixel_change_norm" title="Link to this definition"></a></dt>
-<dd><p>A list containing the L2 norm of the pixel change over iterations
-(<code class="docutils literal notranslate"><span class="pre">pixel_change_norm[i]</span></code> is the pixel change norm in
-<code class="docutils literal notranslate"><span class="pre">geodesic</span></code> between iterations <code class="docutils literal notranslate"><span class="pre">i</span></code> and <code class="docutils literal notranslate"><span class="pre">i-1</span></code>).</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>list</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="plenoptic.synthesize.geodesic.Geodesic.step_energy">
-<span class="sig-name descname"><span class="pre">step_energy</span></span><a class="headerlink" href="#plenoptic.synthesize.geodesic.Geodesic.step_energy" title="Link to this definition"></a></dt>
-<dd><p>step lengths in representation space, stored along the optimization
-process.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Tensor</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="plenoptic.synthesize.geodesic.Geodesic.dev_from_line">
-<span class="sig-name descname"><span class="pre">dev_from_line</span></span><a class="headerlink" href="#plenoptic.synthesize.geodesic.Geodesic.dev_from_line" title="Link to this definition"></a></dt>
-<dd><p>deviation of the representation to the straight line interpolation,
-measures distance from straight line and distance along straight line,
-stored along the optimization process</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Tensor</p>
-</dd>
-</dl>
-</dd></dl>
-
-<p class="rubric">Notes</p>
-<p>Manifold prior hypothesis: natural images form a manifold 𝑀ˣ embedded
-in signal space (ℝⁿ), a model warps this manifold to another manifold 𝑀ʸ
-embedded in representation space (ℝᵐ), and thereby induces a different
-local metric.</p>
-<p>This method computes an approximate geodesics by solving an optimization
-problem: it minimizes the path energy (aka. action functional), which has
-the same minimum as minimizing path length and by Cauchy-Schwarz, reaches
-it with constant-speed minimizing geodesic</p>
-<p>Caveat: depending on the geometry of the manifold, geodesics between two
-anchor points may not be unique and may depend on the initialization.</p>
-<p class="rubric">References</p>
-<div role="list" class="citation-list">
-<div class="citation" id="ra15ff52749c2-1" role="doc-biblioentry">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id7">1</a><span class="fn-bracket">]</span></span>
-<p>Geodesics of learned representations
-O J Hénaff and E P Simoncelli
-Published in Int’l Conf on Learning Representations (ICLR), May 2016.
-<a class="reference external" href="https://www.cns.nyu.edu/~lcv/pubs/makeAbs.php?loc=Henaff16b">https://www.cns.nyu.edu/~lcv/pubs/makeAbs.php?loc=Henaff16b</a></p>
-</div>
-</div>
-<div class="deprecated">
-<p><span class="versionmodified deprecated">Deprecated since version 1.1.0: </span>Geodesic is not robust enough yet, see
-<a class="reference external" href="https://github.com/plenoptic-org/geodesics">https://github.com/plenoptic-org/geodesics</a> for ongoing
-development</p>
-</div>
-<dl class="field-list simple">
-<dt class="field-odd">Attributes<span class="colon">:</span></dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>allowed_range</strong></dt><dd></dd>
-<dt><a class="reference internal" href="#id8" title="plenoptic.synthesize.geodesic.Geodesic.dev_from_line"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dev_from_line</span></code></a></dt><dd><p>Deviation of representation each from of <code class="docutils literal notranslate"><span class="pre">self.geodesic</span></code> from a straight line.</p>
-</dd>
-<dt><strong>geodesic</strong></dt><dd></dd>
-<dt><a class="reference internal" href="#plenoptic.synthesize.geodesic.Geodesic.gradient_norm" title="plenoptic.synthesize.geodesic.Geodesic.gradient_norm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">gradient_norm</span></code></a></dt><dd><p>Synthesis gradient’s L2 norm over iterations.</p>
-</dd>
-<dt><strong>image_a</strong></dt><dd></dd>
-<dt><strong>image_b</strong></dt><dd></dd>
-<dt><a class="reference internal" href="#plenoptic.synthesize.geodesic.Geodesic.losses" title="plenoptic.synthesize.geodesic.Geodesic.losses"><code class="xref py py-obj docutils literal notranslate"><span class="pre">losses</span></code></a></dt><dd><p>Synthesis loss over iterations.</p>
-</dd>
-<dt><strong>model</strong></dt><dd></dd>
-<dt><strong>optimizer</strong></dt><dd></dd>
-<dt><a class="reference internal" href="#plenoptic.synthesize.geodesic.Geodesic.pixel_change_norm" title="plenoptic.synthesize.geodesic.Geodesic.pixel_change_norm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pixel_change_norm</span></code></a></dt><dd><p>L2 norm change in pixel values over iterations.</p>
-</dd>
-<dt><strong>range_penalty_lambda</strong></dt><dd></dd>
-<dt><strong>scheduler</strong></dt><dd></dd>
-<dt><a class="reference internal" href="#id12" title="plenoptic.synthesize.geodesic.Geodesic.step_energy"><code class="xref py py-obj docutils literal notranslate"><span class="pre">step_energy</span></code></a></dt><dd><p>Squared L2 norm of transition between geodesic frames in representation space.</p>
-</dd>
-<dt><strong>store_progress</strong></dt><dd></dd>
-</dl>
-</dd>
-</dl>
-<p class="rubric">Methods</p>
-<table class="autosummary longtable docutils align-default">
-<tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#plenoptic.synthesize.geodesic.Geodesic.calculate_jerkiness" title="plenoptic.synthesize.geodesic.Geodesic.calculate_jerkiness"><code class="xref py py-obj docutils literal notranslate"><span class="pre">calculate_jerkiness</span></code></a>([geodesic])</p></td>
-<td><p>Compute the alignment of representation's acceleration to model local curvature.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#plenoptic.synthesize.geodesic.Geodesic.load" title="plenoptic.synthesize.geodesic.Geodesic.load"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load</span></code></a>(file_path[, map_location])</p></td>
-<td><p>Load all relevant stuff from a .pt file.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#plenoptic.synthesize.geodesic.Geodesic.objective_function" title="plenoptic.synthesize.geodesic.Geodesic.objective_function"><code class="xref py py-obj docutils literal notranslate"><span class="pre">objective_function</span></code></a>([geodesic])</p></td>
-<td><p>Compute geodesic synthesis loss.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#plenoptic.synthesize.geodesic.Geodesic.save" title="plenoptic.synthesize.geodesic.Geodesic.save"><code class="xref py py-obj docutils literal notranslate"><span class="pre">save</span></code></a>(file_path)</p></td>
-<td><p>Save all relevant variables in .pt file.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#plenoptic.synthesize.geodesic.Geodesic.setup" title="plenoptic.synthesize.geodesic.Geodesic.setup"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setup</span></code></a>([initial_sequence, optimizer, ...])</p></td>
-<td><p>Initialize the geodesic and optimizer.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#plenoptic.synthesize.geodesic.Geodesic.synthesize" title="plenoptic.synthesize.geodesic.Geodesic.synthesize"><code class="xref py py-obj docutils literal notranslate"><span class="pre">synthesize</span></code></a>([max_iter, store_progress, ...])</p></td>
-<td><p>Synthesize a geodesic via optimization.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#id15" title="plenoptic.synthesize.geodesic.Geodesic.to"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to</span></code></a>(*args, **kwargs)</p></td>
-<td><p>Moves and/or casts the parameters and buffers.</p></td>
-</tr>
-</tbody>
-</table>
-<dl class="py method">
-<dt class="sig sig-object py" id="plenoptic.synthesize.geodesic.Geodesic.calculate_jerkiness">
-<span class="sig-name descname"><span class="pre">calculate_jerkiness</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">geodesic</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/plenoptic/synthesize/geodesic.html#Geodesic.calculate_jerkiness"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#plenoptic.synthesize.geodesic.Geodesic.calculate_jerkiness" title="Link to this definition"></a></dt>
-<dd><p>Compute the alignment of representation’s acceleration to model local curvature.</p>
-<p>This is the first order optimality condition for a geodesic, and can be
-used to assess the validity of the solution obtained by optimization.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>geodesic</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tensor</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span>) – Geodesic to check. If None, we use <code class="docutils literal notranslate"><span class="pre">self.geodesic</span></code>. Must have a
-gradient attached.</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>jerkiness</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="id8">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">dev_from_line</span></span><a class="headerlink" href="#id8" title="Link to this definition"></a></dt>
-<dd><p>Deviation of representation each from of <code class="docutils literal notranslate"><span class="pre">self.geodesic</span></code> from a straight
-line.</p>
-<p>Has shape <code class="docutils literal notranslate"><span class="pre">(np.ceil(synth_iter/store_progress),</span> <span class="pre">n_steps+1,</span> <span class="pre">2)</span></code>, where
-<code class="docutils literal notranslate"><span class="pre">synth_iter</span></code> is the number of iterations of synthesis that have
-happened. For final dimension, the first element is the Euclidean
-distance along the straight line and the second is the Euclidean
-distance to the line.</p>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="id9">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">geodesic</span></span><a class="headerlink" href="#id9" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="plenoptic.synthesize.geodesic.Geodesic.image_a">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">image_a</span></span><a class="headerlink" href="#plenoptic.synthesize.geodesic.Geodesic.image_a" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="plenoptic.synthesize.geodesic.Geodesic.image_b">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">image_b</span></span><a class="headerlink" href="#plenoptic.synthesize.geodesic.Geodesic.image_b" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="plenoptic.synthesize.geodesic.Geodesic.load">
-<span class="sig-name descname"><span class="pre">load</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">map_location</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">pickle_load_args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/plenoptic/synthesize/geodesic.html#Geodesic.load"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#plenoptic.synthesize.geodesic.Geodesic.load" title="Link to this definition"></a></dt>
-<dd><p>Load all relevant stuff from a .pt file.</p>
-<p>This must be called by a <code class="docutils literal notranslate"><span class="pre">Geodesic</span></code> object initialized just like the saved
-object.</p>
-<p>Note this operates in place and so doesn’t return anything.</p>
-<div class="versionchanged">
-<p><span class="versionmodified changed">Changed in version 1.2: </span>load behavior changed in a backwards-incompatible manner in order to
-compatible with breaking changes in torch 2.6.</p>
-</div>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>file_path</strong> (<em>str</em>) – The path to load the synthesis object from</p></li>
-<li><p><strong>map_location</strong> (<em>str</em><em>, </em><em>optional</em>) – map_location argument to pass to <code class="docutils literal notranslate"><span class="pre">torch.load</span></code>. If you save
-stuff that was being run on a GPU and are loading onto a
-CPU, you’ll need this to make sure everything lines up
-properly. This should be structured like the str you would
-pass to <code class="docutils literal notranslate"><span class="pre">torch.device</span></code></p></li>
-<li><p><strong>pickle_load_args</strong> – any additional kwargs will be added to <code class="docutils literal notranslate"><span class="pre">pickle_module.load</span></code> via
-<code class="docutils literal notranslate"><span class="pre">torch.load</span></code>, see that function’s docstring for details.</p></li>
-</ul>
-</dd>
-</dl>
-<p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">plenoptic</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">po</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">img_a</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">einstein</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">img_b</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">curie</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">simul</span><span class="o">.</span><span class="n">Gaussian</span><span class="p">(</span><span class="mi">30</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">po</span><span class="o">.</span><span class="n">tools</span><span class="o">.</span><span class="n">remove_grad</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">geo</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">synth</span><span class="o">.</span><span class="n">Geodesic</span><span class="p">(</span><span class="n">img_a</span><span class="p">,</span> <span class="n">img_b</span><span class="p">,</span> <span class="n">model</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">geo</span><span class="o">.</span><span class="n">synthesize</span><span class="p">(</span><span class="n">max_iter</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">store_progress</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">geo</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s1">&#39;geo.pt&#39;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">geo_copy</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">synth</span><span class="o">.</span><span class="n">Geodesic</span><span class="p">(</span><span class="n">img_a</span><span class="p">,</span> <span class="n">img_b</span><span class="p">,</span> <span class="n">model</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">geo_copy</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s1">&#39;geo.pt&#39;</span><span class="p">)</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="plenoptic.synthesize.geodesic.Geodesic.model">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#plenoptic.synthesize.geodesic.Geodesic.model" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="plenoptic.synthesize.geodesic.Geodesic.objective_function">
-<span class="sig-name descname"><span class="pre">objective_function</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">geodesic</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/plenoptic/synthesize/geodesic.html#Geodesic.objective_function"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#plenoptic.synthesize.geodesic.Geodesic.objective_function" title="Link to this definition"></a></dt>
-<dd><p>Compute geodesic synthesis loss.</p>
-<p>This is the path energy (i.e., squared L2 norm of each step) of the
-geodesic’s model representation, with the weighted range penalty.</p>
-<p>Additionally, caches:</p>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">self._geodesic_representation</span> <span class="pre">=</span> <span class="pre">self.model(geodesic)</span></code></p></li>
-<li><dl class="simple">
-<dt><a href="#id10"><span class="problematic" id="id11">``</span></a>self._most_recent_step_energy = self._calculate_step_energy(</dt><dd><p>self._geodesic_representation)``</p>
-</dd>
-</dl>
-</li>
-</ul>
-<p>These are cached because we might store them (if <code class="docutils literal notranslate"><span class="pre">self.store_progress</span>
-<span class="pre">is</span> <span class="pre">True</span></code>) and don’t want to recalcualte them</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>geodesic</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tensor</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span>) – Geodesic to check. If None, we use <code class="docutils literal notranslate"><span class="pre">self.geodesic</span></code>.</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>loss</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="plenoptic.synthesize.geodesic.Geodesic.save">
-<span class="sig-name descname"><span class="pre">save</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/plenoptic/synthesize/geodesic.html#Geodesic.save"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#plenoptic.synthesize.geodesic.Geodesic.save" title="Link to this definition"></a></dt>
-<dd><p>Save all relevant variables in .pt file.</p>
-<p>See <code class="docutils literal notranslate"><span class="pre">load</span></code> docstring for an example of use.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>file_path</strong> (<em>str</em>) – The path to save the Geodesic object to</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="plenoptic.synthesize.geodesic.Geodesic.setup">
-<span class="sig-name descname"><span class="pre">setup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">initial_sequence</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">optimizer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">optimizer_kwargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/plenoptic/synthesize/geodesic.html#Geodesic.setup"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#plenoptic.synthesize.geodesic.Geodesic.setup" title="Link to this definition"></a></dt>
-<dd><p>Initialize the geodesic and optimizer.</p>
-<p>Can only be called once. If <code class="docutils literal notranslate"><span class="pre">load()</span></code> has been called, <code class="docutils literal notranslate"><span class="pre">initial_sequence</span></code>
-must be None.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>initial_sequence</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Literal</span></code>[<code class="docutils literal notranslate"><span class="pre">'straight'</span></code>, <code class="docutils literal notranslate"><span class="pre">'bridge'</span></code>]]</span>) – initialize the geodesic with pixel linear interpolation
-(<code class="docutils literal notranslate"><span class="pre">'straight'</span></code>), or with a brownian bridge between the two anchors
-(<code class="docutils literal notranslate"><span class="pre">'bridge'</span></code>). If None, use <code class="docutils literal notranslate"><span class="pre">'straight'</span></code>.</p></li>
-<li><p><strong>optimizer</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Optimizer</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span>) – The un-initialized optimizer object to use. If None, we use Adam(lr=.001,
-amsgrad=True).</p></li>
-<li><p><strong>optimizer_kwargs</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span>) – The keyword arguments to pass to the optimizer on initialization.</p></li>
-</ul>
-</dd>
-</dl>
-<p class="rubric">Examples</p>
-<p>Set initial sequence:</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">plenoptic</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">po</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">img</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">einstein</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">simul</span><span class="o">.</span><span class="n">Gaussian</span><span class="p">(</span><span class="mi">30</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">po</span><span class="o">.</span><span class="n">tools</span><span class="o">.</span><span class="n">remove_grad</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">geod</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">synth</span><span class="o">.</span><span class="n">Geodesic</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">img</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="n">model</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">geod</span><span class="o">.</span><span class="n">setup</span><span class="p">(</span><span class="s2">&quot;bridge&quot;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">geod</span><span class="o">.</span><span class="n">synthesize</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>Set optimizer:</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">plenoptic</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">po</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">img</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">einstein</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">simul</span><span class="o">.</span><span class="n">Gaussian</span><span class="p">(</span><span class="mi">30</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">po</span><span class="o">.</span><span class="n">tools</span><span class="o">.</span><span class="n">remove_grad</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">geod</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">synth</span><span class="o">.</span><span class="n">Geodesic</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">img</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="n">model</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">geod</span><span class="o">.</span><span class="n">setup</span><span class="p">(</span><span class="n">optimizer</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">SGD</span><span class="p">,</span> <span class="n">optimizer_kwargs</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;lr&quot;</span><span class="p">:</span> <span class="mf">0.01</span><span class="p">})</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">geod</span><span class="o">.</span><span class="n">synthesize</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>Use with save/load. Only the optimizer object is necessary, its kwargs and the
-initial sequence are handled by load.</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">plenoptic</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">po</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">img</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">einstein</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">simul</span><span class="o">.</span><span class="n">Gaussian</span><span class="p">(</span><span class="mi">30</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">po</span><span class="o">.</span><span class="n">tools</span><span class="o">.</span><span class="n">remove_grad</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">geod</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">synth</span><span class="o">.</span><span class="n">Geodesic</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">img</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="n">model</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">geod</span><span class="o">.</span><span class="n">setup</span><span class="p">(</span><span class="s2">&quot;bridge&quot;</span><span class="p">,</span> <span class="n">optimizer</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">SGD</span><span class="p">,</span>
-<span class="gp">... </span>           <span class="n">optimizer_kwargs</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;lr&quot;</span><span class="p">:</span> <span class="mf">0.01</span><span class="p">})</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">geod</span><span class="o">.</span><span class="n">synthesize</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">geod</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">&quot;geod_setup.pt&quot;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">geod</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">synth</span><span class="o">.</span><span class="n">Geodesic</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">img</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="n">model</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">geod</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;geod_setup.pt&quot;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">geod</span><span class="o">.</span><span class="n">setup</span><span class="p">(</span><span class="n">optimizer</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">SGD</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">geod</span><span class="o">.</span><span class="n">synthesize</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="id12">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">step_energy</span></span><a class="headerlink" href="#id12" title="Link to this definition"></a></dt>
-<dd><p>Squared L2 norm of transition between geodesic frames in representation space.</p>
-<p>Has shape <code class="docutils literal notranslate"><span class="pre">(np.ceil(synth_iter/store_progress),</span> <span class="pre">n_steps)</span></code>, where
-<code class="docutils literal notranslate"><span class="pre">synth_iter</span></code> is the number of iterations of synthesis that have
-happened.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="plenoptic.synthesize.geodesic.Geodesic.synthesize">
-<span class="sig-name descname"><span class="pre">synthesize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">max_iter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">store_progress</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stop_criterion</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stop_iters_to_check</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">50</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/plenoptic/synthesize/geodesic.html#Geodesic.synthesize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#plenoptic.synthesize.geodesic.Geodesic.synthesize" title="Link to this definition"></a></dt>
-<dd><p>Synthesize a geodesic via optimization.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>max_iter</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – The maximum number of iterations to run before we end synthesis
-(unless we hit the stop criterion).</p></li>
-<li><p><strong>store_progress</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code> | <code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – Whether we should store the step energy and deviation of the
-representation from a straight line. If False, we don’t save
-anything. If True, we save every iteration. If an int, we save
-every <code class="docutils literal notranslate"><span class="pre">store_progress</span></code> iterations (note then that 0 is the same
-as False and 1 the same as True).</p></li>
-<li><p><strong>stop_criterion</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span>) – If pixel_change_norm (i.e., the norm of the difference in
-<code class="docutils literal notranslate"><span class="pre">self.geodesic</span></code> from one iteration to the next) over the past
-<code class="docutils literal notranslate"><span class="pre">stop_iters_to_check</span></code> has been less than <code class="docutils literal notranslate"><span class="pre">stop_criterion</span></code>, we
-terminate synthesis. If None, we pick a default value based on the
-norm of <code class="docutils literal notranslate"><span class="pre">self.pixelfade</span></code>.</p></li>
-<li><p><strong>stop_iters_to_check</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – How many iterations back to check in order to see if
-pixel_change_norm has stopped decreasing (for <code class="docutils literal notranslate"><span class="pre">stop_criterion</span></code>).</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="plenoptic.synthesize.geodesic.Geodesic.to">
-<span class="sig-name descname"><span class="pre">to</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/plenoptic/synthesize/geodesic.html#Geodesic.to"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#plenoptic.synthesize.geodesic.Geodesic.to" title="Link to this definition"></a></dt>
-<dd><p>Moves and/or casts the parameters and buffers.</p>
-<p>This can be called as</p>
-<dl class="py function">
-<dt class="sig sig-object py" id="id13">
-<span class="sig-name descname"><span class="pre">to</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">non_blocking</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/plenoptic/synthesize/geodesic.html#Geodesic.to"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id13" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="id14">
-<span class="sig-name descname"><span class="pre">to</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dtype</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">non_blocking</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/plenoptic/synthesize/geodesic.html#Geodesic.to"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id14" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="id15">
-<span class="sig-name descname"><span class="pre">to</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">non_blocking</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/plenoptic/synthesize/geodesic.html#Geodesic.to"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id15" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<p>Its signature is similar to <code class="xref py py-meth docutils literal notranslate"><span class="pre">torch.Tensor.to()</span></code>, but only accepts
-floating point desired <code class="xref py py-attr docutils literal notranslate"><span class="pre">dtype</span></code> s. In addition, this method will
-only cast the floating point parameters and buffers to <code class="xref py py-attr docutils literal notranslate"><span class="pre">dtype</span></code>
-(if given). The integral parameters and buffers will be moved
-<code class="xref py py-attr docutils literal notranslate"><span class="pre">device</span></code>, if that is given, but with dtypes unchanged. When
-<code class="xref py py-attr docutils literal notranslate"><span class="pre">non_blocking</span></code> is set, it tries to convert/move asynchronously
-with respect to the host if possible, e.g., moving CPU Tensors with
-pinned memory to CUDA devices.</p>
-<p>See below for examples.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>This method modifies the module in-place.</p>
-</div>
-<dl class="simple">
-<dt>Args:</dt><dd><dl class="simple">
-<dt>device (<code class="xref py py-class docutils literal notranslate"><span class="pre">torch.device</span></code>): the desired device of the parameters</dt><dd><p>and buffers in this module</p>
-</dd>
-<dt>dtype (<code class="xref py py-class docutils literal notranslate"><span class="pre">torch.dtype</span></code>): the desired floating point type of</dt><dd><p>the floating point parameters and buffers in this module</p>
-</dd>
-<dt>tensor (torch.Tensor): Tensor whose dtype and device are the desired</dt><dd><p>dtype and device for all parameters and buffers in this module</p>
-</dd>
-</dl>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="plenoptic.synthesize.geodesic.plot_deviation_from_line">
-<span class="sig-prename descclassname"><span class="pre">plenoptic.synthesize.geodesic.</span></span><span class="sig-name descname"><span class="pre">plot_deviation_from_line</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">geodesic</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">natural_video</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/plenoptic/synthesize/geodesic.html#plot_deviation_from_line"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#plenoptic.synthesize.geodesic.plot_deviation_from_line" title="Link to this definition"></a></dt>
-<dd><p>Visual diagnostic of geodesic linearity in representation space.</p>
-<p>This plot illustrates the deviation from the straight line connecting
-the representations of a pair of images, for different paths
-in representation space.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>geodesic</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="#plenoptic.synthesize.geodesic.Geodesic" title="plenoptic.synthesize.geodesic.Geodesic"><code class="xref py py-class docutils literal notranslate"><span class="pre">Geodesic</span></code></a></span>) – Geodesic object to visualize.</p></li>
-<li><p><strong>natural_video</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tensor</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span>) – Natural video that bridges the anchor points, for comparison.</p></li>
-<li><p><strong>ax</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Axes</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span>) – If not None, the axis to plot this representation on. If
-None, we call <code class="docutils literal notranslate"><span class="pre">plt.gca()</span></code></p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Axes containing the plot</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>ax</p>
-</dd>
-</dl>
-<p class="rubric">Notes</p>
-<p>Axes are in the same units, normalized by the distance separating
-the end point representations.</p>
-<p>Knots along each curve indicate samples used to compute the path.</p>
-<p>When the representation is non-linear it may not be feasible for the
-geodesic to be straight (for example if the representation is normalized,
-all paths are constrained to live on a hypershpere). Nevertheless, if the
-representation is able to linearize the transformation between the anchor
-images, then we expect that both the ground truth natural video sequence
-and the geodesic will deviate from straight line similarly. By contrast the
-pixel-based interpolation will deviate significantly more from a straight
-line.</p>
-<div class="deprecated">
-<p><span class="versionmodified deprecated">Deprecated since version 1.1.0: </span>Geodesic is not robust enough yet, see
-<a class="reference external" href="https://github.com/plenoptic-org/geodesics">https://github.com/plenoptic-org/geodesics</a> for ongoing
-development</p>
-</div>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="plenoptic.synthesize.geodesic.plot_loss">
-<span class="sig-prename descclassname"><span class="pre">plenoptic.synthesize.geodesic.</span></span><span class="sig-name descname"><span class="pre">plot_loss</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">geodesic</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/plenoptic/synthesize/geodesic.html#plot_loss"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#plenoptic.synthesize.geodesic.plot_loss" title="Link to this definition"></a></dt>
-<dd><p>Plot synthesis loss.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>geodesic</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="#plenoptic.synthesize.geodesic.Geodesic" title="plenoptic.synthesize.geodesic.Geodesic"><code class="xref py py-class docutils literal notranslate"><span class="pre">Geodesic</span></code></a></span>) – Geodesic object whose synthesis loss we want to plot.</p></li>
-<li><p><strong>ax</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Axes</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span>) – If not None, the axis to plot this representation on. If
-None, we call <code class="docutils literal notranslate"><span class="pre">plt.gca()</span></code></p></li>
-<li><p><strong>kwargs</strong> – passed to plt.semilogy</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Axes containing the plot.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>ax</p>
-</dd>
-</dl>
-<p class="rubric">Notes</p>
-<div class="deprecated">
-<p><span class="versionmodified deprecated">Deprecated since version 1.1.0: </span>Geodesic is not robust enough yet, see
-<a class="reference external" href="https://github.com/plenoptic-org/geodesics">https://github.com/plenoptic-org/geodesics</a> for ongoing
-development</p>
-</div>
-</dd></dl>
-
-</section>
 <section id="module-plenoptic.synthesize.mad_competition">
 <span id="plenoptic-synthesize-mad-competition-module"></span><h2>plenoptic.synthesize.mad_competition module<a class="headerlink" href="#module-plenoptic.synthesize.mad_competition" title="Link to this heading"></a></h2>
 <p>Run MAD Competition.</p>
@@ -1199,7 +669,7 @@ development</p>
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">plenoptic.synthesize.mad_competition.</span></span><span class="sig-name descname"><span class="pre">MADCompetition</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">image</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">optimized_metric</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reference_metric</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">minmax</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metric_tradeoff_lambda</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">range_penalty_lambda</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allowed_range</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(0,</span> <span class="pre">1)</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/plenoptic/synthesize/mad_competition.html#MADCompetition"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#plenoptic.synthesize.mad_competition.MADCompetition" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#plenoptic.synthesize.synthesis.OptimizedSynthesis" title="plenoptic.synthesize.synthesis.OptimizedSynthesis"><code class="xref py py-class docutils literal notranslate"><span class="pre">OptimizedSynthesis</span></code></a></p>
 <p>Synthesize a single maximally-differentiating image for two metrics.</p>
-<p>Following the basic idea in <a class="reference internal" href="#r457fcb70e19f-1" id="id16">[1]</a>, this class synthesizes a
+<p>Following the basic idea in <a class="reference internal" href="#r457fcb70e19f-1" id="id7">[1]</a>, this class synthesizes a
 maximally-differentiating image for two given metrics, based on a given
 image. We start by adding noise to this image and then iteratively
 adjusting its pixels so as to either minimize or maximize
@@ -1331,7 +801,7 @@ on how many iterations we’ve run for.</p>
 <p class="rubric">References</p>
 <div role="list" class="citation-list">
 <div class="citation" id="r457fcb70e19f-1" role="doc-biblioentry">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id16">1</a><span class="fn-bracket">]</span></span>
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id7">1</a><span class="fn-bracket">]</span></span>
 <p>Wang, Z., &amp; Simoncelli, E. P. (2008). Maximum differentiation (MAD)
 competition: A methodology for comparing computational models of
 perceptual discriminability. Journal of Vision, 8(12), 1–13.
@@ -1383,7 +853,7 @@ perceptual discriminability. Journal of Vision, 8(12), 1–13.
 <tr class="row-odd"><td><p><a class="reference internal" href="#plenoptic.synthesize.mad_competition.MADCompetition.synthesize" title="plenoptic.synthesize.mad_competition.MADCompetition.synthesize"><code class="xref py py-obj docutils literal notranslate"><span class="pre">synthesize</span></code></a>([max_iter, store_progress, ...])</p></td>
 <td><p>Synthesize a MAD image.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#id24" title="plenoptic.synthesize.mad_competition.MADCompetition.to"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to</span></code></a>(*args, **kwargs)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#id15" title="plenoptic.synthesize.mad_competition.MADCompetition.to"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to</span></code></a>(*args, **kwargs)</p></td>
 <td><p>Moves and/or casts the parameters and buffers.</p></td>
 </tr>
 </tbody>
@@ -1394,8 +864,8 @@ perceptual discriminability. Journal of Vision, 8(12), 1–13.
 <dd></dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="id17">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">initial_image</span></span><a class="headerlink" href="#id17" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="id8">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">initial_image</span></span><a class="headerlink" href="#id8" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -1445,8 +915,8 @@ pass to <code class="docutils literal notranslate"><span class="pre">torch.devic
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="id18">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">mad_image</span></span><a class="headerlink" href="#id18" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="id9">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">mad_image</span></span><a class="headerlink" href="#id9" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py property">
@@ -1496,8 +966,8 @@ None, use <code class="docutils literal notranslate"><span class="pre">self.imag
 <dd></dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="id19">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">optimized_metric_loss</span></span><a class="headerlink" href="#id19" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="id10">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">optimized_metric_loss</span></span><a class="headerlink" href="#id10" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py property">
@@ -1506,8 +976,8 @@ None, use <code class="docutils literal notranslate"><span class="pre">self.imag
 <dd></dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="id20">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">reference_metric_loss</span></span><a class="headerlink" href="#id20" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="id11">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">reference_metric_loss</span></span><a class="headerlink" href="#id11" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -1525,8 +995,8 @@ large.</p>
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="id21">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">saved_mad_image</span></span><a class="headerlink" href="#id21" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="id12">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">saved_mad_image</span></span><a class="headerlink" href="#id12" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -1622,18 +1092,18 @@ loss has stopped decreasing (for <code class="docutils literal notranslate"><spa
 <dd><p>Moves and/or casts the parameters and buffers.</p>
 <p>This can be called as</p>
 <dl class="py function">
-<dt class="sig sig-object py" id="id22">
-<span class="sig-name descname"><span class="pre">to</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">non_blocking</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/plenoptic/synthesize/mad_competition.html#MADCompetition.to"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id22" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="id13">
+<span class="sig-name descname"><span class="pre">to</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">non_blocking</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/plenoptic/synthesize/mad_competition.html#MADCompetition.to"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id13" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="id23">
-<span class="sig-name descname"><span class="pre">to</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dtype</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">non_blocking</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/plenoptic/synthesize/mad_competition.html#MADCompetition.to"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id23" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="id14">
+<span class="sig-name descname"><span class="pre">to</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dtype</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">non_blocking</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/plenoptic/synthesize/mad_competition.html#MADCompetition.to"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id14" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="id24">
-<span class="sig-name descname"><span class="pre">to</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">non_blocking</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/plenoptic/synthesize/mad_competition.html#MADCompetition.to"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id24" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="id15">
+<span class="sig-name descname"><span class="pre">to</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">non_blocking</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/plenoptic/synthesize/mad_competition.html#MADCompetition.to"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id15" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <p>Its signature is similar to <code class="xref py py-meth docutils literal notranslate"><span class="pre">torch.Tensor.to()</span></code>, but only accepts
@@ -1974,7 +1444,7 @@ specifying their relative width. Any not included will be assumed to be
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">plenoptic.synthesize.metamer.</span></span><span class="sig-name descname"><span class="pre">Metamer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">image</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loss_function=&lt;function</span> <span class="pre">mse&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">range_penalty_lambda=0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allowed_range=(0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">1)</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/plenoptic/synthesize/metamer.html#Metamer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#plenoptic.synthesize.metamer.Metamer" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#plenoptic.synthesize.synthesis.OptimizedSynthesis" title="plenoptic.synthesize.synthesis.OptimizedSynthesis"><code class="xref py py-class docutils literal notranslate"><span class="pre">OptimizedSynthesis</span></code></a></p>
 <p>Synthesize metamers for image-computable differentiable models.</p>
-<p>Following the basic idea in <a class="reference internal" href="#r868b9832577a-1" id="id25">[1]</a>, this class creates a metamer for a given model on
+<p>Following the basic idea in <a class="reference internal" href="#r868b9832577a-1" id="id16">[1]</a>, this class creates a metamer for a given model on
 a given image. We iteratively adjust the pixel values so as to match the
 representation of the <code class="docutils literal notranslate"><span class="pre">metamer</span></code> and <code class="docutils literal notranslate"><span class="pre">image</span></code>.</p>
 <p>All <code class="docutils literal notranslate"><span class="pre">saved_</span></code> attributes are initialized as empty lists and will be
@@ -2073,7 +1543,7 @@ iterations we’ve run for.</p>
 <p class="rubric">References</p>
 <div role="list" class="citation-list">
 <div class="citation" id="r868b9832577a-1" role="doc-biblioentry">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id25">1</a><span class="fn-bracket">]</span></span>
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id16">1</a><span class="fn-bracket">]</span></span>
 <p>J Portilla and E P Simoncelli. A Parametric Texture Model
 based on Joint Statistics of Complex Wavelet Coefficients. Int’l
 Journal of Computer Vision. 40(1):49-71, October, 2000.
@@ -2099,7 +1569,7 @@ Journal of Computer Vision. 40(1):49-71, October, 2000.
 <dt><strong>saved_metamer</strong></dt><dd></dd>
 <dt><strong>scheduler</strong></dt><dd></dd>
 <dt><strong>store_progress</strong></dt><dd></dd>
-<dt><a class="reference internal" href="#id28" title="plenoptic.synthesize.metamer.Metamer.target_representation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">target_representation</span></code></a></dt><dd><p>Model representation of <code class="docutils literal notranslate"><span class="pre">image</span></code>, the goal of synthesis is for <code class="docutils literal notranslate"><span class="pre">model(metamer)</span></code> to match this value.</p>
+<dt><a class="reference internal" href="#id19" title="plenoptic.synthesize.metamer.Metamer.target_representation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">target_representation</span></code></a></dt><dd><p>Model representation of <code class="docutils literal notranslate"><span class="pre">image</span></code>, the goal of synthesis is for <code class="docutils literal notranslate"><span class="pre">model(metamer)</span></code> to match this value.</p>
 </dd>
 </dl>
 </dd>
@@ -2122,7 +1592,7 @@ Journal of Computer Vision. 40(1):49-71, October, 2000.
 <tr class="row-odd"><td><p><a class="reference internal" href="#plenoptic.synthesize.metamer.Metamer.synthesize" title="plenoptic.synthesize.metamer.Metamer.synthesize"><code class="xref py py-obj docutils literal notranslate"><span class="pre">synthesize</span></code></a>([max_iter, store_progress, ...])</p></td>
 <td><p>Synthesize a metamer.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#id31" title="plenoptic.synthesize.metamer.Metamer.to"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to</span></code></a>(*args, **kwargs)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#id22" title="plenoptic.synthesize.metamer.Metamer.to"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to</span></code></a>(*args, **kwargs)</p></td>
 <td><p>Moves and/or casts the parameters and buffers.</p></td>
 </tr>
 </tbody>
@@ -2179,8 +1649,8 @@ pass to <code class="docutils literal notranslate"><span class="pre">torch.devic
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="id26">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">metamer</span></span><a class="headerlink" href="#id26" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="id17">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">metamer</span></span><a class="headerlink" href="#id17" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py property">
@@ -2224,8 +1694,8 @@ large.</p>
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="id27">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">saved_metamer</span></span><a class="headerlink" href="#id27" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="id18">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">saved_metamer</span></span><a class="headerlink" href="#id18" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -2318,8 +1788,8 @@ loss has stopped decreasing (for <code class="docutils literal notranslate"><spa
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="id28">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">target_representation</span></span><a class="headerlink" href="#id28" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="id19">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">target_representation</span></span><a class="headerlink" href="#id19" title="Link to this definition"></a></dt>
 <dd><p>Model representation of <code class="docutils literal notranslate"><span class="pre">image</span></code>, the goal of synthesis is for
 <code class="docutils literal notranslate"><span class="pre">model(metamer)</span></code> to match this value.</p>
 </dd></dl>
@@ -2330,18 +1800,18 @@ loss has stopped decreasing (for <code class="docutils literal notranslate"><spa
 <dd><p>Moves and/or casts the parameters and buffers.</p>
 <p>This can be called as</p>
 <dl class="py function">
-<dt class="sig sig-object py" id="id29">
-<span class="sig-name descname"><span class="pre">to</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">non_blocking</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/plenoptic/synthesize/metamer.html#Metamer.to"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id29" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="id20">
+<span class="sig-name descname"><span class="pre">to</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">non_blocking</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/plenoptic/synthesize/metamer.html#Metamer.to"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id20" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="id30">
-<span class="sig-name descname"><span class="pre">to</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dtype</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">non_blocking</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/plenoptic/synthesize/metamer.html#Metamer.to"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id30" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="id21">
+<span class="sig-name descname"><span class="pre">to</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dtype</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">non_blocking</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/plenoptic/synthesize/metamer.html#Metamer.to"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id21" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="id31">
-<span class="sig-name descname"><span class="pre">to</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">non_blocking</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/plenoptic/synthesize/metamer.html#Metamer.to"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id31" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="id22">
+<span class="sig-name descname"><span class="pre">to</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">non_blocking</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/plenoptic/synthesize/metamer.html#Metamer.to"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id22" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <p>Its signature is similar to <code class="xref py py-meth docutils literal notranslate"><span class="pre">torch.Tensor.to()</span></code>, but only accepts
@@ -2378,7 +1848,7 @@ pinned memory to CUDA devices.</p>
 <dd><p>Bases: <a class="reference internal" href="#plenoptic.synthesize.metamer.Metamer" title="plenoptic.synthesize.metamer.Metamer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Metamer</span></code></a></p>
 <p>Synthesize model metamers with coarse-to-fine synthesis.</p>
 <p>This is a special case of <code class="docutils literal notranslate"><span class="pre">Metamer</span></code>, which uses the coarse-to-fine
-synthesis procedure described in <a href="#id37"><span class="problematic" id="id32">[1]_</span></a>: we start by updating metamer with
+synthesis procedure described in <a href="#id28"><span class="problematic" id="id23">[1]_</span></a>: we start by updating metamer with
 respect to only a subset of the model’s representation (generally, that
 which corresponds to the lowest spatial frequencies), and changing which
 subset we consider over the course of synthesis. This is similar to
@@ -2619,23 +2089,23 @@ pass to <code class="docutils literal notranslate"><span class="pre">torch.devic
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="id33">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">scales</span></span><a class="headerlink" href="#id33" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="id24">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">scales</span></span><a class="headerlink" href="#id24" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="id34">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">scales_finished</span></span><a class="headerlink" href="#id34" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="id25">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">scales_finished</span></span><a class="headerlink" href="#id25" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="id35">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">scales_loss</span></span><a class="headerlink" href="#id35" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="id26">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">scales_loss</span></span><a class="headerlink" href="#id26" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="id36">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">scales_timing</span></span><a class="headerlink" href="#id36" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="id27">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">scales_timing</span></span><a class="headerlink" href="#id27" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -2965,137 +2435,6 @@ specifying their relative width. Any not included will be assumed to be
 </dd></dl>
 
 </section>
-<section id="module-plenoptic.synthesize.simple_metamer">
-<span id="plenoptic-synthesize-simple-metamer-module"></span><h2>plenoptic.synthesize.simple_metamer module<a class="headerlink" href="#module-plenoptic.synthesize.simple_metamer" title="Link to this heading"></a></h2>
-<p>Simple Metamer Class</p>
-<dl class="py class">
-<dt class="sig sig-object py" id="plenoptic.synthesize.simple_metamer.SimpleMetamer">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">plenoptic.synthesize.simple_metamer.</span></span><span class="sig-name descname"><span class="pre">SimpleMetamer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">image</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/plenoptic/synthesize/simple_metamer.html#SimpleMetamer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#plenoptic.synthesize.simple_metamer.SimpleMetamer" title="Link to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="#plenoptic.synthesize.synthesis.Synthesis" title="plenoptic.synthesize.synthesis.Synthesis"><code class="xref py py-class docutils literal notranslate"><span class="pre">Synthesis</span></code></a></p>
-<p>Simple version of metamer synthesis.</p>
-<p>This doesn’t have any of the bells and whistles of the full Metamer class,
-but does perform basic metamer synthesis: given a target image and a model,
-synthesize a new image (initialized with uniform noise) that has the same
-model output.</p>
-<p>This is meant as a demonstration of the basic logic of synthesis.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>image</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tensor</span></code></span>) – A 4d tensor, this is the image whose model representation we wish to
-match.</p></li>
-<li><p><strong>model</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code></span>) – The visual model whose representation we wish to match.</p></li>
-</ul>
-</dd>
-</dl>
-<p class="rubric">Notes</p>
-<div class="deprecated">
-<p><span class="versionmodified deprecated">Deprecated since version 1.1.0: </span>Use <a class="reference internal" href="#plenoptic.synthesize.metamer.Metamer" title="plenoptic.synthesize.metamer.Metamer"><code class="xref py py-class docutils literal notranslate"><span class="pre">plenoptic.synthesize.metamer.Metamer</span></code></a> instead</p>
-</div>
-<p class="rubric">Methods</p>
-<table class="autosummary longtable docutils align-default">
-<tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#plenoptic.synthesize.simple_metamer.SimpleMetamer.load" title="plenoptic.synthesize.simple_metamer.SimpleMetamer.load"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load</span></code></a>(file_path[, map_location])</p></td>
-<td><p>Load all relevant attributes from a .pt file.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#plenoptic.synthesize.simple_metamer.SimpleMetamer.save" title="plenoptic.synthesize.simple_metamer.SimpleMetamer.save"><code class="xref py py-obj docutils literal notranslate"><span class="pre">save</span></code></a>(file_path)</p></td>
-<td><p>Save all relevant (non-model) variables in .pt file.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#plenoptic.synthesize.simple_metamer.SimpleMetamer.synthesize" title="plenoptic.synthesize.simple_metamer.SimpleMetamer.synthesize"><code class="xref py py-obj docutils literal notranslate"><span class="pre">synthesize</span></code></a>([max_iter, optimizer])</p></td>
-<td><p>Synthesize a simple metamer.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#plenoptic.synthesize.simple_metamer.SimpleMetamer.to" title="plenoptic.synthesize.simple_metamer.SimpleMetamer.to"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to</span></code></a>(*args, **kwargs)</p></td>
-<td><p>Move and/or cast the parameters and buffers.</p></td>
-</tr>
-</tbody>
-</table>
-<dl class="py method">
-<dt class="sig sig-object py" id="plenoptic.synthesize.simple_metamer.SimpleMetamer.load">
-<span class="sig-name descname"><span class="pre">load</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">map_location</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/plenoptic/synthesize/simple_metamer.html#SimpleMetamer.load"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#plenoptic.synthesize.simple_metamer.SimpleMetamer.load" title="Link to this definition"></a></dt>
-<dd><p>Load all relevant attributes from a .pt file.</p>
-<p>Note this operates in place and so doesn’t return anything.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>file_path</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – The path to load the synthesis object from</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="plenoptic.synthesize.simple_metamer.SimpleMetamer.save">
-<span class="sig-name descname"><span class="pre">save</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/plenoptic/synthesize/simple_metamer.html#SimpleMetamer.save"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#plenoptic.synthesize.simple_metamer.SimpleMetamer.save" title="Link to this definition"></a></dt>
-<dd><p>Save all relevant (non-model) variables in .pt file.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>file_path</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – The path to save the SimpleMetamer object to.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="plenoptic.synthesize.simple_metamer.SimpleMetamer.synthesize">
-<span class="sig-name descname"><span class="pre">synthesize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">max_iter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">optimizer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/plenoptic/synthesize/simple_metamer.html#SimpleMetamer.synthesize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#plenoptic.synthesize.simple_metamer.SimpleMetamer.synthesize" title="Link to this definition"></a></dt>
-<dd><p>Synthesize a simple metamer.</p>
-<p>If called multiple times, will continue where we left off.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>max_iter</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – Number of iterations to run synthesis for.</p></li>
-<li><p><strong>optimizer</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code> | <code class="xref py py-class docutils literal notranslate"><span class="pre">Optimizer</span></code></span>) – The optimizer to use. If None and this is the first time calling
-synthesize, we use Adam(lr=.01, amsgrad=True); if synthesize has
-been called before, we reuse the previous optimizer.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>The synthesized metamer</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>metamer</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="plenoptic.synthesize.simple_metamer.SimpleMetamer.to">
-<span class="sig-name descname"><span class="pre">to</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/plenoptic/synthesize/simple_metamer.html#SimpleMetamer.to"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#plenoptic.synthesize.simple_metamer.SimpleMetamer.to" title="Link to this definition"></a></dt>
-<dd><p>Move and/or cast the parameters and buffers.</p>
-<p>This can be called as
-.. function:: to(device=None, dtype=None, non_blocking=False)
-.. function:: to(dtype, non_blocking=False)
-.. function:: to(tensor, non_blocking=False)
-Its signature is similar to <code class="xref py py-meth docutils literal notranslate"><span class="pre">torch.Tensor.to()</span></code>, but only accepts
-floating point desired <code class="xref py py-attr docutils literal notranslate"><span class="pre">dtype</span></code> s. In addition, this method will
-only cast the floating point parameters and buffers to <code class="xref py py-attr docutils literal notranslate"><span class="pre">dtype</span></code>
-(if given). The integral parameters and buffers will be moved
-<code class="xref py py-attr docutils literal notranslate"><span class="pre">device</span></code>, if that is given, but with dtypes unchanged. When
-<code class="xref py py-attr docutils literal notranslate"><span class="pre">non_blocking</span></code> is set, it tries to convert/move asynchronously
-with respect to the host if possible, e.g., moving CPU Tensors with
-pinned memory to CUDA devices. When calling this method to move tensors
-to a CUDA device, items in <code class="docutils literal notranslate"><span class="pre">attrs</span></code> that start with “<a href="#id38"><span class="problematic" id="id39">saved_</span></a>” will not
-be moved.
-.. note:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">This</span> <span class="n">method</span> <span class="n">modifies</span> <span class="n">the</span> <span class="n">module</span> <span class="ow">in</span><span class="o">-</span><span class="n">place</span><span class="o">.</span>
-</pre></div>
-</div>
-<dl class="simple">
-<dt>Args:</dt><dd><dl class="simple">
-<dt>device (<code class="xref py py-class docutils literal notranslate"><span class="pre">torch.device</span></code>): the desired device of the parameters</dt><dd><p>and buffers in this module</p>
-</dd>
-<dt>dtype (<code class="xref py py-class docutils literal notranslate"><span class="pre">torch.dtype</span></code>): the desired floating point type of</dt><dd><p>the floating point parameters and buffers in this module</p>
-</dd>
-<dt>tensor (torch.Tensor): Tensor whose dtype and device are the desired</dt><dd><p>dtype and device for all parameters and buffers in this module</p>
-</dd>
-<dt>attrs (<code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>): list of strs containing the attributes of</dt><dd><p>this object to move to the specified device/dtype</p>
-</dd>
-</dl>
-</dd>
-<dt>Returns:</dt><dd><p>Module: self</p>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
-</section>
 <section id="module-plenoptic.synthesize.synthesis">
 <span id="plenoptic-synthesize-synthesis-module"></span><h2>plenoptic.synthesize.synthesis module<a class="headerlink" href="#module-plenoptic.synthesize.synthesis" title="Link to this heading"></a></h2>
 <p>abstract synthesis super-class.</p>
@@ -3318,7 +2657,7 @@ only cast the floating point parameters and buffers to <code class="xref py py-a
 <code class="xref py py-attr docutils literal notranslate"><span class="pre">non_blocking</span></code> is set, it tries to convert/move asynchronously
 with respect to the host if possible, e.g., moving CPU Tensors with
 pinned memory to CUDA devices. When calling this method to move tensors
-to a CUDA device, items in <code class="docutils literal notranslate"><span class="pre">attrs</span></code> that start with “<a href="#id40"><span class="problematic" id="id41">saved_</span></a>” will not
+to a CUDA device, items in <code class="docutils literal notranslate"><span class="pre">attrs</span></code> that start with “<a href="#id29"><span class="problematic" id="id30">saved_</span></a>” will not
 be moved.
 .. note:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">This</span> <span class="n">method</span> <span class="n">modifies</span> <span class="n">the</span> <span class="n">module</span> <span class="ow">in</span><span class="o">-</span><span class="n">place</span><span class="o">.</span>
