@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>plenoptic.simulate.canonical_computations.steerable_pyramid_freq &mdash; plenoptic 1.2.1.dev22 documentation</title>
+  <title>plenoptic.simulate.canonical_computations.steerable_pyramid_freq &mdash; plenoptic 1.2.1.dev78 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/plot_directive.css" />
@@ -15,7 +15,7 @@
   
       <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../../_static/documentation_options.js?v=bcf5c17c"></script>
+      <script src="../../../../_static/documentation_options.js?v=20676b15"></script>
       <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -409,6 +409,8 @@
 
         <span class="c1"># reasonable default dtype</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+        <span class="c1"># This model has no trainable parameters, so it&#39;s always in eval mode</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
 
 <div class="viewcode-block" id="SteerablePyramidFreq.forward">
 <a class="viewcode-back" href="../../../../api/plenoptic.simulate.canonical_computations.html#plenoptic.simulate.canonical_computations.steerable_pyramid_freq.SteerablePyramidFreq.forward">[docs]</a>
@@ -708,7 +710,8 @@
         <span class="k">for</span> <span class="n">ch</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_channels</span><span class="p">):</span>
             <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">pyr_keys</span><span class="p">:</span>
                 <span class="k">if</span> <span class="s2">&quot;residual&quot;</span> <span class="ow">in</span> <span class="n">k</span><span class="p">:</span>
-                    <span class="n">band</span> <span class="o">=</span> <span class="n">pyr_tensor</span><span class="p">[:,</span> <span class="n">i</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">type</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">float</span><span class="p">)</span>
+                    <span class="c1"># residuals are real-valued, the complex part is all 0</span>
+                    <span class="n">band</span> <span class="o">=</span> <span class="n">pyr_tensor</span><span class="p">[:,</span> <span class="n">i</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">real</span>
                     <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="k">if</span> <span class="n">split_complex</span><span class="p">:</span>
