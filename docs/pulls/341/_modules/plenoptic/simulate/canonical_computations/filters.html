@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>plenoptic.simulate.canonical_computations.filters &mdash; plenoptic 1.2.1.dev92 documentation</title>
+  <title>plenoptic.simulate.canonical_computations.filters &mdash; plenoptic 1.2.1.dev103 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/plot_directive.css" />
@@ -15,7 +15,7 @@
   
       <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../../_static/documentation_options.js?v=81393f12"></script>
+      <script src="../../../../_static/documentation_options.js?v=4e297482"></script>
       <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -202,8 +202,8 @@
 <a class="viewcode-back" href="../../../../api/plenoptic.simulate.canonical_computations.html#plenoptic.simulate.canonical_computations.filters.circular_gaussian2d">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">circular_gaussian2d</span><span class="p">(</span>
     <span class="n">kernel_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span>
-    <span class="n">std</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="n">Tensor</span><span class="p">,</span>
-    <span class="n">out_channels</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="n">std</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">|</span> <span class="nb">float</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">|</span> <span class="n">Tensor</span><span class="p">,</span>
+    <span class="n">out_channels</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Creates normalized, centered circular 2D gaussian tensor with which to convolve.</span>
 
@@ -215,9 +215,11 @@
 <span class="sd">        faster, see</span>
 <span class="sd">        https://pytorch.org/docs/stable/generated/torch.nn.functional.conv2d.html</span>
 <span class="sd">    std:</span>
-<span class="sd">        Standard deviation of 2D circular Gaussian.</span>
+<span class="sd">        Standard deviation of 2D circular Gaussian. If a scalar and ``out_channels`` is</span>
+<span class="sd">        not ``None``, all out channels will have the same value. If not a scalar and</span>
+<span class="sd">        ``out_channels`` is not ``None``, ``len(std)`` must equal ``out_channels``.</span>
 <span class="sd">    out_channels:</span>
-<span class="sd">        Number of channels with same kernel repeated along channel dim.</span>
+<span class="sd">        Number of output channels. If None, inferred from shape of ``std``.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -225,8 +227,27 @@
 <span class="sd">        Circular gaussian kernel, normalized by total pixel-sum (_not_ by 2pi*std).</span>
 <span class="sd">        ``filt`` has shape ``(out_channels=n_channels, in_channels=1, height, width)``</span>
 
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    ValueError:</span>
+<span class="sd">        If out_channels is not a positive integer.</span>
+<span class="sd">    ValueError:</span>
+<span class="sd">        If kernel_size is not one or two positive integers.</span>
+<span class="sd">    ValueError:</span>
+<span class="sd">        If std is not positive.</span>
+<span class="sd">    ValueError:</span>
+<span class="sd">        If std is non-scalar and ``len(std) != out_channels``</span>
+
+<span class="sd">    See also</span>
+<span class="sd">    --------</span>
+<span class="sd">    Gaussian</span>
+<span class="sd">        Torch Module to perform this convolution.</span>
+
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
+
+<span class="sd">    Single output channel.</span>
+
 <span class="sd">    .. plot::</span>
 
 <span class="sd">      &gt;&gt;&gt; import plenoptic as po</span>
@@ -235,43 +256,170 @@
 <span class="sd">      &gt;&gt;&gt; import torch</span>
 <span class="sd">      &gt;&gt;&gt; import matplotlib.pyplot as plt</span>
 <span class="sd">      &gt;&gt;&gt; kernel_size = 32</span>
-<span class="sd">      &gt;&gt;&gt; filt_2d = circular_gaussian2d(kernel_size=kernel_size, std=2.)</span>
+<span class="sd">      &gt;&gt;&gt; filt_2d = circular_gaussian2d(kernel_size=kernel_size, std=2)</span>
 <span class="sd">      &gt;&gt;&gt; einstein_img = po.data.einstein()</span>
 <span class="sd">      &gt;&gt;&gt; blurred_einstein = conv2d(einstein_img, filt_2d, padding=&quot;same&quot;)</span>
 <span class="sd">      &gt;&gt;&gt; po.imshow(</span>
-<span class="sd">      ...     [filt_2d, einstein_img, blurred_einstein],</span>
-<span class="sd">      ...     title=[&quot;2D Gaussian Filter&quot;, &quot;Einstein&quot;, &quot;Blurred Einstein&quot;]</span>
+<span class="sd">      ...     [einstein_img, filt_2d, blurred_einstein],</span>
+<span class="sd">      ...     title=[&quot;Einstein&quot;, &quot;2D Gaussian Filter&quot;, &quot;Blurred Einstein&quot;]</span>
+<span class="sd">      ... )  #doctest: +ELLIPSIS</span>
+<span class="sd">      &lt;PyrFigure ...&gt;</span>
+
+<span class="sd">    Multiple output channels with different standard deviations.</span>
+
+<span class="sd">    .. plot::</span>
+
+<span class="sd">      &gt;&gt;&gt; import plenoptic as po</span>
+<span class="sd">      &gt;&gt;&gt; from plenoptic.simulate import circular_gaussian2d</span>
+<span class="sd">      &gt;&gt;&gt; from torch.nn.functional import conv2d</span>
+<span class="sd">      &gt;&gt;&gt; import torch</span>
+<span class="sd">      &gt;&gt;&gt; import matplotlib.pyplot as plt</span>
+<span class="sd">      &gt;&gt;&gt; kernel_size = 32</span>
+<span class="sd">      &gt;&gt;&gt; filt_2d = circular_gaussian2d(kernel_size=kernel_size, std=[2, 5.5],</span>
+<span class="sd">      ...                               out_channels=2)</span>
+<span class="sd">      &gt;&gt;&gt; einstein_img = po.data.einstein()</span>
+<span class="sd">      &gt;&gt;&gt; blurred_einstein = conv2d(einstein_img, filt_2d, padding=&quot;same&quot;)</span>
+<span class="sd">      &gt;&gt;&gt; titles = [&quot;Einstein&quot;, &quot;2D Gaussian Filter&quot;, &quot;Larger 2D Gaussian Filter&quot;,</span>
+<span class="sd">      ...           &quot;Blurred Einstein&quot;, &quot;Blurrier Einstein&quot;]</span>
+<span class="sd">      &gt;&gt;&gt; po.imshow(</span>
+<span class="sd">      ...     [einstein_img, filt_2d, blurred_einstein], title=titles</span>
+<span class="sd">      ... )  #doctest: +ELLIPSIS</span>
+<span class="sd">      &lt;PyrFigure ...&gt;</span>
+
+<span class="sd">    Multiple input and output channels, convolved independently. See [conv2d</span>
+<span class="sd">    documentation](https://pytorch.org/docs/stable/generated/torch.nn.functional.conv2d.html)</span>
+<span class="sd">    to understand the behavior below:</span>
+
+<span class="sd">    .. plot::</span>
+
+<span class="sd">      &gt;&gt;&gt; import plenoptic as po</span>
+<span class="sd">      &gt;&gt;&gt; from plenoptic.simulate import circular_gaussian2d</span>
+<span class="sd">      &gt;&gt;&gt; from torch.nn.functional import conv2d</span>
+<span class="sd">      &gt;&gt;&gt; import torch</span>
+<span class="sd">      &gt;&gt;&gt; import matplotlib.pyplot as plt</span>
+<span class="sd">      &gt;&gt;&gt; kernel_size = 32</span>
+<span class="sd">      &gt;&gt;&gt; filt_2d = circular_gaussian2d(kernel_size=kernel_size, std=[2, 5.5],</span>
+<span class="sd">      ...                               out_channels=2)</span>
+<span class="sd">      &gt;&gt;&gt; wheel = po.data.color_wheel(as_gray=False)</span>
+<span class="sd">      &gt;&gt;&gt; blurred_wheel = conv2d(wheel, filt_2d.repeat(3, 1, 1, 1), groups=3,</span>
+<span class="sd">      ...                        padding=&quot;same&quot;)</span>
+<span class="sd">      &gt;&gt;&gt; titles = [&quot;Wheel&quot;, &quot;Blurred Wheel&quot;, &quot;Blurrier Wheel&quot;]</span>
+<span class="sd">      &gt;&gt;&gt; # note that the order of channels: the first two correspond to the first</span>
+<span class="sd">      &gt;&gt;&gt; # channel of the input image, convolved with the each of the two gaussians,</span>
+<span class="sd">      &gt;&gt;&gt; # and so on.</span>
+<span class="sd">      &gt;&gt;&gt; po.imshow(</span>
+<span class="sd">      ...     [wheel, blurred_wheel[:, ::2], blurred_wheel[:, 1::2]], title=titles,</span>
+<span class="sd">      ...     as_rgb=True,</span>
 <span class="sd">      ... )  #doctest: +ELLIPSIS</span>
 <span class="sd">      &lt;PyrFigure ...&gt;</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">device</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s2">&quot;cpu&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">std</span><span class="p">,</span> <span class="nb">float</span><span class="p">)</span> <span class="k">else</span> <span class="n">std</span><span class="o">.</span><span class="n">device</span>
+    <span class="n">kernel_size</span><span class="p">,</span> <span class="n">std</span><span class="p">,</span> <span class="n">out_channels</span> <span class="o">=</span> <span class="n">_validate_filter_args</span><span class="p">(</span>
+        <span class="n">kernel_size</span><span class="p">,</span> <span class="n">std</span><span class="p">,</span> <span class="n">out_channels</span>
+    <span class="p">)</span>
 
-    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">kernel_size</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
-        <span class="n">kernel_size</span> <span class="o">=</span> <span class="p">(</span><span class="n">kernel_size</span><span class="p">,</span> <span class="n">kernel_size</span><span class="p">)</span>
-    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">std</span><span class="p">,</span> <span class="nb">float</span><span class="p">)</span> <span class="ow">or</span> <span class="n">std</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="n">torch</span><span class="o">.</span><span class="n">Size</span><span class="p">([]):</span>
-        <span class="n">std</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">out_channels</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span> <span class="o">*</span> <span class="n">std</span>
+    <span class="n">origin</span> <span class="o">=</span> <span class="p">(</span><span class="n">kernel_size</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span>
 
-    <span class="k">assert</span> <span class="n">out_channels</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;number of filters must be positive integer&quot;</span>
-    <span class="k">assert</span> <span class="n">torch</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">std</span> <span class="o">&gt;</span> <span class="mf">0.0</span><span class="p">),</span> <span class="s2">&quot;stdev must be positive&quot;</span>
-    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">std</span><span class="p">)</span> <span class="o">==</span> <span class="n">out_channels</span><span class="p">,</span> <span class="s2">&quot;Number of stds must equal out_channels&quot;</span>
-    <span class="n">origin</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">as_tensor</span><span class="p">(((</span><span class="n">kernel_size</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">,</span> <span class="p">(</span><span class="n">kernel_size</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">))</span>
-    <span class="n">origin</span> <span class="o">=</span> <span class="n">origin</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
-
-    <span class="n">shift_y</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">kernel_size</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span> <span class="o">-</span> <span class="n">origin</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>  <span class="c1"># height</span>
-    <span class="n">shift_x</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">kernel_size</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span> <span class="o">-</span> <span class="n">origin</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>  <span class="c1"># width</span>
+    <span class="n">shift_y</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">kernel_size</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">std</span><span class="o">.</span><span class="n">device</span><span class="p">)</span> <span class="o">-</span> <span class="n">origin</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">shift_x</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">kernel_size</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">std</span><span class="o">.</span><span class="n">device</span><span class="p">)</span> <span class="o">-</span> <span class="n">origin</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
 
     <span class="p">(</span><span class="n">xramp</span><span class="p">,</span> <span class="n">yramp</span><span class="p">)</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">shift_x</span><span class="p">,</span> <span class="n">shift_y</span><span class="p">,</span> <span class="n">indexing</span><span class="o">=</span><span class="s2">&quot;xy&quot;</span><span class="p">)</span>
 
     <span class="n">log_filt</span> <span class="o">=</span> <span class="p">(</span><span class="n">xramp</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">yramp</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
-    <span class="n">log_filt</span> <span class="o">=</span> <span class="n">log_filt</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="n">out_channels</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>  <span class="c1"># 4D</span>
+    <span class="n">log_filt</span> <span class="o">=</span> <span class="n">log_filt</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="n">out_channels</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
     <span class="n">log_filt</span> <span class="o">=</span> <span class="n">log_filt</span> <span class="o">/</span> <span class="p">(</span><span class="o">-</span><span class="mf">2.0</span> <span class="o">*</span> <span class="n">std</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">out_channels</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
 
     <span class="n">filt</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">log_filt</span><span class="p">)</span>
-    <span class="n">filt</span> <span class="o">=</span> <span class="n">filt</span> <span class="o">/</span> <span class="n">torch</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">filt</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="n">keepdim</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>  <span class="c1"># normalize</span>
+    <span class="c1"># normalize</span>
+    <span class="n">filt</span> <span class="o">=</span> <span class="n">filt</span> <span class="o">/</span> <span class="n">torch</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">filt</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="n">keepdim</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">filt</span></div>
 
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_validate_filter_args</span><span class="p">(</span>
+    <span class="n">kernel_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span>
+    <span class="n">std</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">|</span> <span class="nb">float</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">|</span> <span class="n">Tensor</span><span class="p">,</span>
+    <span class="n">out_channels</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">std_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;std&quot;</span><span class="p">,</span>
+    <span class="n">out_channels_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;out_channels&quot;</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">Tensor</span><span class="p">,</span> <span class="n">Tensor</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Validate common filter args</span>
+
+<span class="sd">    Checks that:</span>
+
+<span class="sd">    - kernel_size is positive, integer-valued, and has 1 or 2 values</span>
+
+<span class="sd">    - std is positive and either a single value (i.e., an int, float, or scalar tensor)</span>
+<span class="sd">      or ``len(std) == out_channels``</span>
+
+<span class="sd">    - out_channels must be a positive integer.</span>
+
+<span class="sd">    Does the following and then returns the three values</span>
+<span class="sd">    - if ``out_channels`` is ``None``, then infer from shape of ``std``.</span>
+<span class="sd">    - makes ``kernel_size`` a 1d tensor of size 2</span>
+<span class="sd">    - makes ``std`` a float32 1d tensor of size ``out_channels``</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    kernel_size:</span>
+<span class="sd">        Filter kernel size.</span>
+<span class="sd">    std:</span>
+<span class="sd">        Standard deviation of 2D circular Gaussian. If a scalar and ``out_channels`` is</span>
+<span class="sd">        not ``None``, all out channels will have the same value. If not a scalar and</span>
+<span class="sd">        ``out_channels`` is not ``None``, ``len(std)`` must equal ``out_channels``.</span>
+<span class="sd">    out_channels:</span>
+<span class="sd">        Number of output channels. If None, inferred from ``len(std)``.</span>
+<span class="sd">    std_name, out_channels_name:</span>
+<span class="sd">        Names of these variables to raise more informative error messages (when e.g.,</span>
+<span class="sd">        calling from ``CenterSurround``, which uses this function to validate different</span>
+<span class="sd">        std arguments.)</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    kernel_size, std, out_channels</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    ValueError:</span>
+<span class="sd">        If out_channels is not a positive integer.</span>
+<span class="sd">    ValueError:</span>
+<span class="sd">        If kernel_size is not one or two positive integers.</span>
+<span class="sd">    ValueError:</span>
+<span class="sd">        If std is not positive.</span>
+<span class="sd">    ValueError:</span>
+<span class="sd">        If std is non-scalar and ``len(std) != out_channels``</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">std</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">as_tensor</span><span class="p">(</span><span class="n">std</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">torch</span><span class="o">.</span><span class="n">is_floating_point</span><span class="p">(</span><span class="n">std</span><span class="p">):</span>
+        <span class="n">std</span> <span class="o">=</span> <span class="n">std</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">out_channels</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">out_channels</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">std</span><span class="p">)</span> <span class="k">if</span> <span class="n">std</span><span class="o">.</span><span class="n">ndim</span> <span class="o">!=</span> <span class="mi">0</span> <span class="k">else</span> <span class="mi">1</span>
+
+    <span class="k">if</span> <span class="n">out_channels</span> <span class="o">&lt;</span> <span class="mi">1</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">out_channels</span><span class="p">,</span> <span class="nb">float</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">out_channels_name</span><span class="si">}</span><span class="s2"> must be positive integer&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">std</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">std</span> <span class="o">=</span> <span class="n">std</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="n">out_channels</span><span class="p">)</span>
+
+    <span class="n">kernel_size</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">as_tensor</span><span class="p">(</span><span class="n">kernel_size</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">std</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">kernel_size</span><span class="o">.</span><span class="n">numel</span><span class="p">()</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">kernel_size</span> <span class="o">=</span> <span class="n">kernel_size</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">is_floating_point</span><span class="p">(</span><span class="n">kernel_size</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;kernel_size must be integer-valued&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">kernel_size</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;kernel_size must be positive&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">std</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">std_name</span><span class="si">}</span><span class="s2"> must be positive&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">std</span><span class="p">)</span> <span class="o">!=</span> <span class="n">out_channels</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;If non-scalar, len(</span><span class="si">{</span><span class="n">std_name</span><span class="si">}</span><span class="s2">) must equal </span><span class="si">{</span><span class="n">out_channels_name</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">kernel_size</span><span class="p">,</span> <span class="n">std</span><span class="p">,</span> <span class="n">out_channels</span>
 </pre></div>
 
            </div>

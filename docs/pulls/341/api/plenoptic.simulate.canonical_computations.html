@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>plenoptic.simulate.canonical_computations package &mdash; plenoptic 1.2.1.dev92 documentation</title>
+  <title>plenoptic.simulate.canonical_computations package &mdash; plenoptic 1.2.1.dev103 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css" />
@@ -16,7 +16,7 @@
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../_static/documentation_options.js?v=81393f12"></script>
+      <script src="../_static/documentation_options.js?v=4e297482"></script>
       <script src="../_static/doctools.js?v=9bcbadda"></script>
       <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -136,7 +136,7 @@
 <span id="plenoptic-simulate-canonical-computations-filters-module"></span><h2>plenoptic.simulate.canonical_computations.filters module<a class="headerlink" href="#module-plenoptic.simulate.canonical_computations.filters" title="Link to this heading"></a></h2>
 <dl class="py function">
 <dt class="sig sig-object py" id="plenoptic.simulate.canonical_computations.filters.circular_gaussian2d">
-<span class="sig-prename descclassname"><span class="pre">plenoptic.simulate.canonical_computations.filters.</span></span><span class="sig-name descname"><span class="pre">circular_gaussian2d</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">kernel_size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">std</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_channels</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/plenoptic/simulate/canonical_computations/filters.html#circular_gaussian2d"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#plenoptic.simulate.canonical_computations.filters.circular_gaussian2d" title="Link to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">plenoptic.simulate.canonical_computations.filters.</span></span><span class="sig-name descname"><span class="pre">circular_gaussian2d</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">kernel_size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">std</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_channels</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/plenoptic/simulate/canonical_computations/filters.html#circular_gaussian2d"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#plenoptic.simulate.canonical_computations.filters.circular_gaussian2d" title="Link to this definition"></a></dt>
 <dd><p>Creates normalized, centered circular 2D gaussian tensor with which to convolve.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -145,8 +145,10 @@
 If you use same-padding, convolution with an odd-length kernel will also be
 faster, see
 <a class="reference external" href="https://pytorch.org/docs/stable/generated/torch.nn.functional.conv2d.html">https://pytorch.org/docs/stable/generated/torch.nn.functional.conv2d.html</a></p></li>
-<li><p><strong>std</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code> | <a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.6)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tensor</span></code></a></span>) – Standard deviation of 2D circular Gaussian.</p></li>
-<li><p><strong>out_channels</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – Number of channels with same kernel repeated along channel dim.</p></li>
+<li><p><strong>std</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code> | <code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>] | <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code> | <code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>] | <a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.6)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tensor</span></code></a></span>) – Standard deviation of 2D circular Gaussian. If a scalar and <code class="docutils literal notranslate"><span class="pre">out_channels</span></code> is
+not <code class="docutils literal notranslate"><span class="pre">None</span></code>, all out channels will have the same value. If not a scalar and
+<code class="docutils literal notranslate"><span class="pre">out_channels</span></code> is not <code class="docutils literal notranslate"><span class="pre">None</span></code>, <code class="docutils literal notranslate"><span class="pre">len(std)</span></code> must equal <code class="docutils literal notranslate"><span class="pre">out_channels</span></code>.</p></li>
+<li><p><strong>out_channels</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span>) – Number of output channels. If None, inferred from shape of <code class="docutils literal notranslate"><span class="pre">std</span></code>.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -156,20 +158,36 @@ faster, see
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>filt</p>
 </dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>ValueError:</strong> – If out_channels is not a positive integer.</p></li>
+<li><p><strong>ValueError:</strong> – If kernel_size is not one or two positive integers.</p></li>
+<li><p><strong>ValueError:</strong> – If std is not positive.</p></li>
+<li><p><strong>ValueError:</strong> – If std is non-scalar and <code class="docutils literal notranslate"><span class="pre">len(std)</span> <span class="pre">!=</span> <span class="pre">out_channels</span></code></p></li>
+</ul>
+</dd>
 </dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">Gaussian</span></code></dt><dd><p>Torch Module to perform this convolution.</p>
+</dd>
+</dl>
+</div>
 <p class="rubric">Examples</p>
+<p>Single output channel.</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">plenoptic</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">po</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">plenoptic.simulate</span><span class="w"> </span><span class="kn">import</span> <span class="n">circular_gaussian2d</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">torch.nn.functional</span><span class="w"> </span><span class="kn">import</span> <span class="n">conv2d</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">kernel_size</span> <span class="o">=</span> <span class="mi">32</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">filt_2d</span> <span class="o">=</span> <span class="n">circular_gaussian2d</span><span class="p">(</span><span class="n">kernel_size</span><span class="o">=</span><span class="n">kernel_size</span><span class="p">,</span> <span class="n">std</span><span class="o">=</span><span class="mf">2.</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">filt_2d</span> <span class="o">=</span> <span class="n">circular_gaussian2d</span><span class="p">(</span><span class="n">kernel_size</span><span class="o">=</span><span class="n">kernel_size</span><span class="p">,</span> <span class="n">std</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">einstein_img</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">einstein</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">blurred_einstein</span> <span class="o">=</span> <span class="n">conv2d</span><span class="p">(</span><span class="n">einstein_img</span><span class="p">,</span> <span class="n">filt_2d</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="s2">&quot;same&quot;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">po</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span>
-<span class="gp">... </span>    <span class="p">[</span><span class="n">filt_2d</span><span class="p">,</span> <span class="n">einstein_img</span><span class="p">,</span> <span class="n">blurred_einstein</span><span class="p">],</span>
-<span class="gp">... </span>    <span class="n">title</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;2D Gaussian Filter&quot;</span><span class="p">,</span> <span class="s2">&quot;Einstein&quot;</span><span class="p">,</span> <span class="s2">&quot;Blurred Einstein&quot;</span><span class="p">]</span>
+<span class="gp">... </span>    <span class="p">[</span><span class="n">einstein_img</span><span class="p">,</span> <span class="n">filt_2d</span><span class="p">,</span> <span class="n">blurred_einstein</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="n">title</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Einstein&quot;</span><span class="p">,</span> <span class="s2">&quot;2D Gaussian Filter&quot;</span><span class="p">,</span> <span class="s2">&quot;Blurred Einstein&quot;</span><span class="p">]</span>
 <span class="gp">... </span><span class="p">)</span>  
 <span class="go">&lt;PyrFigure ...&gt;</span>
 </pre></div>
@@ -177,6 +195,58 @@ faster, see
 <p>(<a class="reference download internal" download="" href="../_downloads/89770886052c86939dda8465a9492ed7/plenoptic-simulate-canonical_computations-1.png"><code class="xref download docutils literal notranslate"><span class="pre">png</span></code></a>, <a class="reference download internal" download="" href="../_downloads/d25a020b38237e678ed03e4d87b8e117/plenoptic-simulate-canonical_computations-1.hires.png"><code class="xref download docutils literal notranslate"><span class="pre">hires.png</span></code></a>, <a class="reference download internal" download="" href="../_downloads/edc0ab91eb1065bc68840751da0618f7/plenoptic-simulate-canonical_computations-1.pdf"><code class="xref download docutils literal notranslate"><span class="pre">pdf</span></code></a>)</p>
 <figure class="align-default">
 <img alt="../_images/plenoptic-simulate-canonical_computations-1.png" class="plot-directive" src="../_images/plenoptic-simulate-canonical_computations-1.png" />
+</figure>
+<p>Multiple output channels with different standard deviations.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">plenoptic</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">po</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">plenoptic.simulate</span><span class="w"> </span><span class="kn">import</span> <span class="n">circular_gaussian2d</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">torch.nn.functional</span><span class="w"> </span><span class="kn">import</span> <span class="n">conv2d</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">kernel_size</span> <span class="o">=</span> <span class="mi">32</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">filt_2d</span> <span class="o">=</span> <span class="n">circular_gaussian2d</span><span class="p">(</span><span class="n">kernel_size</span><span class="o">=</span><span class="n">kernel_size</span><span class="p">,</span> <span class="n">std</span><span class="o">=</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mf">5.5</span><span class="p">],</span>
+<span class="gp">... </span>                              <span class="n">out_channels</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">einstein_img</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">einstein</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">blurred_einstein</span> <span class="o">=</span> <span class="n">conv2d</span><span class="p">(</span><span class="n">einstein_img</span><span class="p">,</span> <span class="n">filt_2d</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="s2">&quot;same&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">titles</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Einstein&quot;</span><span class="p">,</span> <span class="s2">&quot;2D Gaussian Filter&quot;</span><span class="p">,</span> <span class="s2">&quot;Larger 2D Gaussian Filter&quot;</span><span class="p">,</span>
+<span class="gp">... </span>          <span class="s2">&quot;Blurred Einstein&quot;</span><span class="p">,</span> <span class="s2">&quot;Blurrier Einstein&quot;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">po</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="p">[</span><span class="n">einstein_img</span><span class="p">,</span> <span class="n">filt_2d</span><span class="p">,</span> <span class="n">blurred_einstein</span><span class="p">],</span> <span class="n">title</span><span class="o">=</span><span class="n">titles</span>
+<span class="gp">... </span><span class="p">)</span>  
+<span class="go">&lt;PyrFigure ...&gt;</span>
+</pre></div>
+</div>
+<p>(<a class="reference download internal" download="" href="../_downloads/c3b36d18186d35c209e03b05089ee8d4/plenoptic-simulate-canonical_computations-2.png"><code class="xref download docutils literal notranslate"><span class="pre">png</span></code></a>, <a class="reference download internal" download="" href="../_downloads/fd8ca01eeaa9053cafe8eb1aeca10498/plenoptic-simulate-canonical_computations-2.hires.png"><code class="xref download docutils literal notranslate"><span class="pre">hires.png</span></code></a>, <a class="reference download internal" download="" href="../_downloads/82248334b6fb1ec98b52abaca919e1e6/plenoptic-simulate-canonical_computations-2.pdf"><code class="xref download docutils literal notranslate"><span class="pre">pdf</span></code></a>)</p>
+<figure class="align-default">
+<img alt="../_images/plenoptic-simulate-canonical_computations-2.png" class="plot-directive" src="../_images/plenoptic-simulate-canonical_computations-2.png" />
+</figure>
+<p>Multiple input and output channels, convolved independently. See [conv2d
+documentation](<a class="reference external" href="https://pytorch.org/docs/stable/generated/torch.nn.functional.conv2d.html">https://pytorch.org/docs/stable/generated/torch.nn.functional.conv2d.html</a>)
+to understand the behavior below:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">plenoptic</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">po</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">plenoptic.simulate</span><span class="w"> </span><span class="kn">import</span> <span class="n">circular_gaussian2d</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">torch.nn.functional</span><span class="w"> </span><span class="kn">import</span> <span class="n">conv2d</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">kernel_size</span> <span class="o">=</span> <span class="mi">32</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">filt_2d</span> <span class="o">=</span> <span class="n">circular_gaussian2d</span><span class="p">(</span><span class="n">kernel_size</span><span class="o">=</span><span class="n">kernel_size</span><span class="p">,</span> <span class="n">std</span><span class="o">=</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mf">5.5</span><span class="p">],</span>
+<span class="gp">... </span>                              <span class="n">out_channels</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">wheel</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">color_wheel</span><span class="p">(</span><span class="n">as_gray</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">blurred_wheel</span> <span class="o">=</span> <span class="n">conv2d</span><span class="p">(</span><span class="n">wheel</span><span class="p">,</span> <span class="n">filt_2d</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">groups</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+<span class="gp">... </span>                       <span class="n">padding</span><span class="o">=</span><span class="s2">&quot;same&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">titles</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Wheel&quot;</span><span class="p">,</span> <span class="s2">&quot;Blurred Wheel&quot;</span><span class="p">,</span> <span class="s2">&quot;Blurrier Wheel&quot;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># note that the order of channels: the first two correspond to the first</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># channel of the input image, convolved with the each of the two gaussians,</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># and so on.</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">po</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="p">[</span><span class="n">wheel</span><span class="p">,</span> <span class="n">blurred_wheel</span><span class="p">[:,</span> <span class="p">::</span><span class="mi">2</span><span class="p">],</span> <span class="n">blurred_wheel</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">::</span><span class="mi">2</span><span class="p">]],</span> <span class="n">title</span><span class="o">=</span><span class="n">titles</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">as_rgb</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="gp">... </span><span class="p">)</span>  
+<span class="go">&lt;PyrFigure ...&gt;</span>
+</pre></div>
+</div>
+<p>(<a class="reference download internal" download="" href="../_downloads/9e7046b95429d3620a9edd1da624bc30/plenoptic-simulate-canonical_computations-3.png"><code class="xref download docutils literal notranslate"><span class="pre">png</span></code></a>, <a class="reference download internal" download="" href="../_downloads/81309f9909c98a02b23612b83a6a790c/plenoptic-simulate-canonical_computations-3.hires.png"><code class="xref download docutils literal notranslate"><span class="pre">hires.png</span></code></a>, <a class="reference download internal" download="" href="../_downloads/cd42f96a23edbb5093e4813c0ac10a58/plenoptic-simulate-canonical_computations-3.pdf"><code class="xref download docutils literal notranslate"><span class="pre">pdf</span></code></a>)</p>
+<figure class="align-default">
+<img alt="../_images/plenoptic-simulate-canonical_computations-3.png" class="plot-directive" src="../_images/plenoptic-simulate-canonical_computations-3.png" />
 </figure>
 </dd></dl>
 
@@ -236,9 +306,9 @@ for SSIM</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
 </pre></div>
 </div>
-<p>(<a class="reference download internal" download="" href="../_downloads/c3b36d18186d35c209e03b05089ee8d4/plenoptic-simulate-canonical_computations-2.png"><code class="xref download docutils literal notranslate"><span class="pre">png</span></code></a>, <a class="reference download internal" download="" href="../_downloads/fd8ca01eeaa9053cafe8eb1aeca10498/plenoptic-simulate-canonical_computations-2.hires.png"><code class="xref download docutils literal notranslate"><span class="pre">hires.png</span></code></a>, <a class="reference download internal" download="" href="../_downloads/82248334b6fb1ec98b52abaca919e1e6/plenoptic-simulate-canonical_computations-2.pdf"><code class="xref download docutils literal notranslate"><span class="pre">pdf</span></code></a>)</p>
+<p>(<a class="reference download internal" download="" href="../_downloads/2e58a75e42188c88273f1693b711e18e/plenoptic-simulate-canonical_computations-4.png"><code class="xref download docutils literal notranslate"><span class="pre">png</span></code></a>, <a class="reference download internal" download="" href="../_downloads/f08f0d263d95f3a3082bd03fdb75ae65/plenoptic-simulate-canonical_computations-4.hires.png"><code class="xref download docutils literal notranslate"><span class="pre">hires.png</span></code></a>, <a class="reference download internal" download="" href="../_downloads/013db7a90fc702f932796c4425254e1e/plenoptic-simulate-canonical_computations-4.pdf"><code class="xref download docutils literal notranslate"><span class="pre">pdf</span></code></a>)</p>
 <figure class="align-default">
-<img alt="../_images/plenoptic-simulate-canonical_computations-2.png" class="plot-directive" src="../_images/plenoptic-simulate-canonical_computations-2.png" />
+<img alt="../_images/plenoptic-simulate-canonical_computations-4.png" class="plot-directive" src="../_images/plenoptic-simulate-canonical_computations-4.png" />
 </figure>
 <div class="deprecated">
 <p><span class="versionmodified deprecated">Deprecated since version 1.2.0: </span>gaussian1d will be removed soon.</p>

@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>plenoptic.tools.signal &mdash; plenoptic 1.2.1.dev92 documentation</title>
+  <title>plenoptic.tools.signal &mdash; plenoptic 1.2.1.dev103 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/plot_directive.css" />
@@ -15,7 +15,7 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=81393f12"></script>
+      <script src="../../../_static/documentation_options.js?v=4e297482"></script>
       <script src="../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -544,8 +544,8 @@
 <span class="sd">        N-dimensional tensor, we assume the last two dimensions are height and</span>
 <span class="sd">        width.</span>
 <span class="sd">    output_size :</span>
-<span class="sd">        The size of the output. Note that we only support a single number, so</span>
-<span class="sd">        both dimensions are cropped identically</span>
+<span class="sd">        The size of the output. Must be a positive int. Note that we only support a</span>
+<span class="sd">        single number, so both dimensions are cropped identically</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -553,8 +553,27 @@
 <span class="sd">        Tensor whose last two dimensions have each been cropped to</span>
 <span class="sd">        ``output_size``</span>
 
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; import plenoptic as po</span>
+<span class="sd">    &gt;&gt;&gt; img = po.data.einstein()</span>
+<span class="sd">    &gt;&gt;&gt; img.shape</span>
+<span class="sd">    torch.Size([1, 1, 256, 256])</span>
+<span class="sd">    &gt;&gt;&gt; img = po.tools.center_crop(img, 128)</span>
+<span class="sd">    &gt;&gt;&gt; img.shape</span>
+<span class="sd">    torch.Size([1, 1, 128, 128])</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">h</span><span class="p">,</span> <span class="n">w</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">:]</span>
+    <span class="n">output_size</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">as_tensor</span><span class="p">(</span><span class="n">output_size</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">output_size</span><span class="o">.</span><span class="n">ndim</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;output_size must be a single number!&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">is_floating_point</span><span class="p">(</span><span class="n">output_size</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;output_size must be an int!&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">output_size</span> <span class="o">&gt;</span> <span class="n">h</span> <span class="ow">or</span> <span class="n">output_size</span> <span class="o">&gt;</span> <span class="n">w</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;output_size is bigger than image height/width!&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">output_size</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;output_size must be positive!&quot;</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">x</span><span class="p">[</span>
         <span class="o">...</span><span class="p">,</span>
         <span class="p">(</span><span class="n">h</span> <span class="o">//</span> <span class="mi">2</span> <span class="o">-</span> <span class="n">output_size</span> <span class="o">//</span> <span class="mi">2</span><span class="p">)</span> <span class="p">:</span> <span class="p">(</span><span class="n">h</span> <span class="o">//</span> <span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="n">output_size</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">//</span> <span class="mi">2</span><span class="p">),</span>
