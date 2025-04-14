@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>plenoptic.synthesize.eigendistortion &mdash; plenoptic 1.2.1.dev87 documentation</title>
+  <title>plenoptic.synthesize.eigendistortion &mdash; plenoptic 1.2.1.dev105 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/plot_directive.css" />
@@ -15,7 +15,7 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=bdff71e8"></script>
+      <script src="../../../_static/documentation_options.js?v=21d86056"></script>
       <script src="../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -193,24 +193,19 @@
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    image</span>
-<span class="sd">        Image, torch.Size(batch=1, channel, height, width). We currently do not</span>
-<span class="sd">        support batches of images, as each image requires its own optimization.</span>
+<span class="sd">        Image. We currently do not support batches of images, as each image requires its</span>
+<span class="sd">        own optimization, so either ``image.ndimension()==1`` or ``image.shape[0]==1``</span>
 <span class="sd">    model</span>
 <span class="sd">        Torch model with defined forward and backward operations.</span>
 
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
-<span class="sd">    batch_size: int</span>
-<span class="sd">    n_channels: int</span>
-<span class="sd">    im_height: int</span>
-<span class="sd">    im_width: int</span>
 <span class="sd">    jacobian: Tensor</span>
 <span class="sd">        Is only set when :func:`synthesize` is run with ``method=&#39;exact&#39;``. Default to</span>
 <span class="sd">        ``None``.</span>
 <span class="sd">    eigendistortions: Tensor</span>
 <span class="sd">        Tensor of eigendistortions (eigenvectors of Fisher matrix), ordered by</span>
-<span class="sd">        eigenvalue, with Size((n_distortions, n_channels, im_height,</span>
-<span class="sd">        im_width)).</span>
+<span class="sd">        eigenvalue, with Size((n_distortions, *image.shape[1:])).</span>
 <span class="sd">    eigenvalues: Tensor</span>
 <span class="sd">        Tensor of eigenvalues corresponding to each eigendistortion, listed in</span>
 <span class="sd">        decreasing order.</span>
@@ -255,12 +250,9 @@
             <span class="n">device</span><span class="o">=</span><span class="n">image</span><span class="o">.</span><span class="n">device</span><span class="p">,</span>
         <span class="p">)</span>
 
-        <span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">batch_size</span><span class="p">,</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">n_channels</span><span class="p">,</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">im_height</span><span class="p">,</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">im_width</span><span class="p">,</span>
-        <span class="p">)</span> <span class="o">=</span> <span class="n">image</span><span class="o">.</span><span class="n">shape</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_image_shape</span> <span class="o">=</span> <span class="n">image</span><span class="o">.</span><span class="n">shape</span>
+        <span class="k">if</span> <span class="n">image</span><span class="o">.</span><span class="n">ndimension</span><span class="p">()</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_image_shape</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_image_shape</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_model</span> <span class="o">=</span> <span class="n">model</span>
         <span class="c1"># flatten and attach gradient and reshape to image</span>
@@ -587,13 +579,10 @@
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        imgs</span>
-<span class="sd">            List of Tensor images, each with ``torch.Size(img_height, im_width)``.</span>
+<span class="sd">            List of Tensor images</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="n">imgs</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="n">vecs</span><span class="p">[:,</span> <span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">n_channels</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">im_height</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">im_width</span><span class="p">))</span>
-            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">vecs</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
-        <span class="p">]</span>
+        <span class="n">imgs</span> <span class="o">=</span> <span class="p">[</span><span class="n">vecs</span><span class="p">[:,</span> <span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_image_shape</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">vecs</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])]</span>
         <span class="k">return</span> <span class="n">imgs</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_indexer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">idx</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
@@ -836,11 +825,7 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># reshape so channel dim is last</span>
-    <span class="n">im_shape</span> <span class="o">=</span> <span class="p">(</span>
-        <span class="n">eigendistortion</span><span class="o">.</span><span class="n">n_channels</span><span class="p">,</span>
-        <span class="n">eigendistortion</span><span class="o">.</span><span class="n">im_height</span><span class="p">,</span>
-        <span class="n">eigendistortion</span><span class="o">.</span><span class="n">im_width</span><span class="p">,</span>
-    <span class="p">)</span>
+    <span class="n">im_shape</span> <span class="o">=</span> <span class="n">eigendistortion</span><span class="o">.</span><span class="n">_image_shape</span>
     <span class="n">image</span> <span class="o">=</span> <span class="n">eigendistortion</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">*</span><span class="n">im_shape</span><span class="p">)</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span>
     <span class="n">dist</span> <span class="o">=</span> <span class="p">(</span>
         <span class="n">eigendistortion</span><span class="o">.</span><span class="n">eigendistortions</span><span class="p">[</span><span class="n">eigendistortion</span><span class="o">.</span><span class="n">_indexer</span><span class="p">(</span><span class="n">eigenindex</span><span class="p">)]</span>

@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Reproducing Berardino et al., 2017 (Eigendistortions) &mdash; plenoptic 1.2.1.dev87 documentation</title>
+  <title>Reproducing Berardino et al., 2017 (Eigendistortions) &mdash; plenoptic 1.2.1.dev105 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
@@ -17,7 +17,7 @@
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=bdff71e8"></script>
+      <script src="../../_static/documentation_options.js?v=21d86056"></script>
       <script src="../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -128,7 +128,6 @@
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">torch</span><span class="w"> </span><span class="kn">import</span> <span class="n">nn</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">plenoptic</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">po</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">plenoptic.simulate.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">OnOff</span>
@@ -138,7 +137,8 @@
 <span class="c1"># if this fails, install torchvision in your plenoptic environment</span>
 <span class="c1"># and restart the notebook kernel.</span>
 <span class="k">try</span><span class="p">:</span>
-    <span class="kn">from</span><span class="w"> </span><span class="nn">torchvision.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">vgg16</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">torchvision</span><span class="w"> </span><span class="kn">import</span> <span class="n">models</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">torchvision.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">feature_extraction</span>
 <span class="k">except</span> <span class="ne">ModuleNotFoundError</span><span class="p">:</span>
     <span class="k">raise</span> <span class="ne">ModuleNotFoundError</span><span class="p">(</span>
         <span class="s2">&quot;optional dependency torchvision not found!&quot;</span>
@@ -151,6 +151,21 @@
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;device: &quot;</span><span class="p">,</span> <span class="n">device</span><span class="p">)</span>
 </pre></div>
 </div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+/mnt/sw/nix/store/29h1dijh98y9ar6n8hxv78v8zz2pqfzf-python-3.11.7-view/lib/python3.11/site-packages/numpy/core/getlimits.py:549: UserWarning: The value of the smallest subnormal for &lt;class &#39;numpy.float64&#39;&gt; type is zero.
+  setattr(self, word, getattr(machar, word).flat[0])
+/mnt/sw/nix/store/29h1dijh98y9ar6n8hxv78v8zz2pqfzf-python-3.11.7-view/lib/python3.11/site-packages/numpy/core/getlimits.py:89: UserWarning: The value of the smallest subnormal for &lt;class &#39;numpy.float64&#39;&gt; type is zero.
+  return self._float_to_str(self.smallest_subnormal)
+/mnt/sw/nix/store/29h1dijh98y9ar6n8hxv78v8zz2pqfzf-python-3.11.7-view/lib/python3.11/site-packages/numpy/core/getlimits.py:549: UserWarning: The value of the smallest subnormal for &lt;class &#39;numpy.float32&#39;&gt; type is zero.
+  setattr(self, word, getattr(machar, word).flat[0])
+/mnt/sw/nix/store/29h1dijh98y9ar6n8hxv78v8zz2pqfzf-python-3.11.7-view/lib/python3.11/site-packages/numpy/core/getlimits.py:89: UserWarning: The value of the smallest subnormal for &lt;class &#39;numpy.float32&#39;&gt; type is zero.
+  return self._float_to_str(self.smallest_subnormal)
+</pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
@@ -172,42 +187,28 @@ device:  cuda
 </section>
 <section id="Input-preprocessing">
 <h2>Input preprocessing<a class="headerlink" href="#Input-preprocessing" title="Link to this heading"></a></h2>
-<p>Let’s load the parrot image used in the paper, display it, and cast it as a <code class="docutils literal notranslate"><span class="pre">float32</span></code> tensor.</p>
+<p>Let’s load the parrot image used in the paper and display it:</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">image</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">parrot</span><span class="p">(</span><span class="n">as_gray</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="n">zoom</span> <span class="o">=</span> <span class="mi">1</span>
-
-
-<span class="k">def</span><span class="w"> </span><span class="nf">crop</span><span class="p">(</span><span class="n">img</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns 2D numpy as image as 4D tensor Shape((b, c, h, w))&quot;&quot;&quot;</span>
-    <span class="n">img_tensor</span> <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">clone</span><span class="p">()</span>
-    <span class="k">return</span> <span class="n">img_tensor</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="p">:</span><span class="mi">254</span><span class="p">,</span> <span class="p">:</span><span class="mi">254</span><span class="p">]</span>  <span class="c1"># crop to same size</span>
-
-
-<span class="n">image_tensor</span> <span class="o">=</span> <span class="n">crop</span><span class="p">(</span><span class="n">image</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Torch image shape:&quot;</span><span class="p">,</span> <span class="n">image_tensor</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
-
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># crop the image to be square:</span>
+<span class="n">image_tensor</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">parrot</span><span class="p">(</span><span class="n">as_gray</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
 <span class="c1"># reduce size of image if we&#39;re on CPU, otherwise this will take too long</span>
 <span class="k">if</span> <span class="n">device</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s2">&quot;cpu&quot;</span><span class="p">:</span>
-    <span class="n">image_tensor</span> <span class="o">=</span> <span class="n">image_tensor</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="mi">100</span><span class="p">:</span><span class="mi">164</span><span class="p">,</span> <span class="mi">100</span><span class="p">:</span><span class="mi">164</span><span class="p">]</span>
-    <span class="c1"># want to zoom so this is displayed at same size</span>
+    <span class="n">sz</span> <span class="o">=</span> <span class="mi">64</span>
     <span class="n">zoom</span> <span class="o">=</span> <span class="mi">256</span> <span class="o">/</span> <span class="mi">64</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="n">sz</span> <span class="o">=</span> <span class="mi">254</span>
+    <span class="n">zoom</span> <span class="o">=</span> <span class="mi">1</span>
 
-<span class="n">po</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">image_tensor</span><span class="p">,</span> <span class="n">zoom</span><span class="o">=</span><span class="n">zoom</span><span class="p">)</span>
+<span class="n">image_tensor</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">tools</span><span class="o">.</span><span class="n">center_crop</span><span class="p">(</span><span class="n">image_tensor</span><span class="p">,</span> <span class="n">sz</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Torch image shape:&quot;</span><span class="p">,</span> <span class="n">image_tensor</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+
+<span class="n">po</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">image_tensor</span><span class="p">,</span> <span class="n">zoom</span><span class="o">=</span><span class="n">zoom</span><span class="p">);</span>
 </pre></div>
 </div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area stderr docutils container">
-<div class="highlight"><pre>
-/mnt/home/wbroderick/plenoptic/plenoptic/tools/data.py:126: UserWarning: Creating a tensor from a list of numpy.ndarrays is extremely slow. Please consider converting the list to a single numpy.ndarray with numpy.array() before converting to a tensor. (Triggered internally at /opt/conda/conda-bld/pytorch_1670525553989/work/torch/csrc/utils/tensor_new.cpp:230.)
-  images = torch.tensor(images, dtype=torch.float32)
-</pre></div></div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
@@ -221,7 +222,7 @@ Torch image shape: torch.Size([1, 1, 254, 254])
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../../_images/tutorials_applications_Demo_Eigendistortion_4_2.png" src="../../_images/tutorials_applications_Demo_Eigendistortion_4_2.png" />
+<img alt="../../_images/tutorials_applications_Demo_Eigendistortion_4_1.png" src="../../_images/tutorials_applications_Demo_Eigendistortion_4_1.png" />
 </div>
 </div>
 <p>Since the Front-end OnOff model only has two channel outputs, we can easily visualize the feature maps. We’ll apply a circular mask to this model’s inputs to avoid edge artifacts in the synthesis method.</p>
@@ -247,10 +248,8 @@ Torch image shape: torch.Size([1, 1, 254, 254])
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-/mnt/home/wbroderick/plenoptic/plenoptic/simulate/models/frontend.py:388: UserWarning: pretrained is True but cache_filt is False. Set cache_filt to True for efficiency unless you are fine-tuning.
-  warn(&#34;pretrained is True but cache_filt is False. Set cache_filt to &#34;
-/mnt/home/wbroderick/miniconda3/envs/plenoptic/lib/python3.7/site-packages/torch/functional.py:504: UserWarning: torch.meshgrid: in an upcoming release, it will be required to pass the indexing argument. (Triggered internally at /opt/conda/conda-bld/pytorch_1670525553989/work/aten/src/ATen/native/TensorShape.cpp:3190.)
-  return _VF.meshgrid(tensors, **kwargs)  # type: ignore[attr-defined]
+/mnt/home/wbroderick/plenoptic/src/plenoptic/simulate/models/frontend.py:511: UserWarning: pretrained is True but cache_filt is False. Set cache_filt to True for efficiency unless you are fine-tuning.
+  warn(
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
@@ -266,7 +265,7 @@ Torch image shape: torch.Size([1, 1, 254, 254])
 <section id="Front-end-model:-eigendistortion-synthesis">
 <h3>Front-end model: eigendistortion synthesis<a class="headerlink" href="#Front-end-model:-eigendistortion-synthesis" title="Link to this heading"></a></h3>
 <p>Now that we have our Front End model set up, we can synthesize eigendistortions! This is done easily just by calling <code class="docutils literal notranslate"><span class="pre">.synthesis()</span></code> after instantiating the <code class="docutils literal notranslate"><span class="pre">Eigendistortion</span></code> object. We’ll synthesize the top and bottom <code class="docutils literal notranslate"><span class="pre">k</span></code>, representing the most- and least-noticeable eigendistortions for this model.</p>
-<p>The paper synthesizes the top and bottom <code class="docutils literal notranslate"><span class="pre">k=1</span></code> eigendistortions, but we’ll set <code class="docutils literal notranslate"><span class="pre">k&gt;1</span></code> so the algorithm converges/stabilizes faster. We highly recommended running the following block on GPU, otherwise we suggest cropping the image to a smaller size.</p>
+<p>The paper synthesizes the top and bottom <code class="docutils literal notranslate"><span class="pre">k=1</span></code> eigendistortions, but we’ll set <code class="docutils literal notranslate"><span class="pre">k&gt;1</span></code> so the algorithm converges/stabilizes faster.</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
 </pre></div>
@@ -280,47 +279,38 @@ Torch image shape: torch.Size([1, 1, 254, 254])
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-
-Initializing Eigendistortion -- Input dim: 64516 | Output dim: 129032
-</pre></div></div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-/mnt/home/wbroderick/plenoptic/plenoptic/tools/validate.py:179: UserWarning: model is in training mode, you probably want to call eval() to switch to evaluation mode
-  &#34;model is in training mode, you probably want to call eval()&#34;
+/mnt/home/wbroderick/plenoptic/src/plenoptic/tools/validate.py:202: UserWarning: model is in training mode, you probably want to call eval() to switch to evaluation mode
+  warnings.warn(
 </pre></div></div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<script type="application/vnd.jupyter.widget-view+json">{"model_id": "3ede60e0b532476d8e5533870de85203", "version_major": 2, "version_minor": 0}</script></div>
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "9ee750d11d104f4ab1ef70dd7a4ee0ae", "version_major": 2, "version_minor": 0}</script></div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-Top k=3 eigendists computed | Tolerance 1.00E-07 reached.
+Top k=3 eigendists computed | Stop criterion 1.00E-07 reached.
 </pre></div></div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<script type="application/vnd.jupyter.widget-view+json">{"model_id": "d1a01e7aafee4d17abcd9ddae6c358ae", "version_major": 2, "version_minor": 0}</script></div>
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "9ebf5755f5aa43e6890ffc2406009a43", "version_major": 2, "version_minor": 0}</script></div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-Bottom k=3 eigendists computed | Tolerance 1.00E-07 reached.
+Bottom k=3 eigendists computed | Stop criterion 1.00E-07 reached.
 </pre></div></div>
 </div>
 </section>
@@ -386,30 +376,17 @@ Bottom k=3 eigendists computed | Tolerance 1.00E-07 reached.
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Create a class that takes the nth layer output of a given model</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">NthLayerVGG16</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Wrapper to get the response of an intermediate layer of VGG16&quot;&quot;&quot;</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">layer</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s2">&quot;cpu&quot;</span><span class="p">)):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        layer: int</span>
-<span class="sd">            Which model response layer to output</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">TorchVision</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">return_node</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
-        <span class="n">model</span> <span class="o">=</span> <span class="n">vgg16</span><span class="p">(</span><span class="n">pretrained</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">progress</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
-        <span class="n">features</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">features</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">features</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">ModuleList</span><span class="p">(</span><span class="n">features</span><span class="p">)</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
-
-        <span class="k">if</span> <span class="n">layer</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">layer</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">features</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">layer</span> <span class="o">=</span> <span class="n">layer</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">extractor</span> <span class="o">=</span> <span class="n">feature_extraction</span><span class="o">.</span><span class="n">create_feature_extractor</span><span class="p">(</span>
+            <span class="n">model</span><span class="p">,</span> <span class="n">return_nodes</span><span class="o">=</span><span class="p">[</span><span class="n">return_node</span><span class="p">]</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">model</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">return_node</span> <span class="o">=</span> <span class="n">return_node</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
-        <span class="k">for</span> <span class="n">ii</span><span class="p">,</span> <span class="n">mdl</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">features</span><span class="p">):</span>
-            <span class="n">x</span> <span class="o">=</span> <span class="n">mdl</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">ii</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">layer</span><span class="p">:</span>
-                <span class="k">return</span> <span class="n">x</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">extractor</span><span class="p">(</span><span class="n">x</span><span class="p">)[</span><span class="bp">self</span><span class="o">.</span><span class="n">return_node</span><span class="p">]</span>
 </pre></div>
 </div>
 </div>
@@ -424,19 +401,18 @@ Bottom k=3 eigendists computed | Tolerance 1.00E-07 reached.
     <span class="k">return</span> <span class="p">(</span><span class="n">img_tensor</span> <span class="o">-</span> <span class="n">img_tensor</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span> <span class="o">/</span> <span class="n">img_tensor</span><span class="o">.</span><span class="n">std</span><span class="p">()</span>
 
 
-<span class="n">image_tensor</span> <span class="o">=</span> <span class="n">normalize</span><span class="p">(</span><span class="n">crop</span><span class="p">(</span><span class="n">image</span><span class="p">))</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
-
-<span class="c1"># reduce size of image if we&#39;re on CPU, otherwise this will take too long</span>
-<span class="k">if</span> <span class="n">device</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s2">&quot;cpu&quot;</span><span class="p">:</span>
-    <span class="n">image_tensor</span> <span class="o">=</span> <span class="n">image_tensor</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="mi">100</span><span class="p">:</span><span class="mi">164</span><span class="p">,</span> <span class="mi">100</span><span class="p">:</span><span class="mi">164</span><span class="p">]</span>
-    <span class="c1"># want to zoom so this is displayed at same size</span>
-    <span class="n">zoom</span> <span class="o">=</span> <span class="mi">256</span> <span class="o">/</span> <span class="mi">64</span>
+<span class="c1"># store these for later so we can un-normalize the image for display purposes</span>
+<span class="n">orig_mean</span> <span class="o">=</span> <span class="n">image_tensor</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span>
+<span class="n">orig_std</span> <span class="o">=</span> <span class="n">image_tensor</span><span class="o">.</span><span class="n">std</span><span class="p">()</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span>
+<span class="n">image_tensor</span> <span class="o">=</span> <span class="n">normalize</span><span class="p">(</span><span class="n">image_tensor</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
 
 <span class="n">image_tensor3</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">([</span><span class="n">image_tensor</span><span class="p">]</span> <span class="o">*</span> <span class="mi">3</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
 
 <span class="c1"># &quot;layer 3&quot; according to Berardino et al (2017)</span>
-<span class="n">mdl_v</span> <span class="o">=</span> <span class="n">NthLayerVGG16</span><span class="p">(</span><span class="n">layer</span><span class="o">=</span><span class="mi">11</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span>
+<span class="n">vgg</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">vgg16</span><span class="p">(</span><span class="n">weights</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">VGG16_Weights</span><span class="o">.</span><span class="n">IMAGENET1K_V1</span><span class="p">)</span>
+<span class="n">mdl_v</span> <span class="o">=</span> <span class="n">TorchVision</span><span class="p">(</span><span class="n">vgg</span><span class="p">,</span> <span class="s2">&quot;features.11&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
 <span class="n">po</span><span class="o">.</span><span class="n">tools</span><span class="o">.</span><span class="n">remove_grad</span><span class="p">(</span><span class="n">mdl_v</span><span class="p">)</span>
+<span class="n">mdl_v</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
 
 <span class="n">eigendist_v</span> <span class="o">=</span> <span class="n">Eigendistortion</span><span class="p">(</span><span class="n">image</span><span class="o">=</span><span class="n">image_tensor3</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="n">mdl_v</span><span class="p">)</span>
 <span class="n">eigendist_v</span><span class="o">.</span><span class="n">synthesize</span><span class="p">(</span><span class="n">k</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;power&quot;</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="n">max_iter_vgg</span><span class="p">)</span>
@@ -446,37 +422,14 @@ Bottom k=3 eigendists computed | Tolerance 1.00E-07 reached.
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
-<div class="output_area stderr docutils container">
-<div class="highlight"><pre>
-Downloading: &#34;https://download.pytorch.org/models/vgg16-397923af.pth&#34; to /mnt/home/wbroderick/.cache/torch/hub/checkpoints/vgg16-397923af.pth
-</pre></div></div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
 <div class="output_area docutils container">
-<script type="application/vnd.jupyter.widget-view+json">{"model_id": "56cc71e27d5e4f1aaa61cd670cf98e1b", "version_major": 2, "version_minor": 0}</script></div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-
-Initializing Eigendistortion -- Input dim: 193548 | Output dim: 1016064
-</pre></div></div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<script type="application/vnd.jupyter.widget-view+json">{"model_id": "cc77e9c1d8f6418ca84f2852a8b990d9", "version_major": 2, "version_minor": 0}</script></div>
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "11a21ad28ce3492badfa31b4b18781a9", "version_major": 2, "version_minor": 0}</script></div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<script type="application/vnd.jupyter.widget-view+json">{"model_id": "c6680b28d1af4c338f91ab1dbf1ff004", "version_major": 2, "version_minor": 0}</script></div>
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "8713fdca1ab74ac4a9a9a08f3e8a942f", "version_major": 2, "version_minor": 0}</script></div>
 </div>
 </section>
 <section id="VGG16:-eigendistortion-display">
@@ -498,7 +451,7 @@ Initializing Eigendistortion -- Input dim: 193548 | Output dim: 1016064
 <span class="c1"># create an image processing function to unnormalize the image and avg the channels to</span>
 <span class="c1"># grayscale</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">unnormalize</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
-    <span class="k">return</span> <span class="p">(</span><span class="n">x</span> <span class="o">*</span> <span class="n">image</span><span class="o">.</span><span class="n">std</span><span class="p">()</span> <span class="o">+</span> <span class="n">image</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">keepdims</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">x</span> <span class="o">*</span> <span class="n">orig_std</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">device</span><span class="p">)</span> <span class="o">+</span> <span class="n">orig_mean</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">device</span><span class="p">))</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">keepdims</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
 
 <span class="n">alpha_max</span><span class="p">,</span> <span class="n">alpha_min</span> <span class="o">=</span> <span class="mf">15.0</span><span class="p">,</span> <span class="mf">100.0</span>

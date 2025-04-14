@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Portilla-Simoncelli Texture Metamer &mdash; plenoptic 1.2.1.dev87 documentation</title>
+  <title>Portilla-Simoncelli Texture Metamer &mdash; plenoptic 1.2.1.dev105 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
@@ -17,7 +17,7 @@
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=bdff71e8"></script>
+      <script src="../../_static/documentation_options.js?v=21d86056"></script>
       <script src="../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -148,8 +148,14 @@
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-/mnt/home/wbroderick/miniconda3/envs/plenoptic/lib/python3.9/site-packages/tqdm/auto.py:21: TqdmWarning: IProgress not found. Please update jupyter and ipywidgets. See https://ipywidgets.readthedocs.io/en/stable/user_install.html
-  from .autonotebook import tqdm as notebook_tqdm
+/mnt/sw/nix/store/29h1dijh98y9ar6n8hxv78v8zz2pqfzf-python-3.11.7-view/lib/python3.11/site-packages/numpy/core/getlimits.py:549: UserWarning: The value of the smallest subnormal for &lt;class &#39;numpy.float64&#39;&gt; type is zero.
+  setattr(self, word, getattr(machar, word).flat[0])
+/mnt/sw/nix/store/29h1dijh98y9ar6n8hxv78v8zz2pqfzf-python-3.11.7-view/lib/python3.11/site-packages/numpy/core/getlimits.py:89: UserWarning: The value of the smallest subnormal for &lt;class &#39;numpy.float64&#39;&gt; type is zero.
+  return self._float_to_str(self.smallest_subnormal)
+/mnt/sw/nix/store/29h1dijh98y9ar6n8hxv78v8zz2pqfzf-python-3.11.7-view/lib/python3.11/site-packages/numpy/core/getlimits.py:549: UserWarning: The value of the smallest subnormal for &lt;class &#39;numpy.float32&#39;&gt; type is zero.
+  setattr(self, word, getattr(machar, word).flat[0])
+/mnt/sw/nix/store/29h1dijh98y9ar6n8hxv78v8zz2pqfzf-python-3.11.7-view/lib/python3.11/site-packages/numpy/core/getlimits.py:89: UserWarning: The value of the smallest subnormal for &lt;class &#39;numpy.float32&#39;&gt; type is zero.
+  return self._float_to_str(self.smallest_subnormal)
 </pre></div></div>
 </div>
 <div class="nbinput nblast docutils container">
@@ -1424,7 +1430,7 @@ synthetic images are seamlessly periodic (due to circular boundary-handling with
 <p>Note that we do this differently than what is described in the paper. In the original paper, mixed statistics were computed by calculating the statistics on a single input image that consisted of half of each of two texture images pasted together. This led to an “oil and water” appearance in the resulting texture metamer, which appeared to have patches from each image.</p>
 <p>In the following, we compute the texture statistics on two texture images separately and then average the resulting statistics, which appears to perform better. Note that, in all the other examples in this notebook, we knew there exists <em>at least one</em> image whose output matches our optimization target: the image we started with. For these mixtures, that is no longer the case.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[41]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># The following classes are designed to extend the PortillaSimoncelli model</span>
@@ -1474,57 +1480,11 @@ synthetic images are seamlessly periodic (due to circular boundary-handling with
             <span class="k">return</span> <span class="p">(</span><span class="n">stats0</span> <span class="o">+</span> <span class="n">stats1</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="n">images</span><span class="p">,</span> <span class="n">scales</span><span class="o">=</span><span class="n">scales</span><span class="p">)</span>
-
-
-<span class="k">class</span><span class="w"> </span><span class="nc">MetamerMixture</span><span class="p">(</span><span class="n">po</span><span class="o">.</span><span class="n">synth</span><span class="o">.</span><span class="n">MetamerCTF</span><span class="p">):</span>
-<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Extending metamer synthesis based on image-computable</span>
-<span class="sd">    differentiable models, for mixing two images.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">setup</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span>
-        <span class="n">initial_image</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">optimizer</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">optimizer_kwargs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">scheduler</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">scheduler_kwargs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-    <span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize the metamer.</span>
-
-<span class="sd">        Set the ``self.metamer`` attribute to be a parameter with</span>
-<span class="sd">        the user-supplied data, making sure it&#39;s the right shape.</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        initial_image :</span>
-<span class="sd">            The tensor we use to initialize the metamer. If None (the</span>
-<span class="sd">            default), we initialize with uniformly-distributed random</span>
-<span class="sd">            noise lying between 0 and 1.</span>
-
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="n">initial_image</span><span class="o">.</span><span class="n">ndimension</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mi">4</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span>
-                <span class="s2">&quot;initial_image must be torch.Size([n_batch&quot;</span>
-                <span class="s2">&quot;, n_channels, im_height, im_width]) but got &quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">initial_image</span><span class="o">.</span><span class="n">size</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span>
-            <span class="p">)</span>
-        <span class="c1"># the difference between this and the regular version of Metamer is that</span>
-        <span class="c1"># the regular version requires synthesized_signal and target_signal to have</span>
-        <span class="c1"># the same shape, and here target_signal is</span>
-        <span class="c1"># (2, 1, 256, 256), not (1, 1, 256, 256)</span>
-        <span class="n">metamer</span> <span class="o">=</span> <span class="n">initial_image</span><span class="o">.</span><span class="n">clone</span><span class="p">()</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span>
-        <span class="n">metamer</span> <span class="o">=</span> <span class="n">metamer</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">dtype</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
-        <span class="n">metamer</span><span class="o">.</span><span class="n">requires_grad_</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_metamer</span> <span class="o">=</span> <span class="n">metamer</span>
-        <span class="c1"># initialize the optimizer</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_initialize_optimizer</span><span class="p">(</span><span class="n">optimizer</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">metamer</span><span class="p">,</span> <span class="n">optimizer_kwargs</span><span class="p">)</span>
-        <span class="c1"># and scheduler</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_initialize_scheduler</span><span class="p">(</span><span class="n">scheduler</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span><span class="p">,</span> <span class="n">scheduler_kwargs</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[42]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Figure 20. Examples of “mixture” textures.</span>
@@ -1537,7 +1497,7 @@ synthetic images are seamlessly periodic (due to circular boundary-handling with
 <span class="n">n</span> <span class="o">=</span> <span class="n">imgs</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
 
 <span class="n">model</span> <span class="o">=</span> <span class="n">PortillaSimoncelliMixture</span><span class="p">([</span><span class="n">n</span><span class="p">,</span> <span class="n">n</span><span class="p">])</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">DEVICE</span><span class="p">)</span>
-<span class="n">met</span> <span class="o">=</span> <span class="n">MetamerMixture</span><span class="p">(</span>
+<span class="n">met</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">synth</span><span class="o">.</span><span class="n">MetamerCTF</span><span class="p">(</span>
     <span class="n">imgs</span><span class="p">,</span>
     <span class="n">model</span><span class="p">,</span>
     <span class="n">loss_function</span><span class="o">=</span><span class="n">po</span><span class="o">.</span><span class="n">tools</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">l2_norm</span><span class="p">,</span>
@@ -1554,16 +1514,32 @@ synthetic images are seamlessly periodic (due to circular boundary-handling with
 </pre></div>
 </div>
 </div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+/mnt/home/wbroderick/plenoptic/src/plenoptic/tools/validate.py:234: UserWarning: Validating whether model can work with coarse-to-fine synthesis -- this can take a while!
+  warnings.warn(
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "b60b0187492f4f908b6f559573a78932", "version_major": 2, "version_minor": 0}</script></div>
+</div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-  7%|▋         | 292/4000 [00:10&lt;02:17, 26.93it/s, loss=3.9513e-01, learning_rate=0.02, gradient_norm=4.1310e-01, pixel_change_norm=3.3290e-01, current_scale=all, current_scale_loss=3.9513e-01]
+/mnt/home/wbroderick/plenoptic/src/plenoptic/synthesize/metamer.py:787: UserWarning: Loss has converged, stopping synthesis
+  warnings.warn(&#34;Loss has converged, stopping synthesis&#34;)
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[43]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">po</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span>

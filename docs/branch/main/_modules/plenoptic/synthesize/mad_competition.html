@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>plenoptic.synthesize.mad_competition &mdash; plenoptic 1.2.1.dev87 documentation</title>
+  <title>plenoptic.synthesize.mad_competition &mdash; plenoptic 1.2.1.dev105 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/plot_directive.css" />
@@ -15,7 +15,7 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=bdff71e8"></script>
+      <script src="../../../_static/documentation_options.js?v=21d86056"></script>
       <script src="../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -146,27 +146,20 @@
 <span class="sd">    0 if and only if the two images are identical (thus, the larger the number,</span>
 <span class="sd">    the more different the two images).</span>
 
-<span class="sd">    Note that a full set of images MAD Competition images consists of two</span>
-<span class="sd">    pairs: a maximal and a minimal image for each metric. A single</span>
-<span class="sd">    instantiation of ``MADCompetition`` will generate one of these four images.</span>
+<span class="sd">    Note that a full set of MAD Competition images consists of two pairs: a maximal and</span>
+<span class="sd">    a minimal image for each metric. A single instantiation of ``MADCompetition`` will</span>
+<span class="sd">    generate one of these four images.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    image :</span>
-<span class="sd">        A 4d tensor, this is the image whose representation we wish to</span>
-<span class="sd">        match. If this is not a tensor, we try to cast it as one.</span>
+<span class="sd">        A tensor, this is the image we use as the reference point.</span>
 <span class="sd">    optimized_metric :</span>
 <span class="sd">        The metric whose value you wish to minimize or maximize, which takes</span>
-<span class="sd">        two tensors and returns a scalar. Because of the limitations of pickle,</span>
-<span class="sd">        you cannot use a lambda function for this if you wish to save the</span>
-<span class="sd">        MADCompetition object (i.e., it must be one of our built-in functions or</span>
-<span class="sd">        defined using a `def` statement)</span>
+<span class="sd">        two tensors and returns a scalar.</span>
 <span class="sd">    reference_metric :</span>
 <span class="sd">        The metric whose value you wish to keep fixed, which takes two tensors</span>
-<span class="sd">        and returns a scalar. Because of the limitations of pickle, you cannot</span>
-<span class="sd">        use a lambda function for this if you wish to save the MADCompetition object</span>
-<span class="sd">        (i.e., it must be one of our built-in functions or defined using a</span>
-<span class="sd">        `def` statement)</span>
+<span class="sd">        and returns a scalar.</span>
 <span class="sd">    minmax :</span>
 <span class="sd">        Whether you wish to minimize or maximize ``optimized_metric``.</span>
 <span class="sd">    metric_tradeoff_lambda :</span>
@@ -291,10 +284,10 @@
 <span class="sd">            torch.randn_like(self.image)``, so this gives the standard deviation of the</span>
 <span class="sd">            Gaussian noise. If None, we use a value of 0.1.</span>
 <span class="sd">        optimizer :</span>
-<span class="sd">            The un-initialized optimizer object to use. If None, we use Adam(lr=.01,</span>
-<span class="sd">            amsgrad=True).</span>
+<span class="sd">            The un-initialized optimizer object to use. If None, we use Adam.</span>
 <span class="sd">        optimizer_kwargs :</span>
-<span class="sd">            The keyword arguments to pass to the optimizer on initialization.</span>
+<span class="sd">            The keyword arguments to pass to the optimizer on initialization. If None,</span>
+<span class="sd">            we use {&quot;lr&quot;: .01} and, if optimizer is None, {&quot;amsgrad&quot;: True}</span>
 <span class="sd">        scheduler :</span>
 <span class="sd">            The learning rate scheduler to use. If None, we don&#39;t use one.</span>
 <span class="sd">        scheduler_kwargs :</span>
@@ -339,6 +332,7 @@
 <span class="sd">        &gt;&gt;&gt; mad.load(&quot;mad_setup.pt&quot;)</span>
 <span class="sd">        &gt;&gt;&gt; mad.setup(optimizer=torch.optim.SGD)</span>
 <span class="sd">        &gt;&gt;&gt; mad.synthesize(10)</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mad_image</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">initial_noise</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -399,10 +393,9 @@
 <span class="sd">            The maximum number of iterations to run before we end synthesis</span>
 <span class="sd">            (unless we hit the stop criterion).</span>
 <span class="sd">        store_progress :</span>
-<span class="sd">            Whether we should store the representation of the MAD image in</span>
-<span class="sd">            progress on every iteration. If False, we don&#39;t save anything. If</span>
-<span class="sd">            True, we save every iteration. If an int, we save every</span>
-<span class="sd">            ``store_progress`` iterations (note then that 0 is the same as</span>
+<span class="sd">            Whether we should store the MAD image in progress during synthesis. If</span>
+<span class="sd">            False, we don&#39;t save anything. If True, we save every iteration. If an int,</span>
+<span class="sd">            we save every ``store_progress`` iterations (note then that 0 is the same as</span>
 <span class="sd">            False and 1 the same as True).</span>
 <span class="sd">        stop_criterion :</span>
 <span class="sd">            If the loss over the past ``stop_iters_to_check`` has changed</span>

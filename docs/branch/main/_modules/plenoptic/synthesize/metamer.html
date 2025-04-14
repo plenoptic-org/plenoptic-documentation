@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>plenoptic.synthesize.metamer &mdash; plenoptic 1.2.1.dev87 documentation</title>
+  <title>plenoptic.synthesize.metamer &mdash; plenoptic 1.2.1.dev105 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/plot_directive.css" />
@@ -15,7 +15,7 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=bdff71e8"></script>
+      <script src="../../../_static/documentation_options.js?v=21d86056"></script>
       <script src="../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -148,16 +148,13 @@
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    image :</span>
-<span class="sd">        A 4d tensor, this is the image whose representation we wish to</span>
-<span class="sd">        match. If this is not a tensor, we try to cast it as one.</span>
+<span class="sd">        A tensor, this is the image whose representation we wish to</span>
+<span class="sd">        match.</span>
 <span class="sd">    model :</span>
 <span class="sd">        A visual model, see `Metamer` notebook for more details</span>
 <span class="sd">    loss_function :</span>
 <span class="sd">        the loss function to use to compare the representations of the models</span>
-<span class="sd">        in order to determine their loss. Because of the limitations of pickle,</span>
-<span class="sd">        you cannot use a lambda function for this if you wish to save the</span>
-<span class="sd">        Metamer object (i.e., it must be one of our built-in functions or</span>
-<span class="sd">        defined using a `def` statement)</span>
+<span class="sd">        in order to determine their loss.</span>
 <span class="sd">    range_penalty_lambda :</span>
 <span class="sd">        strength of the regularizer that enforces the allowed_range. Must be</span>
 <span class="sd">        non-negative.</span>
@@ -242,10 +239,10 @@
 <span class="sd">            The tensor we use to initialize the metamer. If None, we initialize with</span>
 <span class="sd">            uniformly-distributed random noise lying within ``self.allowed_range``.</span>
 <span class="sd">        optimizer :</span>
-<span class="sd">            The un-initialized optimizer object to use. If None, we use Adam(lr=.01,</span>
-<span class="sd">            amsgrad=True).</span>
+<span class="sd">            The un-initialized optimizer object to use. If None, we use Adam.</span>
 <span class="sd">        optimizer_kwargs :</span>
-<span class="sd">            The keyword arguments to pass to the optimizer on initialization.</span>
+<span class="sd">            The keyword arguments to pass to the optimizer on initialization. If None,</span>
+<span class="sd">            we use {&quot;lr&quot;: .01} and, if optimizer is None, {&quot;amsgrad&quot;: True}</span>
 <span class="sd">        scheduler :</span>
 <span class="sd">            The learning rate scheduler to use. If None, we don&#39;t use one.</span>
 <span class="sd">        scheduler_kwargs :</span>
@@ -303,14 +300,14 @@
                 <span class="c1"># self.allowed_range</span>
                 <span class="n">metamer</span> <span class="o">=</span> <span class="n">signal</span><span class="o">.</span><span class="n">rescale</span><span class="p">(</span><span class="n">metamer</span><span class="p">,</span> <span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">allowed_range</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="k">if</span> <span class="n">initial_image</span><span class="o">.</span><span class="n">ndimension</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mi">4</span><span class="p">:</span>
-                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                        <span class="s2">&quot;initial_image must be torch.Size([n_batch&quot;</span>
-                        <span class="s2">&quot;, n_channels, im_height, im_width]) but got &quot;</span>
-                        <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">initial_image</span><span class="o">.</span><span class="n">size</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span>
-                    <span class="p">)</span>
+                <span class="n">validate_input</span><span class="p">(</span><span class="n">initial_image</span><span class="p">,</span> <span class="n">allowed_range</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">allowed_range</span><span class="p">)</span>
                 <span class="k">if</span> <span class="n">initial_image</span><span class="o">.</span><span class="n">size</span><span class="p">()</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">size</span><span class="p">():</span>
-                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;initial_image and image must be same size!&quot;</span><span class="p">)</span>
+                    <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+                        <span class="s2">&quot;initial_image and image are different sizes! This &quot;</span>
+                        <span class="s2">&quot;has not been tested as much, open an issue if you have&quot;</span>
+                        <span class="s2">&quot;any problems! https://github.com/plenoptic-org/plenoptic/&quot;</span>
+                        <span class="s2">&quot;issues/new?template=bug_report.md&quot;</span>
+                    <span class="p">)</span>
                 <span class="n">metamer</span> <span class="o">=</span> <span class="n">initial_image</span><span class="o">.</span><span class="n">clone</span><span class="p">()</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span>
                 <span class="n">metamer</span> <span class="o">=</span> <span class="n">metamer</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">dtype</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
             <span class="n">metamer</span><span class="o">.</span><span class="n">requires_grad_</span><span class="p">()</span>
@@ -357,8 +354,8 @@
 <span class="sd">            The maximum number of iterations to run before we end synthesis</span>
 <span class="sd">            (unless we hit the stop criterion).</span>
 <span class="sd">        store_progress :</span>
-<span class="sd">            Whether we should store the metamer image in progress on every</span>
-<span class="sd">            iteration. If False, we don&#39;t save anything. If True, we save every</span>
+<span class="sd">            Whether we should store the metamer image in progress during</span>
+<span class="sd">            synthesis. If False, we don&#39;t save anything. If True, we save every</span>
 <span class="sd">            iteration. If an int, we save every ``store_progress`` iterations</span>
 <span class="sd">            (note then that 0 is the same as False and 1 the same as True).</span>
 <span class="sd">        stop_criterion :</span>
@@ -738,16 +735,13 @@
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    image :</span>
-<span class="sd">        A 4d tensor, this is the image whose representation we wish to</span>
-<span class="sd">        match. If this is not a tensor, we try to cast it as one.</span>
+<span class="sd">        A tensor, this is the image whose representation we wish to</span>
+<span class="sd">        match.</span>
 <span class="sd">    model :</span>
 <span class="sd">        A visual model, see `Metamer` notebook for more details</span>
 <span class="sd">    loss_function :</span>
 <span class="sd">        the loss function to use to compare the representations of the models</span>
-<span class="sd">        in order to determine their loss. Because of the limitations of pickle,</span>
-<span class="sd">        you cannot use a lambda function for this if you wish to save the</span>
-<span class="sd">        Metamer object (i.e., it must be one of our built-in functions or</span>
-<span class="sd">        defined using a `def` statement)</span>
+<span class="sd">        in order to determine their loss.</span>
 <span class="sd">    range_penalty_lambda :</span>
 <span class="sd">        strength of the regularizer that enforces the allowed_range. Must be</span>
 <span class="sd">        non-negative.</span>
