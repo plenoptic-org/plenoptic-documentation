@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>plenoptic.synthesize package &mdash; plenoptic 1.2.1.dev113 documentation</title>
+  <title>plenoptic.synthesize package &mdash; plenoptic 1.2.1.dev122 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css" />
@@ -16,7 +16,7 @@
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../_static/documentation_options.js?v=2ae6a4c6"></script>
+      <script src="../_static/documentation_options.js?v=23ce5013"></script>
       <script src="../_static/doctools.js?v=9bcbadda"></script>
       <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -343,7 +343,7 @@ neural information processing systems (pp. 3530-3539).
 <tr class="row-odd"><td><p><a class="reference internal" href="#plenoptic.synthesize.eigendistortion.Eigendistortion.compute_jacobian" title="plenoptic.synthesize.eigendistortion.Eigendistortion.compute_jacobian"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_jacobian</span></code></a>()</p></td>
 <td><p>Calls autodiff.jacobian and returns jacobian.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#plenoptic.synthesize.eigendistortion.Eigendistortion.load" title="plenoptic.synthesize.eigendistortion.Eigendistortion.load"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load</span></code></a>(file_path[, map_location])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#plenoptic.synthesize.eigendistortion.Eigendistortion.load" title="plenoptic.synthesize.eigendistortion.Eigendistortion.load"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load</span></code></a>(file_path[, map_location, ...])</p></td>
 <td><p>Load all relevant stuff from a .pt file.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#plenoptic.synthesize.eigendistortion.Eigendistortion.save" title="plenoptic.synthesize.eigendistortion.Eigendistortion.save"><code class="xref py py-obj docutils literal notranslate"><span class="pre">save</span></code></a>(file_path)</p></td>
@@ -405,7 +405,7 @@ Default to <code class="docutils literal notranslate"><span class="pre">None</sp
 
 <dl class="py method">
 <dt class="sig sig-object py" id="plenoptic.synthesize.eigendistortion.Eigendistortion.load">
-<span class="sig-name descname"><span class="pre">load</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">map_location</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">pickle_load_args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/plenoptic/synthesize/eigendistortion.html#Eigendistortion.load"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#plenoptic.synthesize.eigendistortion.Eigendistortion.load" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">load</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">map_location</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tensor_equality_atol</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-08</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tensor_equality_rtol</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-05</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">pickle_load_args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/plenoptic/synthesize/eigendistortion.html#Eigendistortion.load"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#plenoptic.synthesize.eigendistortion.Eigendistortion.load" title="Link to this definition"></a></dt>
 <dd><p>Load all relevant stuff from a .pt file.</p>
 <p>This must be called by a <code class="docutils literal notranslate"><span class="pre">Eigendistortion</span></code> object initialized just like the
 saved object.</p>
@@ -423,6 +423,22 @@ stuff that was being run on a GPU and are loading onto a
 CPU, you’ll need this to make sure everything lines up
 properly. This should be structured like the str you would
 pass to <code class="docutils literal notranslate"><span class="pre">torch.device</span></code></p></li>
+<li><p><strong>tensor_equality_atol</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – Absolute tolerance to use when checking for tensor equality during load,
+passed to <a class="reference external" href="https://pytorch.org/docs/stable/generated/torch.allclose.html#torch.allclose" title="(in PyTorch v2.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">torch.allclose()</span></code></a>. It may be necessary to increase if you are
+saving and loading on two machines with torch built by different cuda
+versions. Be careful when changing this! See
+<a class="reference external" href="https://pytorch.org/docs/stable/type_info.html#torch.torch.finfo" title="(in PyTorch v2.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">torch.finfo</span></code></a> for more details about floating
+point precision of different data types (especially, <code class="docutils literal notranslate"><span class="pre">eps</span></code>); if you have
+to increase this by more than 1 or 2 decades, then you are probably not
+dealing with a numerical issue.</p></li>
+<li><p><strong>tensor_equality_rtol</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – Relative tolerance to use when checking for tensor equality during load,
+passed to <a class="reference external" href="https://pytorch.org/docs/stable/generated/torch.allclose.html#torch.allclose" title="(in PyTorch v2.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">torch.allclose()</span></code></a>. It may be necessary to increase if you are
+saving and loading on two machines with torch built by different cuda
+versions. Be careful when changing this! See
+<a class="reference external" href="https://pytorch.org/docs/stable/type_info.html#torch.torch.finfo" title="(in PyTorch v2.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">torch.finfo</span></code></a> for more details about floating
+point precision of different data types (especially, <code class="docutils literal notranslate"><span class="pre">eps</span></code>); if you have
+to increase this by more than 1 or 2 decades, then you are probably not
+dealing with a numerical issue.</p></li>
 <li><p><strong>pickle_load_args</strong> – any additional kwargs will be added to <code class="docutils literal notranslate"><span class="pre">pickle_module.load</span></code> via
 <code class="docutils literal notranslate"><span class="pre">torch.load</span></code>, see that function’s docstring for details.</p></li>
 </ul>
@@ -789,7 +805,7 @@ perceptual discriminability. Journal of Vision, 8(12), 1–13.
 <p class="rubric">Methods</p>
 <table class="autosummary longtable docutils align-default">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#plenoptic.synthesize.mad_competition.MADCompetition.load" title="plenoptic.synthesize.mad_competition.MADCompetition.load"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load</span></code></a>(file_path[, map_location])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#plenoptic.synthesize.mad_competition.MADCompetition.load" title="plenoptic.synthesize.mad_competition.MADCompetition.load"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load</span></code></a>(file_path[, map_location, ...])</p></td>
 <td><p>Load all relevant stuff from a .pt file.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#plenoptic.synthesize.mad_competition.MADCompetition.objective_function" title="plenoptic.synthesize.mad_competition.MADCompetition.objective_function"><code class="xref py py-obj docutils literal notranslate"><span class="pre">objective_function</span></code></a>([mad_image, image])</p></td>
@@ -821,7 +837,7 @@ perceptual discriminability. Journal of Vision, 8(12), 1–13.
 
 <dl class="py method">
 <dt class="sig sig-object py" id="plenoptic.synthesize.mad_competition.MADCompetition.load">
-<span class="sig-name descname"><span class="pre">load</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">map_location</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">pickle_load_args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/plenoptic/synthesize/mad_competition.html#MADCompetition.load"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#plenoptic.synthesize.mad_competition.MADCompetition.load" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">load</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">map_location</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tensor_equality_atol</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-08</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tensor_equality_rtol</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-05</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">pickle_load_args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/plenoptic/synthesize/mad_competition.html#MADCompetition.load"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#plenoptic.synthesize.mad_competition.MADCompetition.load" title="Link to this definition"></a></dt>
 <dd><p>Load all relevant stuff from a .pt file.</p>
 <p>This must be called by a <code class="docutils literal notranslate"><span class="pre">MADCompetition</span></code> object initialized just like the
 saved object.</p>
@@ -839,6 +855,22 @@ stuff that was being run on a GPU and are loading onto a
 CPU, you’ll need this to make sure everything lines up
 properly. This should be structured like the str you would
 pass to <code class="docutils literal notranslate"><span class="pre">torch.device</span></code></p></li>
+<li><p><strong>tensor_equality_atol</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – Absolute tolerance to use when checking for tensor equality during load,
+passed to <a class="reference external" href="https://pytorch.org/docs/stable/generated/torch.allclose.html#torch.allclose" title="(in PyTorch v2.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">torch.allclose()</span></code></a>. It may be necessary to increase if you are
+saving and loading on two machines with torch built by different cuda
+versions. Be careful when changing this! See
+<a class="reference external" href="https://pytorch.org/docs/stable/type_info.html#torch.torch.finfo" title="(in PyTorch v2.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">torch.finfo</span></code></a> for more details about floating
+point precision of different data types (especially, <code class="docutils literal notranslate"><span class="pre">eps</span></code>); if you have
+to increase this by more than 1 or 2 decades, then you are probably not
+dealing with a numerical issue.</p></li>
+<li><p><strong>tensor_equality_rtol</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – Relative tolerance to use when checking for tensor equality during load,
+passed to <a class="reference external" href="https://pytorch.org/docs/stable/generated/torch.allclose.html#torch.allclose" title="(in PyTorch v2.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">torch.allclose()</span></code></a>. It may be necessary to increase if you are
+saving and loading on two machines with torch built by different cuda
+versions. Be careful when changing this! See
+<a class="reference external" href="https://pytorch.org/docs/stable/type_info.html#torch.torch.finfo" title="(in PyTorch v2.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">torch.finfo</span></code></a> for more details about floating
+point precision of different data types (especially, <code class="docutils literal notranslate"><span class="pre">eps</span></code>); if you have
+to increase this by more than 1 or 2 decades, then you are probably not
+dealing with a numerical issue.</p></li>
 <li><p><strong>pickle_load_args</strong> – any additional kwargs will be added to <code class="docutils literal notranslate"><span class="pre">pickle_module.load</span></code> via
 <code class="docutils literal notranslate"><span class="pre">torch.load</span></code>, see that function’s docstring for details.</p></li>
 </ul>
@@ -1530,7 +1562,7 @@ Journal of Computer Vision. 40(1):49-71, October, 2000.
 <p class="rubric">Methods</p>
 <table class="autosummary longtable docutils align-default">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#plenoptic.synthesize.metamer.Metamer.load" title="plenoptic.synthesize.metamer.Metamer.load"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load</span></code></a>(file_path[, map_location])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#plenoptic.synthesize.metamer.Metamer.load" title="plenoptic.synthesize.metamer.Metamer.load"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load</span></code></a>(file_path[, map_location, ...])</p></td>
 <td><p>Load all relevant stuff from a .pt file.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#plenoptic.synthesize.metamer.Metamer.objective_function" title="plenoptic.synthesize.metamer.Metamer.objective_function"><code class="xref py py-obj docutils literal notranslate"><span class="pre">objective_function</span></code></a>([metamer_representation, ...])</p></td>
@@ -1557,7 +1589,7 @@ Journal of Computer Vision. 40(1):49-71, October, 2000.
 
 <dl class="py method">
 <dt class="sig sig-object py" id="plenoptic.synthesize.metamer.Metamer.load">
-<span class="sig-name descname"><span class="pre">load</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">map_location</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">pickle_load_args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/plenoptic/synthesize/metamer.html#Metamer.load"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#plenoptic.synthesize.metamer.Metamer.load" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">load</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">map_location</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tensor_equality_atol</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-08</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tensor_equality_rtol</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-05</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">pickle_load_args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/plenoptic/synthesize/metamer.html#Metamer.load"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#plenoptic.synthesize.metamer.Metamer.load" title="Link to this definition"></a></dt>
 <dd><p>Load all relevant stuff from a .pt file.</p>
 <p>This must be called by a <code class="docutils literal notranslate"><span class="pre">Metamer</span></code> object initialized just like the saved
 object.</p>
@@ -1575,6 +1607,22 @@ stuff that was being run on a GPU and are loading onto a
 CPU, you’ll need this to make sure everything lines up
 properly. This should be structured like the str you would
 pass to <code class="docutils literal notranslate"><span class="pre">torch.device</span></code></p></li>
+<li><p><strong>tensor_equality_atol</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – Absolute tolerance to use when checking for tensor equality during load,
+passed to <a class="reference external" href="https://pytorch.org/docs/stable/generated/torch.allclose.html#torch.allclose" title="(in PyTorch v2.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">torch.allclose()</span></code></a>. It may be necessary to increase if you are
+saving and loading on two machines with torch built by different cuda
+versions. Be careful when changing this! See
+<a class="reference external" href="https://pytorch.org/docs/stable/type_info.html#torch.torch.finfo" title="(in PyTorch v2.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">torch.finfo</span></code></a> for more details about floating
+point precision of different data types (especially, <code class="docutils literal notranslate"><span class="pre">eps</span></code>); if you have
+to increase this by more than 1 or 2 decades, then you are probably not
+dealing with a numerical issue.</p></li>
+<li><p><strong>tensor_equality_rtol</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – Relative tolerance to use when checking for tensor equality during load,
+passed to <a class="reference external" href="https://pytorch.org/docs/stable/generated/torch.allclose.html#torch.allclose" title="(in PyTorch v2.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">torch.allclose()</span></code></a>. It may be necessary to increase if you are
+saving and loading on two machines with torch built by different cuda
+versions. Be careful when changing this! See
+<a class="reference external" href="https://pytorch.org/docs/stable/type_info.html#torch.torch.finfo" title="(in PyTorch v2.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">torch.finfo</span></code></a> for more details about floating
+point precision of different data types (especially, <code class="docutils literal notranslate"><span class="pre">eps</span></code>); if you have
+to increase this by more than 1 or 2 decades, then you are probably not
+dealing with a numerical issue.</p></li>
 <li><p><strong>pickle_load_args</strong> – any additional kwargs will be added to <code class="docutils literal notranslate"><span class="pre">pickle_module.load</span></code> via
 <code class="docutils literal notranslate"><span class="pre">torch.load</span></code>, see that function’s docstring for details.</p></li>
 </ul>
@@ -1978,7 +2026,7 @@ the iteration where we started and stopped optimizing this scale.</p>
 <p class="rubric">Methods</p>
 <table class="autosummary longtable docutils align-default">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#plenoptic.synthesize.metamer.MetamerCTF.load" title="plenoptic.synthesize.metamer.MetamerCTF.load"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load</span></code></a>(file_path[, map_location])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#plenoptic.synthesize.metamer.MetamerCTF.load" title="plenoptic.synthesize.metamer.MetamerCTF.load"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load</span></code></a>(file_path[, map_location, ...])</p></td>
 <td><p>Load all relevant stuff from a .pt file.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">objective_function</span></code>([metamer_representation, ...])</p></td>
@@ -2005,7 +2053,7 @@ the iteration where we started and stopped optimizing this scale.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="plenoptic.synthesize.metamer.MetamerCTF.load">
-<span class="sig-name descname"><span class="pre">load</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">map_location</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">pickle_load_args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/plenoptic/synthesize/metamer.html#MetamerCTF.load"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#plenoptic.synthesize.metamer.MetamerCTF.load" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">load</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">map_location</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tensor_equality_atol</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-08</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tensor_equality_rtol</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-05</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">pickle_load_args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/plenoptic/synthesize/metamer.html#MetamerCTF.load"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#plenoptic.synthesize.metamer.MetamerCTF.load" title="Link to this definition"></a></dt>
 <dd><p>Load all relevant stuff from a .pt file.</p>
 <p>This should be called by an initialized <code class="docutils literal notranslate"><span class="pre">Metamer</span></code> object – we will
 ensure that <code class="docutils literal notranslate"><span class="pre">image</span></code>, <code class="docutils literal notranslate"><span class="pre">target_representation</span></code> (and thus
@@ -2020,6 +2068,22 @@ stuff that was being run on a GPU and are loading onto a
 CPU, you’ll need this to make sure everything lines up
 properly. This should be structured like the str you would
 pass to <code class="docutils literal notranslate"><span class="pre">torch.device</span></code></p></li>
+<li><p><strong>tensor_equality_atol</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – Absolute tolerance to use when checking for tensor equality during load,
+passed to <a class="reference external" href="https://pytorch.org/docs/stable/generated/torch.allclose.html#torch.allclose" title="(in PyTorch v2.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">torch.allclose()</span></code></a>. It may be necessary to increase if you are
+saving and loading on two machines with torch built by different cuda
+versions. Be careful when changing this! See
+<a class="reference external" href="https://pytorch.org/docs/stable/type_info.html#torch.torch.finfo" title="(in PyTorch v2.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">torch.finfo</span></code></a> for more details about floating
+point precision of different data types (especially, <code class="docutils literal notranslate"><span class="pre">eps</span></code>); if you have
+to increase this by more than 1 or 2 decades, then you are probably not
+dealing with a numerical issue.</p></li>
+<li><p><strong>tensor_equality_rtol</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – Relative tolerance to use when checking for tensor equality during load,
+passed to <a class="reference external" href="https://pytorch.org/docs/stable/generated/torch.allclose.html#torch.allclose" title="(in PyTorch v2.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">torch.allclose()</span></code></a>. It may be necessary to increase if you are
+saving and loading on two machines with torch built by different cuda
+versions. Be careful when changing this! See
+<a class="reference external" href="https://pytorch.org/docs/stable/type_info.html#torch.torch.finfo" title="(in PyTorch v2.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">torch.finfo</span></code></a> for more details about floating
+point precision of different data types (especially, <code class="docutils literal notranslate"><span class="pre">eps</span></code>); if you have
+to increase this by more than 1 or 2 decades, then you are probably not
+dealing with a numerical issue.</p></li>
 <li><p><strong>pickle_load_args</strong> – any additional kwargs will be added to <code class="docutils literal notranslate"><span class="pre">pickle_module.load</span></code> via
 <code class="docutils literal notranslate"><span class="pre">torch.load</span></code>, see that function’s docstring for details.</p></li>
 </ul>
@@ -2521,7 +2585,7 @@ sub-class and thus are marked as abstract methods here</p>
 </table>
 <dl class="py method">
 <dt class="sig sig-object py" id="plenoptic.synthesize.synthesis.Synthesis.load">
-<span class="sig-name descname"><span class="pre">load</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">empty_on_init_attr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">map_location</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">check_attributes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">check_io_attributes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">state_dict_attributes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">pickle_load_args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/plenoptic/synthesize/synthesis.html#Synthesis.load"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#plenoptic.synthesize.synthesis.Synthesis.load" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">load</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">empty_on_init_attr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">map_location</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">check_attributes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">check_io_attributes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">state_dict_attributes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tensor_equality_atol</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-08</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tensor_equality_rtol</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-05</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">pickle_load_args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/plenoptic/synthesize/synthesis.html#Synthesis.load"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#plenoptic.synthesize.synthesis.Synthesis.load" title="Link to this definition"></a></dt>
 <dd><p>Load all relevant attributes from a .pt file.</p>
 <p>This should be called by <code class="docutils literal notranslate"><span class="pre">Synthesis</span></code> object that has just been initialized.</p>
 <p>Note this operates in place and so doesn’t return anything.</p>
@@ -2547,6 +2611,22 @@ the callable and their state_dict. We will ensure the name of the attributes
 are identical and then load the state_dict. If the attribute is None on the
 initialized Synthesis object, then we set the tuple, and count on the
 Synthesis object to properly handle it when needed.</p></li>
+<li><p><strong>tensor_equality_atol</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – Absolute tolerance to use when checking for tensor equality during load,
+passed to <a class="reference external" href="https://pytorch.org/docs/stable/generated/torch.allclose.html#torch.allclose" title="(in PyTorch v2.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">torch.allclose()</span></code></a>. It may be necessary to increase if you are
+saving and loading on two machines with torch built by different cuda
+versions. Be careful when changing this! See
+<a class="reference external" href="https://pytorch.org/docs/stable/type_info.html#torch.torch.finfo" title="(in PyTorch v2.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">torch.finfo</span></code></a> for more details about floating
+point precision of different data types (especially, <code class="docutils literal notranslate"><span class="pre">eps</span></code>); if you have
+to increase this by more than 1 or 2 decades, then you are probably not
+dealing with a numerical issue.</p></li>
+<li><p><strong>tensor_equality_rtol</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – Relative tolerance to use when checking for tensor equality during load,
+passed to <a class="reference external" href="https://pytorch.org/docs/stable/generated/torch.allclose.html#torch.allclose" title="(in PyTorch v2.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">torch.allclose()</span></code></a>. It may be necessary to increase if you are
+saving and loading on two machines with torch built by different cuda
+versions. Be careful when changing this! See
+<a class="reference external" href="https://pytorch.org/docs/stable/type_info.html#torch.torch.finfo" title="(in PyTorch v2.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">torch.finfo</span></code></a> for more details about floating
+point precision of different data types (especially, <code class="docutils literal notranslate"><span class="pre">eps</span></code>); if you have
+to increase this by more than 1 or 2 decades, then you are probably not
+dealing with a numerical issue.</p></li>
 <li><p><strong>pickle_load_args</strong> – any additional kwargs will be added to <code class="docutils literal notranslate"><span class="pre">pickle_module.load</span></code> via
 <code class="docutils literal notranslate"><span class="pre">torch.load</span></code>, see that function’s docstring for details.</p></li>
 </ul>
