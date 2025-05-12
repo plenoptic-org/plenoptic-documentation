@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>plenoptic.tools.validate &mdash; plenoptic 1.2.1.dev166 documentation</title>
+  <title>plenoptic.tools.validate &mdash; plenoptic 1.2.1.dev170 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/plot_directive.css" />
@@ -15,7 +15,7 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=97f10de5"></script>
+      <script src="../../../_static/documentation_options.js?v=9ccfc975"></script>
       <script src="../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -160,6 +160,7 @@
 
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
+
 <span class="sd">    Check that our built-in images work.</span>
 
 <span class="sd">    &gt;&gt;&gt; import plenoptic as po</span>
@@ -169,9 +170,7 @@
 
 <span class="sd">    &gt;&gt;&gt; import plenoptic as po</span>
 <span class="sd">    &gt;&gt;&gt; img = po.data.einstein()</span>
-<span class="sd">    &gt;&gt;&gt; po.tools.validate.validate_input(</span>
-<span class="sd">    ...     img, allowed_range=(0, 0.5)</span>
-<span class="sd">    ... )  # doctest: +ELLIPSIS</span>
+<span class="sd">    &gt;&gt;&gt; po.tools.validate.validate_input(img, allowed_range=(0, .5)) #doctest: +ELLIPSIS</span>
 <span class="sd">    Traceback (most recent call last):</span>
 <span class="sd">    ValueError: input_tensor range ...</span>
 
@@ -271,7 +270,7 @@
 <span class="sd">    device</span>
 <span class="sd">        What device to place test image on.</span>
 
-<span class="sd">    See Also</span>
+<span class="sd">    See also</span>
 <span class="sd">    --------</span>
 <span class="sd">    remove_grad</span>
 <span class="sd">        Helper function for detaching all parameters (in place).</span>
@@ -283,6 +282,7 @@
 
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
+
 <span class="sd">    Check that one of our built-in models work:</span>
 
 <span class="sd">    &gt;&gt;&gt; import plenoptic as po</span>
@@ -296,11 +296,10 @@
 <span class="sd">    &gt;&gt;&gt; class FailureModel(torch.nn.Module):</span>
 <span class="sd">    ...     def __init__(self):</span>
 <span class="sd">    ...         super().__init__()</span>
-<span class="sd">    ...</span>
 <span class="sd">    ...     def forward(self, x):</span>
 <span class="sd">    ...         x = x.detach().numpy()</span>
 <span class="sd">    ...         return torch.as_tensor(x)</span>
-<span class="sd">    &gt;&gt;&gt; po.tools.validate.validate_model(FailureModel())  # doctest: +ELLIPSIS</span>
+<span class="sd">    &gt;&gt;&gt; po.tools.validate.validate_model(FailureModel()) #doctest: +ELLIPSIS</span>
 <span class="sd">    Traceback (most recent call last):</span>
 <span class="sd">    ValueError: model strips gradient from input, ...</span>
 
@@ -423,12 +422,11 @@
 <span class="sd">    ...     def __init__(self):</span>
 <span class="sd">    ...         super().__init__()</span>
 <span class="sd">    ...         self.model = po.simul.PortillaSimoncelli((256, 256))</span>
-<span class="sd">    ...</span>
 <span class="sd">    ...     def forward(self, x):</span>
 <span class="sd">    ...         return self.model(x)</span>
 <span class="sd">    &gt;&gt;&gt; shape = (1, 1, 256, 256)</span>
 <span class="sd">    &gt;&gt;&gt; model = FailureModel()</span>
-<span class="sd">    &gt;&gt;&gt; po.tools.validate.validate_coarse_to_fine(model, shape)  # doctest: +ELLIPSIS</span>
+<span class="sd">    &gt;&gt;&gt; po.tools.validate.validate_coarse_to_fine(model, shape) #doctest: +ELLIPSIS</span>
 <span class="sd">    Traceback (most recent call last):</span>
 <span class="sd">    AttributeError: model has no scales attribute ...</span>
 
@@ -506,13 +504,13 @@
 <span class="sd">    Check that 1-SSIM works:</span>
 
 <span class="sd">    &gt;&gt;&gt; import plenoptic as po</span>
-<span class="sd">    &gt;&gt;&gt; po.tools.validate.validate_metric(lambda x, y: 1 - po.metric.ssim(x, y))</span>
+<span class="sd">    &gt;&gt;&gt; po.tools.validate.validate_metric(lambda x, y: 1-po.metric.ssim(x, y))</span>
 
 <span class="sd">    Check that SSIM doesn&#39;t work (because SSIM=0 means that images are *different*,</span>
 <span class="sd">    whereas we need metric=0 to mean *identical*):</span>
 
 <span class="sd">    &gt;&gt;&gt; import plenoptic as po</span>
-<span class="sd">    &gt;&gt;&gt; po.tools.validate.validate_metric(po.metric.ssim)  # doctest: +ELLIPSIS</span>
+<span class="sd">    &gt;&gt;&gt; po.tools.validate.validate_metric(po.metric.ssim) #doctest: +ELLIPSIS</span>
 <span class="sd">    Traceback (most recent call last):</span>
 <span class="sd">    ValueError: metric should return ...</span>
 
@@ -559,9 +557,10 @@
 
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
+
 <span class="sd">    &gt;&gt;&gt; import plenoptic as po</span>
 <span class="sd">    &gt;&gt;&gt; model = po.simul.OnOff(31, pretrained=True, cache_filt=True).eval()</span>
-<span class="sd">    &gt;&gt;&gt; po.tools.validate.validate_model(model)  # doctest: +ELLIPSIS</span>
+<span class="sd">    &gt;&gt;&gt; po.tools.validate.validate_model(model) #doctest: +ELLIPSIS</span>
 <span class="sd">    Traceback (most recent call last):</span>
 <span class="sd">    ValueError: model adds gradient to input, ...</span>
 <span class="sd">    &gt;&gt;&gt; po.tools.remove_grad(model)</span>
