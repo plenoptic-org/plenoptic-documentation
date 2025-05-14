@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>plenoptic.simulate.models.naive &mdash; plenoptic 1.2.1.dev122 documentation</title>
+  <title>plenoptic.simulate.models.naive &mdash; plenoptic 1.2.1.dev182 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/plot_directive.css" />
@@ -15,7 +15,7 @@
   
       <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../../_static/documentation_options.js?v=23ce5013"></script>
+      <script src="../../../../_static/documentation_options.js?v=7acd7e39"></script>
       <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -108,7 +108,16 @@
            <div itemprop="articleBody">
              
   <h1>Source code for plenoptic.simulate.models.naive</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Very simple visual models.</span>
+
+<span class="sd">While these may be useful as is, they are useful when combined with each other or</span>
+<span class="sd">non-linearities, as in :mod:`plenoptic.simulate.models.frontend`</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">torch</span><span class="w"> </span><span class="kn">import</span> <span class="n">Tensor</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">torch</span><span class="w"> </span><span class="kn">import</span> <span class="n">nn</span> <span class="k">as</span> <span class="n">nn</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">torch.nn</span><span class="w"> </span><span class="kn">import</span> <span class="n">functional</span> <span class="k">as</span> <span class="n">F</span>
@@ -122,7 +131,8 @@
 <div class="viewcode-block" id="Identity">
 <a class="viewcode-back" href="../../../../api/plenoptic.simulate.models.html#plenoptic.simulate.models.naive.Identity">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">Identity</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
-<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;simple class that just returns a copy of the image</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Simple class that just returns a copy of the image.</span>
 
 <span class="sd">    We use this as a &quot;dummy model&quot; for metrics that we don&#39;t have the</span>
 <span class="sd">    representation for. We use this as the model and then just change</span>
@@ -142,17 +152,18 @@
 <div class="viewcode-block" id="Identity.forward">
 <a class="viewcode-back" href="../../../../api/plenoptic.simulate.models.html#plenoptic.simulate.models.naive.Identity.forward">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return a copy of the tensor</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return a copy of the tensor.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        x : torch.Tensor</span>
-<span class="sd">            The tensor to return</span>
+<span class="sd">        x</span>
+<span class="sd">            The tensor to return.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        x : torch.Tensor</span>
-<span class="sd">            a clone of the input tensor</span>
+<span class="sd">        x</span>
+<span class="sd">            A clone of the input tensor.</span>
 
 <span class="sd">        Examples</span>
 <span class="sd">        --------</span>
@@ -163,10 +174,9 @@
 <span class="sd">           &gt;&gt;&gt; img = po.data.curie()</span>
 <span class="sd">           &gt;&gt;&gt; y = identity_model.forward(img)</span>
 <span class="sd">           &gt;&gt;&gt; titles = [&quot;Input&quot;, &quot;Output (identical)&quot;]</span>
-<span class="sd">           &gt;&gt;&gt; po.imshow([img, y], title=titles) #doctest: +ELLIPSIS</span>
+<span class="sd">           &gt;&gt;&gt; po.imshow([img, y], title=titles)</span>
 <span class="sd">           &lt;PyrFigure ...&gt;</span>
-
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        &quot;&quot;&quot;</span>  <span class="c1"># numpydoc ignore=ES01</span>
         <span class="n">y</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">*</span> <span class="n">x</span>
         <span class="k">return</span> <span class="n">y</span></div>
 </div>
@@ -176,24 +186,25 @@
 <div class="viewcode-block" id="Linear">
 <a class="viewcode-back" href="../../../../api/plenoptic.simulate.models.html#plenoptic.simulate.models.naive.Linear">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">Linear</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
-<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Simplistic linear convolutional model.</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Simplistic linear convolutional model.</span>
 
 <span class="sd">    If ``default_filters=True``, this model splits the input image into low</span>
 <span class="sd">    and high frequencies.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    kernel_size:</span>
+<span class="sd">    kernel_size</span>
 <span class="sd">        Convolutional kernel size.</span>
-<span class="sd">    pad_mode:</span>
-<span class="sd">        Mode with which to pad image using `nn.functional.pad()`.</span>
-<span class="sd">    default_filters:</span>
+<span class="sd">    pad_mode</span>
+<span class="sd">        Mode with which to pad image using :func:`torch.nn.functional.pad()`.</span>
+<span class="sd">    default_filters</span>
 <span class="sd">        Initialize the filters to a low-pass and a band-pass. If False, filters are</span>
 <span class="sd">        randomly initialized.</span>
 
 <span class="sd">    Raises</span>
 <span class="sd">    ------</span>
-<span class="sd">    ValueError:</span>
+<span class="sd">    ValueError</span>
 <span class="sd">        If kernel_size is not one or two positive integers.</span>
 
 <span class="sd">    Examples</span>
@@ -212,7 +223,6 @@
 <span class="sd">    Linear(</span>
 <span class="sd">      (conv): Conv2d(1, 2, kernel_size=(5, 5), stride=(1, 1), bias=False)</span>
 <span class="sd">    )</span>
-
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
@@ -244,19 +254,20 @@
 <div class="viewcode-block" id="Linear.forward">
 <a class="viewcode-back" href="../../../../api/plenoptic.simulate.models.html#plenoptic.simulate.models.naive.Linear.forward">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Convolve filter with input tensor.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Convolve filter with input tensor.</span>
 
 <span class="sd">        We use same-padding to ensure that the output and input shapes are matched.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        x :</span>
-<span class="sd">            The input tensor, should be 4d (batch, channel, height, width)</span>
+<span class="sd">        x</span>
+<span class="sd">            The input tensor, with (batch, channel, height, width).</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        y :</span>
-<span class="sd">            a linear convolution of the input image, of same shape as the input.</span>
+<span class="sd">        y</span>
+<span class="sd">            A linear convolution of the input image, of same shape as the input.</span>
 
 <span class="sd">        Examples</span>
 <span class="sd">        --------</span>
@@ -266,10 +277,15 @@
 <span class="sd">          &gt;&gt;&gt; linear_model = po.simul.Linear()</span>
 <span class="sd">          &gt;&gt;&gt; img = po.data.curie()</span>
 <span class="sd">          &gt;&gt;&gt; y = linear_model.forward(img)</span>
-<span class="sd">          &gt;&gt;&gt; po.imshow([img, y], title=[&quot;Input image&quot;, &quot;Lowpass channel output&quot;,</span>
-<span class="sd">          ...                            &quot;Bandpass channel output&quot;]) #doctest: +ELLIPSIS</span>
+<span class="sd">          &gt;&gt;&gt; po.imshow(</span>
+<span class="sd">          ...     [img, y],</span>
+<span class="sd">          ...     title=[</span>
+<span class="sd">          ...         &quot;Input image&quot;,</span>
+<span class="sd">          ...         &quot;Lowpass channel output&quot;,</span>
+<span class="sd">          ...         &quot;Bandpass channel output&quot;,</span>
+<span class="sd">          ...     ],</span>
+<span class="sd">          ... )</span>
 <span class="sd">          &lt;PyrFigure size...&gt;</span>
-
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">y</span> <span class="o">=</span> <span class="n">same_padding</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">kernel_size</span><span class="p">,</span> <span class="n">pad_mode</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">pad_mode</span><span class="p">)</span>
         <span class="n">h</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">conv</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
@@ -281,32 +297,34 @@
 <div class="viewcode-block" id="Gaussian">
 <a class="viewcode-back" href="../../../../api/plenoptic.simulate.models.html#plenoptic.simulate.models.naive.Gaussian">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">Gaussian</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Isotropic Gaussian convolutional filter.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Isotropic Gaussian convolutional filter.</span>
+
 <span class="sd">    Kernel elements are normalized and sum to one.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    kernel_size:</span>
+<span class="sd">    kernel_size</span>
 <span class="sd">        Size of convolutional kernel.</span>
-<span class="sd">    std:</span>
-<span class="sd">        Standard deviation of circularly symmtric Gaussian kernel.</span>
-<span class="sd">    pad_mode:</span>
-<span class="sd">        Padding mode argument to pass to `torch.nn.functional.pad`.</span>
-<span class="sd">    out_channels:</span>
+<span class="sd">    std</span>
+<span class="sd">        Standard deviation of circularly symmetric Gaussian kernel.</span>
+<span class="sd">    pad_mode</span>
+<span class="sd">        Padding mode argument to pass to :func:`torch.nn.functional.pad`.</span>
+<span class="sd">    out_channels</span>
 <span class="sd">        Number of filters. If None, inferred from shape of ``std``.</span>
-<span class="sd">    cache_filt:</span>
+<span class="sd">    cache_filt</span>
 <span class="sd">        Whether or not to cache the filter. Avoids regenerating filt with each</span>
-<span class="sd">        forward pass. Cached to `self._filt`.</span>
+<span class="sd">        forward pass.</span>
 
 <span class="sd">    Raises</span>
 <span class="sd">    ------</span>
-<span class="sd">    ValueError:</span>
+<span class="sd">    ValueError</span>
 <span class="sd">        If out_channels is not a positive integer.</span>
-<span class="sd">    ValueError:</span>
+<span class="sd">    ValueError</span>
 <span class="sd">        If kernel_size is not a positive integer.</span>
-<span class="sd">    ValueError:</span>
+<span class="sd">    ValueError</span>
 <span class="sd">        If std is not positive.</span>
-<span class="sd">    ValueError:</span>
+<span class="sd">    ValueError</span>
 <span class="sd">        If std is non-scalar and ``len(std) != out_channels``</span>
 
 <span class="sd">    Examples</span>
@@ -315,7 +333,6 @@
 <span class="sd">    &gt;&gt;&gt; gaussian_model = po.simul.Gaussian(kernel_size=10)</span>
 <span class="sd">    &gt;&gt;&gt; gaussian_model</span>
 <span class="sd">    Gaussian()</span>
-
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
@@ -339,7 +356,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">register_buffer</span><span class="p">(</span><span class="s2">&quot;_filt&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">filt</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">filt</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Gaussian filter(s).&quot;&quot;&quot;</span>  <span class="c1"># numpydoc ignore=ES01,RT01</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_filt</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># use old filter</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_filt</span>
         <span class="k">else</span><span class="p">:</span>  <span class="c1"># create new filter, optionally cache it</span>
@@ -351,22 +369,23 @@
 
 <div class="viewcode-block" id="Gaussian.forward">
 <a class="viewcode-back" href="../../../../api/plenoptic.simulate.models.html#plenoptic.simulate.models.naive.Gaussian.forward">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span> <span class="o">**</span><span class="n">conv2d_kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Convolve Gaussian filter with input tensor</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span> <span class="o">**</span><span class="n">conv2d_kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Convolve Gaussian filter with input tensor.</span>
 
 <span class="sd">        We use same-padding to ensure that the output and input shapes are matched.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        x :</span>
-<span class="sd">            The input tensor, should be 4d (batch, channel, height, width)</span>
-<span class="sd">        conv2d_kwargs :</span>
-<span class="sd">            Passed to [](torch.nn.functional.conv2d).</span>
+<span class="sd">        x</span>
+<span class="sd">            The input tensor, should be 4d (batch, channel, height, width).</span>
+<span class="sd">        **conv2d_kwargs</span>
+<span class="sd">            Passed to :func:`torch.nn.functional.conv2d`.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        y :</span>
-<span class="sd">            a linear convolution of the input image, of same shape as the input.</span>
+<span class="sd">        y</span>
+<span class="sd">            A linear convolution of the input image, of same shape as the input.</span>
 
 <span class="sd">        Examples</span>
 <span class="sd">        --------</span>
@@ -376,7 +395,7 @@
 <span class="sd">          &gt;&gt;&gt; gaussian_model = po.simul.Gaussian(kernel_size=10)</span>
 <span class="sd">          &gt;&gt;&gt; img = po.data.curie()</span>
 <span class="sd">          &gt;&gt;&gt; y = gaussian_model.forward(img)</span>
-<span class="sd">          &gt;&gt;&gt; po.imshow([img, y], title=[&quot;Input image&quot;, &quot;Output&quot;]) #doctest: +ELLIPSIS</span>
+<span class="sd">          &gt;&gt;&gt; po.imshow([img, y], title=[&quot;Input image&quot;, &quot;Output&quot;])</span>
 <span class="sd">          &lt;PyrFigure size...&gt;</span>
 
 <span class="sd">        Multiple output channels with different standard deviations.</span>
@@ -384,14 +403,16 @@
 <span class="sd">        .. plot::</span>
 
 <span class="sd">          &gt;&gt;&gt; import plenoptic as po</span>
-<span class="sd">          &gt;&gt;&gt; gaussian_model = po.simul.Gaussian(kernel_size=10, std=[2, 5],</span>
-<span class="sd">          ...                                    out_channels=2)</span>
+<span class="sd">          &gt;&gt;&gt; gaussian_model = po.simul.Gaussian(</span>
+<span class="sd">          ...     kernel_size=10, std=[2, 5], out_channels=2</span>
+<span class="sd">          ... )</span>
 <span class="sd">          &gt;&gt;&gt; img = po.data.curie()</span>
 <span class="sd">          &gt;&gt;&gt; y = gaussian_model.forward(img)</span>
-<span class="sd">          &gt;&gt;&gt; po.imshow([img, y], title=[&quot;Input image&quot;, &quot;Output Channel 0&quot;,</span>
-<span class="sd">          ...                            &quot;Output Channel 1&quot;]) #doctest: +ELLIPSIS</span>
+<span class="sd">          &gt;&gt;&gt; po.imshow(</span>
+<span class="sd">          ...     [img, y],</span>
+<span class="sd">          ...     title=[&quot;Input image&quot;, &quot;Output Channel 0&quot;, &quot;Output Channel 1&quot;],</span>
+<span class="sd">          ... )</span>
 <span class="sd">          &lt;PyrFigure ...&gt;</span>
-
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">std</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">std</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span>  <span class="c1"># ensure stdev is positive</span>
 
@@ -406,51 +427,54 @@
 <div class="viewcode-block" id="CenterSurround">
 <a class="viewcode-back" href="../../../../api/plenoptic.simulate.models.html#plenoptic.simulate.models.naive.CenterSurround">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">CenterSurround</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Center-Surround, Difference of Gaussians (DoG) filter model. Can be either</span>
-<span class="sd">    on-center/off-surround, or vice versa.</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Center-Surround, Difference of Gaussians (DoG) filter model.</span>
+
+<span class="sd">    Can be either on-center/off-surround, or vice versa.</span>
 
 <span class="sd">    Filter is constructed as:</span>
+
 <span class="sd">    .. math::</span>
-<span class="sd">        f &amp;= amplitude_ratio * center - surround \\</span>
+<span class="sd">        f &amp;= amplitude\_ratio * center - surround \\</span>
 <span class="sd">        f &amp;= f/f.sum()</span>
 
 <span class="sd">    The signs of center and surround are determined by ``on_center`` argument.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    kernel_size:</span>
+<span class="sd">    kernel_size</span>
 <span class="sd">        Shape of convolutional kernel.</span>
-<span class="sd">    on_center:</span>
+<span class="sd">    on_center</span>
 <span class="sd">        Dictates whether center is on or off; surround will be the opposite of center</span>
 <span class="sd">        (i.e. on-off or off-on). If List of bools, then list length must equal</span>
-<span class="sd">        `out_channels`, if just a single bool, then all `out_channels` will be assumed</span>
-<span class="sd">        to be all on-off or off-on.</span>
-<span class="sd">    amplitude_ratio:</span>
+<span class="sd">        ``out_channels``, if just a single bool, then all ``out_channels`` will be</span>
+<span class="sd">        assumed to be all on-off or off-on.</span>
+<span class="sd">    amplitude_ratio</span>
 <span class="sd">        Ratio of center/surround amplitude. Applied before filter normalization. Must be</span>
 <span class="sd">        greater than or equal to 1.</span>
-<span class="sd">    center_std:</span>
+<span class="sd">    center_std</span>
 <span class="sd">        Standard deviation of circular Gaussian for center.</span>
-<span class="sd">    surround_std:</span>
+<span class="sd">    surround_std</span>
 <span class="sd">        Standard deviation of circular Gaussian for surround.</span>
-<span class="sd">    out_channels:</span>
+<span class="sd">    out_channels</span>
 <span class="sd">        Number of filters. If None, inferred from shape of ``center_std``.</span>
-<span class="sd">    pad_mode:</span>
-<span class="sd">        Padding for convolution, defaults to &quot;circular&quot;.</span>
-<span class="sd">    cache_filt:</span>
+<span class="sd">    pad_mode</span>
+<span class="sd">        Padding for convolution.</span>
+<span class="sd">    cache_filt</span>
 <span class="sd">        Whether or not to cache the filter. Avoids regenerating filt with each</span>
-<span class="sd">        forward pass. Cached to `self._filt`</span>
+<span class="sd">        forward pass.</span>
 
 <span class="sd">    Raises</span>
 <span class="sd">    ------</span>
-<span class="sd">    ValueError:</span>
+<span class="sd">    ValueError</span>
 <span class="sd">        If out_channels is not a positive integer.</span>
-<span class="sd">    ValueError:</span>
+<span class="sd">    ValueError</span>
 <span class="sd">        If kernel_size is not a positive integer.</span>
-<span class="sd">    ValueError:</span>
+<span class="sd">    ValueError</span>
 <span class="sd">        If center_std or surround_std are not positive.</span>
-<span class="sd">    ValueError:</span>
+<span class="sd">    ValueError</span>
 <span class="sd">        If center_std and surround_std do not have the same number of values.</span>
-<span class="sd">    ValueError:</span>
+<span class="sd">    ValueError</span>
 <span class="sd">        If center_std or surround_std are non-scalar and their lengths do not</span>
 <span class="sd">        equal ``out_channels``</span>
 
@@ -467,7 +491,6 @@
 <span class="sd">    &gt;&gt;&gt; cs_model = po.simul.CenterSurround(10, [True, False])</span>
 <span class="sd">    &gt;&gt;&gt; cs_model</span>
 <span class="sd">    CenterSurround()</span>
-
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
@@ -522,7 +545,7 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">filt</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Creates an on center/off surround, or off center/on surround conv filter&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Center-surround filter(s).&quot;&quot;&quot;</span>  <span class="c1"># numpydoc ignore=ES01,RT01</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_filt</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="c1"># use cached filt</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_filt</span>
@@ -551,19 +574,20 @@
 <div class="viewcode-block" id="CenterSurround.forward">
 <a class="viewcode-back" href="../../../../api/plenoptic.simulate.models.html#plenoptic.simulate.models.naive.CenterSurround.forward">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Convolve center-surround filter with input tensor.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Convolve center-surround filter with input tensor.</span>
 
 <span class="sd">        We use same-padding to ensure that the output and input shapes are matched.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        x :</span>
-<span class="sd">            The input tensor, should be 4d (batch, channel, height, width)</span>
+<span class="sd">        x</span>
+<span class="sd">            The input tensor, should be 4d (batch, channel, height, width).</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        y :</span>
-<span class="sd">            a linear convolution of the input image, of same shape as the input.</span>
+<span class="sd">        y</span>
+<span class="sd">            A linear convolution of the input image, of same shape as the input.</span>
 
 <span class="sd">        Examples</span>
 <span class="sd">        --------</span>
@@ -573,7 +597,7 @@
 <span class="sd">          &gt;&gt;&gt; cs_model = po.simul.CenterSurround(kernel_size=10)</span>
 <span class="sd">          &gt;&gt;&gt; img = po.data.curie()</span>
 <span class="sd">          &gt;&gt;&gt; y = cs_model.forward(img)</span>
-<span class="sd">          &gt;&gt;&gt; po.imshow([img, y], title=[&quot;Input image&quot;, &quot;Output&quot;]) #doctest: +ELLIPSIS</span>
+<span class="sd">          &gt;&gt;&gt; po.imshow([img, y], title=[&quot;Input image&quot;, &quot;Output&quot;])</span>
 <span class="sd">          &lt;PyrFigure size...&gt;</span>
 
 <span class="sd">        Model with both on-center/off-surround and off-center/on-surround:</span>
@@ -584,11 +608,13 @@
 <span class="sd">          &gt;&gt;&gt; cs_model = po.simul.CenterSurround(10, [True, False])</span>
 <span class="sd">          &gt;&gt;&gt; img = po.data.curie()</span>
 <span class="sd">          &gt;&gt;&gt; y = cs_model.forward(img)</span>
-<span class="sd">          &gt;&gt;&gt; titles = [&quot;Input image&quot;, &quot;On-center/off-surround&quot;,</span>
-<span class="sd">          ...           &quot;Off-center/on-surround&quot;]</span>
-<span class="sd">          &gt;&gt;&gt; po.imshow([img, y], title=titles) #doctest: +ELLIPSIS</span>
+<span class="sd">          &gt;&gt;&gt; titles = [</span>
+<span class="sd">          ...     &quot;Input image&quot;,</span>
+<span class="sd">          ...     &quot;On-center/off-surround&quot;,</span>
+<span class="sd">          ...     &quot;Off-center/on-surround&quot;,</span>
+<span class="sd">          ... ]</span>
+<span class="sd">          &gt;&gt;&gt; po.imshow([img, y], title=titles)</span>
 <span class="sd">          &lt;PyrFigure size...&gt;</span>
-
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">x</span> <span class="o">=</span> <span class="n">same_padding</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">kernel_size</span><span class="p">,</span> <span class="n">pad_mode</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">pad_mode</span><span class="p">)</span>
         <span class="n">y</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">conv2d</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">filt</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
