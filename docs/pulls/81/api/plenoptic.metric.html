@@ -1,0 +1,798 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>plenoptic.metric package &mdash; plenoptic 1.2.1.dev138 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=f712bd2b"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../_static/copybutton.js?v=35a8b989"></script>
+      <script src="../_static/design-tabs.js?v=f930bc37"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+      <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="plenoptic.simulate package" href="plenoptic.simulate.html" />
+    <link rel="prev" title="plenoptic.data package" href="plenoptic.data.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            plenoptic
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Basic concepts</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../jupyter.html">Using Jupyter to Run Example Notebooks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../conceptual_intro.html">Conceptual Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../models.html">Model requirements</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/00_quickstart.html">Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../citation.html">Citation Guide and Bibliography</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Synthesis method introductions</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/intro/02_Eigendistortions.html">Eigendistortions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/intro/06_Metamer.html">Metamers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/intro/07_Simple_MAD.html">MAD Competition Conceptual Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/intro/08_MAD_Competition.html">MAD Competition Usage</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Models and metrics</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/models/03_Steerable_Pyramid.html">Steerable Pyramid</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/models/04_Perceptual_distance.html">Perceptual distance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/models/Metamer-Portilla-Simoncelli.html">Portilla-Simoncelli Texture Metamer</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Synthesis method examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/applications/09_Original_MAD.html">Reproducing Wang and Simoncelli, 2008 (MAD Competition)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/applications/Demo_Eigendistortion.html">Reproducing Berardino et al., 2017 (Eigendistortions)</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Advanced usage</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../synthesis.html">Synthesis object design</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tips.html">Tips and Tricks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reproducibility.html">Reproducibility</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">API Documentation</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="plenoptic.html">plenoptic package</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="plenoptic.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="plenoptic.data.html">plenoptic.data package</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">plenoptic.metric package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="plenoptic.simulate.html">plenoptic.simulate package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="plenoptic.synthesize.html">plenoptic.synthesize package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="plenoptic.tools.html">plenoptic.tools package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="plenoptic.html#module-plenoptic">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/advanced/Display.html">Display and animate functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/advanced/Synthesis_extensions.html">Extending existing synthesis objects</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">plenoptic</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">plenoptic</a></li>
+          <li class="breadcrumb-item"><a href="plenoptic.html">plenoptic package</a></li>
+      <li class="breadcrumb-item active">plenoptic.metric package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/plenoptic.metric.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="plenoptic-metric-package">
+<h1>plenoptic.metric package<a class="headerlink" href="#plenoptic-metric-package" title="Link to this heading"></a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
+</section>
+<section id="module-plenoptic.metric.classes">
+<span id="plenoptic-metric-classes-module"></span><h2>plenoptic.metric.classes module<a class="headerlink" href="#module-plenoptic.metric.classes" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="plenoptic.metric.classes.NLP">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">plenoptic.metric.classes.</span></span><span class="sig-name descname"><span class="pre">NLP</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/plenoptic/metric/classes.html#NLP"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#plenoptic.metric.classes.NLP" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.pytorch.org/docs/stable/generated/torch.nn.Module.html#torch.nn.Module" title="(in PyTorch v2.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code></a></p>
+<p>simple class for implementing normalized laplacian pyramid</p>
+<p>This class just calls
+<code class="docutils literal notranslate"><span class="pre">plenoptic.metric.normalized_laplacian_pyramid</span></code> on the image and
+returns a 3d tensor with the flattened activations.</p>
+<p>NOTE: synthesis using this class will not be the exact same as
+synthesis using the <code class="docutils literal notranslate"><span class="pre">plenoptic.metric.nlpd</span></code> function (by default),
+because the <code class="docutils literal notranslate"><span class="pre">nlpd</span></code> function uses the root-mean square of the L2 distance (i.e.,
+<code class="docutils literal notranslate"><span class="pre">torch.sqrt(torch.mean(x-y)**2))</span></code> as the distance metric between representations.</p>
+<p>Model parameters are those used in <a class="reference internal" href="#rcb138e2d4399-1" id="id1">[1]</a>, copied from the matlab code used in the
+paper, found at <a class="reference internal" href="#rcb138e2d4399-2" id="id2">[2]</a>.</p>
+<p class="rubric">References</p>
+<div role="list" class="citation-list">
+<div class="citation" id="rcb138e2d4399-1" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">1</a><span class="fn-bracket">]</span></span>
+<p>Laparra, V., Ballé, J., Berardino, A. and Simoncelli, E.P., 2016. Perceptual
+image quality assessment using a normalized Laplacian pyramid. Electronic
+Imaging, 2016(16), pp.1-6.</p>
+</div>
+<div class="citation" id="rcb138e2d4399-2" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id2">2</a><span class="fn-bracket">]</span></span>
+<p>[matlab code](<a class="reference external" href="https://www.cns.nyu.edu/~lcv/NLPyr/NLP_dist.m">https://www.cns.nyu.edu/~lcv/NLPyr/NLP_dist.m</a>)</p>
+</div>
+</div>
+<div class="deprecated">
+<p><span class="versionmodified deprecated">Deprecated since version 1.2.0: </span>NLP will be removed soon, use
+perceptual_distance.normalized_laplacian_pyramid directly</p>
+</div>
+<p class="rubric">Methods</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_module</span></code>(name, module)</p></td>
+<td><p>Add a child module to the current module.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">apply</span></code>(fn)</p></td>
+<td><p>Apply <code class="docutils literal notranslate"><span class="pre">fn</span></code> recursively to every submodule (as returned by <code class="docutils literal notranslate"><span class="pre">.children()</span></code>) as well as self.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">bfloat16</span></code>()</p></td>
+<td><p>Casts all floating point parameters and buffers to <code class="docutils literal notranslate"><span class="pre">bfloat16</span></code> datatype.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">buffers</span></code>([recurse])</p></td>
+<td><p>Return an iterator over module buffers.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">children</span></code>()</p></td>
+<td><p>Return an iterator over immediate children modules.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">compile</span></code>(*args, **kwargs)</p></td>
+<td><p>Compile this Module's forward using <a class="reference external" href="https://docs.pytorch.org/docs/stable/generated/torch.compile.html#torch.compile" title="(in PyTorch v2.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">torch.compile()</span></code></a>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">cpu</span></code>()</p></td>
+<td><p>Move all model parameters and buffers to the CPU.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">cuda</span></code>([device])</p></td>
+<td><p>Move all model parameters and buffers to the GPU.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">double</span></code>()</p></td>
+<td><p>Casts all floating point parameters and buffers to <code class="docutils literal notranslate"><span class="pre">double</span></code> datatype.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">eval</span></code>()</p></td>
+<td><p>Set the module in evaluation mode.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">extra_repr</span></code>()</p></td>
+<td><p>Return the extra representation of the module.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">float</span></code>()</p></td>
+<td><p>Casts all floating point parameters and buffers to <code class="docutils literal notranslate"><span class="pre">float</span></code> datatype.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#plenoptic.metric.classes.NLP.forward" title="plenoptic.metric.classes.NLP.forward"><code class="xref py py-obj docutils literal notranslate"><span class="pre">forward</span></code></a>(image)</p></td>
+<td><p>returns flattened NLP activations</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_buffer</span></code>(target)</p></td>
+<td><p>Return the buffer given by <code class="docutils literal notranslate"><span class="pre">target</span></code> if it exists, otherwise throw an error.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_extra_state</span></code>()</p></td>
+<td><p>Return any extra state to include in the module's state_dict.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_parameter</span></code>(target)</p></td>
+<td><p>Return the parameter given by <code class="docutils literal notranslate"><span class="pre">target</span></code> if it exists, otherwise throw an error.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_submodule</span></code>(target)</p></td>
+<td><p>Return the submodule given by <code class="docutils literal notranslate"><span class="pre">target</span></code> if it exists, otherwise throw an error.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">half</span></code>()</p></td>
+<td><p>Casts all floating point parameters and buffers to <code class="docutils literal notranslate"><span class="pre">half</span></code> datatype.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">ipu</span></code>([device])</p></td>
+<td><p>Move all model parameters and buffers to the IPU.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_state_dict</span></code>(state_dict[, strict, assign])</p></td>
+<td><p>Copy parameters and buffers from <code class="xref py py-attr docutils literal notranslate"><span class="pre">state_dict</span></code> into this module and its descendants.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">modules</span></code>()</p></td>
+<td><p>Return an iterator over all modules in the network.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">mtia</span></code>([device])</p></td>
+<td><p>Move all model parameters and buffers to the MTIA.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">named_buffers</span></code>([prefix, recurse, ...])</p></td>
+<td><p>Return an iterator over module buffers, yielding both the name of the buffer as well as the buffer itself.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">named_children</span></code>()</p></td>
+<td><p>Return an iterator over immediate children modules, yielding both the name of the module as well as the module itself.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">named_modules</span></code>([memo, prefix, remove_duplicate])</p></td>
+<td><p>Return an iterator over all modules in the network, yielding both the name of the module as well as the module itself.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">named_parameters</span></code>([prefix, recurse, ...])</p></td>
+<td><p>Return an iterator over module parameters, yielding both the name of the parameter as well as the parameter itself.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">parameters</span></code>([recurse])</p></td>
+<td><p>Return an iterator over module parameters.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">register_backward_hook</span></code>(hook)</p></td>
+<td><p>Register a backward hook on the module.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">register_buffer</span></code>(name, tensor[, persistent])</p></td>
+<td><p>Add a buffer to the module.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">register_forward_hook</span></code>(hook, *[, prepend, ...])</p></td>
+<td><p>Register a forward hook on the module.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">register_forward_pre_hook</span></code>(hook, *[, ...])</p></td>
+<td><p>Register a forward pre-hook on the module.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">register_full_backward_hook</span></code>(hook[, prepend])</p></td>
+<td><p>Register a backward hook on the module.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">register_full_backward_pre_hook</span></code>(hook[, prepend])</p></td>
+<td><p>Register a backward pre-hook on the module.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">register_load_state_dict_post_hook</span></code>(hook)</p></td>
+<td><p>Register a post-hook to be run after module's <code class="xref py py-meth docutils literal notranslate"><span class="pre">load_state_dict()</span></code> is called.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">register_load_state_dict_pre_hook</span></code>(hook)</p></td>
+<td><p>Register a pre-hook to be run before module's <code class="xref py py-meth docutils literal notranslate"><span class="pre">load_state_dict()</span></code> is called.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">register_module</span></code>(name, module)</p></td>
+<td><p>Alias for <code class="xref py py-func docutils literal notranslate"><span class="pre">add_module()</span></code>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">register_parameter</span></code>(name, param)</p></td>
+<td><p>Add a parameter to the module.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">register_state_dict_post_hook</span></code>(hook)</p></td>
+<td><p>Register a post-hook for the <a class="reference external" href="https://docs.pytorch.org/docs/stable/generated/torch.nn.Module.html#torch.nn.Module.state_dict" title="(in PyTorch v2.7)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">state_dict()</span></code></a> method.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">register_state_dict_pre_hook</span></code>(hook)</p></td>
+<td><p>Register a pre-hook for the <a class="reference external" href="https://docs.pytorch.org/docs/stable/generated/torch.nn.Module.html#torch.nn.Module.state_dict" title="(in PyTorch v2.7)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">state_dict()</span></code></a> method.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">requires_grad_</span></code>([requires_grad])</p></td>
+<td><p>Change if autograd should record operations on parameters in this module.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_extra_state</span></code>(state)</p></td>
+<td><p>Set extra state contained in the loaded <cite>state_dict</cite>.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_submodule</span></code>(target, module[, strict])</p></td>
+<td><p>Set the submodule given by <code class="docutils literal notranslate"><span class="pre">target</span></code> if it exists, otherwise throw an error.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">share_memory</span></code>()</p></td>
+<td><p>See <a class="reference external" href="https://docs.pytorch.org/docs/stable/generated/torch.Tensor.share_memory_.html#torch.Tensor.share_memory_" title="(in PyTorch v2.7)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">torch.Tensor.share_memory_()</span></code></a>.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">state_dict</span></code>(*args[, destination, prefix, ...])</p></td>
+<td><p>Return a dictionary containing references to the whole state of the module.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">to</span></code>(*args, **kwargs)</p></td>
+<td><p>Move and/or cast the parameters and buffers.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_empty</span></code>(*, device[, recurse])</p></td>
+<td><p>Move the parameters and buffers to the specified device without copying storage.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">train</span></code>([mode])</p></td>
+<td><p>Set the module in training mode.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">type</span></code>(dst_type)</p></td>
+<td><p>Casts all parameters and buffers to <code class="xref py py-attr docutils literal notranslate"><span class="pre">dst_type</span></code>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">xpu</span></code>([device])</p></td>
+<td><p>Move all model parameters and buffers to the XPU.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">zero_grad</span></code>([set_to_none])</p></td>
+<td><p>Reset gradients of all model parameters.</p></td>
+</tr>
+</tbody>
+</table>
+<table class="docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><strong>__call__</strong></p></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<dl class="py method">
+<dt class="sig sig-object py" id="plenoptic.metric.classes.NLP.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">image</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/plenoptic/metric/classes.html#NLP.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#plenoptic.metric.classes.NLP.forward" title="Link to this definition"></a></dt>
+<dd><p>returns flattened NLP activations</p>
+<p>WARNING: For now this only supports images with batch and
+channel size 1</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>image</strong> (<a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.7)"><em>torch.Tensor</em></a>) – image to pass to normalized_laplacian_pyramid</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>representation</strong> – 3d tensor with flattened NLP activations</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.7)">torch.Tensor</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-plenoptic.metric.model_metric">
+<span id="plenoptic-metric-model-metric-module"></span><h2>plenoptic.metric.model_metric module<a class="headerlink" href="#module-plenoptic.metric.model_metric" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="plenoptic.metric.model_metric.model_metric">
+<span class="sig-prename descclassname"><span class="pre">plenoptic.metric.model_metric.</span></span><span class="sig-name descname"><span class="pre">model_metric</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/plenoptic/metric/model_metric.html#model_metric"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#plenoptic.metric.model_metric.model_metric" title="Link to this definition"></a></dt>
+<dd><p>Calculate distance between x and y in model space root mean squared error</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> – images with shape (batch, channel, height, width)</p></li>
+<li><p><strong>y</strong> – images with shape (batch, channel, height, width)</p></li>
+<li><p><strong>model</strong> – torch model with defined forward and backward operations</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">plenoptic</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">po</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">einstein_img</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">einstein</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">curie_img</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">curie</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">simul</span><span class="o">.</span><span class="n">Gaussian</span><span class="p">(</span><span class="mi">30</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model_metric</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">metric</span><span class="o">.</span><span class="n">model_metric</span><span class="p">(</span><span class="n">einstein_img</span><span class="p">,</span> <span class="n">curie_img</span><span class="p">,</span> <span class="n">model</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model_metric</span>
+<span class="go">tensor(0.3128, grad_fn=&lt;SqrtBackward0&gt;)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># calculate this model metric manually:</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">torch</span><span class="o">.</span><span class="n">mean</span><span class="p">((</span><span class="n">model</span><span class="p">(</span><span class="n">einstein_img</span><span class="p">)</span> <span class="o">-</span> <span class="n">model</span><span class="p">(</span><span class="n">curie_img</span><span class="p">))</span><span class="o">.</span><span class="n">pow</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span><span class="o">.</span><span class="n">sqrt</span><span class="p">()</span>
+<span class="go">tensor(0.3128, grad_fn=&lt;SqrtBackward0&gt;)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</section>
+<section id="module-plenoptic.metric.naive">
+<span id="plenoptic-metric-naive-module"></span><h2>plenoptic.metric.naive module<a class="headerlink" href="#module-plenoptic.metric.naive" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="plenoptic.metric.naive.mse">
+<span class="sig-prename descclassname"><span class="pre">plenoptic.metric.naive.</span></span><span class="sig-name descname"><span class="pre">mse</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">img1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">img2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/plenoptic/metric/naive.html#mse"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#plenoptic.metric.naive.mse" title="Link to this definition"></a></dt>
+<dd><p>return the MSE between img1 and img2</p>
+<p>Our baseline metric to compare two images is often mean-squared
+error, MSE. This is not a good approximation of the human visual
+system, but is handy to compare against.</p>
+<p>For two images, <span class="math notranslate nohighlight">\(x\)</span> and <span class="math notranslate nohighlight">\(y\)</span>, with <span class="math notranslate nohighlight">\(n\)</span> pixels
+each:</p>
+<div class="math notranslate nohighlight">
+\[MSE &amp;= \frac{1}{n}\sum_i=1^n (x_i - y_i)^2\]</div>
+<p>The two images must have a float dtype</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>img1</strong> (<a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.7)"><em>torch.Tensor</em></a>) – The first image to compare</p></li>
+<li><p><strong>img2</strong> (<a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.7)"><em>torch.Tensor</em></a>) – The second image to compare, must be same size as <code class="docutils literal notranslate"><span class="pre">img1</span></code></p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>mse</strong> – the mean-squared error between <code class="docutils literal notranslate"><span class="pre">img1</span></code> and <code class="docutils literal notranslate"><span class="pre">img2</span></code></p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>torch.float</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">plenoptic</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">po</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">einstein</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">einstein</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">po</span><span class="o">.</span><span class="n">tools</span><span class="o">.</span><span class="n">set_seed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">einstein_noisy</span> <span class="o">=</span> <span class="n">einstein</span> <span class="o">+</span> <span class="mf">0.1</span> <span class="o">*</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn_like</span><span class="p">(</span><span class="n">einstein</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">po</span><span class="o">.</span><span class="n">metric</span><span class="o">.</span><span class="n">mse</span><span class="p">(</span><span class="n">einstein</span><span class="p">,</span> <span class="n">einstein_noisy</span><span class="p">)</span>
+<span class="go">tensor([[0.0100]])</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</section>
+<section id="module-plenoptic.metric.perceptual_distance">
+<span id="plenoptic-metric-perceptual-distance-module"></span><h2>plenoptic.metric.perceptual_distance module<a class="headerlink" href="#module-plenoptic.metric.perceptual_distance" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="plenoptic.metric.perceptual_distance.ms_ssim">
+<span class="sig-prename descclassname"><span class="pre">plenoptic.metric.perceptual_distance.</span></span><span class="sig-name descname"><span class="pre">ms_ssim</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">img1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">img2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">power_factors</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/plenoptic/metric/perceptual_distance.html#ms_ssim"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#plenoptic.metric.perceptual_distance.ms_ssim" title="Link to this definition"></a></dt>
+<dd><p>Multiscale structural similarity index (MS-SSIM)</p>
+<p>As described in <a class="reference internal" href="#r0fe3e06251c7-1" id="id3">[1]</a>, multiscale structural similarity index (MS-SSIM) is
+an improvement upon structural similarity index (SSIM) that takes into
+account the perceptual distance between two images on different scales.</p>
+<p>SSIM is based on three comparison measurements between the two images:
+luminance, contrast, and structure. All of these are computed convolutionally
+across the images, producing three maps instead of scalars. The SSIM map is
+the elementwise product of these three maps. See <cite>metric.ssim</cite> and
+<cite>metric.ssim_map</cite> for a full description of SSIM.</p>
+<p>To get images of different scales, average pooling operations with kernel
+size 2 are performed recursively on the input images. The product of
+contrast map and structure map (the “contrast-structure map”) is computed
+for all but the coarsest scales, and the overall SSIM map is only computed
+for the coarsest scale. Their mean values are raised to exponents and
+multiplied to produce MS-SSIM:</p>
+<div class="math notranslate nohighlight">
+\[MSSSIM = {SSIM}_M^{a_M} \prod_{i=1}^{M-1} ({CS}_i)^{a_i}\]</div>
+<p>Here :math: <cite>M</cite> is the number of scales, :math: <cite>{CS}_i</cite> is the mean value
+of the contrast-structure map for the i’th finest scale, and :math: <cite>{SSIM}_M</cite>
+is the mean value of the SSIM map for the coarsest scale. If at least one
+of these terms are negative, the value of MS-SSIM is zero. The values of
+:math: <cite>a_i, i=1,…,M</cite> are taken from the argument <cite>power_factors</cite>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>img1</strong> (<a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.7)"><em>torch.Tensor</em></a><em> of </em><em>shape</em><em> (</em><em>batch</em><em>, </em><em>channel</em><em>, </em><em>height</em><em>, </em><em>width</em><em>)</em>) – The first image or batch of images.</p></li>
+<li><p><strong>img2</strong> (<a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.7)"><em>torch.Tensor</em></a><em> of </em><em>shape</em><em> (</em><em>batch</em><em>, </em><em>channel</em><em>, </em><em>height</em><em>, </em><em>width</em><em>)</em>) – The second image or batch of images. The heights and widths of <cite>img1</cite>
+and <cite>img2</cite> must be the same. The numbers of batches and channels of
+<cite>img1</cite> and <cite>img2</cite> need to be broadcastable: either they are the same
+or one of them is 1. The output will be computed separately for each
+channel (so channels are treated in the same way as batches). Both
+images should have values between 0 and 1. Otherwise, the result may
+be inaccurate, and we will raise a warning (but will still compute it).</p></li>
+<li><p><strong>power_factors</strong> (<em>1D array</em><em>, </em><em>optional.</em>) – power exponents for the mean values of maps, for different scales (from
+fine to coarse). The length of this array determines the number of scales.
+By default, this is set to [0.0448, 0.2856, 0.3001, 0.2363, 0.1333],
+which is what psychophysical experiments in <a class="reference internal" href="#r0fe3e06251c7-1" id="id4">[1]</a> found.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>msssim</strong> – 2d tensor of shape (batch, channel) containing the MS-SSIM for each image</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.7)">torch.Tensor</a></p>
+</dd>
+</dl>
+<p class="rubric">References</p>
+<div role="list" class="citation-list">
+<div class="citation" id="r0fe3e06251c7-1" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></span>
+<span class="backrefs">(<a role="doc-backlink" href="#id3">1</a>,<a role="doc-backlink" href="#id4">2</a>)</span>
+<p>Wang, Zhou, Eero P. Simoncelli, and Alan C. Bovik. “Multiscale
+structural similarity for image quality assessment.” The Thrity-Seventh
+Asilomar Conference on Signals, Systems &amp; Computers, 2003. Vol. 2. IEEE, 2003.</p>
+</div>
+</div>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">plenoptic</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">po</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">po</span><span class="o">.</span><span class="n">tools</span><span class="o">.</span><span class="n">set_seed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">img</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">einstein</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">po</span><span class="o">.</span><span class="n">metric</span><span class="o">.</span><span class="n">ms_ssim</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">img</span> <span class="o">+</span> <span class="n">torch</span><span class="o">.</span><span class="n">rand_like</span><span class="p">(</span><span class="n">img</span><span class="p">))</span>
+<span class="go">tensor([[0.4684]])</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="plenoptic.metric.perceptual_distance.nlpd">
+<span class="sig-prename descclassname"><span class="pre">plenoptic.metric.perceptual_distance.</span></span><span class="sig-name descname"><span class="pre">nlpd</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">img1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">img2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/plenoptic/metric/perceptual_distance.html#nlpd"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#plenoptic.metric.perceptual_distance.nlpd" title="Link to this definition"></a></dt>
+<dd><p>Normalized Laplacian Pyramid Distance</p>
+<p>As described in  <a class="reference internal" href="#rf2ca686465eb-1" id="id5">[1]</a>, this is an image quality metric based on the transformations
+associated with the early visual system: local luminance subtraction and local
+contrast gain control.</p>
+<p>A laplacian pyramid subtracts a local estimate of the mean luminance at six scales.
+Then a local gain control divides these centered coefficients by a weighted sum of
+absolute values in spatial neighborhood.</p>
+<p>These weights parameters were optimized for redundancy reduction over an training
+database of (undistorted) natural images, as described in the paper. Parameters were
+copied from matlab code used for the paper, found at  <a class="reference internal" href="#rf2ca686465eb-2" id="id6">[2]</a>.</p>
+<p>Note that we compute root mean squared error for each scale, and then average over
+these, effectively giving larger weight to the lower frequency coefficients
+(which are fewer in number, due to subsampling).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>img1</strong> (<a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.7)"><em>torch.Tensor</em></a><em> of </em><em>shape</em><em> (</em><em>batch</em><em>, </em><em>channel</em><em>, </em><em>height</em><em>, </em><em>width</em><em>)</em>) – The first image or batch of images.</p></li>
+<li><p><strong>img2</strong> (<a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.7)"><em>torch.Tensor</em></a><em> of </em><em>shape</em><em> (</em><em>batch</em><em>, </em><em>channel</em><em>, </em><em>height</em><em>, </em><em>width</em><em>)</em>) – The second image or batch of images. The heights and widths of <cite>img1</cite>
+and <cite>img2</cite> must be the same. The numbers of batches and channels of
+<cite>img1</cite> and <cite>img2</cite> need to be broadcastable: either they are the same
+or one of them is 1. The output will be computed separately for each
+channel (so channels are treated in the same way as batches). Both
+images should have values between 0 and 1. Otherwise, the result may
+be inaccurate, and we will raise a warning (but will still compute it).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>distance</strong> – The normalized Laplacian Pyramid distance.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.7)">torch.Tensor</a> of shape (batch, channel)</p>
+</dd>
+</dl>
+<p class="rubric">References</p>
+<div role="list" class="citation-list">
+<div class="citation" id="rf2ca686465eb-1" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id5">1</a><span class="fn-bracket">]</span></span>
+<p>Laparra, V., Ballé, J., Berardino, A. and Simoncelli, E.P., 2016. Perceptual
+image quality assessment using a normalized Laplacian pyramid. Electronic
+Imaging, 2016(16), pp.1-6.</p>
+</div>
+<div class="citation" id="rf2ca686465eb-2" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id6">2</a><span class="fn-bracket">]</span></span>
+<p>[matlab code](<a class="reference external" href="https://www.cns.nyu.edu/~lcv/NLPyr/NLP_dist.m">https://www.cns.nyu.edu/~lcv/NLPyr/NLP_dist.m</a>)</p>
+</div>
+</div>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">plenoptic</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">po</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">einstein_img</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">einstein</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">curie_img</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">curie</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">po</span><span class="o">.</span><span class="n">metric</span><span class="o">.</span><span class="n">nlpd</span><span class="p">(</span><span class="n">einstein_img</span><span class="p">,</span> <span class="n">curie_img</span><span class="p">)</span>
+<span class="go">tensor([[1.3507]])</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="plenoptic.metric.perceptual_distance.normalized_laplacian_pyramid">
+<span class="sig-prename descclassname"><span class="pre">plenoptic.metric.perceptual_distance.</span></span><span class="sig-name descname"><span class="pre">normalized_laplacian_pyramid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">img</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/plenoptic/metric/perceptual_distance.html#normalized_laplacian_pyramid"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#plenoptic.metric.perceptual_distance.normalized_laplacian_pyramid" title="Link to this definition"></a></dt>
+<dd><p>Compute the normalized Laplacian Pyramid using pre-optimized parameters</p>
+<p>Model parameters are those used in <a class="reference internal" href="#rfabc35e64cfc-1" id="id7">[1]</a>, copied from the matlab code used in the
+paper, found at <a class="reference internal" href="#rfabc35e64cfc-2" id="id8">[2]</a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>img</strong> (<a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.7)"><em>torch.Tensor</em></a><em> of </em><em>shape</em><em> (</em><em>batch</em><em>, </em><em>channel</em><em>, </em><em>height</em><em>, </em><em>width</em><em>)</em>) – Image, or batch of images. This representation is designed
+for grayscale images and will be computed separately for each
+channel (so channels are treated in the same way as batches).</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>normalized_laplacian_activations</strong> – The normalized Laplacian Pyramid with six scales</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list of <a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.7)">torch.Tensor</a></p>
+</dd>
+</dl>
+<p class="rubric">References</p>
+<div role="list" class="citation-list">
+<div class="citation" id="rfabc35e64cfc-1" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id7">1</a><span class="fn-bracket">]</span></span>
+<p>Laparra, V., Ballé, J., Berardino, A. and Simoncelli, E.P., 2016. Perceptual
+image quality assessment using a normalized Laplacian pyramid. Electronic
+Imaging, 2016(16), pp.1-6.</p>
+</div>
+<div class="citation" id="rfabc35e64cfc-2" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id8">2</a><span class="fn-bracket">]</span></span>
+<p>[matlab code](<a class="reference external" href="https://www.cns.nyu.edu/~lcv/NLPyr/NLP_dist.m">https://www.cns.nyu.edu/~lcv/NLPyr/NLP_dist.m</a>)</p>
+</div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="plenoptic.metric.perceptual_distance.ssim">
+<span class="sig-prename descclassname"><span class="pre">plenoptic.metric.perceptual_distance.</span></span><span class="sig-name descname"><span class="pre">ssim</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">img1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">img2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weighted</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pad</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/plenoptic/metric/perceptual_distance.html#ssim"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#plenoptic.metric.perceptual_distance.ssim" title="Link to this definition"></a></dt>
+<dd><p>Structural similarity index</p>
+<p>As described in <a class="reference internal" href="#r7636d31811ee-1" id="id9">[1]</a>, the structural similarity index (SSIM) is a
+perceptual distance metric, giving the distance between two images. SSIM is
+based on three comparison measurements between the two images: luminance,
+contrast, and structure. All of these are computed convolutionally across the
+images. See the references for more information.</p>
+<p>This implementation follows the original implementation, as found at <a class="reference internal" href="#r7636d31811ee-2" id="id10">[2]</a>,
+as well as providing the option to use the weighted version used in <a class="reference internal" href="#r7636d31811ee-4" id="id11">[4]</a>
+(which was shown to consistently improve the image quality prediction on
+the LIVE database).</p>
+<p>Note that this is a similarity metric (not a distance), and so 1 means the
+two images are identical and 0 means they’re very different. When the two
+images are negatively correlated, SSIM can be negative. SSIM is bounded
+between -1 and 1.</p>
+<p>This function returns the mean SSIM, a scalar-valued metric giving the
+average over the whole image. For the SSIM map (showing the computed value
+across the image), call <cite>ssim_map</cite>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>img1</strong> (<a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.7)"><em>torch.Tensor</em></a><em> of </em><em>shape</em><em> (</em><em>batch</em><em>, </em><em>channel</em><em>, </em><em>height</em><em>, </em><em>width</em><em>)</em>) – The first image or batch of images.</p></li>
+<li><p><strong>img2</strong> (<a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.7)"><em>torch.Tensor</em></a><em> of </em><em>shape</em><em> (</em><em>batch</em><em>, </em><em>channel</em><em>, </em><em>height</em><em>, </em><em>width</em><em>)</em>) – The second image or batch of images. The heights and widths of <cite>img1</cite>
+and <cite>img2</cite> must be the same. The numbers of batches and channels of
+<cite>img1</cite> and <cite>img2</cite> need to be broadcastable: either they are the same
+or one of them is 1. The output will be computed separately for each
+channel (so channels are treated in the same way as batches). Both
+images should have values between 0 and 1. Otherwise, the result may
+be inaccurate, and we will raise a warning (but will still compute it).</p></li>
+<li><p><strong>weighted</strong> (<em>bool</em><em>, </em><em>optional</em>) – whether to use the original, unweighted SSIM version (<cite>False</cite>) as used
+in <a class="reference internal" href="#r7636d31811ee-1" id="id12">[1]</a> or the weighted version (<cite>True</cite>) as used in <a class="reference internal" href="#r7636d31811ee-4" id="id13">[4]</a>. See Notes
+section for the weight</p></li>
+<li><p><strong>pad</strong> (<em>{False</em><em>, </em><em>'constant'</em><em>, </em><em>'reflect'</em><em>, </em><em>'replicate'</em><em>, </em><em>'circular'}</em><em>, </em><em>optional</em>) – If not False, how to pad the image for the convolutions computing the
+local average of each image. See <cite>torch.nn.functional.pad</cite> for how
+these work.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>mssim</strong> – 2d tensor of shape (batch, channel) containing the mean SSIM for each
+image, averaged over the whole image</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.7)">torch.Tensor</a></p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>The weight used when <cite>weighted=True</cite> is:</p>
+<div class="math notranslate nohighlight">
+\[\log((1+\frac{\sigma_1^2}{C_2})(1+\frac{\sigma_2^2}{C_2}))\]</div>
+<p>where <span class="math notranslate nohighlight">\(sigma_1^2\)</span> and <span class="math notranslate nohighlight">\(sigma_2^2\)</span> are the variances of <cite>img1</cite>
+and <cite>img2</cite>, respectively, and <span class="math notranslate nohighlight">\(C_2\)</span> is a constant. See <a class="reference internal" href="#r7636d31811ee-4" id="id14">[4]</a> for more
+details.</p>
+<p class="rubric">References</p>
+<div role="list" class="citation-list">
+<div class="citation" id="r7636d31811ee-1" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></span>
+<span class="backrefs">(<a role="doc-backlink" href="#id9">1</a>,<a role="doc-backlink" href="#id12">2</a>)</span>
+<p>Z. Wang, A. C. Bovik, H. R. Sheikh, and E. P. Simoncelli, “Image
+quality assessment: From error measurement to structural similarity”
+IEEE Transactions on Image Processing, vol. 13, no. 1, Jan. 2004.</p>
+</div>
+<div class="citation" id="r7636d31811ee-2" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id10">2</a><span class="fn-bracket">]</span></span>
+<p>[matlab code](<a class="reference external" href="https://www.cns.nyu.edu/~lcv/ssim/ssim_index.m">https://www.cns.nyu.edu/~lcv/ssim/ssim_index.m</a>)</p>
+</div>
+<div class="citation" id="r7636d31811ee-3" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></span>
+<p>[project page](<a class="reference external" href="https://www.cns.nyu.edu/~lcv/ssim/">https://www.cns.nyu.edu/~lcv/ssim/</a>)</p>
+</div>
+<div class="citation" id="r7636d31811ee-4" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span>4<span class="fn-bracket">]</span></span>
+<span class="backrefs">(<a role="doc-backlink" href="#id11">1</a>,<a role="doc-backlink" href="#id13">2</a>,<a role="doc-backlink" href="#id14">3</a>)</span>
+<p>Wang, Z., &amp; Simoncelli, E. P. (2008). Maximum differentiation (MAD)
+competition: A methodology for comparing computational models of
+perceptual discriminability. Journal of Vision, 8(12), 1–13.
+<a class="reference external" href="https://dx.doi.org/10.1167/8.12.8">https://dx.doi.org/10.1167/8.12.8</a></p>
+</div>
+</div>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">plenoptic</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">po</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">po</span><span class="o">.</span><span class="n">tools</span><span class="o">.</span><span class="n">set_seed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">img</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">einstein</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">po</span><span class="o">.</span><span class="n">metric</span><span class="o">.</span><span class="n">ssim</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">img</span> <span class="o">+</span> <span class="n">torch</span><span class="o">.</span><span class="n">rand_like</span><span class="p">(</span><span class="n">img</span><span class="p">))</span>
+<span class="go">tensor([[0.0519]])</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="plenoptic.metric.perceptual_distance.ssim_map">
+<span class="sig-prename descclassname"><span class="pre">plenoptic.metric.perceptual_distance.</span></span><span class="sig-name descname"><span class="pre">ssim_map</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">img1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">img2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/plenoptic/metric/perceptual_distance.html#ssim_map"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#plenoptic.metric.perceptual_distance.ssim_map" title="Link to this definition"></a></dt>
+<dd><p>Structural similarity index map</p>
+<p>As described in <a class="reference internal" href="#rd2b7072c4613-1" id="id15">[1]</a>, the structural similarity index (SSIM) is a
+perceptual distance metric, giving the distance between two images. SSIM is
+based on three comparison measurements between the two images: luminance,
+contrast, and structure. All of these are computed convolutionally across the
+images. See the references for more information.</p>
+<p>This implementation follows the original implementation, as found at <a class="reference internal" href="#rd2b7072c4613-2" id="id16">[2]</a>,
+as well as providing the option to use the weighted version used in <a class="reference internal" href="#rd2b7072c4613-4" id="id17">[4]</a>
+(which was shown to consistently improve the image quality prediction on
+the LIVE database).</p>
+<p>Note that this is a similarity metric (not a distance), and so 1 means the
+two images are identical and 0 means they’re very different. When the two
+images are negatively correlated, SSIM can be negative. SSIM is bounded
+between -1 and 1.</p>
+<p>This function returns the SSIM map, showing the SSIM values across the
+image. For the mean SSIM (a single value metric), call <cite>ssim</cite>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>img1</strong> (<a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.7)"><em>torch.Tensor</em></a><em> of </em><em>shape</em><em> (</em><em>batch</em><em>, </em><em>channel</em><em>, </em><em>height</em><em>, </em><em>width</em><em>)</em>) – The first image or batch of images.</p></li>
+<li><p><strong>img2</strong> (<a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.7)"><em>torch.Tensor</em></a><em> of </em><em>shape</em><em> (</em><em>batch</em><em>, </em><em>channel</em><em>, </em><em>height</em><em>, </em><em>width</em><em>)</em>) – The second image or batch of images. The heights and widths of <cite>img1</cite>
+and <cite>img2</cite> must be the same. The numbers of batches and channels of
+<cite>img1</cite> and <cite>img2</cite> need to be broadcastable: either they are the same
+or one of them is 1. The output will be computed separately for each
+channel (so channels are treated in the same way as batches). Both
+images should have values between 0 and 1. Otherwise, the result may
+be inaccurate, and we will raise a warning (but will still compute it).</p></li>
+<li><p><strong>weighted</strong> (<em>bool</em><em>, </em><em>optional</em>) – whether to use the original, unweighted SSIM version (<cite>False</cite>) as used
+in <a class="reference internal" href="#rd2b7072c4613-1" id="id18">[1]</a> or the weighted version (<cite>True</cite>) as used in <a class="reference internal" href="#rd2b7072c4613-4" id="id19">[4]</a>. See Notes
+section for the weight</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ssim_map</strong> – 4d tensor containing the map of SSIM values.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.7)">torch.Tensor</a></p>
+</dd>
+</dl>
+<p class="rubric">References</p>
+<div role="list" class="citation-list">
+<div class="citation" id="rd2b7072c4613-1" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></span>
+<span class="backrefs">(<a role="doc-backlink" href="#id15">1</a>,<a role="doc-backlink" href="#id18">2</a>)</span>
+<p>Z. Wang, A. C. Bovik, H. R. Sheikh, and E. P. Simoncelli, “Image
+quality assessment: From error measurement to structural similarity”
+IEEE Transactions on Image Processing, vol. 13, no. 1, Jan. 2004.</p>
+</div>
+<div class="citation" id="rd2b7072c4613-2" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id16">2</a><span class="fn-bracket">]</span></span>
+<p>[matlab code](<a class="reference external" href="https://www.cns.nyu.edu/~lcv/ssim/ssim_index.m">https://www.cns.nyu.edu/~lcv/ssim/ssim_index.m</a>)</p>
+</div>
+<div class="citation" id="rd2b7072c4613-3" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></span>
+<p>[project page](<a class="reference external" href="https://www.cns.nyu.edu/~lcv/ssim/">https://www.cns.nyu.edu/~lcv/ssim/</a>)</p>
+</div>
+<div class="citation" id="rd2b7072c4613-4" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span>4<span class="fn-bracket">]</span></span>
+<span class="backrefs">(<a role="doc-backlink" href="#id17">1</a>,<a role="doc-backlink" href="#id19">2</a>)</span>
+<p>Wang, Z., &amp; Simoncelli, E. P. (2008). Maximum differentiation (MAD)
+competition: A methodology for comparing computational models of
+perceptual discriminability. Journal of Vision, 8(12), 1–13.
+<a class="reference external" href="https://dx.doi.org/10.1167/8.12.8">https://dx.doi.org/10.1167/8.12.8</a></p>
+</div>
+</div>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">plenoptic</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">po</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">po</span><span class="o">.</span><span class="n">tools</span><span class="o">.</span><span class="n">set_seed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">img</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">einstein</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ssim_map</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">metric</span><span class="o">.</span><span class="n">ssim_map</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">img</span> <span class="o">+</span> <span class="n">torch</span><span class="o">.</span><span class="n">rand_like</span><span class="p">(</span><span class="n">img</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ssim_map</span><span class="o">.</span><span class="n">shape</span>
+<span class="go">torch.Size([1, 1, 246, 246])</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</section>
+<section id="module-plenoptic.metric">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-plenoptic.metric" title="Link to this heading"></a></h2>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="plenoptic.data.html" class="btn btn-neutral float-left" title="plenoptic.data package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="plenoptic.simulate.html" class="btn btn-neutral float-right" title="plenoptic.simulate package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2019, Plenoptic authors.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
