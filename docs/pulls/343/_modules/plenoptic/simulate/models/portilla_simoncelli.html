@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>plenoptic.simulate.models.portilla_simoncelli &mdash; plenoptic 1.2.1.dev123 documentation</title>
+  <title>plenoptic.simulate.models.portilla_simoncelli &mdash; plenoptic 1.3.1.dev3 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/plot_directive.css" />
@@ -15,7 +15,7 @@
   
       <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../../_static/documentation_options.js?v=87b6d40a"></script>
+      <script src="../../../../_static/documentation_options.js?v=4d645560"></script>
       <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -108,13 +108,22 @@
            <div itemprop="articleBody">
              
   <h1>Source code for plenoptic.simulate.models.portilla_simoncelli</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Portilla-Simoncelli texture statistics.</span>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Portilla-Simoncelli texture statistics.</span>
 
 <span class="sd">The Portilla-Simoncelli (PS) texture statistics are a set of image</span>
 <span class="sd">statistics, first described in [1]_, that are proposed as a sufficient set</span>
 <span class="sd">of measurements for describing visual textures. That is, if two texture</span>
 <span class="sd">images have the same values for all PS texture stats, humans should</span>
 <span class="sd">consider them as members of the same family of textures.</span>
+
+<span class="sd">References</span>
+<span class="sd">----------</span>
+<span class="sd">.. [1] J Portilla and E P Simoncelli. A Parametric Texture Model based on</span>
+<span class="sd">   Joint Statistics of Complex Wavelet Coefficients. Int&#39;l Journal of</span>
+<span class="sd">   Computer Vision. 40(1):49-71, October, 2000.</span>
+<span class="sd">   https://www.cns.nyu.edu/~eero/ABSTRACTS/portilla99-abstract.html</span>
+<span class="sd">   https://www.cns.nyu.edu/~lcv/texture/</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">collections</span><span class="w"> </span><span class="kn">import</span> <span class="n">OrderedDict</span>
@@ -146,7 +155,8 @@
 <div class="viewcode-block" id="PortillaSimoncelli">
 <a class="viewcode-back" href="../../../../api/plenoptic.simulate.models.html#plenoptic.simulate.models.portilla_simoncelli.PortillaSimoncelli">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">PortillaSimoncelli</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
-<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Portila-Simoncelli texture statistics.</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Portila-Simoncelli texture statistics.</span>
 
 <span class="sd">    The Portilla-Simoncelli (PS) texture statistics are a set of image</span>
 <span class="sd">    statistics, first described in [1]_, that are proposed as a sufficient set</span>
@@ -154,8 +164,8 @@
 <span class="sd">    images have the same values for all PS texture stats, humans should</span>
 <span class="sd">    consider them as members of the same family of textures.</span>
 
-<span class="sd">    The PS stats are computed based on the steerable pyramid [2]_. They consist</span>
-<span class="sd">    of the local auto-correlations, cross-scale (within-orientation)</span>
+<span class="sd">    The PS stats are computed based on the :class:`SteerablePyramidFreq` [2]_.</span>
+<span class="sd">    They consist of the local auto-correlations, cross-scale (within-orientation)</span>
 <span class="sd">    correlations, and cross-orientation (within-scale) correlations of both the</span>
 <span class="sd">    pyramid coefficients and the local energy (as computed by those</span>
 <span class="sd">    coefficients). Additionally, they include the first four global moments</span>
@@ -164,20 +174,27 @@
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    image_shape:</span>
+<span class="sd">    image_shape</span>
 <span class="sd">        Shape of input image.</span>
-<span class="sd">    n_scales:</span>
-<span class="sd">        The number of pyramid scales used to measure the statistics (default=4)</span>
-<span class="sd">    n_orientations:</span>
-<span class="sd">        The number of orientations used to measure the statistics (default=4)</span>
-<span class="sd">    spatial_corr_width:</span>
-<span class="sd">        The width of the spatial cross- and auto-correlation statistics</span>
+<span class="sd">    n_scales</span>
+<span class="sd">        The number of pyramid scales used to measure the statistics.</span>
+<span class="sd">    n_orientations</span>
+<span class="sd">        The number of orientations used to measure the statistics.</span>
+<span class="sd">    spatial_corr_width</span>
+<span class="sd">        The width of the spatial cross- and auto-correlation statistics.</span>
 
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
 <span class="sd">    scales: list</span>
 <span class="sd">        The names of the unique scales of coefficients in the pyramid, used for</span>
 <span class="sd">        coarse-to-fine metamer synthesis.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If the height or width of ``image`` cannot be divided by 2 ``n_scales``</span>
+<span class="sd">        times. This is necessary because of how the model handles multiscale</span>
+<span class="sd">        representations.</span>
 
 <span class="sd">    References</span>
 <span class="sd">    ----------</span>
@@ -189,7 +206,6 @@
 <span class="sd">    .. [2] E P Simoncelli and W T Freeman, &quot;The Steerable Pyramid: A Flexible</span>
 <span class="sd">       Architecture for Multi-Scale Derivative Computation,&quot; Second Int&#39;l Conf</span>
 <span class="sd">       on Image Processing, Washington, DC, Oct 1995.</span>
-
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
@@ -262,7 +278,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_create_scales_shape_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">OrderedDict</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create dictionary defining scales and shape of each stat.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Create dictionary defining scales and shape of each stat.</span>
 
 <span class="sd">        This dictionary functions as metadata which is used for two main</span>
 <span class="sd">        purposes:</span>
@@ -291,7 +308,6 @@
 <span class="sd">           values. These arrays have the same shape as the stat (excluding</span>
 <span class="sd">           batch and channel), with values defining which scale they correspond</span>
 <span class="sd">           to.</span>
-
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">shape_dict</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
         <span class="c1"># There are 6 pixel statistics</span>
@@ -381,7 +397,8 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">_create_necessary_stats_dict</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">scales_shape_dict</span><span class="p">:</span> <span class="n">OrderedDict</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">OrderedDict</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create mask specifying the necessary statistics.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Create mask specifying the necessary statistics.</span>
 
 <span class="sd">        Some of the statistics computed by the model are redundant, due to</span>
 <span class="sd">        symmetries. For example, about half of the values in the</span>
@@ -403,7 +420,6 @@
 <span class="sd">            scales_shape_dict&#39;s corresponding values. True denotes the</span>
 <span class="sd">            statistics that will be included in the model&#39;s output, while False</span>
 <span class="sd">            denotes the redundant ones we will toss.</span>
-
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">mask_dict</span> <span class="o">=</span> <span class="n">scales_shape_dict</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
         <span class="c1"># Pre-compute some necessary indices.</span>
@@ -450,7 +466,8 @@
 <div class="viewcode-block" id="PortillaSimoncelli.forward">
 <a class="viewcode-back" href="../../../../api/plenoptic.simulate.models.html#plenoptic.simulate.models.portilla_simoncelli.PortillaSimoncelli.forward">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">image</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span> <span class="n">scales</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">SCALES_TYPE</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
-<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Generate Texture Statistics representation of an image.</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generate Texture Statistics representation of an image.</span>
 
 <span class="sd">        Note that separate batches and channels are analyzed in parallel.</span>
 
@@ -460,10 +477,10 @@
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        image :</span>
+<span class="sd">        image</span>
 <span class="sd">            A 4d tensor (batch, channel, height, width) containing the image(s) to</span>
 <span class="sd">            analyze.</span>
-<span class="sd">        scales :</span>
+<span class="sd">        scales</span>
 <span class="sd">            Which scales to include in the returned representation. If None, we</span>
 <span class="sd">            include all scales. Otherwise, can contain subset of values present</span>
 <span class="sd">            in this model&#39;s ``scales`` attribute, and the returned tensor will</span>
@@ -471,15 +488,14 @@
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        representation_tensor:</span>
+<span class="sd">        representation_tensor</span>
 <span class="sd">            3d tensor of shape (batch, channel, stats) containing the measured</span>
 <span class="sd">            texture statistics.</span>
 
 <span class="sd">        Raises</span>
 <span class="sd">        ------</span>
-<span class="sd">        ValueError :</span>
-<span class="sd">            If `image` is not 4d or has a dtype other than float or complex.</span>
-
+<span class="sd">        ValueError</span>
+<span class="sd">            If ``image`` is not 4d or has a dtype other than float or complex.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">validate_input</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
 
@@ -620,7 +636,8 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">remove_scales</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">representation_tensor</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span> <span class="n">scales_to_keep</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">SCALES_TYPE</span><span class="p">]</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Remove statistics not associated with scales.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Remove statistics not associated with scales.</span>
 
 <span class="sd">        For a given representation_tensor and a list of scales_to_keep, this</span>
 <span class="sd">        attribute removes all statistics *not* associated with those scales.</span>
@@ -629,9 +646,9 @@
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        representation_tensor:</span>
+<span class="sd">        representation_tensor</span>
 <span class="sd">            3d tensor containing the measured representation statistics.</span>
-<span class="sd">        scales_to_keep:</span>
+<span class="sd">        scales_to_keep</span>
 <span class="sd">            Which scales to include in the returned representation. Can contain</span>
 <span class="sd">            subset of values present in this model&#39;s ``scales`` attribute, and</span>
 <span class="sd">            the returned tensor will then contain the subset of the full</span>
@@ -639,9 +656,8 @@
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        limited_representation_tensor :</span>
+<span class="sd">        limited_representation_tensor</span>
 <span class="sd">            Representation tensor with some statistics removed.</span>
-
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># this is necessary because object is the dtype of</span>
         <span class="c1"># self._representation_scales</span>
@@ -658,22 +674,27 @@
 <div class="viewcode-block" id="PortillaSimoncelli.convert_to_tensor">
 <a class="viewcode-back" href="../../../../api/plenoptic.simulate.models.html#plenoptic.simulate.models.portilla_simoncelli.PortillaSimoncelli.convert_to_tensor">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">convert_to_tensor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">representation_dict</span><span class="p">:</span> <span class="n">OrderedDict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
-<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Convert dictionary of statistics to a tensor.</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Convert dictionary of statistics to a tensor.</span>
+
+<span class="sd">        The output has shape (batch, channel, n_statistics), flattening and</span>
+<span class="sd">        concatenating across all statistic classes. The dictionary representation</span>
+<span class="sd">        may be easier to make sense of.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        representation_dict :</span>
+<span class="sd">        representation_dict</span>
 <span class="sd">             Dictionary of representation.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        3d tensor of statistics.</span>
+<span class="sd">        rep</span>
+<span class="sd">            3d tensor of statistics.</span>
 
 <span class="sd">        See Also</span>
 <span class="sd">        --------</span>
-<span class="sd">        convert_to_dict:</span>
+<span class="sd">        convert_to_dict</span>
 <span class="sd">            Convert tensor representation to dictionary.</span>
-
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">rep</span> <span class="o">=</span> <span class="n">einops</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">representation_dict</span><span class="o">.</span><span class="n">values</span><span class="p">()),</span> <span class="s2">&quot;b c *&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
         <span class="c1"># then get rid of all the nans / unnecessary stats</span>
@@ -683,7 +704,8 @@
 <div class="viewcode-block" id="PortillaSimoncelli.convert_to_dict">
 <a class="viewcode-back" href="../../../../api/plenoptic.simulate.models.html#plenoptic.simulate.models.portilla_simoncelli.PortillaSimoncelli.convert_to_dict">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">convert_to_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">representation_tensor</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">OrderedDict</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Convert tensor of statistics to a dictionary.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Convert tensor of statistics to a dictionary.</span>
 
 <span class="sd">        While the tensor representation is required by plenoptic&#39;s synthesis</span>
 <span class="sd">        objects, the dictionary representation is easier to manually inspect.</span>
@@ -701,11 +723,19 @@
 <span class="sd">        rep</span>
 <span class="sd">            Dictionary of representation, with informative keys.</span>
 
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        ValueError</span>
+<span class="sd">            If ``representation_tensor`` has an unexpected number of elements. This can</span>
+<span class="sd">            happen if some elements were manually removed from</span>
+<span class="sd">            ``representation_tensor``, if a non-``None`` value was passed to ``forward``</span>
+<span class="sd">            when computing it, or if it was computed using a different instantiation of</span>
+<span class="sd">            the model.</span>
+
 <span class="sd">        See Also</span>
 <span class="sd">        --------</span>
 <span class="sd">        convert_to_tensor:</span>
 <span class="sd">            Convert dictionary representation to tensor.</span>
-
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">representation_tensor</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_representation_scales</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
@@ -741,35 +771,35 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">_compute_pyr_coeffs</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">image</span><span class="p">:</span> <span class="n">Tensor</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">OrderedDict</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="n">Tensor</span><span class="p">],</span> <span class="n">Tensor</span><span class="p">,</span> <span class="n">Tensor</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute pyramid coefficients of image.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute pyramid coefficients of image.</span>
 
 <span class="sd">        Note that the residual lowpass has been demeaned independently for each</span>
 <span class="sd">        batch and channel (and this is true of the lowpass returned separately</span>
-<span class="sd">        as well as the one included in pyr_coeffs_dict)</span>
+<span class="sd">        as well as the one included in pyr_coeffs_dict).</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        image :</span>
+<span class="sd">        image</span>
 <span class="sd">            4d tensor of shape (batch, channel, height, width) containing the</span>
-<span class="sd">            image</span>
+<span class="sd">            image.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        pyr_coeffs_dict :</span>
+<span class="sd">        pyr_coeffs_dict</span>
 <span class="sd">            OrderedDict of containing all pyramid coefficients.</span>
-<span class="sd">        pyr_coeffs :</span>
+<span class="sd">        pyr_coeffs</span>
 <span class="sd">            List of length n_scales, containing 5d tensors of shape (batch,</span>
 <span class="sd">            channel, n_orientations, height, width) containing the complex-valued</span>
 <span class="sd">            oriented bands (note that height and width shrink by half on each</span>
 <span class="sd">            scale). This excludes the residual highpass and lowpass bands.</span>
-<span class="sd">        highpass :</span>
+<span class="sd">        highpass</span>
 <span class="sd">            The residual highpass as a real-valued 4d tensor (batch, channel,</span>
-<span class="sd">            height, width)</span>
-<span class="sd">        lowpass :</span>
+<span class="sd">            height, width).</span>
+<span class="sd">        lowpass</span>
 <span class="sd">            The residual lowpass as a real-valued 4d tensor (batch, channel,</span>
 <span class="sd">            height, width). This tensor has been demeaned (independently for</span>
 <span class="sd">            each batch and channel).</span>
-
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">pyr_coeffs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pyr</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
         <span class="c1"># separate out the residuals and demean the residual lowpass</span>
@@ -789,22 +819,22 @@
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">_compute_pixel_stats</span><span class="p">(</span><span class="n">image</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute the pixel stats: first four moments, min, and max.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute the PS pixel stats: first four moments, min, and max.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        image :</span>
+<span class="sd">        image</span>
 <span class="sd">            4d tensor of shape (batch, channel, height, width) containing input</span>
 <span class="sd">            image. Stats are computed indepently for each batch and channel.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        pixel_stats :</span>
+<span class="sd">        pixel_stats</span>
 <span class="sd">            3d tensor of shape (batch, channel, 6) containing the mean,</span>
 <span class="sd">            variance, skew, kurtosis, minimum pixel value, and maximum pixel</span>
-<span class="sd">            value (in that order)</span>
-
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">            value (in that order).</span>
+<span class="sd">        &quot;&quot;&quot;</span>  <span class="c1"># numpydoc ignore=ES01</span>
         <span class="n">mean</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="n">keepdim</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="c1"># we use torch.var instead of plenoptic.tools.variance, because our</span>
         <span class="c1"># variance is the uncorrected (or sample) variance and we want the</span>
@@ -825,7 +855,8 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">_compute_intermediate_representations</span><span class="p">(</span>
         <span class="n">pyr_coeffs</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="n">Tensor</span><span class="p">],</span> <span class="nb">list</span><span class="p">[</span><span class="n">Tensor</span><span class="p">]]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute useful intermediate representations.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute useful intermediate representations.</span>
 
 <span class="sd">        These representations are:</span>
 <span class="sd">          1) demeaned magnitude of the pyramid coefficients,</span>
@@ -835,24 +866,23 @@
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        pyr_coeffs :</span>
+<span class="sd">        pyr_coeffs</span>
 <span class="sd">            Complex steerable pyramid coefficients (without residuals), as list</span>
 <span class="sd">            of length n_scales, containing 5d tensors of shape (batch, channel,</span>
-<span class="sd">            n_orientations, height, width)</span>
+<span class="sd">            n_orientations, height, width).</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        magnitude_pyr_coeffs :</span>
+<span class="sd">        magnitude_pyr_coeffs</span>
 <span class="sd">           List of length n_scales, containing 5d tensors of shape (batch,</span>
 <span class="sd">           channel, n_orientations, height, width) (same as ``pyr_coeffs``),</span>
 <span class="sd">           containing the demeaned magnitude of the steerable pyramid</span>
-<span class="sd">           coefficients (i.e., coeffs.abs() - coeffs.abs().mean((-2, -1)))</span>
+<span class="sd">           coefficients (i.e., ``coeffs.abs() - coeffs.abs().mean((-2, -1))``).</span>
 <span class="sd">        real_pyr_coeffs :</span>
 <span class="sd">           List of length n_scales, containing 5d tensors of shape (batch,</span>
 <span class="sd">           channel, n_orientations, height, width) (same as ``pyr_coeffs``),</span>
 <span class="sd">           containing the real components of the coefficients (i.e.</span>
-<span class="sd">           coeffs.real)</span>
-
+<span class="sd">           ``coeffs.real``).</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">magnitude_pyr_coeffs</span> <span class="o">=</span> <span class="p">[</span><span class="n">coeff</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span> <span class="k">for</span> <span class="n">coeff</span> <span class="ow">in</span> <span class="n">pyr_coeffs</span><span class="p">]</span>
         <span class="n">magnitude_means</span> <span class="o">=</span> <span class="p">[</span>
@@ -867,26 +897,26 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">_reconstruct_lowpass_at_each_scale</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">pyr_coeffs_dict</span><span class="p">:</span> <span class="n">OrderedDict</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Tensor</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Reconstruct the lowpass unoriented image at each scale.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Reconstruct the lowpass unoriented image at each scale.</span>
 
 <span class="sd">        The autocorrelation, standard deviation, skew, and kurtosis of each of</span>
 <span class="sd">        these images is part of the texture representation.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        pyr_coeffs_dict :</span>
+<span class="sd">        pyr_coeffs_dict</span>
 <span class="sd">            Dictionary containing the steerable pyramid coefficients, with the</span>
 <span class="sd">            lowpass residual demeaned.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        reconstructed_images :</span>
+<span class="sd">        reconstructed_images</span>
 <span class="sd">            List of length n_scales+1 containing the reconstructed unoriented</span>
 <span class="sd">            image at each scale, from fine to coarse. The final image is</span>
 <span class="sd">            reconstructed just from the residual lowpass image. Each is a 4d</span>
 <span class="sd">            tensor, this is a list because they are all different heights and</span>
 <span class="sd">            widths.</span>
-
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">reconstructed_images</span> <span class="o">=</span> <span class="p">[</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_pyr</span><span class="o">.</span><span class="n">recon_pyr</span><span class="p">(</span><span class="n">pyr_coeffs_dict</span><span class="p">,</span> <span class="n">levels</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;residual_lowpass&quot;</span><span class="p">])</span>
@@ -907,31 +937,36 @@
         <span class="k">return</span> <span class="n">reconstructed_images</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_compute_autocorr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">coeffs_list</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Tensor</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">Tensor</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute the autocorrelation of some statistics.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute the autocorrelation of some statistics.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        coeffs_list :</span>
+<span class="sd">        coeffs_list</span>
 <span class="sd">            List (of length s) of tensors of shape (batch, channel, *, height,</span>
 <span class="sd">            width), where * is zero or one additional dimensions. Intended use</span>
-<span class="sd">            case: magnitude_pyr_coeffs (which is list of length n_scales of 5d</span>
-<span class="sd">            tensors, with * containing n_orientations) or reconstructed_images</span>
-<span class="sd">            (which is a list of length n_scales+1 of 4d tensors)</span>
+<span class="sd">            case: ``magnitude_pyr_coeffs`` (which is list of length ``n_scales`` of 5d</span>
+<span class="sd">            tensors, with * containing ``n_orientations``) or ``reconstructed_images``</span>
+<span class="sd">            (which is a list of length ``n_scales+1`` of 4d tensors).</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        autocorrs :</span>
+<span class="sd">        autocorrs</span>
 <span class="sd">            Tensor of shape (batch, channel, spatial_corr_width,</span>
 <span class="sd">            spatial_corr_width, *, s) containing the autocorrelation (up to</span>
 <span class="sd">            distance ``spatial_corr_width//2``) of each element in</span>
 <span class="sd">            ``coeffs_list``, computed independently over all but the final two</span>
 <span class="sd">            dimensions.</span>
-<span class="sd">        vars :</span>
+<span class="sd">        vars</span>
 <span class="sd">            3d Tensor of shape (batch, channel, *, s) containing the variance</span>
 <span class="sd">            of each element in ``coeffs_list``, computed independently over all</span>
 <span class="sd">            but the final two dimensions.</span>
 
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        ValueError</span>
+<span class="sd">            If ``coeffs_list`` contains tensors that have other than 4 or 5 dimensions.</span>
+<span class="sd">        &quot;&quot;&quot;</span>  <span class="c1"># numpydoc ignore=ES01</span>
         <span class="k">if</span> <span class="n">coeffs_list</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">5</span><span class="p">:</span>
             <span class="n">dims</span> <span class="o">=</span> <span class="s2">&quot;o&quot;</span>
         <span class="k">elif</span> <span class="n">coeffs_list</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
@@ -952,34 +987,34 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">_compute_skew_kurtosis_recon</span><span class="p">(</span>
         <span class="n">reconstructed_images</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Tensor</span><span class="p">],</span> <span class="n">var_recon</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span> <span class="n">img_var</span><span class="p">:</span> <span class="n">Tensor</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">Tensor</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute the skew and kurtosis of each lowpass reconstructed image.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute the skew and kurtosis of each lowpass reconstructed image.</span>
 
 <span class="sd">        For each scale, if the ratio of its variance to the original image&#39;s</span>
 <span class="sd">        pixel variance is below a threshold of</span>
-<span class="sd">        torch.finfo(img_var.dtype).resolution (1e-6 for float32, 1e-15 for</span>
-<span class="sd">        float64), skew and kurtosis are assigned default values of 0 or 3,</span>
-<span class="sd">        respectively.</span>
+<span class="sd">        ``torch.finfo(img_var.dtype).resolution`` (``1e-6`` for ``float32``,</span>
+<span class="sd">        ``1e-15`` for ``float64``), skew and kurtosis are assigned default</span>
+<span class="sd">        values of ``0`` or ``3``, respectively.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        reconstructed_images :</span>
-<span class="sd">            List of length n_scales+1 containing the reconstructed unoriented</span>
+<span class="sd">        reconstructed_images</span>
+<span class="sd">            List of length ``n_scales+1`` containing the reconstructed unoriented</span>
 <span class="sd">            image at each scale, from fine to coarse. The final image is</span>
 <span class="sd">            reconstructed just from the residual lowpass image.</span>
-<span class="sd">        var_recon :</span>
+<span class="sd">        var_recon</span>
 <span class="sd">            Tensor of shape (batch, channel, n_scales+1) containing the</span>
-<span class="sd">            variance of each tensor in reconstruced_images</span>
-<span class="sd">        img_var :</span>
+<span class="sd">            variance of each tensor in reconstruced_images.</span>
+<span class="sd">        img_var</span>
 <span class="sd">            Tensor of shape (batch, channel) containing the pixel variance</span>
-<span class="sd">            (from pixel_stats tensor)</span>
+<span class="sd">            (from ``pixel_stats`` tensor).</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        skew_recon, kurtosis_recon :</span>
+<span class="sd">        skew_recon, kurtosis_recon</span>
 <span class="sd">            Tensors of shape (batch, channel, n_scales+1) containing the skew</span>
 <span class="sd">            and kurtosis, respectively, of each tensor in</span>
 <span class="sd">            ``reconstructed_images``.</span>
-
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">skew_recon</span> <span class="o">=</span> <span class="p">[</span>
             <span class="n">stats</span><span class="o">.</span><span class="n">skew</span><span class="p">(</span><span class="n">im</span><span class="p">,</span> <span class="n">mean</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">var</span><span class="o">=</span><span class="n">var_recon</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">i</span><span class="p">],</span> <span class="n">dim</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">])</span>
@@ -1009,14 +1044,15 @@
         <span class="n">coeffs_var</span><span class="p">:</span> <span class="kc">None</span> <span class="o">|</span> <span class="n">Tensor</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">coeffs_other_var</span><span class="p">:</span> <span class="kc">None</span> <span class="o">|</span> <span class="n">Tensor</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute cross-correlations.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute cross-correlations.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        coeffs_tensor, coeffs_tensor_other :</span>
+<span class="sd">        coeffs_tensor, coeffs_tensor_other</span>
 <span class="sd">            The two lists of length scales, each containing 5d tensors of shape</span>
 <span class="sd">            (batch, channel, n_orientations, height, width) to be correlated.</span>
-<span class="sd">        coeffs_var, coeffs_other_var :</span>
+<span class="sd">        coeffs_var, coeffs_other_var</span>
 <span class="sd">            Two optional tensors containing the variances of coeffs_tensor and</span>
 <span class="sd">            coeffs_tensor_other, respectively, in case they&#39;ve already been computed.</span>
 <span class="sd">            Should be of shape (batch, channel, n_orientations, n_scales). Used to</span>
@@ -1024,12 +1060,11 @@
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        cross_corrs :</span>
+<span class="sd">        cross_corrs</span>
 <span class="sd">            Tensor of shape (batch, channel, n_orientations, n_orientations,</span>
 <span class="sd">            scales) containing the cross-correlations at each</span>
 <span class="sd">            scale.</span>
-
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        &quot;&quot;&quot;</span>  <span class="c1"># numpydoc ignore=ES01</span>
         <span class="n">covars</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">coeff</span><span class="p">,</span> <span class="n">coeff_other</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span>
             <span class="nb">zip</span><span class="p">(</span><span class="n">coeffs_tensor</span><span class="p">,</span> <span class="n">coeffs_tensor_other</span><span class="p">)</span>
@@ -1073,30 +1108,33 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">_double_phase_pyr_coeffs</span><span class="p">(</span>
         <span class="n">pyr_coeffs</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Tensor</span><span class="p">],</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="n">Tensor</span><span class="p">],</span> <span class="nb">list</span><span class="p">[</span><span class="n">Tensor</span><span class="p">]]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Upsample and double the phase of pyramid coefficients.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Upsample and double the phase of pyramid coefficients.</span>
+
+<span class="sd">        This is trick is key to correctly computing the correlation between</span>
+<span class="sd">        coefficients at different spatial scales.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        pyr_coeffs :</span>
+<span class="sd">        pyr_coeffs</span>
 <span class="sd">            Complex steerable pyramid coefficients (without residuals), as list</span>
 <span class="sd">            of length n_scales, containing 5d tensors of shape (batch, channel,</span>
-<span class="sd">            n_orientations, height, width)</span>
+<span class="sd">            n_orientations, height, width).</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        doubled_phase_mags :</span>
+<span class="sd">        doubled_phase_mags</span>
 <span class="sd">            The demeaned magnitude (i.e., pyr_coeffs.abs()) of each upsampled</span>
 <span class="sd">            double-phased coefficient. List of length n_scales-1 containing</span>
 <span class="sd">            tensors of same shape the input (the finest scale has been</span>
 <span class="sd">            removed).</span>
-<span class="sd">        doubled_phase_separate :</span>
+<span class="sd">        doubled_phase_separate</span>
 <span class="sd">            The real and imaginary parts of each double-phased coefficient.</span>
 <span class="sd">            List of length n_scales-1, containing tensors of shape (batch,</span>
 <span class="sd">            channel, 2*n_orientations, height, width), with the real component</span>
 <span class="sd">            found at the same orientation index as the input, and the imaginary</span>
 <span class="sd">            at orientation+self.n_orientations. (The finest scale has been</span>
-<span class="sd">            removed.)</span>
-
+<span class="sd">            removed).</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">doubled_phase_mags</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">doubled_phase_sep</span> <span class="o">=</span> <span class="p">[]</span>
@@ -1128,8 +1166,11 @@
         <span class="n">batch_idx</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
         <span class="n">title</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">plt</span><span class="o">.</span><span class="n">Figure</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="n">plt</span><span class="o">.</span><span class="n">Axes</span><span class="p">]]:</span>
-<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Plot the representation in a human viewable format -- stem</span>
-<span class="sd">        plots with data separated out by statistic type.</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Plot the representation in a human viewable format.</span>
+
+<span class="sd">        We plot the representation as stem plots with data separated out by</span>
+<span class="sd">        statistic type.</span>
 
 <span class="sd">        This plots the representation of a single batch and averages over all</span>
 <span class="sd">        channels in the representation.</span>
@@ -1157,8 +1198,8 @@
 <span class="sd">          between each orientation at each scale (summarized using Euclidean</span>
 <span class="sd">          norm)</span>
 
-<span class="sd">        If self.n_scales &gt; 1, we also have combination of the following, where all</span>
-<span class="sd">        cross-correlations are summarized using Euclidean norm over the</span>
+<span class="sd">        If ``self.n_scales &gt; 1``, we also have combination of the following, where</span>
+<span class="sd">        all cross-correlations are summarized using Euclidean norm over the</span>
 <span class="sd">        channel dimension:</span>
 
 <span class="sd">        - cross_scale_correlation_magnitude: the cross-correlations between the</span>
@@ -1171,34 +1212,38 @@
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        data :</span>
+<span class="sd">        data</span>
 <span class="sd">            The data to show on the plot. Else, should look like the output of</span>
 <span class="sd">            ``self.forward(img)``, with the exact same structure (e.g., as</span>
 <span class="sd">            returned by ``metamer.representation_error()`` or another instance</span>
 <span class="sd">            of this class).</span>
-<span class="sd">        ax :</span>
+<span class="sd">        ax</span>
 <span class="sd">            Axes where we will plot the data. If a ``plt.Axes`` instance, will</span>
 <span class="sd">            subdivide into 6 or 8 new axes (depending on self.n_scales). If</span>
 <span class="sd">            None, we create a new figure.</span>
-<span class="sd">        figsize :</span>
+<span class="sd">        figsize</span>
 <span class="sd">            The size of the figure to create. Must be ``None`` if ax is not ``None``. If</span>
-<span class="sd">            both figsize and ax are ``None``, then we set ``figsize=(15, 15)``</span>
-<span class="sd">        ylim :</span>
+<span class="sd">            both figsize and ax are ``None``, then we set ``figsize=(15, 15)``.</span>
+<span class="sd">        ylim</span>
 <span class="sd">            If not None, the y-limits to use for this plot. If None, we use the</span>
 <span class="sd">            default, slightly adjusted so that the minimum is 0. If False, do not</span>
 <span class="sd">            change y-limits.</span>
-<span class="sd">        batch_idx :</span>
-<span class="sd">            Which index to take from the batch dimension (the first one)</span>
-<span class="sd">        title : string</span>
-<span class="sd">            Title for the plot</span>
+<span class="sd">        batch_idx</span>
+<span class="sd">            Which index to take from the batch dimension (the first one).</span>
+<span class="sd">        title</span>
+<span class="sd">            Title for the plot.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        fig:</span>
-<span class="sd">            Figure containing the plot</span>
-<span class="sd">        axes:</span>
-<span class="sd">            List of 6 or 8 axes containing the plot (depending on self.n_scales)</span>
+<span class="sd">        fig</span>
+<span class="sd">            Figure containing the plot.</span>
+<span class="sd">        axes</span>
+<span class="sd">            List of 6 or 8 axes containing the plot (depending on ``self.n_scales``).</span>
 
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        ValueError</span>
+<span class="sd">            If both ``figsize`` and ``ax`` are not ``None``.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">ax</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">figsize</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">figsize</span> <span class="o">=</span> <span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">15</span><span class="p">)</span>
@@ -1251,11 +1296,28 @@
 
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_representation_for_plotting</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rep</span><span class="p">:</span> <span class="n">OrderedDict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">OrderedDict</span><span class="p">:</span>
-<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Convert the data into a dictionary representation that is more convenient</span>
-<span class="sd">        for plotting.</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Convert into a representation that is more convenient for plotting.</span>
 
 <span class="sd">        Intended as a helper function for plot_representation.</span>
 
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        rep</span>
+<span class="sd">            Dictionary of representation, with informative keys.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        plot_rep</span>
+<span class="sd">            Dictionary of representation summarized for plotting.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        ValueError</span>
+<span class="sd">            If the tensors in ``rep`` looks like they have more than one batch</span>
+<span class="sd">            or channel. Should select or average over those dimensions.</span>
+<span class="sd">        ValueError</span>
+<span class="sd">            If ``rep`` contains unexpected keys.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">rep</span><span class="p">[</span><span class="s2">&quot;skew_reconstructed&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">ndim</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
@@ -1304,7 +1366,8 @@
         <span class="n">data</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span>
         <span class="n">batch_idx</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">plt</span><span class="o">.</span><span class="n">Artist</span><span class="p">]:</span>
-<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Update the information in our representation plot.</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Update the information in our representation plot.</span>
 
 <span class="sd">        This is used for creating an animation of the representation</span>
 <span class="sd">        over time. In order to create the animation, we need to know how</span>
@@ -1327,24 +1390,23 @@
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        axes :</span>
+<span class="sd">        axes</span>
 <span class="sd">            A list of axes to update. We assume that these are the axes</span>
 <span class="sd">            created by ``plot_representation`` and so contain stem plots</span>
 <span class="sd">            in the correct order.</span>
-<span class="sd">        batch_idx :</span>
-<span class="sd">            Which index to take from the batch dimension (the first one)</span>
-<span class="sd">        data :</span>
+<span class="sd">        data</span>
 <span class="sd">            The data to show on the plot. Else, should look like the output of</span>
 <span class="sd">            ``self.forward(img)``, with the exact same structure (e.g., as</span>
 <span class="sd">            returned by ``metamer.representation_error()`` or another instance</span>
 <span class="sd">            of this class).</span>
+<span class="sd">        batch_idx</span>
+<span class="sd">            Which index to take from the batch dimension (the first one).</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        stem_artists :</span>
+<span class="sd">        stem_artists</span>
 <span class="sd">            A list of the artists used to update the information on the</span>
-<span class="sd">            stem plots</span>
-
+<span class="sd">            stem plots.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">stem_artists</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">axes</span> <span class="o">=</span> <span class="p">[</span><span class="n">ax</span> <span class="k">for</span> <span class="n">ax</span> <span class="ow">in</span> <span class="n">axes</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">containers</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">]</span>

@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>plenoptic.metric.perceptual_distance &mdash; plenoptic 1.2.1.dev123 documentation</title>
+  <title>plenoptic.metric.perceptual_distance &mdash; plenoptic 1.3.1.dev3 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/plot_directive.css" />
@@ -15,7 +15,7 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=87b6d40a"></script>
+      <script src="../../../_static/documentation_options.js?v=4d645560"></script>
       <script src="../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -108,9 +108,17 @@
            <div itemprop="articleBody">
              
   <h1>Source code for plenoptic.metric.perceptual_distance</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Metrics designed to model human perceptual distance.</span>
+
+<span class="sd">Metrics that model human perceptual distance seek to answer the question &quot;how different</span>
+<span class="sd">do humans find these two images?&quot;.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">importlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">resources</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Literal</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
@@ -123,47 +131,84 @@
 <span class="n">DIRNAME</span> <span class="o">=</span> <span class="n">resources</span><span class="o">.</span><span class="n">files</span><span class="p">(</span><span class="s2">&quot;plenoptic.metric&quot;</span><span class="p">)</span>
 
 
-<span class="k">def</span><span class="w"> </span><span class="nf">_ssim_parts</span><span class="p">(</span><span class="n">img1</span><span class="p">,</span> <span class="n">img2</span><span class="p">,</span> <span class="n">pad</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">func_name</span><span class="o">=</span><span class="s2">&quot;SSIM&quot;</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Calcluates the various components used to compute SSIM</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_ssim_parts</span><span class="p">(</span>
+    <span class="n">img1</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
+    <span class="n">img2</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
+    <span class="n">pad</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="kc">False</span><span class="p">,</span> <span class="s2">&quot;constant&quot;</span><span class="p">,</span> <span class="s2">&quot;reflect&quot;</span><span class="p">,</span> <span class="s2">&quot;replicate&quot;</span><span class="p">,</span> <span class="s2">&quot;circular&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">func_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;SSIM&quot;</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Calculate the various components used to compute SSIM.</span>
 
 <span class="sd">    This should not be called by users directly, but is meant to assist for</span>
 <span class="sd">    calculating SSIM and MS-SSIM.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    img1: torch.Tensor of shape (batch, channel, height, width)</span>
-<span class="sd">        The first image or batch of images.</span>
-<span class="sd">    img2: torch.Tensor of shape (batch, channel, height, width)</span>
-<span class="sd">        The second image or batch of images. The heights and widths of `img1`</span>
-<span class="sd">        and `img2` must be the same. The numbers of batches and channels of</span>
-<span class="sd">        `img1` and `img2` need to be broadcastable: either they are the same</span>
-<span class="sd">        or one of them is 1. The output will be computed separately for each</span>
-<span class="sd">        channel (so channels are treated in the same way as batches). Both</span>
-<span class="sd">        images should have values between 0 and 1. Otherwise, the result may</span>
-<span class="sd">        be inaccurate, and we will raise a warning (but will still compute it).</span>
-<span class="sd">    pad : {False, &#39;constant&#39;, &#39;reflect&#39;, &#39;replicate&#39;, &#39;circular&#39;}, optional</span>
+<span class="sd">    img1</span>
+<span class="sd">        The first image or batch of images, of shape (batch, channel, height, width).</span>
+<span class="sd">    img2</span>
+<span class="sd">        The second image or batch of images, of shape (batch, channel, height, width).</span>
+<span class="sd">        The heights and widths of ``img1`` and ``img2`` must be the same. The numbers of</span>
+<span class="sd">        batches and channels of ``img1`` and ``img2`` need to be broadcastable: either</span>
+<span class="sd">        they are the same or one of them is 1. The output will be computed separately</span>
+<span class="sd">        for each channel (so channels are treated in the same way as batches). Both</span>
+<span class="sd">        images should have values between 0 and 1. Otherwise, the result may be</span>
+<span class="sd">        inaccurate, and we will raise a warning (but will still compute it).</span>
+<span class="sd">    pad</span>
 <span class="sd">        If not False, how to pad the image for the convolutions computing the</span>
-<span class="sd">        local average of each image. See `torch.nn.functional.pad` for how</span>
+<span class="sd">        local average of each image. See :func:`torch.nn.functional.pad` for how</span>
 <span class="sd">        these work.</span>
+<span class="sd">    func_name</span>
+<span class="sd">        Name of the function that called this one, in order to raise more helpful error</span>
+<span class="sd">        / warning messages.</span>
 
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    map_ssim</span>
+<span class="sd">        Map of SSIM values across the image.</span>
+<span class="sd">    contrast_structure_map</span>
+<span class="sd">        Map of contrast structure values.</span>
+<span class="sd">    weight</span>
+<span class="sd">        Weight used for stability of computation.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If either ``img1`` or ``img2`` is not 4d.</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If ``img1`` and ``img2`` have different height or width.</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If ``img1`` and ``img2`` have different batch or channel, unless one of them has</span>
+<span class="sd">        a 1 there, so they can be broadcast.</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If ``img1`` and ``img2`` have different dtypes.</span>
+
+<span class="sd">    Warns</span>
+<span class="sd">    -----</span>
+<span class="sd">    UserWarning</span>
+<span class="sd">        If either ``img1`` or ``img2`` has multiple channels, as SSIM was designed for</span>
+<span class="sd">        grayscale images.</span>
+<span class="sd">    UserWarning</span>
+<span class="sd">        If either ``img1`` or ``img2`` has a value outside of range ``[0, 1]``.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">img_ranges</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">as_tensor</span><span class="p">([[</span><span class="n">img1</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">img1</span><span class="o">.</span><span class="n">max</span><span class="p">()],</span> <span class="p">[</span><span class="n">img2</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">img2</span><span class="o">.</span><span class="n">max</span><span class="p">()]])</span>
     <span class="k">if</span> <span class="p">(</span><span class="n">img_ranges</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">any</span><span class="p">()</span> <span class="ow">or</span> <span class="p">(</span><span class="n">img_ranges</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">any</span><span class="p">():</span>
         <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;Image range falls outside [0, 1]. </span><span class="si">{</span><span class="n">func_name</span><span class="si">}</span><span class="s2"> output may not make sense.&quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;Image range falls outside [0, 1]. </span><span class="si">{</span><span class="n">func_name</span><span class="si">}</span><span class="s2"> output may not make sense.&quot;</span><span class="p">,</span>
         <span class="p">)</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="n">img1</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="n">img2</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
             <span class="s2">&quot;Input images should have four dimensions: (batch, channel, height, width)&quot;</span>
         <span class="p">)</span>
     <span class="k">if</span> <span class="n">img1</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">:]</span> <span class="o">!=</span> <span class="n">img2</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">:]:</span>
-        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;img1 and img2 must have the same height and width!&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;img1 and img2 must have the same height and width!&quot;</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">img1</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">!=</span> <span class="n">img2</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="ow">and</span> <span class="n">img1</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">img2</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
                 <span class="s2">&quot;Either img1 and img2 should have the same number of &quot;</span>
-                <span class="s2">&quot;elements in each dimension, or one of &quot;</span>
+                <span class="s2">&quot;elements in the batch and channel dimensions, or one of &quot;</span>
                 <span class="s2">&quot;them should be 1! But got shapes &quot;</span>
                 <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">img1</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">img2</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2"> instead&quot;</span>
             <span class="p">)</span>
@@ -171,7 +216,7 @@
         <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
             <span class="s2">&quot;SSIM was designed for grayscale images and here it will be&quot;</span>
             <span class="s2">&quot; computed separately for each channel (so channels are treated in&quot;</span>
-            <span class="s2">&quot; the same way as batches).&quot;</span>
+            <span class="s2">&quot; the same way as batches).&quot;</span><span class="p">,</span>
         <span class="p">)</span>
     <span class="k">if</span> <span class="n">img1</span><span class="o">.</span><span class="n">dtype</span> <span class="o">!=</span> <span class="n">img2</span><span class="o">.</span><span class="n">dtype</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Input images must have same dtype!&quot;</span><span class="p">)</span>
@@ -187,13 +232,13 @@
         <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;window should have sum of 1! normalizing...&quot;</span><span class="p">)</span>
         <span class="n">window</span> <span class="o">=</span> <span class="n">window</span> <span class="o">/</span> <span class="n">window_sum</span>
     <span class="k">if</span> <span class="n">window</span><span class="o">.</span><span class="n">ndim</span> <span class="o">!=</span> <span class="mi">4</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;window must have 4 dimensions!&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;window must have 4 dimensions!&quot;</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">pad</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">False</span><span class="p">:</span>
         <span class="n">img1</span> <span class="o">=</span> <span class="n">same_padding</span><span class="p">(</span><span class="n">img1</span><span class="p">,</span> <span class="p">(</span><span class="n">real_size</span><span class="p">,</span> <span class="n">real_size</span><span class="p">),</span> <span class="n">pad_mode</span><span class="o">=</span><span class="n">pad</span><span class="p">)</span>
         <span class="n">img2</span> <span class="o">=</span> <span class="n">same_padding</span><span class="p">(</span><span class="n">img2</span><span class="p">,</span> <span class="p">(</span><span class="n">real_size</span><span class="p">,</span> <span class="n">real_size</span><span class="p">),</span> <span class="n">pad_mode</span><span class="o">=</span><span class="n">pad</span><span class="p">)</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">windowed_average</span><span class="p">(</span><span class="n">img</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">windowed_average</span><span class="p">(</span><span class="n">img</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>  <span class="c1"># numpydoc ignore=GL08</span>
         <span class="n">padd</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="p">(</span><span class="n">n_batches</span><span class="p">,</span> <span class="n">n_channels</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">)</span> <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">shape</span>
         <span class="n">img</span> <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">n_batches</span> <span class="o">*</span> <span class="n">n_channels</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">img</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">img</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
@@ -231,8 +276,14 @@
 
 <div class="viewcode-block" id="ssim">
 <a class="viewcode-back" href="../../../api/plenoptic.metric.html#plenoptic.metric.perceptual_distance.ssim">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">ssim</span><span class="p">(</span><span class="n">img1</span><span class="p">,</span> <span class="n">img2</span><span class="p">,</span> <span class="n">weighted</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">pad</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Structural similarity index</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">ssim</span><span class="p">(</span>
+    <span class="n">img1</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
+    <span class="n">img2</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
+    <span class="n">weighted</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">pad</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="kc">False</span><span class="p">,</span> <span class="s2">&quot;constant&quot;</span><span class="p">,</span> <span class="s2">&quot;reflect&quot;</span><span class="p">,</span> <span class="s2">&quot;replicate&quot;</span><span class="p">,</span> <span class="s2">&quot;circular&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Compute the structural similarity index.</span>
 
 <span class="sd">    As described in [1]_, the structural similarity index (SSIM) is a</span>
 <span class="sd">    perceptual distance metric, giving the distance between two images. SSIM is</span>
@@ -252,44 +303,65 @@
 
 <span class="sd">    This function returns the mean SSIM, a scalar-valued metric giving the</span>
 <span class="sd">    average over the whole image. For the SSIM map (showing the computed value</span>
-<span class="sd">    across the image), call `ssim_map`.</span>
+<span class="sd">    across the image), call :func:`ssim_map`.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    img1: torch.Tensor of shape (batch, channel, height, width)</span>
-<span class="sd">        The first image or batch of images.</span>
-<span class="sd">    img2: torch.Tensor of shape (batch, channel, height, width)</span>
-<span class="sd">        The second image or batch of images. The heights and widths of `img1`</span>
-<span class="sd">        and `img2` must be the same. The numbers of batches and channels of</span>
-<span class="sd">        `img1` and `img2` need to be broadcastable: either they are the same</span>
-<span class="sd">        or one of them is 1. The output will be computed separately for each</span>
-<span class="sd">        channel (so channels are treated in the same way as batches). Both</span>
-<span class="sd">        images should have values between 0 and 1. Otherwise, the result may</span>
-<span class="sd">        be inaccurate, and we will raise a warning (but will still compute it).</span>
-<span class="sd">    weighted : bool, optional</span>
-<span class="sd">        whether to use the original, unweighted SSIM version (`False`) as used</span>
-<span class="sd">        in [1]_ or the weighted version (`True`) as used in [4]_. See Notes</span>
-<span class="sd">        section for the weight</span>
-<span class="sd">    pad : {False, &#39;constant&#39;, &#39;reflect&#39;, &#39;replicate&#39;, &#39;circular&#39;}, optional</span>
+<span class="sd">    img1</span>
+<span class="sd">        The first image or batch of images, of shape (batch, channel, height, width).</span>
+<span class="sd">    img2</span>
+<span class="sd">        The second image or batch of images, of shape (batch, channel, height, width).</span>
+<span class="sd">        The heights and widths of ``img1`` and ``img2`` must be the same. The numbers of</span>
+<span class="sd">        batches and channels of ``img1`` and ``img2`` need to be broadcastable: either</span>
+<span class="sd">        they are the same or one of them is 1. The output will be computed separately</span>
+<span class="sd">        for each channel (so channels are treated in the same way as batches). Both</span>
+<span class="sd">        images should have values between 0 and 1. Otherwise, the result may be</span>
+<span class="sd">        inaccurate, and we will raise a warning (but will still compute it).</span>
+<span class="sd">    weighted</span>
+<span class="sd">        Whether to use the original, unweighted SSIM version (``False``) as used</span>
+<span class="sd">        in [1]_ or the weighted version (``True``) as used in [4]_. See Notes</span>
+<span class="sd">        section for the weight.</span>
+<span class="sd">    pad :</span>
 <span class="sd">        If not False, how to pad the image for the convolutions computing the</span>
-<span class="sd">        local average of each image. See `torch.nn.functional.pad` for how</span>
+<span class="sd">        local average of each image. See :func:`torch.nn.functional.pad` for how</span>
 <span class="sd">        these work.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    mssim : torch.Tensor</span>
+<span class="sd">    mssim</span>
 <span class="sd">        2d tensor of shape (batch, channel) containing the mean SSIM for each</span>
-<span class="sd">        image, averaged over the whole image</span>
+<span class="sd">        image, averaged over the whole image.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If either ``img1`` or ``img2`` is not 4d.</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If ``img1`` and ``img2`` have different height or width.</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If ``img1`` and ``img2`` have different batch or channel, unless one of them has</span>
+<span class="sd">        a 1 there, so they can be broadcast.</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If ``img1`` and ``img2`` have different dtypes.</span>
+
+<span class="sd">    Warns</span>
+<span class="sd">    -----</span>
+<span class="sd">    UserWarning</span>
+<span class="sd">        If either ``img1`` or ``img2`` has multiple channels, as SSIM was designed for</span>
+<span class="sd">        grayscale images.</span>
+<span class="sd">    UserWarning</span>
+<span class="sd">        If at least one scale from either ``img1`` or ``img2`` has height or width of</span>
+<span class="sd">        less than 11, since SSIM uses an 11x11 convolutional kernel.</span>
 
 <span class="sd">    Notes</span>
 <span class="sd">    -----</span>
-<span class="sd">    The weight used when `weighted=True` is:</span>
+<span class="sd">    The weight used when ``weighted=True`` is:</span>
 
 <span class="sd">    .. math::</span>
 <span class="sd">       \log((1+\frac{\sigma_1^2}{C_2})(1+\frac{\sigma_2^2}{C_2}))</span>
 
-<span class="sd">    where :math:`sigma_1^2` and :math:`sigma_2^2` are the variances of `img1`</span>
-<span class="sd">    and `img2`, respectively, and :math:`C_2` is a constant. See [4]_ for more</span>
+<span class="sd">    where :math:`\sigma_1^2` and :math:`\sigma_2^2` are the variances of ``img1``</span>
+<span class="sd">    and ``img2``, respectively, and :math:`C_2` is a constant. See [4]_ for more</span>
 <span class="sd">    details.</span>
 
 <span class="sd">    References</span>
@@ -297,8 +369,8 @@
 <span class="sd">    .. [1] Z. Wang, A. C. Bovik, H. R. Sheikh, and E. P. Simoncelli, &quot;Image</span>
 <span class="sd">       quality assessment: From error measurement to structural similarity&quot;</span>
 <span class="sd">       IEEE Transactions on Image Processing, vol. 13, no. 1, Jan. 2004.</span>
-<span class="sd">    .. [2] [matlab code](https://www.cns.nyu.edu/~lcv/ssim/ssim_index.m)</span>
-<span class="sd">    .. [3] [project page](https://www.cns.nyu.edu/~lcv/ssim/)</span>
+<span class="sd">    .. [2] `matlab code &lt;https://www.cns.nyu.edu/~lcv/ssim/ssim_index.m&gt;`_</span>
+<span class="sd">    .. [3] `project page &lt;https://www.cns.nyu.edu/~lcv/ssim/&gt;`_</span>
 <span class="sd">    .. [4] Wang, Z., &amp; Simoncelli, E. P. (2008). Maximum differentiation (MAD)</span>
 <span class="sd">       competition: A methodology for comparing computational models of</span>
 <span class="sd">       perceptual discriminability. Journal of Vision, 8(12), 1–13.</span>
@@ -312,7 +384,6 @@
 <span class="sd">    &gt;&gt;&gt; img = po.data.einstein()</span>
 <span class="sd">    &gt;&gt;&gt; po.metric.ssim(img, img + torch.rand_like(img))</span>
 <span class="sd">    tensor([[0.0519]])</span>
-
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># these are named map_ssim instead of the perhaps more natural ssim_map</span>
     <span class="c1"># because that&#39;s the name of a function</span>
@@ -334,8 +405,9 @@
 
 <div class="viewcode-block" id="ssim_map">
 <a class="viewcode-back" href="../../../api/plenoptic.metric.html#plenoptic.metric.perceptual_distance.ssim_map">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">ssim_map</span><span class="p">(</span><span class="n">img1</span><span class="p">,</span> <span class="n">img2</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Structural similarity index map</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">ssim_map</span><span class="p">(</span><span class="n">img1</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">img2</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Structural similarity index map.</span>
 
 <span class="sd">    As described in [1]_, the structural similarity index (SSIM) is a</span>
 <span class="sd">    perceptual distance metric, giving the distance between two images. SSIM is</span>
@@ -354,37 +426,54 @@
 <span class="sd">    between -1 and 1.</span>
 
 <span class="sd">    This function returns the SSIM map, showing the SSIM values across the</span>
-<span class="sd">    image. For the mean SSIM (a single value metric), call `ssim`.</span>
+<span class="sd">    image. For the mean SSIM (a single value metric), call :func:`ssim`.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    img1: torch.Tensor of shape (batch, channel, height, width)</span>
-<span class="sd">        The first image or batch of images.</span>
-<span class="sd">    img2: torch.Tensor of shape (batch, channel, height, width)</span>
-<span class="sd">        The second image or batch of images. The heights and widths of `img1`</span>
-<span class="sd">        and `img2` must be the same. The numbers of batches and channels of</span>
-<span class="sd">        `img1` and `img2` need to be broadcastable: either they are the same</span>
-<span class="sd">        or one of them is 1. The output will be computed separately for each</span>
-<span class="sd">        channel (so channels are treated in the same way as batches). Both</span>
-<span class="sd">        images should have values between 0 and 1. Otherwise, the result may</span>
-<span class="sd">        be inaccurate, and we will raise a warning (but will still compute it).</span>
-<span class="sd">    weighted : bool, optional</span>
-<span class="sd">        whether to use the original, unweighted SSIM version (`False`) as used</span>
-<span class="sd">        in [1]_ or the weighted version (`True`) as used in [4]_. See Notes</span>
-<span class="sd">        section for the weight</span>
+<span class="sd">    img1</span>
+<span class="sd">        The first image or batch of images, of shape (batch, channel, height, width).</span>
+<span class="sd">    img2</span>
+<span class="sd">        The second image or batch of images, of shape (batch, channel, height, width).</span>
+<span class="sd">        The heights and widths of ``img1`` and ``img2`` must be the same. The numbers of</span>
+<span class="sd">        batches and channels of ``img1`` and ``img2`` need to be broadcastable: either</span>
+<span class="sd">        they are the same or one of them is 1. The output will be computed separately</span>
+<span class="sd">        for each channel (so channels are treated in the same way as batches). Both</span>
+<span class="sd">        images should have values between 0 and 1. Otherwise, the result may be</span>
+<span class="sd">        inaccurate, and we will raise a warning (but will still compute it).</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    ssim_map : torch.Tensor</span>
+<span class="sd">    ssim_map</span>
 <span class="sd">        4d tensor containing the map of SSIM values.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If either ``img1`` or ``img2`` is not 4d.</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If ``img1`` and ``img2`` have different height or width.</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If ``img1`` and ``img2`` have different batch or channel, unless one of them has</span>
+<span class="sd">        a 1 there, so they can be broadcast.</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If ``img1`` and ``img2`` have different dtypes.</span>
+
+<span class="sd">    Warns</span>
+<span class="sd">    -----</span>
+<span class="sd">    UserWarning</span>
+<span class="sd">        If either ``img1`` or ``img2`` has multiple channels, as SSIM was designed for</span>
+<span class="sd">        grayscale images.</span>
+<span class="sd">    UserWarning</span>
+<span class="sd">        If at least one scale from either ``img1`` or ``img2`` has height or width of</span>
+<span class="sd">        less than 11, since SSIM uses an 11x11 convolutional kernel.</span>
 
 <span class="sd">    References</span>
 <span class="sd">    ----------</span>
 <span class="sd">    .. [1] Z. Wang, A. C. Bovik, H. R. Sheikh, and E. P. Simoncelli, &quot;Image</span>
 <span class="sd">       quality assessment: From error measurement to structural similarity&quot;</span>
 <span class="sd">       IEEE Transactions on Image Processing, vol. 13, no. 1, Jan. 2004.</span>
-<span class="sd">    .. [2] [matlab code](https://www.cns.nyu.edu/~lcv/ssim/ssim_index.m)</span>
-<span class="sd">    .. [3] [project page](https://www.cns.nyu.edu/~lcv/ssim/)</span>
+<span class="sd">    .. [2] `matlab code &lt;https://www.cns.nyu.edu/~lcv/ssim/ssim_index.m&gt;`_</span>
+<span class="sd">    .. [3] `project page &lt;https://www.cns.nyu.edu/~lcv/ssim/&gt;`_</span>
 <span class="sd">    .. [4] Wang, Z., &amp; Simoncelli, E. P. (2008). Maximum differentiation (MAD)</span>
 <span class="sd">       competition: A methodology for comparing computational models of</span>
 <span class="sd">       perceptual discriminability. Journal of Vision, 8(12), 1–13.</span>
@@ -399,7 +488,6 @@
 <span class="sd">    &gt;&gt;&gt; ssim_map = po.metric.ssim_map(img, img + torch.rand_like(img))</span>
 <span class="sd">    &gt;&gt;&gt; ssim_map.shape</span>
 <span class="sd">    torch.Size([1, 1, 246, 246])</span>
-
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="nb">min</span><span class="p">(</span><span class="n">img1</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">img1</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span> <span class="o">&lt;</span> <span class="mi">11</span><span class="p">:</span>
         <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
@@ -413,8 +501,11 @@
 
 <div class="viewcode-block" id="ms_ssim">
 <a class="viewcode-back" href="../../../api/plenoptic.metric.html#plenoptic.metric.perceptual_distance.ms_ssim">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">ms_ssim</span><span class="p">(</span><span class="n">img1</span><span class="p">,</span> <span class="n">img2</span><span class="p">,</span> <span class="n">power_factors</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Multiscale structural similarity index (MS-SSIM)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">ms_ssim</span><span class="p">(</span>
+    <span class="n">img1</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">img2</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">power_factors</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Multiscale structural similarity index (MS-SSIM).</span>
 
 <span class="sd">    As described in [1]_, multiscale structural similarity index (MS-SSIM) is</span>
 <span class="sd">    an improvement upon structural similarity index (SSIM) that takes into</span>
@@ -423,8 +514,8 @@
 <span class="sd">    SSIM is based on three comparison measurements between the two images:</span>
 <span class="sd">    luminance, contrast, and structure. All of these are computed convolutionally</span>
 <span class="sd">    across the images, producing three maps instead of scalars. The SSIM map is</span>
-<span class="sd">    the elementwise product of these three maps. See `metric.ssim` and</span>
-<span class="sd">    `metric.ssim_map` for a full description of SSIM.</span>
+<span class="sd">    the elementwise product of these three maps. See :func:`ssim` and</span>
+<span class="sd">    :func:`ssim_map` for a full description of SSIM.</span>
 
 <span class="sd">    To get images of different scales, average pooling operations with kernel</span>
 <span class="sd">    size 2 are performed recursively on the input images. The product of</span>
@@ -436,34 +527,55 @@
 <span class="sd">    .. math::</span>
 <span class="sd">        MSSSIM = {SSIM}_M^{a_M} \prod_{i=1}^{M-1} ({CS}_i)^{a_i}</span>
 
-<span class="sd">    Here :math: `M` is the number of scales, :math: `{CS}_i` is the mean value</span>
-<span class="sd">    of the contrast-structure map for the i&#39;th finest scale, and :math: `{SSIM}_M`</span>
+<span class="sd">    Here :math:`M` is the number of scales, :math:`{CS}_i` is the mean value</span>
+<span class="sd">    of the contrast-structure map for the i&#39;th finest scale, and :math:`{SSIM}_M`</span>
 <span class="sd">    is the mean value of the SSIM map for the coarsest scale. If at least one</span>
 <span class="sd">    of these terms are negative, the value of MS-SSIM is zero. The values of</span>
-<span class="sd">    :math: `a_i, i=1,...,M` are taken from the argument `power_factors`.</span>
+<span class="sd">    :math:`a_i, i=1,...,M` are taken from the argument ``power_factors``.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    img1: torch.Tensor of shape (batch, channel, height, width)</span>
-<span class="sd">        The first image or batch of images.</span>
-<span class="sd">    img2: torch.Tensor of shape (batch, channel, height, width)</span>
-<span class="sd">        The second image or batch of images. The heights and widths of `img1`</span>
-<span class="sd">        and `img2` must be the same. The numbers of batches and channels of</span>
-<span class="sd">        `img1` and `img2` need to be broadcastable: either they are the same</span>
-<span class="sd">        or one of them is 1. The output will be computed separately for each</span>
-<span class="sd">        channel (so channels are treated in the same way as batches). Both</span>
-<span class="sd">        images should have values between 0 and 1. Otherwise, the result may</span>
-<span class="sd">        be inaccurate, and we will raise a warning (but will still compute it).</span>
-<span class="sd">    power_factors : 1D array, optional.</span>
-<span class="sd">        power exponents for the mean values of maps, for different scales (from</span>
+<span class="sd">    img1</span>
+<span class="sd">        The first image or batch of images, of shape (batch, channel, height, width).</span>
+<span class="sd">    img2</span>
+<span class="sd">        The second image or batch of images, of shape (batch, channel, height, width).</span>
+<span class="sd">        The heights and widths of ``img1`` and ``img2`` must be the same. The numbers of</span>
+<span class="sd">        batches and channels of ``img1`` and ``img2`` need to be broadcastable: either</span>
+<span class="sd">        they are the same or one of them is 1. The output will be computed separately</span>
+<span class="sd">        for each channel (so channels are treated in the same way as batches). Both</span>
+<span class="sd">        images should have values between 0 and 1. Otherwise, the result may be</span>
+<span class="sd">        inaccurate, and we will raise a warning (but will still compute it).</span>
+<span class="sd">    power_factors</span>
+<span class="sd">        Power exponents for the mean values of maps, for different scales (from</span>
 <span class="sd">        fine to coarse). The length of this array determines the number of scales.</span>
-<span class="sd">        By default, this is set to [0.0448, 0.2856, 0.3001, 0.2363, 0.1333],</span>
-<span class="sd">        which is what psychophysical experiments in [1]_ found.</span>
+<span class="sd">        If None, set to ``[0.0448, 0.2856, 0.3001, 0.2363, 0.1333]``, which is what</span>
+<span class="sd">        psychophysical experiments in [1]_ found.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    msssim : torch.Tensor</span>
-<span class="sd">        2d tensor of shape (batch, channel) containing the MS-SSIM for each image</span>
+<span class="sd">    msssim</span>
+<span class="sd">        2d tensor of shape (batch, channel) containing the MS-SSIM for each image.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If either ``img1`` or ``img2`` is not 4d.</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If ``img1`` and ``img2`` have different height or width.</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If ``img1`` and ``img2`` have different batch or channel, unless one of them has</span>
+<span class="sd">        a 1 there, so they can be broadcast.</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If ``img1`` and ``img2`` have different dtypes.</span>
+
+<span class="sd">    Warns</span>
+<span class="sd">    -----</span>
+<span class="sd">    UserWarning</span>
+<span class="sd">        If either ``img1`` or ``img2`` has multiple channels, as MS-SSIM was designed</span>
+<span class="sd">        for grayscale images.</span>
+<span class="sd">    UserWarning</span>
+<span class="sd">        If at least one scale from either ``img1`` or ``img2`` has height or width of</span>
+<span class="sd">        less than 11, since SSIM uses an 11x11 convolutional kernel.</span>
 
 <span class="sd">    References</span>
 <span class="sd">    ----------</span>
@@ -479,12 +591,11 @@
 <span class="sd">    &gt;&gt;&gt; img = po.data.einstein()</span>
 <span class="sd">    &gt;&gt;&gt; po.metric.ms_ssim(img, img + torch.rand_like(img))</span>
 <span class="sd">    tensor([[0.4684]])</span>
-
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">power_factors</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">power_factors</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0448</span><span class="p">,</span> <span class="mf">0.2856</span><span class="p">,</span> <span class="mf">0.3001</span><span class="p">,</span> <span class="mf">0.2363</span><span class="p">,</span> <span class="mf">0.1333</span><span class="p">]</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">downsample</span><span class="p">(</span><span class="n">img</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">downsample</span><span class="p">(</span><span class="n">img</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>  <span class="c1"># numpydoc ignore=GL08</span>
         <span class="n">img</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">pad</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">img</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">%</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">img</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">%</span> <span class="mi">2</span><span class="p">),</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;replicate&quot;</span><span class="p">)</span>
         <span class="n">img</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">avg_pool2d</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">img</span>
@@ -511,33 +622,32 @@
 
 <div class="viewcode-block" id="normalized_laplacian_pyramid">
 <a class="viewcode-back" href="../../../api/plenoptic.metric.html#plenoptic.metric.perceptual_distance.normalized_laplacian_pyramid">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">normalized_laplacian_pyramid</span><span class="p">(</span><span class="n">img</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute the normalized Laplacian Pyramid using pre-optimized parameters</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">normalized_laplacian_pyramid</span><span class="p">(</span><span class="n">img</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Compute the normalized Laplacian Pyramid using pre-optimized parameters.</span>
 
 <span class="sd">    Model parameters are those used in [1]_, copied from the matlab code used in the</span>
 <span class="sd">    paper, found at [2]_.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    img: torch.Tensor of shape (batch, channel, height, width)</span>
-<span class="sd">        Image, or batch of images. This representation is designed</span>
-<span class="sd">        for grayscale images and will be computed separately for each</span>
-<span class="sd">        channel (so channels are treated in the same way as batches).</span>
+<span class="sd">    img</span>
+<span class="sd">        Image, or batch of images of shape (batch, channel, height, width). This</span>
+<span class="sd">        representation is designed for grayscale images and will be computed separately</span>
+<span class="sd">        for each channel (so channels are treated in the same way as batches).</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    normalized_laplacian_activations: list of torch.Tensor</span>
-<span class="sd">        The normalized Laplacian Pyramid with six scales</span>
+<span class="sd">    normalized_laplacian_activations</span>
+<span class="sd">        The normalized Laplacian Pyramid with six scales.</span>
 
 <span class="sd">    References</span>
 <span class="sd">    ----------</span>
 <span class="sd">    .. [1] Laparra, V., Ballé, J., Berardino, A. and Simoncelli, E.P., 2016. Perceptual</span>
 <span class="sd">        image quality assessment using a normalized Laplacian pyramid. Electronic</span>
 <span class="sd">        Imaging, 2016(16), pp.1-6.</span>
-<span class="sd">    .. [2] [matlab code](https://www.cns.nyu.edu/~lcv/NLPyr/NLP_dist.m)</span>
-
+<span class="sd">    .. [2] `matlab code &lt;https://www.cns.nyu.edu/~lcv/NLPyr/NLP_dist.m&gt;`_</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-
     <span class="p">(</span><span class="n">_</span><span class="p">,</span> <span class="n">channel</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">width</span><span class="p">)</span> <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">size</span><span class="p">()</span>
 
     <span class="n">N_scales</span> <span class="o">=</span> <span class="mi">6</span>
@@ -570,8 +680,9 @@
 
 <div class="viewcode-block" id="nlpd">
 <a class="viewcode-back" href="../../../api/plenoptic.metric.html#plenoptic.metric.perceptual_distance.nlpd">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">nlpd</span><span class="p">(</span><span class="n">img1</span><span class="p">,</span> <span class="n">img2</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Normalized Laplacian Pyramid Distance</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">nlpd</span><span class="p">(</span><span class="n">img1</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">img2</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Compute the normalized Laplacian Pyramid Distance.</span>
 
 <span class="sd">    As described in  [1]_, this is an image quality metric based on the transformations</span>
 <span class="sd">    associated with the early visual system: local luminance subtraction and local</span>
@@ -591,28 +702,48 @@
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    img1: torch.Tensor of shape (batch, channel, height, width)</span>
-<span class="sd">        The first image or batch of images.</span>
-<span class="sd">    img2: torch.Tensor of shape (batch, channel, height, width)</span>
-<span class="sd">        The second image or batch of images. The heights and widths of `img1`</span>
-<span class="sd">        and `img2` must be the same. The numbers of batches and channels of</span>
-<span class="sd">        `img1` and `img2` need to be broadcastable: either they are the same</span>
-<span class="sd">        or one of them is 1. The output will be computed separately for each</span>
-<span class="sd">        channel (so channels are treated in the same way as batches). Both</span>
-<span class="sd">        images should have values between 0 and 1. Otherwise, the result may</span>
-<span class="sd">        be inaccurate, and we will raise a warning (but will still compute it).</span>
+<span class="sd">    img1</span>
+<span class="sd">        The first image or batch of images of shape (batch, channel, height, width).</span>
+<span class="sd">    img2</span>
+<span class="sd">        The second image or batch of images of shape (batch, channel, height, width).</span>
+<span class="sd">        The heights and widths of ``img1`` and ``img2`` must be the same. The numbers of</span>
+<span class="sd">        batches and channels of ``img1`` and ``img2`` need to be broadcastable: either</span>
+<span class="sd">        they are the same or one of them is 1. The output will be computed separately</span>
+<span class="sd">        for each channel (so channels are treated in the same way as batches). Both</span>
+<span class="sd">        images should have values between 0 and 1. Otherwise, the result may be</span>
+<span class="sd">        inaccurate, and we will raise a warning (but will still compute it).</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    distance: torch.Tensor of shape (batch, channel)</span>
-<span class="sd">        The normalized Laplacian Pyramid distance.</span>
+<span class="sd">    distance</span>
+<span class="sd">        The normalized Laplacian Pyramid distance, with shape (batch, channel).</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If either ``img1`` or ``img2`` is not 4d.</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If ``img1`` and ``img2`` have different height or width.</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If ``img1`` and ``img2`` have different batch or channel, unless one of them has</span>
+<span class="sd">        a 1 there, so they can be broadcast.</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If ``img1`` and ``img2`` have different dtypes.</span>
+
+<span class="sd">    Warns</span>
+<span class="sd">    -----</span>
+<span class="sd">    UserWarning</span>
+<span class="sd">        If either ``img1`` or ``img2`` has multiple channels, as SSIM was designed for</span>
+<span class="sd">        grayscale images.</span>
+<span class="sd">    UserWarning</span>
+<span class="sd">        If either ``img1`` or ``img2`` has a value outside of range ``[0, 1]``.</span>
 
 <span class="sd">    References</span>
 <span class="sd">    ----------</span>
 <span class="sd">    .. [1] Laparra, V., Ballé, J., Berardino, A. and Simoncelli, E.P., 2016. Perceptual</span>
 <span class="sd">        image quality assessment using a normalized Laplacian pyramid. Electronic</span>
 <span class="sd">        Imaging, 2016(16), pp.1-6.</span>
-<span class="sd">    .. [2] [matlab code](https://www.cns.nyu.edu/~lcv/NLPyr/NLP_dist.m)</span>
+<span class="sd">    .. [2] `matlab code &lt;https://www.cns.nyu.edu/~lcv/NLPyr/NLP_dist.m&gt;`_</span>
 
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
@@ -621,20 +752,18 @@
 <span class="sd">    &gt;&gt;&gt; curie_img = po.data.curie()</span>
 <span class="sd">    &gt;&gt;&gt; po.metric.nlpd(einstein_img, curie_img)</span>
 <span class="sd">    tensor([[1.3507]])</span>
-
 <span class="sd">    &quot;&quot;&quot;</span>
-
     <span class="k">if</span> <span class="ow">not</span> <span class="n">img1</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="n">img2</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
             <span class="s2">&quot;Input images should have four dimensions: (batch, channel, height, width)&quot;</span>
         <span class="p">)</span>
     <span class="k">if</span> <span class="n">img1</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">:]</span> <span class="o">!=</span> <span class="n">img2</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">:]:</span>
-        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;img1 and img2 must have the same height and width!&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;img1 and img2 must have the same height and width!&quot;</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">img1</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">!=</span> <span class="n">img2</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="ow">and</span> <span class="n">img1</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">img2</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
                 <span class="s2">&quot;Either img1 and img2 should have the same number of &quot;</span>
-                <span class="s2">&quot;elements in each dimension, or one of &quot;</span>
+                <span class="s2">&quot;elements in the batch and channel dimensions, or one of &quot;</span>
                 <span class="s2">&quot;them should be 1! But got shapes &quot;</span>
                 <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">img1</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">img2</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2"> instead&quot;</span>
             <span class="p">)</span>

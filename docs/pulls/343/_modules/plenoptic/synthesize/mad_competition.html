@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>plenoptic.synthesize.mad_competition &mdash; plenoptic 1.2.1.dev123 documentation</title>
+  <title>plenoptic.synthesize.mad_competition &mdash; plenoptic 1.3.1.dev3 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/plot_directive.css" />
@@ -15,7 +15,7 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=87b6d40a"></script>
+      <script src="../../../_static/documentation_options.js?v=4d645560"></script>
       <script src="../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -108,13 +108,17 @@
            <div itemprop="articleBody">
              
   <h1>Source code for plenoptic.synthesize.mad_competition</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Run MAD Competition.&quot;&quot;&quot;</span>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Run MAD Competition.</span>
+
+<span class="sd">Classes to perform the synthesis of Maximum Differentiation Competition.</span>
+<span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">contextlib</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">collections</span><span class="w"> </span><span class="kn">import</span> <span class="n">OrderedDict</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Callable</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Literal</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Literal</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">mpl</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
@@ -133,7 +137,8 @@
 <div class="viewcode-block" id="MADCompetition">
 <a class="viewcode-back" href="../../../api/plenoptic.synthesize.html#plenoptic.synthesize.mad_competition.MADCompetition">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">MADCompetition</span><span class="p">(</span><span class="n">OptimizedSynthesis</span><span class="p">):</span>
-<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Synthesize a single maximally-differentiating image for two metrics.</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Synthesize a single maximally-differentiating image for two metrics.</span>
 
 <span class="sd">    Following the basic idea in [1]_, this class synthesizes a</span>
 <span class="sd">    maximally-differentiating image for two given metrics, based on a given</span>
@@ -152,48 +157,25 @@
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    image :</span>
+<span class="sd">    image</span>
 <span class="sd">        A tensor, this is the image we use as the reference point.</span>
-<span class="sd">    optimized_metric :</span>
+<span class="sd">    optimized_metric</span>
 <span class="sd">        The metric whose value you wish to minimize or maximize, which takes</span>
 <span class="sd">        two tensors and returns a scalar.</span>
-<span class="sd">    reference_metric :</span>
+<span class="sd">    reference_metric</span>
 <span class="sd">        The metric whose value you wish to keep fixed, which takes two tensors</span>
 <span class="sd">        and returns a scalar.</span>
-<span class="sd">    minmax :</span>
+<span class="sd">    minmax</span>
 <span class="sd">        Whether you wish to minimize or maximize ``optimized_metric``.</span>
-<span class="sd">    metric_tradeoff_lambda :</span>
+<span class="sd">    metric_tradeoff_lambda</span>
 <span class="sd">        Lambda to multiply by ``reference_metric`` loss and add to</span>
 <span class="sd">        ``optimized_metric`` loss. If ``None``, we pick a value so the two</span>
 <span class="sd">        initial losses are approximately equal in magnitude.</span>
-<span class="sd">    range_penalty_lambda :</span>
+<span class="sd">    range_penalty_lambda</span>
 <span class="sd">        Lambda to multiply by range penalty and add to loss.</span>
-<span class="sd">    allowable_range :</span>
+<span class="sd">    allowed_range</span>
 <span class="sd">        Range (inclusive) of allowed pixel values. Any values outside this</span>
 <span class="sd">        range will be penalized.</span>
-
-<span class="sd">    Attributes</span>
-<span class="sd">    ----------</span>
-<span class="sd">    mad_image : torch.Tensor</span>
-<span class="sd">        The Maximally-Differentiating Image. This may be unfinished depending</span>
-<span class="sd">        on how many iterations we&#39;ve run for.</span>
-<span class="sd">    initial_image : torch.Tensor</span>
-<span class="sd">        The initial ``mad_image``, which we obtain by adding Gaussian noise to</span>
-<span class="sd">        ``image``.</span>
-<span class="sd">    losses : list</span>
-<span class="sd">        A list of the objective function&#39;s loss over iterations.</span>
-<span class="sd">    gradient_norm : list</span>
-<span class="sd">        A list of the gradient&#39;s L2 norm over iterations.</span>
-<span class="sd">    pixel_change_norm : list</span>
-<span class="sd">        A list containing the L2 norm of the pixel change over iterations</span>
-<span class="sd">        (``pixel_change_norm[i]`` is the pixel change norm in</span>
-<span class="sd">        ``mad_image`` between iterations ``i`` and ``i-1``).</span>
-<span class="sd">    optimized_metric_loss : list</span>
-<span class="sd">        A list of the ``optimized_metric`` loss over iterations.</span>
-<span class="sd">    reference_metric_loss : list</span>
-<span class="sd">        A list of the ``reference_metric`` loss over iterations.</span>
-<span class="sd">    saved_mad_image : torch.Tensor</span>
-<span class="sd">        Saved ``self.mad_image`` for later examination.</span>
 
 <span class="sd">    References</span>
 <span class="sd">    ----------</span>
@@ -201,7 +183,6 @@
 <span class="sd">           competition: A methodology for comparing computational models of</span>
 <span class="sd">           perceptual discriminability. Journal of Vision, 8(12), 1–13.</span>
 <span class="sd">           https://dx.doi.org/10.1167/8.12.8</span>
-
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
@@ -272,26 +253,36 @@
         <span class="n">scheduler</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">lr_scheduler</span><span class="o">.</span><span class="n">LRScheduler</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">scheduler_kwargs</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize the MAD image, optimizer, and scheduler.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize the MAD image, optimizer, and scheduler.</span>
 
 <span class="sd">        Can only be called once. If ``load()`` has been called, ``initial_noise`` must</span>
 <span class="sd">        be None.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        initial_noise :</span>
-<span class="sd">            ``mad_image`` is initialized to ``self.image + initial_noise *</span>
+<span class="sd">        initial_noise</span>
+<span class="sd">            :attr:`mad_image` is initialized to ``self.image + initial_noise *</span>
 <span class="sd">            torch.randn_like(self.image)``, so this gives the standard deviation of the</span>
 <span class="sd">            Gaussian noise. If None, we use a value of 0.1.</span>
-<span class="sd">        optimizer :</span>
+<span class="sd">        optimizer</span>
 <span class="sd">            The un-initialized optimizer object to use. If None, we use Adam.</span>
-<span class="sd">        optimizer_kwargs :</span>
-<span class="sd">            The keyword arguments to pass to the optimizer on initialization. If None,</span>
-<span class="sd">            we use {&quot;lr&quot;: .01} and, if optimizer is None, {&quot;amsgrad&quot;: True}</span>
-<span class="sd">        scheduler :</span>
-<span class="sd">            The learning rate scheduler to use. If None, we don&#39;t use one.</span>
-<span class="sd">        scheduler_kwargs :</span>
+<span class="sd">        optimizer_kwargs</span>
+<span class="sd">            The keyword arguments to pass to the optimizer on initialization. If</span>
+<span class="sd">            ``None``, we use ``{&quot;lr&quot;: .01}`` and, if optimizer is ``None``,</span>
+<span class="sd">            ``{&quot;amsgrad&quot;: True}``.</span>
+<span class="sd">        scheduler</span>
+<span class="sd">            The un-initialized learning rate scheduler object to use. If ``None``, we</span>
+<span class="sd">            don&#39;t use one.</span>
+<span class="sd">        scheduler_kwargs</span>
 <span class="sd">            The keyword arguments to pass to the scheduler on initialization.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        ValueError</span>
+<span class="sd">            If you try to set ``initial_noise`` after calling :func:`load`.</span>
+<span class="sd">        ValueError</span>
+<span class="sd">            If ``setup`` is called more than once or after :func:`synthesize`.</span>
 
 <span class="sd">        Examples</span>
 <span class="sd">        --------</span>
@@ -299,9 +290,13 @@
 
 <span class="sd">        &gt;&gt;&gt; import plenoptic as po</span>
 <span class="sd">        &gt;&gt;&gt; img = po.data.einstein()</span>
-<span class="sd">        &gt;&gt;&gt; mad = po.synth.MADCompetition(img, lambda x,y: 1 - po.metric.ssim(x, y),</span>
-<span class="sd">        ...                               po.metric.mse, &quot;min&quot;,</span>
-<span class="sd">        ...                               metric_tradeoff_lambda=0.1)</span>
+<span class="sd">        &gt;&gt;&gt; mad = po.synth.MADCompetition(</span>
+<span class="sd">        ...     img,</span>
+<span class="sd">        ...     lambda x, y: 1 - po.metric.ssim(x, y),</span>
+<span class="sd">        ...     po.metric.mse,</span>
+<span class="sd">        ...     &quot;min&quot;,</span>
+<span class="sd">        ...     metric_tradeoff_lambda=0.1,</span>
+<span class="sd">        ... )</span>
 <span class="sd">        &gt;&gt;&gt; mad.setup(1)</span>
 <span class="sd">        &gt;&gt;&gt; mad.synthesize(10)</span>
 
@@ -309,9 +304,13 @@
 
 <span class="sd">        &gt;&gt;&gt; import plenoptic as po</span>
 <span class="sd">        &gt;&gt;&gt; img = po.data.einstein()</span>
-<span class="sd">        &gt;&gt;&gt; mad = po.synth.MADCompetition(img, lambda x,y: 1 - po.metric.ssim(x, y),</span>
-<span class="sd">        ...                               po.metric.mse, &quot;min&quot;,</span>
-<span class="sd">        ...                               metric_tradeoff_lambda=0.1)</span>
+<span class="sd">        &gt;&gt;&gt; mad = po.synth.MADCompetition(</span>
+<span class="sd">        ...     img,</span>
+<span class="sd">        ...     lambda x, y: 1 - po.metric.ssim(x, y),</span>
+<span class="sd">        ...     po.metric.mse,</span>
+<span class="sd">        ...     &quot;min&quot;,</span>
+<span class="sd">        ...     metric_tradeoff_lambda=0.1,</span>
+<span class="sd">        ... )</span>
 <span class="sd">        &gt;&gt;&gt; mad.setup(optimizer=torch.optim.SGD, optimizer_kwargs={&quot;lr&quot;: 0.01})</span>
 <span class="sd">        &gt;&gt;&gt; mad.synthesize(10)</span>
 
@@ -320,19 +319,26 @@
 
 <span class="sd">        &gt;&gt;&gt; import plenoptic as po</span>
 <span class="sd">        &gt;&gt;&gt; img = po.data.einstein()</span>
-<span class="sd">        &gt;&gt;&gt; mad = po.synth.MADCompetition(img, lambda x,y: 1 - po.metric.ssim(x, y),</span>
-<span class="sd">        ...                               po.metric.mse, &quot;min&quot;,</span>
-<span class="sd">        ...                               metric_tradeoff_lambda=0.1)</span>
+<span class="sd">        &gt;&gt;&gt; mad = po.synth.MADCompetition(</span>
+<span class="sd">        ...     img,</span>
+<span class="sd">        ...     lambda x, y: 1 - po.metric.ssim(x, y),</span>
+<span class="sd">        ...     po.metric.mse,</span>
+<span class="sd">        ...     &quot;min&quot;,</span>
+<span class="sd">        ...     metric_tradeoff_lambda=0.1,</span>
+<span class="sd">        ... )</span>
 <span class="sd">        &gt;&gt;&gt; mad.setup(1, optimizer=torch.optim.SGD, optimizer_kwargs={&quot;lr&quot;: 0.01})</span>
 <span class="sd">        &gt;&gt;&gt; mad.synthesize(10)</span>
 <span class="sd">        &gt;&gt;&gt; mad.save(&quot;mad_setup.pt&quot;)</span>
-<span class="sd">        &gt;&gt;&gt; mad = po.synth.MADCompetition(img, lambda x,y: 1 - po.metric.ssim(x, y),</span>
-<span class="sd">        ...                               po.metric.mse, &quot;min&quot;,</span>
-<span class="sd">        ...                               metric_tradeoff_lambda=0.1)</span>
+<span class="sd">        &gt;&gt;&gt; mad = po.synth.MADCompetition(</span>
+<span class="sd">        ...     img,</span>
+<span class="sd">        ...     lambda x, y: 1 - po.metric.ssim(x, y),</span>
+<span class="sd">        ...     po.metric.mse,</span>
+<span class="sd">        ...     &quot;min&quot;,</span>
+<span class="sd">        ...     metric_tradeoff_lambda=0.1,</span>
+<span class="sd">        ... )</span>
 <span class="sd">        &gt;&gt;&gt; mad.load(&quot;mad_setup.pt&quot;)</span>
 <span class="sd">        &gt;&gt;&gt; mad.setup(optimizer=torch.optim.SGD)</span>
 <span class="sd">        &gt;&gt;&gt; mad.synthesize(10)</span>
-
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mad_image</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">initial_noise</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -376,34 +382,39 @@
         <span class="n">stop_criterion</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e-4</span><span class="p">,</span>
         <span class="n">stop_iters_to_check</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">50</span><span class="p">,</span>
     <span class="p">):</span>
-<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Synthesize a MAD image.</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Synthesize a MAD image.</span>
 
-<span class="sd">        Update the pixels of ``initial_image`` to maximize or minimize</span>
+<span class="sd">        Update the pixels of :attr:`initial_image` to maximize or minimize</span>
 <span class="sd">        (depending on the value of ``minmax``) the value of</span>
 <span class="sd">        ``optimized_metric(image, mad_image)`` while keeping the value of</span>
 <span class="sd">        ``reference_metric(image, mad_image)`` constant.</span>
 
 <span class="sd">        We run this until either we reach ``max_iter`` or the change over the</span>
 <span class="sd">        past ``stop_iters_to_check`` iterations is less than</span>
-<span class="sd">        ``stop_criterion``, whichever comes first</span>
+<span class="sd">        ``stop_criterion``, whichever comes first.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        max_iter :</span>
+<span class="sd">        max_iter</span>
 <span class="sd">            The maximum number of iterations to run before we end synthesis</span>
 <span class="sd">            (unless we hit the stop criterion).</span>
-<span class="sd">        store_progress :</span>
+<span class="sd">        store_progress</span>
 <span class="sd">            Whether we should store the MAD image in progress during synthesis. If</span>
 <span class="sd">            False, we don&#39;t save anything. If True, we save every iteration. If an int,</span>
 <span class="sd">            we save every ``store_progress`` iterations (note then that 0 is the same as</span>
 <span class="sd">            False and 1 the same as True).</span>
-<span class="sd">        stop_criterion :</span>
+<span class="sd">        stop_criterion</span>
 <span class="sd">            If the loss over the past ``stop_iters_to_check`` has changed</span>
 <span class="sd">            less than ``stop_criterion``, we terminate synthesis.</span>
-<span class="sd">        stop_iters_to_check :</span>
+<span class="sd">        stop_iters_to_check</span>
 <span class="sd">            How many iterations back to check in order to see if the</span>
 <span class="sd">            loss has stopped decreasing (for ``stop_criterion``).</span>
 
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        ValueError</span>
+<span class="sd">            If we find a NaN during optimization.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># if setup hasn&#39;t been called manually, call it now.</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mad_image</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_scheduler</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
@@ -438,7 +449,8 @@
         <span class="n">mad_image</span><span class="p">:</span> <span class="n">Tensor</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">image</span><span class="p">:</span> <span class="n">Tensor</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
-<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Compute the MADCompetition synthesis loss.</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute the MADCompetition synthesis loss.</span>
 
 <span class="sd">        This computes:</span>
 
@@ -447,29 +459,26 @@
 <span class="sd">            t L_1(x, \hat{x}) &amp;+ \lambda_1 [L_2(x, x+\epsilon) - L_2(x, \hat{x})]^2 \\</span>
 <span class="sd">                              &amp;+ \lambda_2 \mathcal{B}(\hat{x})</span>
 
-
-<span class="sd">        where :math:`t` is 1 if ``self.minmax`` is ``&#39;min&#39;`` and -1</span>
-<span class="sd">        if it&#39;s ``&#39;max&#39;``, :math:`L_1` is ``self.optimized_metric``,</span>
-<span class="sd">        :math:`L_2` is ``self.reference_metric``, :math:`x` is</span>
-<span class="sd">        ``self.image``, :math:`\hat{x}` is ``self.mad_image``,</span>
-<span class="sd">        :math:`\epsilon` is the initial noise, :math:`\mathcal{B}` is the</span>
-<span class="sd">        quadratic bound penalty, :math:`\lambda_1` is</span>
-<span class="sd">        ``self.metric_tradeoff_lambda`` and :math:`\lambda_2` is</span>
-<span class="sd">        ``self.range_penalty_lambda``.</span>
+<span class="sd">        where :math:`t` is 1 if :attr:`minmax` is ``&#39;min&#39;`` and -1 if it&#39;s ``&#39;max&#39;``,</span>
+<span class="sd">        :math:`L_1` is :attr:`optimized_metric`, :math:`L_2` is</span>
+<span class="sd">        :attr:`reference_metric`, :math:`x` is :attr:`image`, :math:`\hat{x}` is</span>
+<span class="sd">        :attr:`mad_image`, :math:`\epsilon` is the initial noise, :math:`\mathcal{B}` is</span>
+<span class="sd">        the quadratic bound penalty, :math:`\lambda_1` is :attr:`metric_tradeoff_lambda`</span>
+<span class="sd">        and :math:`\lambda_2` is :attr:`range_penalty_lambda`.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        mad_image :</span>
+<span class="sd">        mad_image</span>
 <span class="sd">            Proposed ``mad_image``, :math:`\hat{x}` in the above equation. If</span>
 <span class="sd">            None, use ``self.mad_image``.</span>
-<span class="sd">        image :</span>
+<span class="sd">        image</span>
 <span class="sd">            Proposed ``image``, :math:`x` in the above equation. If</span>
 <span class="sd">            None, use ``self.image``.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        loss</span>
-
+<span class="sd">            1-element tensor containing the loss on this step.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">image</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">image</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">image</span>
@@ -489,8 +498,8 @@
 
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_optimizer_step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pbar</span><span class="p">:</span> <span class="n">tqdm</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
-<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Compute and propagate gradients, then step the optimizer to update</span>
-<span class="sd">        mad_image.</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute and propagate gradients, then step optimizer to update mad_image.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -503,9 +512,8 @@
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        loss</span>
-<span class="sd">            1-element tensor containing the loss on this step</span>
-
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">            1-element tensor containing the loss on this step.</span>
+<span class="sd">        &quot;&quot;&quot;</span>  <span class="c1"># numpydoc ignore=ES01</span>
         <span class="n">last_iter_mad_image</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mad_image</span><span class="o">.</span><span class="n">clone</span><span class="p">()</span>
         <span class="n">loss</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_closure</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_losses</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">loss</span><span class="o">.</span><span class="n">item</span><span class="p">())</span>
@@ -542,52 +550,45 @@
         <span class="p">)</span>
         <span class="k">return</span> <span class="n">loss</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">_check_convergence</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stop_criterion</span><span class="p">,</span> <span class="n">stop_iters_to_check</span><span class="p">):</span>
-<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Check whether the loss has stabilized and, if so, return True.</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_check_convergence</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">stop_criterion</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">stop_iters_to_check</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Check whether the loss has stabilized and, if so, return True.</span>
 
-<span class="sd">         Have we been synthesizing for ``stop_iters_to_check`` iterations?</span>
-<span class="sd">         | |</span>
-<span class="sd">        no yes</span>
-<span class="sd">         | &#39;----&gt;Is ``abs(synth.loss[-1] - synth.losses[-stop_iters_to_check]) &lt; stop_criterion``?</span>
-<span class="sd">         |      no |</span>
-<span class="sd">         |       | yes</span>
-<span class="sd">         &lt;-------&#39; |</span>
-<span class="sd">         |         &#39;------&gt; return ``True``</span>
-<span class="sd">         |</span>
-<span class="sd">         &#39;---------&gt; return ``False``</span>
+<span class="sd">        Uses :func:`loss_convergence`.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        stop_criterion :</span>
+<span class="sd">        stop_criterion</span>
 <span class="sd">            If the loss over the past ``stop_iters_to_check`` has changed</span>
 <span class="sd">            less than ``stop_criterion``, we terminate synthesis.</span>
-<span class="sd">        stop_iters_to_check :</span>
+<span class="sd">        stop_iters_to_check</span>
 <span class="sd">            How many iterations back to check in order to see if the</span>
 <span class="sd">            loss has stopped decreasing (for ``stop_criterion``).</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        loss_stabilized :</span>
+<span class="sd">        loss_stabilized</span>
 <span class="sd">            Whether the loss has stabilized or not.</span>
-
-<span class="sd">        &quot;&quot;&quot;</span>  <span class="c1"># noqa: E501</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">loss_convergence</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stop_criterion</span><span class="p">,</span> <span class="n">stop_iters_to_check</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_store</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Store mad_image anbd model response, if appropriate.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Store mad_image anbd model response, if appropriate.</span>
 
-<span class="sd">        if it&#39;s the right iteration, we update ``saved_mad_image``</span>
+<span class="sd">        If it&#39;s the right iteration, we update :attr:`saved_mad_image`.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        i</span>
-<span class="sd">            the current iteration</span>
+<span class="sd">            The current iteration.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        stored :</span>
+<span class="sd">        stored</span>
 <span class="sd">            True if we stored this iteration, False if not.</span>
-
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">store_progress</span> <span class="ow">and</span> <span class="p">(</span><span class="n">i</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">store_progress</span> <span class="o">==</span> <span class="mi">0</span><span class="p">):</span>
             <span class="c1"># want these to always be on cpu, to reduce memory use for GPUs</span>
@@ -600,18 +601,18 @@
 <div class="viewcode-block" id="MADCompetition.save">
 <a class="viewcode-back" href="../../../api/plenoptic.synthesize.html#plenoptic.synthesize.mad_competition.MADCompetition.save">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
-<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Save all relevant variables in .pt file.</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Save all relevant variables in .pt file.</span>
 
-<span class="sd">        Note that if store_progress is True, this will probably be very</span>
+<span class="sd">        Note that if ``store_progress`` is True, this will probably be very</span>
 <span class="sd">        large.</span>
 
-<span class="sd">        See ``load`` docstring for an example of use.</span>
+<span class="sd">        See :func:`load` docstring for an example of use.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        file_path : str</span>
-<span class="sd">            The path to save the MADCompetition object to</span>
-
+<span class="sd">        file_path</span>
+<span class="sd">            The path to save the MADCompetition object to.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">save_io_attrs</span> <span class="o">=</span> <span class="p">[</span>
             <span class="p">(</span><span class="s2">&quot;_optimized_metric&quot;</span><span class="p">,</span> <span class="p">(</span><span class="s2">&quot;_image&quot;</span><span class="p">,</span> <span class="s2">&quot;_mad_image&quot;</span><span class="p">)),</span>
@@ -623,8 +624,9 @@
 
 <div class="viewcode-block" id="MADCompetition.to">
 <a class="viewcode-back" href="../../../api/plenoptic.synthesize.html#plenoptic.synthesize.mad_competition.MADCompetition.to">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Moves and/or casts the parameters and buffers.</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">):</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Move and/or casts the parameters and buffers.</span>
 
 <span class="sd">        This can be called as</span>
 
@@ -643,20 +645,22 @@
 <span class="sd">        with respect to the host if possible, e.g., moving CPU Tensors with</span>
 <span class="sd">        pinned memory to CUDA devices.</span>
 
-<span class="sd">        See below for examples.</span>
+<span class="sd">        See :meth:`torch.nn.Module.to` for examples.</span>
 
 <span class="sd">        .. note::</span>
 <span class="sd">            This method modifies the module in-place.</span>
 
-<span class="sd">        Args:</span>
-<span class="sd">            device (:class:`torch.device`): the desired device of the parameters</span>
-<span class="sd">                and buffers in this module</span>
-<span class="sd">            dtype (:class:`torch.dtype`): the desired floating point type of</span>
-<span class="sd">                the floating point parameters and buffers in this module</span>
-<span class="sd">            tensor (torch.Tensor): Tensor whose dtype and device are the desired</span>
-<span class="sd">                dtype and device for all parameters and buffers in this module</span>
-
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        device : torch.device</span>
+<span class="sd">            The desired device of the parameters and buffers in this module.</span>
+<span class="sd">        dtype : torch.dtype</span>
+<span class="sd">            The desired floating point type of the floating point parameters and</span>
+<span class="sd">            buffers in this module.</span>
+<span class="sd">        tensor : torch.Tensor</span>
+<span class="sd">            Tensor whose dtype and device are the desired dtype and device for</span>
+<span class="sd">            all parameters and buffers in this module.</span>
+<span class="sd">        &quot;&quot;&quot;</span>  <span class="c1"># numpydoc ignore=PR01,PR02</span>
         <span class="n">attrs</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;_initial_image&quot;</span><span class="p">,</span> <span class="s2">&quot;_image&quot;</span><span class="p">,</span> <span class="s2">&quot;_mad_image&quot;</span><span class="p">,</span> <span class="s2">&quot;_saved_mad_image&quot;</span><span class="p">]</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">attrs</span><span class="o">=</span><span class="n">attrs</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="c1"># if the metrics are Modules, then we should pass them as well. If</span>
@@ -675,9 +679,10 @@
         <span class="n">map_location</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">tensor_equality_atol</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e-8</span><span class="p">,</span>
         <span class="n">tensor_equality_rtol</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e-5</span><span class="p">,</span>
-        <span class="o">**</span><span class="n">pickle_load_args</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">pickle_load_args</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
     <span class="p">):</span>
-<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Load all relevant stuff from a .pt file.</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Load all relevant stuff from a .pt file.</span>
 
 <span class="sd">        This must be called by a ``MADCompetition`` object initialized just like the</span>
 <span class="sd">        saved object.</span>
@@ -690,15 +695,15 @@
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        file_path : str</span>
-<span class="sd">            The path to load the synthesis object from</span>
-<span class="sd">        map_location : str, optional</span>
-<span class="sd">            map_location argument to pass to ``torch.load``. If you save</span>
+<span class="sd">        file_path</span>
+<span class="sd">            The path to load the synthesis object from.</span>
+<span class="sd">        map_location</span>
+<span class="sd">            Argument to pass to ``torch.load`` as ``map_location``. If you save</span>
 <span class="sd">            stuff that was being run on a GPU and are loading onto a</span>
 <span class="sd">            CPU, you&#39;ll need this to make sure everything lines up</span>
 <span class="sd">            properly. This should be structured like the str you would</span>
-<span class="sd">            pass to ``torch.device``</span>
-<span class="sd">        tensor_equality_atol :</span>
+<span class="sd">            pass to :class:`torch.device`.</span>
+<span class="sd">        tensor_equality_atol</span>
 <span class="sd">            Absolute tolerance to use when checking for tensor equality during load,</span>
 <span class="sd">            passed to :func:`torch.allclose`. It may be necessary to increase if you are</span>
 <span class="sd">            saving and loading on two machines with torch built by different cuda</span>
@@ -707,7 +712,7 @@
 <span class="sd">            point precision of different data types (especially, ``eps``); if you have</span>
 <span class="sd">            to increase this by more than 1 or 2 decades, then you are probably not</span>
 <span class="sd">            dealing with a numerical issue.</span>
-<span class="sd">        tensor_equality_rtol :</span>
+<span class="sd">        tensor_equality_rtol</span>
 <span class="sd">            Relative tolerance to use when checking for tensor equality during load,</span>
 <span class="sd">            passed to :func:`torch.allclose`. It may be necessary to increase if you are</span>
 <span class="sd">            saving and loading on two machines with torch built by different cuda</span>
@@ -716,13 +721,34 @@
 <span class="sd">            point precision of different data types (especially, ``eps``); if you have</span>
 <span class="sd">            to increase this by more than 1 or 2 decades, then you are probably not</span>
 <span class="sd">            dealing with a numerical issue.</span>
-<span class="sd">        pickle_load_args :</span>
-<span class="sd">            any additional kwargs will be added to ``pickle_module.load`` via</span>
-<span class="sd">            ``torch.load``, see that function&#39;s docstring for details.</span>
+<span class="sd">        **pickle_load_args</span>
+<span class="sd">            Any additional kwargs will be added to ``pickle_module.load`` via</span>
+<span class="sd">            :func:`torch.load`, see that function&#39;s docstring for details.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        ValueError</span>
+<span class="sd">            If :func:`setup` or :func:`synthesize` has been called before this call</span>
+<span class="sd">            to ``load``.</span>
+<span class="sd">        ValueError</span>
+<span class="sd">            If the object saved at ``file_path`` is not a ``MADCompetition`` object.</span>
+<span class="sd">        ValueError</span>
+<span class="sd">            If the saved and loading ``MADCompetition`` objects have a different value</span>
+<span class="sd">            for any of :attr:`image`, :attr:`range_penalty_lambda`,</span>
+<span class="sd">            :attr:`allowed_range`, :attr:`metric_tradeoff_lambda`, or :attr:`minimax`.</span>
+<span class="sd">        ValueError</span>
+<span class="sd">            If the behavior of :attr:`optimized_metric` or :attr:`reference_metric` is</span>
+<span class="sd">            different between the saved and loading objects.</span>
+
+<span class="sd">        Warns</span>
+<span class="sd">        -----</span>
+<span class="sd">        UserWarning</span>
+<span class="sd">            If :func:`setup` will need to be called after ``load``, to finish</span>
+<span class="sd">            initializing :attr:`optimizer` or :attr:`scheduler`.</span>
 
 <span class="sd">        See Also</span>
 <span class="sd">        --------</span>
-<span class="sd">        examine_saved_synthesis :</span>
+<span class="sd">        :func:`~plenoptic.tools.io.examine_saved_synthesis`</span>
 <span class="sd">            Examine metadata from saved object: pytorch and plenoptic versions, name of</span>
 <span class="sd">            the synthesis object, shapes of tensors, etc.</span>
 
@@ -731,15 +757,16 @@
 <span class="sd">        &gt;&gt;&gt; import plenoptic as po</span>
 <span class="sd">        &gt;&gt;&gt; img = po.data.einstein()</span>
 <span class="sd">        &gt;&gt;&gt; def ds_ssim(x, y):</span>
-<span class="sd">        ...    return 1 - po.metric.ssim(x, y)</span>
-<span class="sd">        &gt;&gt;&gt; mad = po.synth.MADCompetition(img, po.metric.mse, ds_ssim, &quot;min&quot;,</span>
-<span class="sd">        ...                               metric_tradeoff_lambda=10)</span>
+<span class="sd">        ...     return 1 - po.metric.ssim(x, y)</span>
+<span class="sd">        &gt;&gt;&gt; mad = po.synth.MADCompetition(</span>
+<span class="sd">        ...     img, po.metric.mse, ds_ssim, &quot;min&quot;, metric_tradeoff_lambda=10</span>
+<span class="sd">        ... )</span>
 <span class="sd">        &gt;&gt;&gt; mad.synthesize(max_iter=5, store_progress=True)</span>
-<span class="sd">        &gt;&gt;&gt; mad.save(&#39;mad.pt&#39;)</span>
-<span class="sd">        &gt;&gt;&gt; mad_copy = po.synth.MADCompetition(img, po.metric.mse, ds_ssim, &quot;min&quot;,</span>
-<span class="sd">        ...                                    metric_tradeoff_lambda=10)</span>
-<span class="sd">        &gt;&gt;&gt; mad_copy.load(&#39;mad.pt&#39;)</span>
-
+<span class="sd">        &gt;&gt;&gt; mad.save(&quot;mad.pt&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; mad_copy = po.synth.MADCompetition(</span>
+<span class="sd">        ...     img, po.metric.mse, ds_ssim, &quot;min&quot;, metric_tradeoff_lambda=10</span>
+<span class="sd">        ... )</span>
+<span class="sd">        &gt;&gt;&gt; mad_copy.load(&quot;mad.pt&quot;)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">check_attributes</span> <span class="o">=</span> <span class="p">[</span>
             <span class="s2">&quot;_image&quot;</span><span class="p">,</span>
@@ -773,43 +800,83 @@
 
 
     <span class="nd">@property</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">mad_image</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">mad_image</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Maximally-differentiating image, the parameter we are optimizing.&quot;&quot;&quot;</span>
+        <span class="c1"># numpydoc ignore=RT01,ES01</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mad_image</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">optimized_metric</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">optimized_metric</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span> <span class="o">|</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">Tensor</span><span class="p">],</span> <span class="n">Tensor</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The metric whose value we are minimizing or maximizing.&quot;&quot;&quot;</span>
+        <span class="c1"># numpydoc ignore=RT01,ES01</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_optimized_metric</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">reference_metric</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">reference_metric</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span> <span class="o">|</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">Tensor</span><span class="p">],</span> <span class="n">Tensor</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The metric whose value we are keeping constant.&quot;&quot;&quot;</span>
+        <span class="c1"># numpydoc ignore=RT01,ES01</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_reference_metric</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">image</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">image</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The reference image for this MAD Competition.&quot;&quot;&quot;</span>
+        <span class="c1"># numpydoc ignore=RT01,ES01</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_image</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">initial_image</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">initial_image</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initial image for MAD Competition.</span>
+
+<span class="sd">        This is the image whose distance to ``image``, the reference, we are</span>
+<span class="sd">        maximizing/minimizing for ``optimized_metric``, while keeping constant for</span>
+<span class="sd">        ``reference_metric``.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># numpydoc ignore=RT01</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_initial_image</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">reference_metric_loss</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">reference_metric_loss</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :attr:`reference_metric` loss over iterations.</span>
+
+<span class="sd">        That is, the value of ``reference_metric(image, mad_image)``. Ideally, this is</span>
+<span class="sd">        equal to ``reference_metric(image, initial_image)``.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># numpydoc ignore=RT01</span>
         <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">as_tensor</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_reference_metric_loss</span><span class="p">)</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">optimized_metric_loss</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">optimized_metric_loss</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :attr:`optimized_metric` loss over iterations.</span>
+
+<span class="sd">        That is, the value of ``optimized_metric(image, mad_image)``. Ideally, this is</span>
+<span class="sd">        either very different from ``optimized_metric(image, initial_image)``.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># numpydoc ignore=RT01</span>
         <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">as_tensor</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_optimized_metric_loss</span><span class="p">)</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">metric_tradeoff_lambda</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">metric_tradeoff_lambda</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Tradeoff between the two metrics in synthesis loss.&quot;&quot;&quot;</span>
+        <span class="c1"># numpydoc ignore=RT01,ES01</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_metric_tradeoff_lambda</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">minmax</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">minmax</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;min&quot;</span><span class="p">,</span> <span class="s2">&quot;max&quot;</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Whether we are minimizing or maximizing :attr:`optimized_metric`.&quot;&quot;&quot;</span>
+        <span class="c1"># numpydoc ignore=RT01,ES01</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_minmax</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">saved_mad_image</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">saved_mad_image</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :attr:`mad_image`, cached over time for later examination.</span>
+
+<span class="sd">        How often the metamer is cached is determined by the ``store_progress`` argument</span>
+<span class="sd">        to the :func:`synthesize` function.</span>
+<span class="sd">        &quot;&quot;&quot;</span>  <span class="c1"># numpydoc ignore=RT01</span>
         <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_saved_mad_image</span><span class="p">)</span></div>
 
 
@@ -820,9 +887,10 @@
     <span class="n">mad</span><span class="p">:</span> <span class="n">MADCompetition</span><span class="p">,</span>
     <span class="n">iteration</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">axes</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">mpl</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">Axes</span><span class="p">]</span> <span class="o">|</span> <span class="n">mpl</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">Axes</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">mpl</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">Axes</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Plot metric losses.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Plot metric losses.</span>
 
 <span class="sd">    Plots ``mad.optimized_metric_loss`` and ``mad.reference_metric_loss`` on two</span>
 <span class="sd">    separate axes, over all iterations. Also plots a red dot at ``iteration``,</span>
@@ -831,17 +899,17 @@
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    mad :</span>
+<span class="sd">    mad</span>
 <span class="sd">        MADCompetition object whose loss we want to plot.</span>
-<span class="sd">    iteration :</span>
+<span class="sd">    iteration</span>
 <span class="sd">        Which iteration to display. If None, the default, we show</span>
 <span class="sd">        the most recent one. Negative values are also allowed.</span>
-<span class="sd">    axes :</span>
+<span class="sd">    axes</span>
 <span class="sd">        Pre-existing axes for plot. If a list of axes, must be the two axes to</span>
 <span class="sd">        use for this plot. If a single axis, we&#39;ll split it in half</span>
-<span class="sd">        horizontally. If None, we call ``plt.gca()``.</span>
-<span class="sd">    kwargs :</span>
-<span class="sd">        passed to plt.plot</span>
+<span class="sd">        horizontally. If None, we call :func:`matplotlib.pyplot.gca()`.</span>
+<span class="sd">    **kwargs</span>
+<span class="sd">        Passed to :func:`matplotlib.pyplot.semilogy`.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -853,7 +921,6 @@
 <span class="sd">    We plot ``abs(mad.losses)`` because if we&#39;re maximizing the synthesis</span>
 <span class="sd">    metric, we minimized its negative. By plotting the absolute value, we get</span>
 <span class="sd">    them all on the same scale.</span>
-
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">iteration</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">loss_idx</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">mad</span><span class="o">.</span><span class="n">losses</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
@@ -891,47 +958,52 @@
     <span class="n">iteration</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">ax</span><span class="p">:</span> <span class="n">mpl</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">Axes</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">title</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;MADCompetition&quot;</span><span class="p">,</span>
-    <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">mpl</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">Axes</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Display MAD image.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Display MAD image.</span>
 
 <span class="sd">    You can specify what iteration to view by using the ``iteration`` arg.</span>
 <span class="sd">    The default, ``None``, shows the final one.</span>
 
-<span class="sd">    We use ``plenoptic.imshow`` to display the synthesized image and attempt to</span>
+<span class="sd">    We use :func:`plenoptic.imshow` to display the synthesized image and attempt to</span>
 <span class="sd">    automatically find the most reasonable zoom value. You can override this</span>
-<span class="sd">    value using the zoom arg, but remember that ``plenoptic.imshow`` is</span>
+<span class="sd">    value using the zoom arg, but remember that :func:`plenoptic.imshow` is</span>
 <span class="sd">    opinionated about the size of the resulting image and will throw an</span>
 <span class="sd">    Exception if the axis created is not big enough for the selected zoom.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    mad :</span>
+<span class="sd">    mad</span>
 <span class="sd">        MADCompetition object whose MAD image we want to display.</span>
-<span class="sd">    batch_idx :</span>
-<span class="sd">        Which index to take from the batch dimension</span>
-<span class="sd">    channel_idx :</span>
-<span class="sd">        Which index to take from the channel dimension. If None, we assume</span>
+<span class="sd">    batch_idx</span>
+<span class="sd">        Which index to take from the batch dimension.</span>
+<span class="sd">    channel_idx</span>
+<span class="sd">        Which index to take from the channel dimension. If ``None``, we assume</span>
 <span class="sd">        image is RGB(A) and show all channels.</span>
-<span class="sd">    zoom :</span>
+<span class="sd">    zoom</span>
 <span class="sd">        How much to zoom in / enlarge the synthesized image, the ratio</span>
-<span class="sd">        of display pixels to image pixels. If None (the default), we</span>
+<span class="sd">        of display pixels to image pixels. If ``None``, we</span>
 <span class="sd">        attempt to find the best value ourselves.</span>
-<span class="sd">    iteration :</span>
+<span class="sd">    iteration</span>
 <span class="sd">        Which iteration to display. If None, the default, we show</span>
 <span class="sd">        the most recent one. Negative values are also allowed.</span>
-<span class="sd">    ax :</span>
-<span class="sd">        Pre-existing axes for plot. If None, we call ``plt.gca()``.</span>
+<span class="sd">    ax</span>
+<span class="sd">        Pre-existing axes for plot. If ``None``, we call :func:`matplotlib.pyplot.gca`.</span>
 <span class="sd">    title :</span>
 <span class="sd">        Title of the axis.</span>
-<span class="sd">    kwargs :</span>
-<span class="sd">        Passed to ``plenoptic.imshow``</span>
+<span class="sd">    **kwargs</span>
+<span class="sd">        Passed to :func:`plenoptic.imshow`.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    ax :</span>
 <span class="sd">        The matplotlib axes containing the plot.</span>
 
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If ``batch_idx`` is not an int.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">image</span> <span class="o">=</span> <span class="n">mad</span><span class="o">.</span><span class="n">mad_image</span> <span class="k">if</span> <span class="n">iteration</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">mad</span><span class="o">.</span><span class="n">saved_mad_image</span><span class="p">[</span><span class="n">iteration</span><span class="p">]</span>
     <span class="k">if</span> <span class="n">batch_idx</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -966,43 +1038,57 @@
     <span class="n">iteration</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">ylim</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">|</span> <span class="n">Literal</span><span class="p">[</span><span class="kc">False</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="n">ax</span><span class="p">:</span> <span class="n">mpl</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">Axes</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">mpl</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">Axes</span><span class="p">:</span>
-<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Plot histogram of pixel values of reference and MAD images.</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Plot histogram of pixel values of reference and MAD images.</span>
 
 <span class="sd">    As a way to check the distributions of pixel intensities and see</span>
-<span class="sd">    if there&#39;s any values outside the allowed range</span>
+<span class="sd">    if there&#39;s any values outside the allowed range.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    mad :</span>
+<span class="sd">    mad</span>
 <span class="sd">        MADCompetition object with the images whose pixel values we want to compare.</span>
-<span class="sd">    batch_idx :</span>
-<span class="sd">        Which index to take from the batch dimension</span>
-<span class="sd">    channel_idx :</span>
-<span class="sd">        Which index to take from the channel dimension. If None, we use all</span>
+<span class="sd">    batch_idx</span>
+<span class="sd">        Which index to take from the batch dimension.</span>
+<span class="sd">    channel_idx</span>
+<span class="sd">        Which index to take from the channel dimension. If ``None``, we use all</span>
 <span class="sd">        channels (assumed use-case is RGB(A) images).</span>
-<span class="sd">    iteration :</span>
-<span class="sd">        Which iteration to display. If None, the default, we show</span>
+<span class="sd">    iteration</span>
+<span class="sd">        Which iteration to display. If ``None``, the default, we show</span>
 <span class="sd">        the most recent one. Negative values are also allowed.</span>
-<span class="sd">    ylim :</span>
-<span class="sd">        if tuple, the ylimit to set for this axis. If False, we leave</span>
-<span class="sd">        it untouched</span>
-<span class="sd">    ax :</span>
-<span class="sd">        Pre-existing axes for plot. If None, we call ``plt.gca()``.</span>
-<span class="sd">    kwargs :</span>
-<span class="sd">        passed to plt.hist</span>
+<span class="sd">    ylim</span>
+<span class="sd">        If tuple, the ylimit to set for this axis. If False, we leave</span>
+<span class="sd">        it untouched.</span>
+<span class="sd">    ax</span>
+<span class="sd">        Pre-existing axes for plot. If ``None``, we call</span>
+<span class="sd">        :func:`matplotlib.pyplot.gca()`.</span>
+<span class="sd">    **kwargs</span>
+<span class="sd">        Passed to :func:`matplotlib.pyplot.hist`.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    ax :</span>
 <span class="sd">        Creates axes.</span>
-
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">_freedman_diaconis_bins</span><span class="p">(</span><span class="n">a</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculate number of hist bins using Freedman-Diaconis rule. copied from</span>
-<span class="sd">        seaborn.&quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_freedman_diaconis_bins</span><span class="p">(</span><span class="n">a</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Calculate number of hist bins using Freedman-Diaconis rule.</span>
+
+<span class="sd">        Copied from seaborn.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        a</span>
+<span class="sd">            The array to histogram.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        n_bins</span>
+<span class="sd">            Number of bins to use for histogram.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># From https://stats.stackexchange.com/questions/798/</span>
         <span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
         <span class="n">iqr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="p">[</span><span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.75</span><span class="p">]))[</span><span class="mi">0</span><span class="p">]</span>
@@ -1049,21 +1135,26 @@
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_check_included_plots</span><span class="p">(</span><span class="n">to_check</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="n">to_check_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Check whether the user wanted us to create plots that we can&#39;t.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Check whether the user wanted us to create plots that we can&#39;t.</span>
 
-<span class="sd">    Helper function for plot_synthesis_status and animate.</span>
+<span class="sd">    Helper function for :func:`plot_synthesis_status` and :func:`animate`.</span>
 
-<span class="sd">    Raises a ValueError to_check contains any values that are not allowed.</span>
+<span class="sd">    Raises a ``ValueError`` if ``to_check`` contains any values that are not allowed.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    to_check :</span>
+<span class="sd">    to_check</span>
 <span class="sd">        The variable to check. We ensure that it doesn&#39;t contain any extra (not</span>
 <span class="sd">        allowed) values. If a list, we check its contents. If a dict, we check</span>
 <span class="sd">        its keys.</span>
-<span class="sd">    to_check_name :</span>
-<span class="sd">        Name of the `to_check` variable, used in the error message.</span>
+<span class="sd">    to_check_name</span>
+<span class="sd">        Name of the ``to_check`` variable, used in the error message.</span>
 
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If ``to_check`` takes an illegal value.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">allowed_vals</span> <span class="o">=</span> <span class="p">[</span>
         <span class="s2">&quot;display_mad_image&quot;</span><span class="p">,</span>
@@ -1096,52 +1187,51 @@
     <span class="n">plot_loss_width</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
     <span class="n">plot_pixel_values_width</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">mpl</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">Figure</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="n">mpl</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">Axes</span><span class="p">],</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Set up figure for plot_synthesis_status.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Set up figure for :func:`plot_synthesis_status`.</span>
 
 <span class="sd">    Creates figure with enough axes for the all the plots you want. Will</span>
-<span class="sd">    also create index in axes_idx for them if you haven&#39;t done so already.</span>
+<span class="sd">    also create index in ``axes_idx`` for them if you haven&#39;t done so already.</span>
 
 <span class="sd">    By default, all axes will be on the same row and have the same width. If</span>
-<span class="sd">    you want them to be on different rows, will need to initialize fig yourself</span>
-<span class="sd">    and pass that in. For changing width, change the corresponding *_width arg,</span>
+<span class="sd">    you want them to be on different rows, will need to initialize ``fig`` yourself</span>
+<span class="sd">    and pass that in. For changing width, change the corresponding ``*_width`` arg,</span>
 <span class="sd">    which gives width relative to other axes. So if you want the axis for the</span>
-<span class="sd">    loss plot to be three times as wide as the others, set loss_width=3.</span>
+<span class="sd">    loss plot to be three times as wide as the others, set ``loss_width=3``.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    fig :</span>
-<span class="sd">        The figure to plot on or None. If None, we create a new figure</span>
-<span class="sd">    axes_idx :</span>
-<span class="sd">        Dictionary specifying which axes contains which type of plot, allows</span>
-<span class="sd">        for more fine-grained control of the resulting figure. Probably only</span>
-<span class="sd">        helpful if fig is also defined. Possible keys: loss, pixel_values,</span>
-<span class="sd">        misc. Values should all be ints. If you tell this function to create a</span>
-<span class="sd">        plot that doesn&#39;t have a corresponding key, we find the lowest int that</span>
-<span class="sd">        is not already in the dict, so if you have axes that you want</span>
-<span class="sd">        unchanged, place their idx in misc.</span>
-<span class="sd">    figsize :</span>
+<span class="sd">    fig</span>
+<span class="sd">        The figure to plot on or None. If None, we create a new figure.</span>
+<span class="sd">    axes_idx</span>
+<span class="sd">        Dictionary specifying which axes contains which type of plot, allows for more</span>
+<span class="sd">        fine-grained control of the resulting figure. Probably only helpful if fig is</span>
+<span class="sd">        also defined. Possible keys: ``&quot;loss&quot;``, ``&quot;pixel_values&quot;``, ``&quot;misc&quot;``. Values</span>
+<span class="sd">        should all be ints. If you tell this function to create a plot that doesn&#39;t have</span>
+<span class="sd">        a corresponding key, we find the lowest int that is not already in the dict, so</span>
+<span class="sd">        if you have axes that you want unchanged, place their idx in ``&quot;misc&quot;``.</span>
+<span class="sd">    figsize</span>
 <span class="sd">        The size of the figure to create. It may take a little bit of</span>
-<span class="sd">        playing around to find a reasonable value. If None, we attempt to</span>
-<span class="sd">        make our best guess, aiming to have relative width=1 correspond to 5</span>
-<span class="sd">    included_plots :</span>
+<span class="sd">        playing around to find a reasonable value. If ``None``, we attempt to</span>
+<span class="sd">        make our best guess, aiming to have relative width=1 correspond to 5.</span>
+<span class="sd">    included_plots</span>
 <span class="sd">        Which plots to include. Must be some subset of ``&#39;display_mad_image&#39;,</span>
 <span class="sd">        &#39;plot_loss&#39;, &#39;plot_pixel_values&#39;``.</span>
-<span class="sd">    display_mad_image_width :</span>
+<span class="sd">    display_mad_image_width</span>
 <span class="sd">        Relative width of the axis for the synthesized image.</span>
-<span class="sd">    plot_loss_width :</span>
+<span class="sd">    plot_loss_width</span>
 <span class="sd">        Relative width of the axis for loss plot.</span>
-<span class="sd">    plot_pixel_values_width :</span>
+<span class="sd">    plot_pixel_values_width</span>
 <span class="sd">        Relative width of the axis for image pixel intensities histograms.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    fig :</span>
-<span class="sd">        The figure to plot on</span>
-<span class="sd">    axes :</span>
-<span class="sd">        List or array of axes contained in fig</span>
-<span class="sd">    axes_idx :</span>
-<span class="sd">        Dictionary identifying the idx for each plot type</span>
-
+<span class="sd">    fig</span>
+<span class="sd">        The figure to plot on.</span>
+<span class="sd">    axes</span>
+<span class="sd">        List or array of axes contained in fig.</span>
+<span class="sd">    axes_idx</span>
+<span class="sd">        Dictionary identifying the idx for each plot type.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">n_subplots</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="n">axes_idx</span> <span class="o">=</span> <span class="n">axes_idx</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
@@ -1213,43 +1303,41 @@
     <span class="p">],</span>
     <span class="n">width_ratios</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="p">{},</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">mpl</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">Figure</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]:</span>
-<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Make a plot showing synthesis status.</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Make a plot showing synthesis status.</span>
 
 <span class="sd">    We create several subplots to analyze this. By default, we create two</span>
 <span class="sd">    subplots on a new figure: the first one contains the MAD image and the</span>
 <span class="sd">    second contains the loss.</span>
 
-<span class="sd">    There is an optional additional plot: pixel_values, a histogram of pixel</span>
-<span class="sd">    values of the synthesized and target images.</span>
-
-<span class="sd">    All of these (including the default plots) can be toggled using their</span>
-<span class="sd">    corresponding boolean flags, and can be created separately using the</span>
-<span class="sd">    method with the name `plot_{flag}`.</span>
+<span class="sd">    The plots to include are specified by including their name in the</span>
+<span class="sd">    ``included_plots`` list. All plots can be created separately using the</span>
+<span class="sd">    method with the same name.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    mad :</span>
+<span class="sd">    mad</span>
 <span class="sd">        MADCompetition object whose status we want to plot.</span>
-<span class="sd">    batch_idx :</span>
-<span class="sd">        Which index to take from the batch dimension</span>
-<span class="sd">    channel_idx :</span>
-<span class="sd">        Which index to take from the channel dimension. If None, we use all</span>
+<span class="sd">    batch_idx</span>
+<span class="sd">        Which index to take from the batch dimension.</span>
+<span class="sd">    channel_idx</span>
+<span class="sd">        Which index to take from the channel dimension. If ``None``, we use all</span>
 <span class="sd">        channels (assumed use-case is RGB(A) image).</span>
-<span class="sd">    iteration :</span>
-<span class="sd">        Which iteration to display. If None, the default, we show</span>
+<span class="sd">    iteration</span>
+<span class="sd">        Which iteration to display. If ``None``, we show</span>
 <span class="sd">        the most recent one. Negative values are also allowed.</span>
-<span class="sd">    vrange :</span>
+<span class="sd">    vrange</span>
 <span class="sd">        The vrange option to pass to ``display_mad_image()``. See</span>
-<span class="sd">        docstring of ``imshow`` for possible values.</span>
-<span class="sd">    zoom :</span>
+<span class="sd">        docstring of :func:`plenoptic.imshow` for possible values.</span>
+<span class="sd">    zoom</span>
 <span class="sd">        How much to zoom in / enlarge the synthesized image, the ratio</span>
-<span class="sd">        of display pixels to image pixels. If None (the default), we</span>
+<span class="sd">        of display pixels to image pixels. If ``None``, we</span>
 <span class="sd">        attempt to find the best value ourselves.</span>
-<span class="sd">    fig :</span>
-<span class="sd">        if None, we create a new figure. otherwise we assume this is</span>
+<span class="sd">    fig</span>
+<span class="sd">        If ``None``, we create a new figure. otherwise we assume this is</span>
 <span class="sd">        an empty figure that has the appropriate size and number of</span>
-<span class="sd">        subplots</span>
-<span class="sd">    axes_idx :</span>
+<span class="sd">        subplots.</span>
+<span class="sd">    axes_idx</span>
 <span class="sd">        Dictionary specifying which axes contains which type of plot, allows</span>
 <span class="sd">        for more fine-grained control of the resulting figure. Probably only</span>
 <span class="sd">        helpful if fig is also defined. Possible keys: ``&#39;mad_image&#39;,</span>
@@ -1257,27 +1345,33 @@
 <span class="sd">        tell this function to create a plot that doesn&#39;t have a corresponding</span>
 <span class="sd">        key, we find the lowest int that is not already in the dict, so if you</span>
 <span class="sd">        have axes that you want unchanged, place their idx in ``&#39;misc&#39;``.</span>
-<span class="sd">    figsize :</span>
+<span class="sd">    figsize</span>
 <span class="sd">        The size of the figure to create. It may take a little bit of</span>
-<span class="sd">        playing around to find a reasonable value. If None, we attempt to</span>
-<span class="sd">        make our best guess, aiming to have each axis be of size (5, 5)</span>
-<span class="sd">    included_plots :</span>
+<span class="sd">        playing around to find a reasonable value. If ``None``, we attempt to</span>
+<span class="sd">        make our best guess, aiming to have each axis be of size ``(5, 5)``.</span>
+<span class="sd">    included_plots</span>
 <span class="sd">        Which plots to include. Must be some subset of ``&#39;display_mad_image&#39;,</span>
 <span class="sd">        &#39;plot_loss&#39;, &#39;plot_pixel_values&#39;``.</span>
-<span class="sd">    width_ratios :</span>
-<span class="sd">        By default, all plots axes will have the same width. To change</span>
-<span class="sd">        that, specify their relative widths using the keys:</span>
-<span class="sd">        [&#39;display_mad_image&#39;, &#39;plot_loss&#39;, &#39;plot_pixel_values&#39;] and floats</span>
-<span class="sd">        specifying their relative width. Any not included will be assumed to be</span>
-<span class="sd">        1.</span>
+<span class="sd">    width_ratios</span>
+<span class="sd">        By default, ``plot_loss`` will have double the width of the other plots. To</span>
+<span class="sd">        change that, specify their relative widths using the keys: [&#39;display_mad_image&#39;,</span>
+<span class="sd">        &#39;plot_loss&#39;, &#39;plot_pixel_values&#39;] and floats specifying their relative width.</span>
+<span class="sd">        If keys are not included, revert to default behavior.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    fig :</span>
-<span class="sd">        The figure containing this plot</span>
-<span class="sd">    axes_idx :</span>
+<span class="sd">    fig</span>
+<span class="sd">        The figure containing this plot.</span>
+<span class="sd">    axes_idx</span>
 <span class="sd">        Dictionary giving index of each plot.</span>
 
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If ``mad.mad_image`` object is not 3d or 4d.</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If the ``iteration is not None`` and the given ``mad`` object was run</span>
+<span class="sd">        with ``store_progress=False``.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">iteration</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">mad</span><span class="o">.</span><span class="n">store_progress</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
@@ -1352,41 +1446,42 @@
     <span class="p">],</span>
     <span class="n">width_ratios</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="p">{},</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">mpl</span><span class="o">.</span><span class="n">animation</span><span class="o">.</span><span class="n">FuncAnimation</span><span class="p">:</span>
-<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Animate synthesis progress.</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Animate synthesis progress.</span>
 
 <span class="sd">    This is essentially the figure produced by</span>
 <span class="sd">    ``mad.plot_synthesis_status`` animated over time, for each stored</span>
 <span class="sd">    iteration.</span>
 
 <span class="sd">    This functions returns a matplotlib FuncAnimation object. See our documentation</span>
-<span class="sd">    (e.g.,</span>
-<span class="sd">    [Quickstart](https://docs.plenoptic.org/docs/branch/main/tutorials/00_quickstart.html))</span>
+<span class="sd">    (e.g., `Quickstart</span>
+<span class="sd">    &lt;https://docs.plenoptic.org/docs/branch/main/tutorials/00_quickstart.html&gt;`_)</span>
 <span class="sd">    for examples on how to view it in a Jupyter notebook. In order to save, use</span>
 <span class="sd">    ``anim.save(filename)``. In either case, this can take a while and you&#39;ll need the</span>
 <span class="sd">    appropriate writer installed and on your path, e.g., ffmpeg, imagemagick, etc). See</span>
-<span class="sd">    [matplotlib documentation](https://matplotlib.org/stable/api/animation_api.html) for</span>
-<span class="sd">    more details.</span>
+<span class="sd">    `matplotlib documentation &lt;https://matplotlib.org/stable/api/animation_api.html&gt;`_</span>
+<span class="sd">    for more details.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    mad :</span>
+<span class="sd">    mad</span>
 <span class="sd">        MADCompetition object whose synthesis we want to animate.</span>
-<span class="sd">    framerate :</span>
+<span class="sd">    framerate</span>
 <span class="sd">        How many frames a second to display.</span>
-<span class="sd">    batch_idx :</span>
-<span class="sd">        Which index to take from the batch dimension</span>
-<span class="sd">    channel_idx :</span>
+<span class="sd">    batch_idx</span>
+<span class="sd">        Which index to take from the batch dimension.</span>
+<span class="sd">    channel_idx</span>
 <span class="sd">        Which index to take from the channel dimension. If None, we use all</span>
 <span class="sd">        channels (assumed use-case is RGB(A) image).</span>
-<span class="sd">    zoom :</span>
+<span class="sd">    zoom</span>
 <span class="sd">        How much to zoom in / enlarge the synthesized image, the ratio</span>
-<span class="sd">        of display pixels to image pixels. If None (the default), we</span>
+<span class="sd">        of display pixels to image pixels. If ``None``, we</span>
 <span class="sd">        attempt to find the best value ourselves.</span>
-<span class="sd">    fig :</span>
-<span class="sd">        If None, create the figure from scratch. Else, should be an empty</span>
-<span class="sd">        figure with enough axes (the expected use here is have same-size</span>
-<span class="sd">        movies with different plots).</span>
-<span class="sd">    axes_idx :</span>
+<span class="sd">    fig</span>
+<span class="sd">        If ``None``, we create a new figure. otherwise we assume this is</span>
+<span class="sd">        an empty figure that has the appropriate size and number of</span>
+<span class="sd">        subplots.</span>
+<span class="sd">    axes_idx</span>
 <span class="sd">        Dictionary specifying which axes contains which type of plot, allows</span>
 <span class="sd">        for more fine-grained control of the resulting figure. Probably only</span>
 <span class="sd">        helpful if fig is also defined. Possible keys: ``&#39;mad_image&#39;,</span>
@@ -1394,34 +1489,45 @@
 <span class="sd">        tell this function to create a plot that doesn&#39;t have a corresponding</span>
 <span class="sd">        key, we find the lowest int that is not already in the dict, so if you</span>
 <span class="sd">        have axes that you want unchanged, place their idx in ``&#39;misc&#39;``.</span>
-<span class="sd">    figsize :</span>
+<span class="sd">    figsize</span>
 <span class="sd">        The size of the figure to create. It may take a little bit of</span>
-<span class="sd">        playing around to find a reasonable value. If None, we attempt to</span>
-<span class="sd">        make our best guess, aiming to have each axis be of size (5, 5)</span>
-<span class="sd">    width_ratios :</span>
-<span class="sd">        By default, all plots axes will have the same width. To change</span>
-<span class="sd">        that, specify their relative widths using the keys:</span>
-<span class="sd">        [&#39;display_mad_image&#39;, &#39;plot_loss&#39;, &#39;plot_pixel_values&#39;] and floats</span>
-<span class="sd">        specifying their relative width. Any not included will be assumed to be</span>
-<span class="sd">        1.</span>
+<span class="sd">        playing around to find a reasonable value. If ``None``, we attempt to</span>
+<span class="sd">        make our best guess, aiming to have each axis be of size ``(5, 5)``.</span>
+<span class="sd">    included_plots</span>
+<span class="sd">        Which plots to include. Must be some subset of ``&#39;display_mad_image&#39;,</span>
+<span class="sd">        &#39;plot_loss&#39;, &#39;plot_pixel_values&#39;``.</span>
+<span class="sd">    width_ratios</span>
+<span class="sd">        By default, ``plot_loss`` will have double the width of the other plots. To</span>
+<span class="sd">        change that, specify their relative widths using the keys: [&#39;display_mad_image&#39;,</span>
+<span class="sd">        &#39;plot_loss&#39;, &#39;plot_pixel_values&#39;] and floats specifying their relative width.</span>
+<span class="sd">        If keys are not included, revert to default behavior.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    anim :</span>
+<span class="sd">    anim</span>
 <span class="sd">        The animation object. In order to view, must convert to HTML</span>
 <span class="sd">        or save.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If the given ``mad`` object was run with ``store_progress=False``.</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If ``mad.mage_image`` object is not 3d or 4d.</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If we do not know how to interpret the value of ``ylim``.</span>
 
 <span class="sd">    Notes</span>
 <span class="sd">    -----</span>
 <span class="sd">    By default, we use the ffmpeg backend, which requires that you have</span>
 <span class="sd">    ffmpeg installed and on your path (https://ffmpeg.org/download.html).</span>
 <span class="sd">    To use a different, use the matplotlib rcParams:</span>
-<span class="sd">    `matplotlib.rcParams[&#39;animation.writer&#39;] = writer`, see</span>
-<span class="sd">    https://matplotlib.org/stable/api/animation_api.html#writer-classes for</span>
-<span class="sd">    more details.</span>
+<span class="sd">    ``matplotlib.rcParams[&#39;animation.writer&#39;] = writer``, see</span>
+<span class="sd">    `matplotlib documentation</span>
+<span class="sd">    &lt;https://matplotlib.org/stable/api/animation_api.html#writer-classes&gt;`_ for more</span>
+<span class="sd">    details.</span>
 
 <span class="sd">    For displaying in a jupyter notebook, ffmpeg appears to be required.</span>
-
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">mad</span><span class="o">.</span><span class="n">store_progress</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
@@ -1456,7 +1562,22 @@
         <span class="n">scat</span> <span class="o">=</span> <span class="p">[</span><span class="n">fig</span><span class="o">.</span><span class="n">axes</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">collections</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">axes_idx</span><span class="p">[</span><span class="s2">&quot;plot_loss&quot;</span><span class="p">]]</span>
     <span class="c1"># can also have multiple plots</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">movie_plot</span><span class="p">(</span><span class="n">i</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">movie_plot</span><span class="p">(</span><span class="n">i</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">mpl</span><span class="o">.</span><span class="n">artist</span><span class="o">.</span><span class="n">Artist</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Matplotlib function for animation.</span>
+
+<span class="sd">        Update plots for frame ``i``.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        i</span>
+<span class="sd">            The frame to plot.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        artists</span>
+<span class="sd">            The updated matplotlib artists.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">artists</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">if</span> <span class="s2">&quot;display_mad_image&quot;</span> <span class="ow">in</span> <span class="n">included_plots</span><span class="p">:</span>
             <span class="n">artists</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span>
@@ -1513,47 +1634,50 @@
     <span class="n">metric1_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">metric2_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">zoom</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
-    <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">mpl</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">Figure</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Display all MAD Competition images.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Display all MAD Competition images.</span>
 
 <span class="sd">    To generate a full set of MAD Competition images, you need four instances:</span>
 <span class="sd">    one for minimizing and maximizing each metric. This helper function creates</span>
 <span class="sd">    a figure to display the full set of images.</span>
 
 <span class="sd">    In addition to the four MAD Competition images, this also plots the initial</span>
-<span class="sd">    image from `mad_metric1_min`, for comparison.</span>
-
-<span class="sd">    Note that all four MADCompetition instances must have the same</span>
-<span class="sd">    `image`.</span>
+<span class="sd">    image from ``mad_metric1_min``, for comparison.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    mad_metric1_min :</span>
-<span class="sd">        MADCompetition object that minimized the first metric.</span>
-<span class="sd">    mad_metric2_min :</span>
-<span class="sd">        MADCompetition object that minimized the second metric.</span>
-<span class="sd">    mad_metric1_max :</span>
-<span class="sd">        MADCompetition object that maximized the first metric.</span>
-<span class="sd">    mad_metric2_max :</span>
-<span class="sd">        MADCompetition object that maximized the second metric.</span>
-<span class="sd">    metric1_name :</span>
-<span class="sd">        Name of the first metric. If None, we use the name of the</span>
-<span class="sd">        `optimized_metric` function from `mad_metric1_min`.</span>
-<span class="sd">    metric2_name :</span>
-<span class="sd">        Name of the second metric. If None, we use the name of the</span>
-<span class="sd">        `optimized_metric` function from `mad_metric2_min`.</span>
-<span class="sd">    zoom :</span>
-<span class="sd">        Ratio of display pixels to image pixels. See `plenoptic.imshow` for</span>
+<span class="sd">    mad_metric1_min</span>
+<span class="sd">        ``MADCompetition`` object that minimized the first metric.</span>
+<span class="sd">    mad_metric2_min</span>
+<span class="sd">        ``MADCompetition`` object that minimized the second metric.</span>
+<span class="sd">    mad_metric1_max</span>
+<span class="sd">        ``MADCompetition`` object that maximized the first metric.</span>
+<span class="sd">    mad_metric2_max</span>
+<span class="sd">        ``MADCompetition`` object that maximized the second metric.</span>
+<span class="sd">    metric1_name</span>
+<span class="sd">        Name of the first metric. If ``None``, we use the name of the</span>
+<span class="sd">        ``optimized_metric`` function from ``mad_metric1_min``.</span>
+<span class="sd">    metric2_name</span>
+<span class="sd">        Name of the second metric. If ``None``, we use the name of the</span>
+<span class="sd">        ``optimized_metric`` function from ``mad_metric2_min``.</span>
+<span class="sd">    zoom</span>
+<span class="sd">        Ratio of display pixels to image pixels. See :func:`plenoptic.imshow` for</span>
 <span class="sd">        details.</span>
-<span class="sd">    kwargs :</span>
-<span class="sd">        Passed to `plenoptic.imshow`.</span>
+<span class="sd">    **kwargs</span>
+<span class="sd">        Passed to :func:`plenoptic.imshow`.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    fig :</span>
+<span class="sd">    fig</span>
 <span class="sd">        Figure containing the images.</span>
 
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If the four ``MADCompetition`` instances do not have the same ``image``</span>
+<span class="sd">        attribute.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># this is a bit of a hack right now, because they don&#39;t all have same</span>
     <span class="c1"># initial image</span>
@@ -1616,53 +1740,56 @@
     <span class="n">metric2_kwargs</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;c&quot;</span><span class="p">:</span> <span class="s2">&quot;C1&quot;</span><span class="p">},</span>
     <span class="n">min_kwargs</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;linestyle&quot;</span><span class="p">:</span> <span class="s2">&quot;--&quot;</span><span class="p">},</span>
     <span class="n">max_kwargs</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;linestyle&quot;</span><span class="p">:</span> <span class="s2">&quot;-&quot;</span><span class="p">},</span>
-    <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span>
+    <span class="n">figsize</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">mpl</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">Figure</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Plot loss for full set of MAD Competiton instances.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Plot loss for full set of MAD Competiton instances.</span>
 
 <span class="sd">    To generate a full set of MAD Competition images, you need four instances:</span>
 <span class="sd">    one for minimizing and maximizing each metric. This helper function creates</span>
 <span class="sd">    a two-axis figure to display the loss for this full set.</span>
 
-<span class="sd">    Note that all four MADCompetition instances must have the same</span>
-<span class="sd">    `image`.</span>
-
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    mad_metric1_min :</span>
-<span class="sd">        MADCompetition object that minimized the first metric.</span>
-<span class="sd">    mad_metric2_min :</span>
-<span class="sd">        MADCompetition object that minimized the second metric.</span>
-<span class="sd">    mad_metric1_max :</span>
-<span class="sd">        MADCompetition object that maximized the first metric.</span>
-<span class="sd">    mad_metric2_max :</span>
-<span class="sd">        MADCompetition object that maximized the second metric.</span>
-<span class="sd">    metric1_name :</span>
-<span class="sd">        Name of the first metric. If None, we use the name of the</span>
-<span class="sd">        `optimized_metric` function from `mad_metric1_min`.</span>
-<span class="sd">    metric2_name :</span>
-<span class="sd">        Name of the second metric. If None, we use the name of the</span>
-<span class="sd">        `optimized_metric` function from `mad_metric2_min`.</span>
-<span class="sd">    metric1_kwargs :</span>
-<span class="sd">        Dictionary of arguments to pass to `matplotlib.pyplot.plot` to identify</span>
+<span class="sd">    mad_metric1_min</span>
+<span class="sd">        ``MADCompetition`` object that minimized the first metric.</span>
+<span class="sd">    mad_metric2_min</span>
+<span class="sd">        ``MADCompetition`` object that minimized the second metric.</span>
+<span class="sd">    mad_metric1_max</span>
+<span class="sd">        ``MADCompetition`` object that maximized the first metric.</span>
+<span class="sd">    mad_metric2_max</span>
+<span class="sd">        ``MADCompetition`` object that maximized the second metric.</span>
+<span class="sd">    metric1_name</span>
+<span class="sd">        Name of the first metric. If ``None``, we use the name of the</span>
+<span class="sd">        ``optimized_metric`` function from ``mad_metric1_min``.</span>
+<span class="sd">    metric2_name</span>
+<span class="sd">        Name of the second metric. If ``None``, we use the name of the</span>
+<span class="sd">        ``optimized_metric`` function from ``mad_metric2_min``.</span>
+<span class="sd">    metric1_kwargs</span>
+<span class="sd">        Dictionary of arguments to pass to :func:`matplotlib.pyplot.plot` to identify</span>
 <span class="sd">        synthesis instance where the first metric was being optimized.</span>
-<span class="sd">    metric2_kwargs :</span>
-<span class="sd">        Dictionary of arguments to pass to `matplotlib.pyplot.plot` to identify</span>
+<span class="sd">    metric2_kwargs</span>
+<span class="sd">        Dictionary of arguments to pass to :func:`matplotlib.pyplot.plot` to identify</span>
 <span class="sd">        synthesis instance where the second metric was being optimized.</span>
-<span class="sd">    min_kwargs :</span>
-<span class="sd">        Dictionary of arguments to pass to `matplotlib.pyplot.plot` to identify</span>
-<span class="sd">        synthesis instance where `optimized_metric` was being minimized.</span>
-<span class="sd">    max_kwargs :</span>
-<span class="sd">        Dictionary of arguments to pass to `matplotlib.pyplot.plot` to identify</span>
-<span class="sd">        synthesis instance where `optimized_metric` was being maximized.</span>
-<span class="sd">    figsize :</span>
+<span class="sd">    min_kwargs</span>
+<span class="sd">        Dictionary of arguments to pass to :func:`matplotlib.pyplot.plot` to identify</span>
+<span class="sd">        synthesis instance where ``optimized_metric`` was being minimized.</span>
+<span class="sd">    max_kwargs</span>
+<span class="sd">        Dictionary of arguments to pass to :func:`matplotlib.pyplot.plot` to identify</span>
+<span class="sd">        synthesis instance where ``optimized_metric`` was being maximized.</span>
+<span class="sd">    figsize</span>
 <span class="sd">        Size of the figure we create.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    fig :</span>
+<span class="sd">    fig</span>
 <span class="sd">        Figure containing the plot.</span>
 
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If the four ``MADCompetition`` instances do not have the same ``image``</span>
+<span class="sd">        attribute.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">torch</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">mad_metric1_min</span><span class="o">.</span><span class="n">image</span><span class="p">,</span> <span class="n">mad_metric2_min</span><span class="o">.</span><span class="n">image</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;All four instances of MADCompetition must have same image!&quot;</span><span class="p">)</span>

@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>plenoptic.data.fetch &mdash; plenoptic 1.2.1.dev123 documentation</title>
+  <title>plenoptic.data.fetch &mdash; plenoptic 1.3.1.dev3 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/plot_directive.css" />
@@ -15,7 +15,7 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=87b6d40a"></script>
+      <script src="../../../_static/documentation_options.js?v=4d645560"></script>
       <script src="../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -109,14 +109,20 @@
            <div itemprop="articleBody">
              
   <h1>Source code for plenoptic.data.fetch</h1><div class="highlight"><pre>
-<span></span><span class="ch">#!/usr/bin/env python3</span>
-
-<span class="kn">import</span><span class="w"> </span><span class="nn">pathlib</span>
-
-<span class="sd">&quot;&quot;&quot;Fetch data using pooch.</span>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Fetch data using pooch.</span>
 
 <span class="sd">This is inspired by scipy&#39;s datasets module.</span>
 <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">pathlib</span>
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;DOWNLOADABLE_FILES&quot;</span><span class="p">,</span> <span class="s2">&quot;fetch_data&quot;</span><span class="p">]</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="fm">__dir__</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+    <span class="k">return</span> <span class="n">__all__</span>
+
 
 <span class="n">REGISTRY</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s2">&quot;plenoptic-test-files.tar.gz&quot;</span><span class="p">:</span> <span class="s2">&quot;a6b8e03ecc8d7e40c505c88e6c767af5da670478d3bebb4e13a9d08ee4f39ae8&quot;</span><span class="p">,</span>  <span class="c1"># noqa: E501</span>
@@ -169,8 +175,9 @@
         <span class="s2">&quot;en8du&quot;</span>
     <span class="p">),</span>
 <span class="p">}</span>
-<span class="n">DOWNLOADABLE_FILES</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">REGISTRY_URLS</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
 
+<span class="c1">#: List of files that can be downloaded using :func:`fetch_data`</span>
+<span class="n">DOWNLOADABLE_FILES</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">REGISTRY_URLS</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
 
 <span class="k">try</span><span class="p">:</span>
     <span class="kn">import</span><span class="w"> </span><span class="nn">pooch</span>
@@ -191,29 +198,68 @@
     <span class="p">)</span>
 
 
-<div class="viewcode-block" id="find_shared_directory">
-<a class="viewcode-back" href="../../../api/plenoptic.data.html#plenoptic.data.fetch.find_shared_directory">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">find_shared_directory</span><span class="p">(</span><span class="n">paths</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Find directory shared by all paths.&quot;&quot;&quot;</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_find_shared_directory</span><span class="p">(</span><span class="n">paths</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Find directory shared by all paths.</span>
+
+<span class="sd">    Helper function for when downloading tar archives.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    paths</span>
+<span class="sd">        List of paths to check.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    shared_dir</span>
+<span class="sd">        Most recent common ancestor.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">for</span> <span class="nb">dir</span> <span class="ow">in</span> <span class="n">paths</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">parents</span><span class="p">:</span>
         <span class="k">if</span> <span class="nb">all</span><span class="p">([</span><span class="nb">dir</span> <span class="ow">in</span> <span class="n">p</span><span class="o">.</span><span class="n">parents</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">paths</span><span class="p">]):</span>
             <span class="k">break</span>
-    <span class="k">return</span> <span class="nb">dir</span></div>
-
+    <span class="k">return</span> <span class="nb">dir</span>
 
 
 <div class="viewcode-block" id="fetch_data">
 <a class="viewcode-back" href="../../../api/plenoptic.data.html#plenoptic.data.fetch.fetch_data">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">fetch_data</span><span class="p">(</span><span class="n">dataset_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Download data, using pooch. These are largely used for testing.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Download data, using pooch. These are largely used for testing.</span>
 
-<span class="sd">    To view list of downloadable files, look at `DOWNLOADABLE_FILES`.</span>
+<span class="sd">    To view list of downloadable files, look at :const:`DOWNLOADABLE_FILES`.</span>
 
 <span class="sd">    This checks whether the data already exists and is unchanged and downloads</span>
 <span class="sd">    again, if necessary. If dataset_name ends in .tar.gz, this also</span>
 <span class="sd">    decompresses and extracts the archive, returning the Path to the resulting</span>
 <span class="sd">    directory. Else, it just returns the Path to the downloaded file.</span>
 
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    dataset_name</span>
+<span class="sd">        Name of the dataset to download.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    path</span>
+<span class="sd">        Path of the downloaded dataset.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    ImportError</span>
+<span class="sd">        If ``pooch`` isn&#39;t installed.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    .. plot::</span>
+
+<span class="sd">      &gt;&gt;&gt; import plenoptic as po</span>
+<span class="sd">      &gt;&gt;&gt; from plenoptic.data import fetch</span>
+<span class="sd">      &gt;&gt;&gt; path = fetch.fetch_data(&quot;portilla_simoncelli_images.tar.gz&quot;)</span>
+<span class="sd">      &gt;&gt;&gt; len(list(path.glob(&quot;*&quot;)))</span>
+<span class="sd">      38</span>
+<span class="sd">      &gt;&gt;&gt; img = po.load_images(path / &quot;fig3b.jpg&quot;)</span>
+<span class="sd">      &gt;&gt;&gt; po.imshow(img)</span>
+<span class="sd">      &lt;PyrFigure size ...&gt;</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">retriever</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span>
@@ -224,7 +270,7 @@
     <span class="n">processor</span> <span class="o">=</span> <span class="n">pooch</span><span class="o">.</span><span class="n">Untar</span><span class="p">()</span> <span class="k">if</span> <span class="n">dataset_name</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;.tar.gz&quot;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
     <span class="n">fname</span> <span class="o">=</span> <span class="n">retriever</span><span class="o">.</span><span class="n">fetch</span><span class="p">(</span><span class="n">dataset_name</span><span class="p">,</span> <span class="n">progressbar</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">processor</span><span class="o">=</span><span class="n">processor</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">dataset_name</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;.tar.gz&quot;</span><span class="p">):</span>
-        <span class="n">fname</span> <span class="o">=</span> <span class="n">find_shared_directory</span><span class="p">([</span><span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">(</span><span class="n">f</span><span class="p">)</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">fname</span><span class="p">])</span>
+        <span class="n">fname</span> <span class="o">=</span> <span class="n">_find_shared_directory</span><span class="p">([</span><span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">(</span><span class="n">f</span><span class="p">)</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">fname</span><span class="p">])</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">fname</span> <span class="o">=</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">fname</span></div>

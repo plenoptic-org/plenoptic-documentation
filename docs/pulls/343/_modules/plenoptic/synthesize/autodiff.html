@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>plenoptic.synthesize.autodiff &mdash; plenoptic 1.2.1.dev123 documentation</title>
+  <title>plenoptic.synthesize.autodiff &mdash; plenoptic 1.3.1.dev3 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/plot_directive.css" />
@@ -15,7 +15,7 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=87b6d40a"></script>
+      <script src="../../../_static/documentation_options.js?v=4d645560"></script>
       <script src="../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -108,7 +108,14 @@
            <div itemprop="articleBody">
              
   <h1>Source code for plenoptic.synthesize.autodiff</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Helper functions for comptuing Jacobian and related outputs.</span>
+
+<span class="sd">Not intended for users to interact with directly; users should use</span>
+<span class="sd">:class:`~plenoptic.synthesize.eigendistortion.Eigendistortion`.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">torch</span><span class="w"> </span><span class="kn">import</span> <span class="n">Tensor</span>
@@ -117,22 +124,32 @@
 <div class="viewcode-block" id="jacobian">
 <a class="viewcode-back" href="../../../api/plenoptic.synthesize.html#plenoptic.synthesize.autodiff.jacobian">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">jacobian</span><span class="p">(</span><span class="n">y</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Explicitly compute the full Jacobian matrix.</span>
-<span class="sd">    N.B. This is only recommended for small input sizes (e.g. &lt;100x100 image)</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Explicitly compute the full Jacobian matrix.</span>
+
+<span class="sd">    N.B. This is only recommended for small input sizes (e.g. fewer than 10,000</span>
+<span class="sd">    elements).</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    y</span>
-<span class="sd">        Model output with gradient attached</span>
+<span class="sd">        Model output with gradient attached. Must be a vector, of shape</span>
+<span class="sd">        ``torch.Size([m, 1])``.</span>
 <span class="sd">    x</span>
-<span class="sd">        Tensor with gradient function model input with gradient attached</span>
+<span class="sd">        Tensor with gradient function model input with gradient attached. Must</span>
+<span class="sd">        be a vector, of shape ``torch.Size([n, 1])``.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    J</span>
-<span class="sd">        Jacobian matrix with ``torch.Size([len(y), len(x)])``</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">        Jacobian matrix with ``torch.Size([m, n])``.</span>
 
+<span class="sd">    Warns</span>
+<span class="sd">    -----</span>
+<span class="sd">    UserWarning</span>
+<span class="sd">        If ``x`` has more than 1e4 elements, in which case we believe that this</span>
+<span class="sd">        calculation will take too long.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">x</span><span class="o">.</span><span class="n">numel</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mf">1e4</span><span class="p">:</span>
         <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
             <span class="s2">&quot;Calculation of Jacobian with input dimensionality greater than&quot;</span>
@@ -170,18 +187,18 @@
     <span class="n">retain_graph</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="n">create_graph</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="n">detach</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-<span class="p">):</span>
-<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Compute vector Jacobian product: :math:`\text{vjp} = u^T(\partial y/\partial x)`</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Compute vector Jacobian product :math:`\text{vjp} = u^T(\partial y/\partial x)`.</span>
 
-<span class="sd">    Backward Mode Auto-Differentiation (`Lop` in Theano)</span>
+<span class="sd">    Backward Mode Auto-Differentiation (``Lop`` in Theano).</span>
 
 <span class="sd">    Note on efficiency: When this function is used in the context of power iteration for</span>
-<span class="sd">    computing eigenvectors, the vector output will be repeatedly fed back into :meth:</span>
-<span class="sd">    `vector_jacobian_product()` and :meth:`jacobian_vector_product()`.</span>
-<span class="sd">    To prevent the accumulation of gradient history in this vector (especially on GPU),</span>
-<span class="sd">    we need to ensure the computation graph is not kept in memory after each iteration.</span>
-<span class="sd">    We can do this by detaching the output, as well as carefully specifying where/when</span>
-<span class="sd">    to retain the created graph.</span>
+<span class="sd">    computing eigenvectors, the vector output will be repeatedly fed back into this</span>
+<span class="sd">    method and :meth:`jacobian_vector_product`. To prevent the accumulation of gradient</span>
+<span class="sd">    history in this vector (especially on GPU), we need to ensure the computation graph</span>
+<span class="sd">    is not kept in memory after each iteration. We can do this by detaching the output,</span>
+<span class="sd">    as well as carefully specifying where/when to retain the created graph.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -191,9 +208,10 @@
 <span class="sd">        Input with gradient attached, ``torch.Size([n, 1])``.</span>
 <span class="sd">    U</span>
 <span class="sd">        Direction, shape is ``torch.Size([m, k])``, i.e. same dim as output tensor.</span>
+<span class="sd">        ``k`` is the number of directions.</span>
 <span class="sd">    retain_graph</span>
 <span class="sd">        Whether or not to keep graph after doing one :meth:`vector_jacobian_product`.</span>
-<span class="sd">        Must be set to True if k&gt;1.</span>
+<span class="sd">        Must be set to True if ``k&gt;1``.</span>
 <span class="sd">    create_graph</span>
 <span class="sd">        Whether or not to create computational graph. Usually should be set to True</span>
 <span class="sd">        unless you&#39;re reusing the graph like in the second step</span>
@@ -205,9 +223,8 @@
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    vJ</span>
-<span class="sd">        vector-Jacobian product, ``torch.Size([m, k])``.</span>
+<span class="sd">        Vector-Jacobian product, ``torch.Size([m, k])``.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-
     <span class="k">assert</span> <span class="n">y</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span>
     <span class="k">assert</span> <span class="n">U</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">y</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 
@@ -239,11 +256,12 @@
 <span class="k">def</span><span class="w"> </span><span class="nf">jacobian_vector_product</span><span class="p">(</span>
     <span class="n">y</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span> <span class="n">V</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span> <span class="n">dummy_vec</span><span class="p">:</span> <span class="n">Tensor</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
-<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Compute Jacobian Vector Product: :math:`\text{jvp} = (\partial y/\partial x) v`</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Compute Jacobian Vector Product: :math:`\text{jvp} = (\partial y/\partial x) v`.</span>
 
 <span class="sd">    Forward Mode Auto-Differentiation (``Rop`` in Theano). PyTorch does not natively</span>
 <span class="sd">    support this operation; this function essentially calls backward mode autodiff</span>
-<span class="sd">    twice, as described in [1].</span>
+<span class="sd">    twice, as described in [1]_.</span>
 
 <span class="sd">    See :meth:`vector_jacobian_product()` docstring on why we and pass arguments for</span>
 <span class="sd">    ``retain_graph`` and ``create_graph``.</span>
@@ -251,26 +269,26 @@
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    y</span>
-<span class="sd">        Model output with gradient attached, shape is torch.Size([m, 1])</span>
+<span class="sd">        Model output with gradient attached, shape is ``torch.Size([m, 1])``.</span>
 <span class="sd">    x</span>
-<span class="sd">        Model input with gradient attached, shape is torch.Size([n, 1]), i.e. same dim</span>
-<span class="sd">        as input tensor</span>
+<span class="sd">        Model input with gradient attached, shape is ``torch.Size([n, 1])``, i.e. same</span>
+<span class="sd">        dim as input tensor.</span>
 <span class="sd">    V</span>
-<span class="sd">        Directions in which to compute product, shape is torch.Size([n, k]) where k is</span>
-<span class="sd">        number of vectors to compute</span>
+<span class="sd">        Directions in which to compute product, shape is ``torch.Size([n, k])`` where</span>
+<span class="sd">        ``k`` is the number of vectors to compute.</span>
 <span class="sd">    dummy_vec</span>
-<span class="sd">        Vector with which to do jvp trick [1]. If argument exists, then use some</span>
-<span class="sd">        pre-allocated, cached vector, otherwise create a new one and move to device in</span>
-<span class="sd">        this method.</span>
+<span class="sd">        Vector with which to do jvp trick [1]_, shape matches ``y``. If argument exists,</span>
+<span class="sd">        then use some pre-allocated, cached vector, otherwise create a new one and move</span>
+<span class="sd">        to ``y.device``.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    Jv</span>
-<span class="sd">        Jacobian-vector product, torch.Size([n, k])</span>
+<span class="sd">        Jacobian-vector product, ``torch.Size([n, k])``.</span>
 
-<span class="sd">    Notes</span>
-<span class="sd">    -----</span>
-<span class="sd">    [1] https://j-towns.github.io/2017/06/12/A-new-trick.html</span>
+<span class="sd">    References</span>
+<span class="sd">    ----------</span>
+<span class="sd">    .. [1] https://j-towns.github.io/2017/06/12/A-new-trick.html</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">assert</span> <span class="n">y</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span>
     <span class="k">assert</span> <span class="n">V</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>

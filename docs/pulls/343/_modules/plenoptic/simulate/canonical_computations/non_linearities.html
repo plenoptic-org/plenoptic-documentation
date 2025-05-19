@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>plenoptic.simulate.canonical_computations.non_linearities &mdash; plenoptic 1.2.1.dev123 documentation</title>
+  <title>plenoptic.simulate.canonical_computations.non_linearities &mdash; plenoptic 1.3.1.dev3 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/plot_directive.css" />
@@ -15,7 +15,7 @@
   
       <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../../_static/documentation_options.js?v=87b6d40a"></script>
+      <script src="../../../../_static/documentation_options.js?v=4d645560"></script>
       <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -108,41 +108,60 @@
            <div itemprop="articleBody">
              
   <h1>Source code for plenoptic.simulate.canonical_computations.non_linearities</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Some useful non-linearities for visual models.</span>
 
+<span class="sd">The functions operate on dictionaries or tensors.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">...tools</span><span class="w"> </span><span class="kn">import</span> <span class="n">signal</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">...tools.conv</span><span class="w"> </span><span class="kn">import</span> <span class="n">blur_downsample</span><span class="p">,</span> <span class="n">upsample_blur</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">...tools.signal</span><span class="w"> </span><span class="kn">import</span> <span class="n">polar_to_rectangular</span><span class="p">,</span> <span class="n">rectangular_to_polar</span>
 
 
 <div class="viewcode-block" id="rectangular_to_polar_dict">
 <a class="viewcode-back" href="../../../../api/plenoptic.simulate.canonical_computations.html#plenoptic.simulate.canonical_computations.non_linearities.rectangular_to_polar_dict">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">rectangular_to_polar_dict</span><span class="p">(</span><span class="n">coeff_dict</span><span class="p">,</span> <span class="n">residuals</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return the complex modulus and the phase of each complex tensor in a dictionary.</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">rectangular_to_polar_dict</span><span class="p">(</span>
+    <span class="n">coeff_dict</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">residuals</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">dict</span><span class="p">,</span> <span class="nb">dict</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Return the complex modulus and the phase of each complex tensor in a dictionary.</span>
+
+<span class="sd">    Keys are preserved, with the option of dropping ``&quot;residual_lowpass&quot;`` and</span>
+<span class="sd">    ``&quot;residual_highpass&quot;`` by setting ``residuals=False``.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    coeff_dict : dict</span>
-<span class="sd">       A dictionary containing complex tensors.</span>
-<span class="sd">    dim : int, optional</span>
-<span class="sd">       The dimension that contains the real and imaginary components.</span>
-<span class="sd">    residuals: bool, optional</span>
-<span class="sd">        An option to carry around residuals in the energy branch.</span>
+<span class="sd">    coeff_dict</span>
+<span class="sd">        A dictionary containing complex tensors.</span>
+<span class="sd">    residuals</span>
+<span class="sd">        An option to include residuals in the returned ``energy`` dict.</span>
+
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    energy : dict</span>
+<span class="sd">    energy</span>
 <span class="sd">        The dictionary of torch.Tensors containing the local complex</span>
 <span class="sd">        modulus of ``coeff_dict``.</span>
-<span class="sd">    state: dict</span>
+<span class="sd">    state</span>
 <span class="sd">        The dictionary of torch.Tensors containing the local phase of</span>
 <span class="sd">        ``coeff_dict``.</span>
 
+<span class="sd">    See Also</span>
+<span class="sd">    --------</span>
+<span class="sd">    :func:`~plenoptic.tools.signal.rectangular_to_polar`</span>
+<span class="sd">        Same operation on tensors.</span>
+<span class="sd">    polar_to_rectangular_dict</span>
+<span class="sd">        The inverse operation.</span>
+<span class="sd">    local_gain_control_dict</span>
+<span class="sd">        The analogous function for complex-valued signals.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">energy</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="n">state</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">coeff_dict</span><span class="p">:</span>
         <span class="c1"># ignore residuals</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">key</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;residual&quot;</span><span class="p">):</span>
-            <span class="n">energy</span><span class="p">[</span><span class="n">key</span><span class="p">],</span> <span class="n">state</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">rectangular_to_polar</span><span class="p">(</span><span class="n">coeff_dict</span><span class="p">[</span><span class="n">key</span><span class="p">])</span>
+            <span class="n">energy</span><span class="p">[</span><span class="n">key</span><span class="p">],</span> <span class="n">state</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">signal</span><span class="o">.</span><span class="n">rectangular_to_polar</span><span class="p">(</span><span class="n">coeff_dict</span><span class="p">[</span><span class="n">key</span><span class="p">])</span>
 
     <span class="k">if</span> <span class="n">residuals</span><span class="p">:</span>
         <span class="n">energy</span><span class="p">[</span><span class="s2">&quot;residual_lowpass&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">coeff_dict</span><span class="p">[</span><span class="s2">&quot;residual_lowpass&quot;</span><span class="p">]</span>
@@ -154,33 +173,45 @@
 
 <div class="viewcode-block" id="polar_to_rectangular_dict">
 <a class="viewcode-back" href="../../../../api/plenoptic.simulate.canonical_computations.html#plenoptic.simulate.canonical_computations.non_linearities.polar_to_rectangular_dict">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">polar_to_rectangular_dict</span><span class="p">(</span><span class="n">energy</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">residuals</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return the real and imaginary parts of tensor in a dictionary.</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">polar_to_rectangular_dict</span><span class="p">(</span>
+    <span class="n">energy</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">state</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">residuals</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Return the real and imaginary parts of tensor in a dictionary.</span>
+
+<span class="sd">    Keys are preserved, with the option of dropping ``&quot;residual_lowpass&quot;`` and</span>
+<span class="sd">    ``&quot;residual_highpass&quot;`` by setting ``residuals=False``.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    energy : dict</span>
+<span class="sd">    energy</span>
 <span class="sd">        The dictionary of torch.Tensors containing the local complex</span>
 <span class="sd">        modulus.</span>
-<span class="sd">    state : dict</span>
+<span class="sd">    state</span>
 <span class="sd">        The dictionary of torch.Tensors containing the local phase.</span>
-<span class="sd">    dim : int, optional</span>
-<span class="sd">       The dimension that contains the real and imaginary components.</span>
-<span class="sd">    residuals: bool, optional</span>
+<span class="sd">    residuals</span>
 <span class="sd">        An option to carry around residuals in the energy branch.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    coeff_dict : dict</span>
+<span class="sd">    coeff_dict</span>
 <span class="sd">       A dictionary containing complex tensors of coefficients.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
 
+<span class="sd">    See Also</span>
+<span class="sd">    --------</span>
+<span class="sd">    :func:`~plenoptic.tools.signal.polar_to_rectangular`</span>
+<span class="sd">        Same operation on tensors.</span>
+<span class="sd">    rectangular_to_polar_dict</span>
+<span class="sd">        The inverse operation.</span>
+<span class="sd">    local_gain_release_dict</span>
+<span class="sd">        The analogous function for real-valued signals.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">coeff_dict</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">energy</span><span class="p">:</span>
         <span class="c1"># ignore residuals</span>
 
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">key</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;residual&quot;</span><span class="p">):</span>
-            <span class="n">coeff_dict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">polar_to_rectangular</span><span class="p">(</span><span class="n">energy</span><span class="p">[</span><span class="n">key</span><span class="p">],</span> <span class="n">state</span><span class="p">[</span><span class="n">key</span><span class="p">])</span>
+            <span class="n">coeff_dict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">signal</span><span class="o">.</span><span class="n">polar_to_rectangular</span><span class="p">(</span><span class="n">energy</span><span class="p">[</span><span class="n">key</span><span class="p">],</span> <span class="n">state</span><span class="p">[</span><span class="n">key</span><span class="p">])</span>
 
     <span class="k">if</span> <span class="n">residuals</span><span class="p">:</span>
         <span class="n">coeff_dict</span><span class="p">[</span><span class="s2">&quot;residual_lowpass&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">energy</span><span class="p">[</span><span class="s2">&quot;residual_lowpass&quot;</span><span class="p">]</span>
@@ -192,41 +223,50 @@
 
 <div class="viewcode-block" id="local_gain_control">
 <a class="viewcode-back" href="../../../../api/plenoptic.simulate.canonical_computations.html#plenoptic.simulate.canonical_computations.non_linearities.local_gain_control">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">local_gain_control</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">epsilon</span><span class="o">=</span><span class="mf">1e-8</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Spatially local gain control.</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">local_gain_control</span><span class="p">(</span>
+    <span class="n">x</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">epsilon</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e-8</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Spatially local gain control.</span>
+
+<span class="sd">    Compute the local energy and phase of a real-valued tensor.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    x : torch.Tensor</span>
-<span class="sd">        Tensor of shape (batch, channel, height, width)</span>
-<span class="sd">    epsilon: float, optional</span>
+<span class="sd">    x</span>
+<span class="sd">        Tensor of shape (batch, channel, height, width).</span>
+<span class="sd">    epsilon</span>
 <span class="sd">        Small constant to avoid division by zero.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    norm : torch.Tensor</span>
-<span class="sd">        The local energy of ``x``. Note that it is down sampled by a</span>
-<span class="sd">        factor 2 in (unlike rect2pol).</span>
-<span class="sd">    direction: torch.Tensor</span>
-<span class="sd">        The local phase of ``x`` (aka. local unit vector, or local</span>
-<span class="sd">        state)</span>
+<span class="sd">    norm</span>
+<span class="sd">        The local energy of ``x``, shape (batch, channel, height/2,</span>
+<span class="sd">        width/2).</span>
+<span class="sd">    direction</span>
+<span class="sd">        The local phase of ``x`` (a.k.a. local unit vector, or local</span>
+<span class="sd">        state), shape (batch, channel, height, width).</span>
+
+<span class="sd">    See Also</span>
+<span class="sd">    --------</span>
+<span class="sd">    local_gain_control_dict</span>
+<span class="sd">        Same operation on dictionaries.</span>
+<span class="sd">    local_gain_release</span>
+<span class="sd">        The inverse operation.</span>
+<span class="sd">    :func:`~plenoptic.tools.signal.rectangular_to_polar`</span>
+<span class="sd">        The analogous function for complex-valued signals.</span>
 
 <span class="sd">    Notes</span>
 <span class="sd">    -----</span>
-<span class="sd">    This function is an analogue to rectangular_to_polar for</span>
-<span class="sd">    real valued signals.</span>
-
-<span class="sd">    Norm and direction (analogous to complex modulus and phase) are</span>
-<span class="sd">    defined using blurring operator and division.  Indeed blurring the</span>
-<span class="sd">    responses removes high frequencies introduced by the squaring</span>
-<span class="sd">    operation. In the complex case adding the quadrature pair response</span>
-<span class="sd">    has the same effect (note that this is most clearly seen in the</span>
-<span class="sd">    frequency domain).  Here computing the direction (phase) reduces to</span>
-<span class="sd">    dividing out the norm (modulus), indeed the signal only has one real</span>
-<span class="sd">    component. This is a normalization operation (local unit vector),</span>
-<span class="sd">    hence the connection to local gain control.</span>
+<span class="sd">    Norm and direction (analogous to complex modulus and phase) are defined using</span>
+<span class="sd">    blurring operator and division. Indeed blurring the responses removes high</span>
+<span class="sd">    frequencies introduced by the squaring operation. In the complex case adding the</span>
+<span class="sd">    quadrature pair response has the same effect (note that this is most clearly seen in</span>
+<span class="sd">    the frequency domain). Here computing the direction (phase) reduces to dividing out</span>
+<span class="sd">    the norm (modulus), indeed the signal only has one real component. This is a</span>
+<span class="sd">    normalization operation (local unit vector), hence the connection to local gain</span>
+<span class="sd">    control.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-
     <span class="c1"># these could be parameters, but no use case so far</span>
     <span class="n">p</span> <span class="o">=</span> <span class="mf">2.0</span>
 
@@ -240,40 +280,50 @@
 
 <div class="viewcode-block" id="local_gain_release">
 <a class="viewcode-back" href="../../../../api/plenoptic.simulate.canonical_computations.html#plenoptic.simulate.canonical_computations.non_linearities.local_gain_release">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">local_gain_release</span><span class="p">(</span><span class="n">norm</span><span class="p">,</span> <span class="n">direction</span><span class="p">,</span> <span class="n">epsilon</span><span class="o">=</span><span class="mf">1e-8</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Spatially local gain release.</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">local_gain_release</span><span class="p">(</span>
+    <span class="n">norm</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">direction</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">epsilon</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e-8</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Spatially local gain release.</span>
+
+<span class="sd">    Convert the local energy and phase to a single real-valued tensor.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    norm : torch.Tensor</span>
-<span class="sd">        The local energy of ``x``. Note that it is down sampled by a</span>
-<span class="sd">        factor 2 in (unlike rect2pol).</span>
-<span class="sd">    direction: torch.Tensor</span>
-<span class="sd">        The local phase of ``x`` (aka. local unit vector, or local</span>
-<span class="sd">        state)</span>
-<span class="sd">    epsilon: float, optional</span>
+<span class="sd">    norm</span>
+<span class="sd">        The local energy of a tensor, with shape (batch, channel, height/2,</span>
+<span class="sd">        width/2).</span>
+<span class="sd">    direction</span>
+<span class="sd">        The local phase of a tensor (a.k.a. local unit vector, or local state),</span>
+<span class="sd">        with shape (batch, channel, height, width).</span>
+<span class="sd">    epsilon</span>
 <span class="sd">        Small constant to avoid division by zero.</span>
+
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    x : torch.Tensor</span>
-<span class="sd">        Tensor of shape (batch, channel, height, width)</span>
+<span class="sd">    x</span>
+<span class="sd">        Tensor of shape (batch, channel, height, width).</span>
+
+<span class="sd">    See Also</span>
+<span class="sd">    --------</span>
+<span class="sd">    local_gain_release_dict</span>
+<span class="sd">        Same operation on dictionaries.</span>
+<span class="sd">    local_gain_control</span>
+<span class="sd">        The inverse operation.</span>
+<span class="sd">    :func:`~plenoptic.tools.signal.polar_to_rectangular`</span>
+<span class="sd">        The analogous function for complex-valued signals.</span>
 
 <span class="sd">    Notes</span>
 <span class="sd">    -----</span>
-<span class="sd">    This function is an analogue to polar_to_rectangular for</span>
-<span class="sd">    real valued signals.</span>
-
-<span class="sd">    Norm and direction (analogous to complex modulus and phase) are</span>
-<span class="sd">    defined using blurring operator and division.  Indeed blurring the</span>
-<span class="sd">    responses removes high frequencies introduced by the squaring</span>
-<span class="sd">    operation. In the complex case adding the quadrature pair response</span>
-<span class="sd">    has the same effect (note that this is most clearly seen in the</span>
-<span class="sd">    frequency domain).  Here computing the direction (phase) reduces to</span>
-<span class="sd">    dividing out the norm (modulus), indeed the signal only has one real</span>
-<span class="sd">    component. This is a normalization operation (local unit vector),</span>
-<span class="sd">    hence the connection to local gain control.</span>
+<span class="sd">    Norm and direction (analogous to complex modulus and phase) are defined using</span>
+<span class="sd">    blurring operator and division. Indeed blurring the responses removes high</span>
+<span class="sd">    frequencies introduced by the squaring operation. In the complex case adding the</span>
+<span class="sd">    quadrature pair response has the same effect (note that this is most clearly seen in</span>
+<span class="sd">    the frequency domain). Here computing the direction (phase) reduces to dividing out</span>
+<span class="sd">    the norm (modulus), indeed the signal only has one real component. This is a</span>
+<span class="sd">    normalization operation (local unit vector), hence the connection to local gain</span>
+<span class="sd">    control.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-
     <span class="n">odd</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">as_tensor</span><span class="p">(</span><span class="n">direction</span><span class="o">.</span><span class="n">shape</span><span class="p">)[</span><span class="mi">2</span><span class="p">:</span><span class="mi">4</span><span class="p">]</span> <span class="o">%</span> <span class="mi">2</span>
     <span class="n">x</span> <span class="o">=</span> <span class="n">direction</span> <span class="o">*</span> <span class="p">(</span><span class="n">upsample_blur</span><span class="p">(</span><span class="n">norm</span><span class="p">,</span> <span class="n">odd</span><span class="p">)</span> <span class="o">+</span> <span class="n">epsilon</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">x</span></div>
@@ -282,34 +332,44 @@
 
 <div class="viewcode-block" id="local_gain_control_dict">
 <a class="viewcode-back" href="../../../../api/plenoptic.simulate.canonical_computations.html#plenoptic.simulate.canonical_computations.non_linearities.local_gain_control_dict">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">local_gain_control_dict</span><span class="p">(</span><span class="n">coeff_dict</span><span class="p">,</span> <span class="n">residuals</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Spatially local gain control, for each element in a dictionary.</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">local_gain_control_dict</span><span class="p">(</span>
+    <span class="n">coeff_dict</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">residuals</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">dict</span><span class="p">,</span> <span class="nb">dict</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Spatially local gain control, for each element in a dictionary.</span>
+
+<span class="sd">    For more details, see :func:`local_gain_control`.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    coeff_dict : dict</span>
-<span class="sd">        A dictionary containing tensors of shape (batch, channel, height, width)</span>
-<span class="sd">    residuals: bool, optional</span>
+<span class="sd">    coeff_dict</span>
+<span class="sd">        A dictionary containing tensors of shape (batch, channel, height, width).</span>
+<span class="sd">    residuals</span>
 <span class="sd">        An option to carry around residuals in the energy dict.</span>
 <span class="sd">        Note that the transformation is not applied to the residuals,</span>
 <span class="sd">        that is dictionary elements with a key starting in &quot;residual&quot;.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    energy : dict</span>
+<span class="sd">    energy</span>
 <span class="sd">        The dictionary of torch.Tensors containing the local energy of</span>
 <span class="sd">        ``x``.</span>
-<span class="sd">    state: dict</span>
+<span class="sd">    state</span>
 <span class="sd">        The dictionary of torch.Tensors containing the local phase of</span>
 <span class="sd">        ``x``.</span>
 
+<span class="sd">    See Also</span>
+<span class="sd">    --------</span>
+<span class="sd">    local_gain_control</span>
+<span class="sd">        Same operation on tensors.</span>
+<span class="sd">    local_gain_release_dict</span>
+<span class="sd">        The inverse operation.</span>
+<span class="sd">    rectangular_to_polar_dict</span>
+<span class="sd">        The analogous function for complex-valued signals.</span>
+
 <span class="sd">    Notes</span>
 <span class="sd">    -----</span>
-<span class="sd">    Note that energy and state is not computed on the residuals.</span>
-
-<span class="sd">    The inverse operation is achieved by `local_gain_release_dict`.</span>
-<span class="sd">    This function is an analogue to rectangular_to_polar_dict for real</span>
-<span class="sd">    valued signals. For more details, see :meth:`local_gain_control`</span>
+<span class="sd">    Note that energy and state are not computed on the residuals.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">energy</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="n">state</span> <span class="o">=</span> <span class="p">{}</span>
@@ -328,32 +388,38 @@
 
 <div class="viewcode-block" id="local_gain_release_dict">
 <a class="viewcode-back" href="../../../../api/plenoptic.simulate.canonical_computations.html#plenoptic.simulate.canonical_computations.non_linearities.local_gain_release_dict">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">local_gain_release_dict</span><span class="p">(</span><span class="n">energy</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">residuals</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Spatially local gain release, for each element in a dictionary.</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">local_gain_release_dict</span><span class="p">(</span><span class="n">energy</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">state</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">residuals</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Spatially local gain release, for each element in a dictionary.</span>
+
+<span class="sd">    For more details, see :func:`local_gain_release`.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    energy : dict</span>
+<span class="sd">    energy</span>
 <span class="sd">        The dictionary of torch.Tensors containing the local energy of</span>
 <span class="sd">        ``x``.</span>
-<span class="sd">    state: dict</span>
+<span class="sd">    state</span>
 <span class="sd">        The dictionary of torch.Tensors containing the local phase of</span>
 <span class="sd">        ``x``.</span>
-<span class="sd">    residuals: bool, optional</span>
+<span class="sd">    residuals</span>
 <span class="sd">        An option to carry around residuals in the energy dict.</span>
 <span class="sd">        Note that the transformation is not applied to the residuals,</span>
 <span class="sd">        that is dictionary elements with a key starting in &quot;residual&quot;.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    coeff_dict : dict</span>
-<span class="sd">        A dictionary containing tensors of shape (batch, channel, height, width)</span>
+<span class="sd">    coeff_dict</span>
+<span class="sd">        A dictionary containing tensors of shape (batch, channel, height, width).</span>
 
-<span class="sd">    Notes</span>
-<span class="sd">    -----</span>
-<span class="sd">    The inverse operation to `local_gain_control_dict`.</span>
-<span class="sd">    This function is  an analogue to polar_to_rectangular_dict for real</span>
-<span class="sd">    valued signals. For more details, see :meth:`local_gain_release`</span>
+<span class="sd">    See Also</span>
+<span class="sd">    --------</span>
+<span class="sd">    local_gain_release</span>
+<span class="sd">        Same operation on tensors.</span>
+<span class="sd">    local_gain_control_dict</span>
+<span class="sd">        The inverse operation.</span>
+<span class="sd">    polar_to_rectangular_dict</span>
+<span class="sd">        The analogous function for complex-valued signals.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">coeff_dict</span> <span class="o">=</span> <span class="p">{}</span>
 
