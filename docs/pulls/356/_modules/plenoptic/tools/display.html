@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>plenoptic.tools.display &mdash; plenoptic 1.3.1.dev22 documentation</title>
+  <title>plenoptic.tools.display &mdash; plenoptic 1.3.1.dev27 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/plot_directive.css" />
@@ -15,7 +15,7 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=c18e9367"></script>
+      <script src="../../../_static/documentation_options.js?v=99870dd9"></script>
       <script src="../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -123,6 +123,62 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">.data</span><span class="w"> </span><span class="kn">import</span> <span class="n">to_numpy</span>
 
 
+<span class="k">def</span><span class="w"> </span><span class="nf">_find_zoom</span><span class="p">(</span>
+    <span class="n">image_heights</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">image_widths</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">ax</span><span class="p">:</span> <span class="n">mpl</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">Axes</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Find best-fitting zoom based on image and axes sizes.</span>
+
+<span class="sd">    If images are bigger than ``ax``, then we figure out the largest float of form</span>
+<span class="sd">    ``1/d``, where ``d`` is an integer. If ``ax`` is bigger than images, figure out the</span>
+<span class="sd">    largest integer we can use.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    image_heights, image_widths</span>
+<span class="sd">        The last two dimensions of all images to plot.</span>
+<span class="sd">    ax</span>
+<span class="sd">        The existing axis we will use for imshow.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    zoom</span>
+<span class="sd">        Our best guess at zoom.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">find_zoom_helper</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">limit</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Find zoom that works. This is only for limit &lt; x.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        x</span>
+<span class="sd">            The sizes to consider.</span>
+<span class="sd">        limit</span>
+<span class="sd">            The max possible size.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        zoom</span>
+<span class="sd">            The valid zoom level.</span>
+<span class="sd">        &quot;&quot;&quot;</span>  <span class="c1"># numpydoc ignore=ES01</span>
+        <span class="c1"># find all non-trivial divisors of x</span>
+        <span class="n">divisors</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">x</span> <span class="o">%</span> <span class="n">i</span><span class="p">]</span>
+        <span class="c1"># find the largest zoom (equivalently, smallest divisor) such that the</span>
+        <span class="c1"># zoomed in image is smaller than the limit</span>
+        <span class="k">return</span> <span class="mi">1</span> <span class="o">/</span> <span class="nb">min</span><span class="p">([</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">divisors</span> <span class="k">if</span> <span class="n">x</span> <span class="o">/</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="n">limit</span><span class="p">])</span>
+
+    <span class="k">if</span> <span class="n">ax</span><span class="o">.</span><span class="n">bbox</span><span class="o">.</span><span class="n">height</span> <span class="o">&gt;</span> <span class="nb">max</span><span class="p">(</span><span class="n">image_heights</span><span class="p">):</span>
+        <span class="n">zoom</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">bbox</span><span class="o">.</span><span class="n">height</span> <span class="o">//</span> <span class="nb">max</span><span class="p">(</span><span class="n">image_heights</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">zoom</span> <span class="o">=</span> <span class="n">find_zoom_helper</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">image_heights</span><span class="p">),</span> <span class="n">ax</span><span class="o">.</span><span class="n">bbox</span><span class="o">.</span><span class="n">height</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">ax</span><span class="o">.</span><span class="n">bbox</span><span class="o">.</span><span class="n">width</span> <span class="o">&gt;</span> <span class="nb">max</span><span class="p">(</span><span class="n">image_widths</span><span class="p">):</span>
+        <span class="n">zoom</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">zoom</span><span class="p">,</span> <span class="n">ax</span><span class="o">.</span><span class="n">bbox</span><span class="o">.</span><span class="n">width</span> <span class="o">//</span> <span class="nb">max</span><span class="p">(</span><span class="n">image_widths</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">zoom</span> <span class="o">=</span> <span class="n">find_zoom_helper</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">image_widths</span><span class="p">),</span> <span class="n">ax</span><span class="o">.</span><span class="n">bbox</span><span class="o">.</span><span class="n">width</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">zoom</span>
+
+
 <div class="viewcode-block" id="imshow">
 <a class="viewcode-back" href="../../../api/plenoptic.tools.html#plenoptic.tools.display.imshow">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">imshow</span><span class="p">(</span>
@@ -189,7 +245,7 @@
 <span class="sd">          10th/90th percentile values map to the 10th/90th percentile intensities.</span>
 
 <span class="sd">    zoom</span>
-<span class="sd">        Ratio of display pixels to image pixels. if greater than 1, must be an</span>
+<span class="sd">        Ratio of display pixels to image pixels. If greater than 1, must be an</span>
 <span class="sd">        integer. If less than 1, must be ``1/d`` where ``d`` is a a divisor of the</span>
 <span class="sd">        size of the largest image. If ``None``, we try to determine the best zoom.</span>
 <span class="sd">    title</span>
@@ -248,6 +304,8 @@
 <span class="sd">    ------</span>
 <span class="sd">    TypeError</span>
 <span class="sd">        If ``batch_idx`` or ``channel_idx`` takes an illegal value.</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If ``zoom`` takes an illegal value.</span>
 <span class="sd">    ValueError</span>
 <span class="sd">        If ``as_rgb=True`` and the input ``image`` does not have 3 or 4 channels.</span>
 <span class="sd">    ValueError</span>
@@ -311,39 +369,13 @@
             <span class="n">heights</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="n">i_</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">i_</span> <span class="ow">in</span> <span class="n">i</span><span class="p">])</span>
             <span class="n">widths</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="n">i_</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">i_</span> <span class="ow">in</span> <span class="n">i</span><span class="p">])</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">find_zoom</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">limit</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Find zoom that works. This is only for limit &lt; x.</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        x</span>
-<span class="sd">            The sizes to consider.</span>
-<span class="sd">        limit</span>
-<span class="sd">            The max possible size.</span>
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        zoom</span>
-<span class="sd">            The valid zoom level.</span>
-<span class="sd">        &quot;&quot;&quot;</span>  <span class="c1"># numpydoc ignore=ES01</span>
-        <span class="c1"># find all non-trivial divisors of x</span>
-        <span class="n">divisors</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">x</span> <span class="o">%</span> <span class="n">i</span><span class="p">]</span>
-        <span class="c1"># find the largest zoom (equivalently, smallest divisor) such that the</span>
-        <span class="c1"># zoomed in image is smaller than the limit</span>
-        <span class="k">return</span> <span class="mi">1</span> <span class="o">/</span> <span class="nb">min</span><span class="p">([</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">divisors</span> <span class="k">if</span> <span class="n">x</span> <span class="o">/</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="n">limit</span><span class="p">])</span>
-
-    <span class="k">if</span> <span class="n">ax</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">zoom</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">ax</span><span class="o">.</span><span class="n">bbox</span><span class="o">.</span><span class="n">height</span> <span class="o">&gt;</span> <span class="nb">max</span><span class="p">(</span><span class="n">heights</span><span class="p">):</span>
-            <span class="n">zoom</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">bbox</span><span class="o">.</span><span class="n">height</span> <span class="o">//</span> <span class="nb">max</span><span class="p">(</span><span class="n">heights</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">zoom</span> <span class="o">=</span> <span class="n">find_zoom</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">heights</span><span class="p">),</span> <span class="n">ax</span><span class="o">.</span><span class="n">bbox</span><span class="o">.</span><span class="n">height</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">ax</span><span class="o">.</span><span class="n">bbox</span><span class="o">.</span><span class="n">width</span> <span class="o">&gt;</span> <span class="nb">max</span><span class="p">(</span><span class="n">widths</span><span class="p">):</span>
-            <span class="n">zoom</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">zoom</span><span class="p">,</span> <span class="n">ax</span><span class="o">.</span><span class="n">bbox</span><span class="o">.</span><span class="n">width</span> <span class="o">//</span> <span class="nb">max</span><span class="p">(</span><span class="n">widths</span><span class="p">))</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">zoom</span> <span class="o">=</span> <span class="n">find_zoom</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">widths</span><span class="p">),</span> <span class="n">ax</span><span class="o">.</span><span class="n">bbox</span><span class="o">.</span><span class="n">width</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">zoom</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">ax</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">zoom</span> <span class="o">=</span> <span class="n">_find_zoom</span><span class="p">(</span><span class="n">heights</span><span class="p">,</span> <span class="n">widths</span><span class="p">,</span> <span class="n">ax</span><span class="p">)</span>
     <span class="k">elif</span> <span class="n">zoom</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">zoom</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="k">elif</span> <span class="n">zoom</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;zoom must be positive!&quot;</span><span class="p">)</span>
+
     <span class="k">return</span> <span class="n">pt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span>
         <span class="n">images_to_plot</span><span class="p">,</span>
         <span class="n">vrange</span><span class="o">=</span><span class="n">vrange</span><span class="p">,</span>
@@ -365,7 +397,7 @@
     <span class="n">framerate</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">2.0</span><span class="p">,</span>
     <span class="n">repeat</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="n">vrange</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">|</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;indep1&quot;</span><span class="p">,</span>
-    <span class="n">zoom</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="n">zoom</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">title</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
     <span class="n">col_wrap</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">ax</span><span class="p">:</span> <span class="n">mpl</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">Axes</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -440,7 +472,7 @@
 <span class="sd">          10th/90th percentile values map to the 10th/90th percentile intensities.</span>
 
 <span class="sd">    zoom</span>
-<span class="sd">        Ratio of display pixels to image pixels. if greater than 1, must be an</span>
+<span class="sd">        Ratio of display pixels to image pixels. If greater than 1, must be an</span>
 <span class="sd">        integer. If less than 1, must be ``1/d`` where ``d`` is a a divisor of the</span>
 <span class="sd">        size of the largest image. If ``None``, we try to determine the best zoom.</span>
 <span class="sd">    title</span>
@@ -526,6 +558,7 @@
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">video</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
         <span class="n">video</span> <span class="o">=</span> <span class="p">[</span><span class="n">video</span><span class="p">]</span>
     <span class="n">videos_to_show</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">heights</span><span class="p">,</span> <span class="n">widths</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">vid</span> <span class="ow">in</span> <span class="n">video</span><span class="p">:</span>
         <span class="n">vid</span> <span class="o">=</span> <span class="n">to_numpy</span><span class="p">(</span><span class="n">vid</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">vid</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">batch_idx</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -564,6 +597,16 @@
         <span class="c1"># be (b,c,t,h,w) or (b,c,t,h,w,r) where r is the RGB(A) values</span>
         <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">vid</span><span class="p">:</span>
             <span class="n">videos_to_show</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="n">v_</span><span class="o">.</span><span class="n">squeeze</span><span class="p">()</span> <span class="k">for</span> <span class="n">v_</span> <span class="ow">in</span> <span class="n">v</span><span class="p">])</span>
+            <span class="n">heights</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="n">v_</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">v_</span> <span class="ow">in</span> <span class="n">v</span><span class="p">])</span>
+            <span class="n">widths</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="n">v_</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="k">for</span> <span class="n">v_</span> <span class="ow">in</span> <span class="n">v</span><span class="p">])</span>
+
+    <span class="k">if</span> <span class="n">zoom</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">ax</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">zoom</span> <span class="o">=</span> <span class="n">_find_zoom</span><span class="p">(</span><span class="n">heights</span><span class="p">,</span> <span class="n">widths</span><span class="p">,</span> <span class="n">ax</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">zoom</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">zoom</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="k">elif</span> <span class="n">zoom</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;zoom must be positive!&quot;</span><span class="p">)</span>
+
     <span class="k">return</span> <span class="n">pt</span><span class="o">.</span><span class="n">animshow</span><span class="p">(</span>
         <span class="n">videos_to_show</span><span class="p">,</span>
         <span class="n">framerate</span><span class="o">=</span><span class="n">framerate</span><span class="p">,</span>
@@ -586,7 +629,7 @@
 <span class="k">def</span><span class="w"> </span><span class="nf">pyrshow</span><span class="p">(</span>
     <span class="n">pyr_coeffs</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
     <span class="n">vrange</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">|</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;indep1&quot;</span><span class="p">,</span>
-    <span class="n">zoom</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">zoom</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
     <span class="n">show_residuals</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="n">cmap</span><span class="p">:</span> <span class="n">mpl</span><span class="o">.</span><span class="n">colors</span><span class="o">.</span><span class="n">Colormap</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">plot_complex</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;rectangular&quot;</span><span class="p">,</span> <span class="s2">&quot;polar&quot;</span><span class="p">,</span> <span class="s2">&quot;logpolar&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;rectangular&quot;</span><span class="p">,</span>
@@ -645,7 +688,7 @@
 <span class="sd">    zoom</span>
 <span class="sd">        Ratio of display pixels to image pixels. if greater than 1, must be an</span>
 <span class="sd">        integer. If less than 1, must be ``1/d`` where ``d`` is a a divisor of the</span>
-<span class="sd">        size of the largest image. If ``None``, we try to determine the best zoom.</span>
+<span class="sd">        size of the largest image.</span>
 <span class="sd">    show_residuals</span>
 <span class="sd">        Whether to display the residual bands.</span>
 <span class="sd">    cmap</span>
