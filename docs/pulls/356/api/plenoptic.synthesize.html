@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>plenoptic.synthesize package &mdash; plenoptic 1.3.1.dev37 documentation</title>
+  <title>plenoptic.synthesize package &mdash; plenoptic 1.3.1.dev38 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css" />
@@ -16,7 +16,7 @@
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../_static/documentation_options.js?v=fd48dd9d"></script>
+      <script src="../_static/documentation_options.js?v=15527e5f"></script>
       <script src="../_static/doctools.js?v=9bcbadda"></script>
       <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -173,7 +173,7 @@ calculation will take too long.</p>
 <p>Forward Mode Auto-Differentiation (<code class="docutils literal notranslate"><span class="pre">Rop</span></code> in Theano). PyTorch does not natively
 support this operation; this function essentially calls backward mode autodiff
 twice, as described in <a class="reference internal" href="#r5c039d101f42-1" id="id1">[1]</a>.</p>
-<p>See <a class="reference internal" href="#plenoptic.synthesize.autodiff.vector_jacobian_product" title="plenoptic.synthesize.autodiff.vector_jacobian_product"><code class="xref py py-meth docutils literal notranslate"><span class="pre">vector_jacobian_product()</span></code></a> docstring on why we and pass arguments for
+<p>See <a class="reference internal" href="#plenoptic.synthesize.autodiff.vector_jacobian_product" title="plenoptic.synthesize.autodiff.vector_jacobian_product"><code class="xref py py-meth docutils literal notranslate"><span class="pre">vector_jacobian_product</span></code></a> docstring on why we and pass arguments for
 <code class="docutils literal notranslate"><span class="pre">retain_graph</span></code> and <code class="docutils literal notranslate"><span class="pre">create_graph</span></code>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -212,7 +212,7 @@ to <code class="docutils literal notranslate"><span class="pre">y.device</span><
 <p>Backward Mode Auto-Differentiation (<code class="docutils literal notranslate"><span class="pre">Lop</span></code> in Theano).</p>
 <p>Note on efficiency: When this function is used in the context of power iteration for
 computing eigenvectors, the vector output will be repeatedly fed back into this
-method and <a class="reference internal" href="#plenoptic.synthesize.autodiff.jacobian_vector_product" title="plenoptic.synthesize.autodiff.jacobian_vector_product"><code class="xref py py-meth docutils literal notranslate"><span class="pre">jacobian_vector_product()</span></code></a>. To prevent the accumulation of gradient
+method and <a class="reference internal" href="#plenoptic.synthesize.autodiff.jacobian_vector_product" title="plenoptic.synthesize.autodiff.jacobian_vector_product"><code class="xref py py-meth docutils literal notranslate"><span class="pre">jacobian_vector_product</span></code></a>. To prevent the accumulation of gradient
 history in this vector (especially on GPU), we need to ensure the computation graph
 is not kept in memory after each iteration. We can do this by detaching the output,
 as well as carefully specifying where/when to retain the created graph.</p>
@@ -223,13 +223,13 @@ as well as carefully specifying where/when to retain the created graph.</p>
 <li><p><strong>x</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tensor</span></code></a></span>) – Input with gradient attached, <code class="docutils literal notranslate"><span class="pre">torch.Size([n,</span> <span class="pre">1])</span></code>.</p></li>
 <li><p><strong>U</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tensor</span></code></a></span>) – Direction, shape is <code class="docutils literal notranslate"><span class="pre">torch.Size([m,</span> <span class="pre">k])</span></code>, i.e. same dim as output tensor.
 <code class="docutils literal notranslate"><span class="pre">k</span></code> is the number of directions.</p></li>
-<li><p><strong>retain_graph</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></span>) – Whether or not to keep graph after doing one <a class="reference internal" href="#plenoptic.synthesize.autodiff.vector_jacobian_product" title="plenoptic.synthesize.autodiff.vector_jacobian_product"><code class="xref py py-meth docutils literal notranslate"><span class="pre">vector_jacobian_product()</span></code></a>.
+<li><p><strong>retain_graph</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></span>) – Whether or not to keep graph after doing one <a class="reference internal" href="#plenoptic.synthesize.autodiff.vector_jacobian_product" title="plenoptic.synthesize.autodiff.vector_jacobian_product"><code class="xref py py-meth docutils literal notranslate"><span class="pre">vector_jacobian_product</span></code></a>.
 Must be set to <code class="docutils literal notranslate"><span class="pre">True</span></code> if <code class="docutils literal notranslate"><span class="pre">k&gt;1</span></code>.</p></li>
 <li><p><strong>create_graph</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></span>) – Whether or not to create computational graph. Usually should be set to <code class="docutils literal notranslate"><span class="pre">True</span></code>
 unless you’re reusing the graph like in the second step
-of <a class="reference internal" href="#plenoptic.synthesize.autodiff.jacobian_vector_product" title="plenoptic.synthesize.autodiff.jacobian_vector_product"><code class="xref py py-meth docutils literal notranslate"><span class="pre">jacobian_vector_product()</span></code></a>.</p></li>
+of <a class="reference internal" href="#plenoptic.synthesize.autodiff.jacobian_vector_product" title="plenoptic.synthesize.autodiff.jacobian_vector_product"><code class="xref py py-meth docutils literal notranslate"><span class="pre">jacobian_vector_product</span></code></a>.</p></li>
 <li><p><strong>detach</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></span>) – As with <code class="docutils literal notranslate"><span class="pre">create_graph</span></code>, only necessary to be <code class="docutils literal notranslate"><span class="pre">True</span></code> when reusing the output
-like we do in the 2nd step of <a class="reference internal" href="#plenoptic.synthesize.autodiff.jacobian_vector_product" title="plenoptic.synthesize.autodiff.jacobian_vector_product"><code class="xref py py-meth docutils literal notranslate"><span class="pre">jacobian_vector_product()</span></code></a>.</p></li>
+like we do in the 2nd step of <a class="reference internal" href="#plenoptic.synthesize.autodiff.jacobian_vector_product" title="plenoptic.synthesize.autodiff.jacobian_vector_product"><code class="xref py py-meth docutils literal notranslate"><span class="pre">jacobian_vector_product</span></code></a>.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
@@ -318,7 +318,7 @@ neural information processing systems (pp. 3530-3539).
 <table class="autosummary longtable docutils align-default">
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="#plenoptic.synthesize.eigendistortion.Eigendistortion.compute_jacobian" title="plenoptic.synthesize.eigendistortion.Eigendistortion.compute_jacobian"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_jacobian</span></code></a>()</p></td>
-<td><p>Compute (via <code class="xref py py-func docutils literal notranslate"><span class="pre">autodiff.jacobian()</span></code>), cache, and return jacobian.</p></td>
+<td><p>Compute (via <code class="xref py py-func docutils literal notranslate"><span class="pre">autodiff.jacobian</span></code>), cache, and return jacobian.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#plenoptic.synthesize.eigendistortion.Eigendistortion.load" title="plenoptic.synthesize.eigendistortion.Eigendistortion.load"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load</span></code></a>(file_path[, map_location, ...])</p></td>
 <td><p>Load all relevant stuff from a .pt file.</p></td>
@@ -337,7 +337,7 @@ neural information processing systems (pp. 3530-3539).
 <dl class="py method">
 <dt class="sig sig-object py" id="plenoptic.synthesize.eigendistortion.Eigendistortion.compute_jacobian">
 <span class="sig-name descname"><span class="pre">compute_jacobian</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/plenoptic/synthesize/eigendistortion.html#Eigendistortion.compute_jacobian"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#plenoptic.synthesize.eigendistortion.Eigendistortion.compute_jacobian" title="Link to this definition"></a></dt>
-<dd><p>Compute (via <code class="xref py py-func docutils literal notranslate"><span class="pre">autodiff.jacobian()</span></code>), cache, and return jacobian.</p>
+<dd><p>Compute (via <code class="xref py py-func docutils literal notranslate"><span class="pre">autodiff.jacobian</span></code>), cache, and return jacobian.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tensor</span></code></a></span></p>
@@ -382,7 +382,7 @@ this calculation will take too long.</p>
 <dt class="sig sig-object py" id="plenoptic.synthesize.eigendistortion.Eigendistortion.jacobian">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">jacobian</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.7)"><span class="pre">Tensor</span></a></em><a class="headerlink" href="#plenoptic.synthesize.eigendistortion.Eigendistortion.jacobian" title="Link to this definition"></a></dt>
 <dd><p>Jacobian matrix of <a class="reference internal" href="#plenoptic.synthesize.eigendistortion.Eigendistortion.model" title="plenoptic.synthesize.eigendistortion.Eigendistortion.model"><code class="xref py py-attr docutils literal notranslate"><span class="pre">model</span></code></a> with respect to <a class="reference internal" href="#plenoptic.synthesize.eigendistortion.Eigendistortion.image" title="plenoptic.synthesize.eigendistortion.Eigendistortion.image"><code class="xref py py-attr docutils literal notranslate"><span class="pre">image</span></code></a>.</p>
-<p>Only set when <a class="reference internal" href="#plenoptic.synthesize.eigendistortion.Eigendistortion.synthesize" title="plenoptic.synthesize.eigendistortion.Eigendistortion.synthesize"><code class="xref py py-func docutils literal notranslate"><span class="pre">synthesize()</span></code></a> is run with <code class="docutils literal notranslate"><span class="pre">method='exact'</span></code>.
+<p>Only set when <a class="reference internal" href="#plenoptic.synthesize.eigendistortion.Eigendistortion.synthesize" title="plenoptic.synthesize.eigendistortion.Eigendistortion.synthesize"><code class="xref py py-func docutils literal notranslate"><span class="pre">synthesize</span></code></a> is run with <code class="docutils literal notranslate"><span class="pre">method='exact'</span></code>.
 Else, <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p>
 </dd></dl>
 
@@ -401,13 +401,13 @@ compatible with breaking changes in torch 2.6.</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>file_path</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – The path to load the synthesis object from.</p></li>
-<li><p><strong>map_location</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span>) – Argument to pass to <a class="reference external" href="https://docs.pytorch.org/docs/stable/generated/torch.load.html#torch.load" title="(in PyTorch v2.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">torch.load()</span></code></a> as <code class="docutils literal notranslate"><span class="pre">map_location</span></code>. If you
+<li><p><strong>map_location</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span>) – Argument to pass to <a class="reference external" href="https://docs.pytorch.org/docs/stable/generated/torch.load.html#torch.load" title="(in PyTorch v2.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">torch.load</span></code></a> as <code class="docutils literal notranslate"><span class="pre">map_location</span></code>. If you
 save stuff that was being run on a GPU and are loading onto a
 CPU, you’ll need this to make sure everything lines up
 properly. This should be structured like the str you would
 pass to <a class="reference external" href="https://docs.pytorch.org/docs/stable/tensor_attributes.html#torch.device" title="(in PyTorch v2.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">torch.device</span></code></a>.</p></li>
 <li><p><strong>tensor_equality_atol</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – Absolute tolerance to use when checking for tensor equality during load,
-passed to <a class="reference external" href="https://docs.pytorch.org/docs/stable/generated/torch.allclose.html#torch.allclose" title="(in PyTorch v2.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">torch.allclose()</span></code></a>. It may be necessary to increase if you are
+passed to <a class="reference external" href="https://docs.pytorch.org/docs/stable/generated/torch.allclose.html#torch.allclose" title="(in PyTorch v2.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">torch.allclose</span></code></a>. It may be necessary to increase if you are
 saving and loading on two machines with torch built by different cuda
 versions. Be careful when changing this! See
 <a class="reference external" href="https://docs.pytorch.org/docs/stable/type_info.html#torch.torch.finfo" title="(in PyTorch v2.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">torch.finfo</span></code></a> for more details about floating
@@ -415,7 +415,7 @@ point precision of different data types (especially, <code class="docutils liter
 to increase this by more than 1 or 2 decades, then you are probably not
 dealing with a numerical issue.</p></li>
 <li><p><strong>tensor_equality_rtol</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – Relative tolerance to use when checking for tensor equality during load,
-passed to <a class="reference external" href="https://docs.pytorch.org/docs/stable/generated/torch.allclose.html#torch.allclose" title="(in PyTorch v2.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">torch.allclose()</span></code></a>. It may be necessary to increase if you are
+passed to <a class="reference external" href="https://docs.pytorch.org/docs/stable/generated/torch.allclose.html#torch.allclose" title="(in PyTorch v2.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">torch.allclose</span></code></a>. It may be necessary to increase if you are
 saving and loading on two machines with torch built by different cuda
 versions. Be careful when changing this! See
 <a class="reference external" href="https://docs.pytorch.org/docs/stable/type_info.html#torch.torch.finfo" title="(in PyTorch v2.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">torch.finfo</span></code></a> for more details about floating
@@ -423,12 +423,12 @@ point precision of different data types (especially, <code class="docutils liter
 to increase this by more than 1 or 2 decades, then you are probably not
 dealing with a numerical issue.</p></li>
 <li><p><strong>**pickle_load_args</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code></span>) – Any additional kwargs will be added to <code class="docutils literal notranslate"><span class="pre">pickle_module.load</span></code> via
-<a class="reference external" href="https://docs.pytorch.org/docs/stable/generated/torch.load.html#torch.load" title="(in PyTorch v2.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">torch.load()</span></code></a>, see that function’s docstring for details.</p></li>
+<a class="reference external" href="https://docs.pytorch.org/docs/stable/generated/torch.load.html#torch.load" title="(in PyTorch v2.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">torch.load</span></code></a>, see that function’s docstring for details.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
-<li><p><strong>ValueError</strong> – If <a class="reference internal" href="#plenoptic.synthesize.eigendistortion.Eigendistortion.synthesize" title="plenoptic.synthesize.eigendistortion.Eigendistortion.synthesize"><code class="xref py py-func docutils literal notranslate"><span class="pre">synthesize()</span></code></a> has been called before this call to <code class="docutils literal notranslate"><span class="pre">load</span></code>.</p></li>
+<li><p><strong>ValueError</strong> – If <a class="reference internal" href="#plenoptic.synthesize.eigendistortion.Eigendistortion.synthesize" title="plenoptic.synthesize.eigendistortion.Eigendistortion.synthesize"><code class="xref py py-func docutils literal notranslate"><span class="pre">synthesize</span></code></a> has been called before this call to <code class="docutils literal notranslate"><span class="pre">load</span></code>.</p></li>
 <li><p><strong>ValueError</strong> – If the object saved at <code class="docutils literal notranslate"><span class="pre">file_path</span></code> is not a <code class="docutils literal notranslate"><span class="pre">Eigendistortion</span></code> object.</p></li>
 <li><p><strong>ValueError</strong> – If the saved and loading <code class="docutils literal notranslate"><span class="pre">Eigendistortion</span></code> objects have a different value
 for <a class="reference internal" href="#plenoptic.synthesize.eigendistortion.Eigendistortion.image" title="plenoptic.synthesize.eigendistortion.Eigendistortion.image"><code class="xref py py-attr docutils literal notranslate"><span class="pre">image</span></code></a>.</p></li>
@@ -440,7 +440,7 @@ objects.</p></li>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
 <dl class="simple">
-<dt><a class="reference internal" href="plenoptic.tools.html#plenoptic.tools.io.examine_saved_synthesis" title="plenoptic.tools.io.examine_saved_synthesis"><code class="xref py py-func docutils literal notranslate"><span class="pre">examine_saved_synthesis()</span></code></a></dt><dd><p>Examine metadata from saved object: pytorch and plenoptic versions, name of the synthesis object, shapes of tensors, etc.</p>
+<dt><a class="reference internal" href="plenoptic.tools.html#plenoptic.tools.io.examine_saved_synthesis" title="plenoptic.tools.io.examine_saved_synthesis"><code class="xref py py-func docutils literal notranslate"><span class="pre">examine_saved_synthesis</span></code></a></dt><dd><p>Examine metadata from saved object: pytorch and plenoptic versions, name of the synthesis object, shapes of tensors, etc.</p>
 </dd>
 </dl>
 </div>
@@ -468,7 +468,7 @@ objects.</p></li>
 <dt class="sig sig-object py" id="plenoptic.synthesize.eigendistortion.Eigendistortion.save">
 <span class="sig-name descname"><span class="pre">save</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/plenoptic/synthesize/eigendistortion.html#Eigendistortion.save"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#plenoptic.synthesize.eigendistortion.Eigendistortion.save" title="Link to this definition"></a></dt>
 <dd><p>Save all relevant variables in .pt file.</p>
-<p>See <a class="reference internal" href="#plenoptic.synthesize.eigendistortion.Eigendistortion.load" title="plenoptic.synthesize.eigendistortion.Eigendistortion.load"><code class="xref py py-meth docutils literal notranslate"><span class="pre">load()</span></code></a> docstring for an example of use.</p>
+<p>See <a class="reference internal" href="#plenoptic.synthesize.eigendistortion.Eigendistortion.load" title="plenoptic.synthesize.eigendistortion.Eigendistortion.load"><code class="xref py py-meth docutils literal notranslate"><span class="pre">load</span></code></a> docstring for an example of use.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>file_path</strong> (<em>str</em>) – The path to save the Eigendistortion object to.</p>
@@ -494,11 +494,11 @@ approximate the top k eigendistortions and their corresponding eigenvalues.</p><
 <li><p><strong>max_iter</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – Maximum number of steps to run for <code class="docutils literal notranslate"><span class="pre">method='power'</span></code> in eigenvalue
 computation. Ignored for other methods.</p></li>
 <li><p><strong>p</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – Oversampling parameter for randomized SVD. k+p vectors will be sampled,
-and k will be returned. See docstring of <code class="xref py py-meth docutils literal notranslate"><span class="pre">_synthesize_randomized_svd()</span></code>
+and k will be returned. See docstring of <code class="xref py py-meth docutils literal notranslate"><span class="pre">_synthesize_randomized_svd</span></code>
 for more details including algorithm reference.</p></li>
 <li><p><strong>q</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – Matrix power parameter for randomized SVD. This is an effective trick for
 the algorithm to converge to the correct eigenvectors when the
-eigenspectrum does not decay quickly. See <code class="xref py py-meth docutils literal notranslate"><span class="pre">_synthesize_randomized_svd()</span></code>
+eigenspectrum does not decay quickly. See <code class="xref py py-meth docutils literal notranslate"><span class="pre">_synthesize_randomized_svd</span></code>
 for more details including algorithm reference.</p></li>
 <li><p><strong>stop_criterion</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – Used if <code class="docutils literal notranslate"><span class="pre">method='power'</span></code> to check for convergence. If the L2-norm
 of the eigenvalues has changed by less than this value from one
@@ -536,7 +536,7 @@ image), in which case we’re worried abour running out of memory.</p>
 <span class="sig-name descname"><span class="pre">to</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">non_blocking</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/plenoptic/synthesize/eigendistortion.html#Eigendistortion.to"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id5" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
-<p>Its signature is similar to <a class="reference external" href="https://docs.pytorch.org/docs/stable/generated/torch.Tensor.to.html#torch.Tensor.to" title="(in PyTorch v2.7)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">torch.Tensor.to()</span></code></a>, but only accepts
+<p>Its signature is similar to <a class="reference external" href="https://docs.pytorch.org/docs/stable/generated/torch.Tensor.to.html#torch.Tensor.to" title="(in PyTorch v2.7)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">torch.Tensor.to</span></code></a>, but only accepts
 floating point desired <code class="xref py py-attr docutils literal notranslate"><span class="pre">dtype</span></code> s. In addition, this method will
 only cast the floating point parameters and buffers to <code class="xref py py-attr docutils literal notranslate"><span class="pre">dtype</span></code>
 (if given). The integral parameters and buffers will be moved
@@ -544,7 +544,7 @@ only cast the floating point parameters and buffers to <code class="xref py py-a
 <code class="xref py py-attr docutils literal notranslate"><span class="pre">non_blocking</span></code> is set, it tries to convert/move asynchronously
 with respect to the host if possible, e.g., moving CPU Tensors with
 pinned memory to CUDA devices.</p>
-<p>See <a class="reference external" href="https://docs.pytorch.org/docs/stable/generated/torch.nn.Module.html#torch.nn.Module.to" title="(in PyTorch v2.7)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">torch.nn.Module.to()</span></code></a> for examples.</p>
+<p>See <a class="reference external" href="https://docs.pytorch.org/docs/stable/generated/torch.nn.Module.html#torch.nn.Module.to" title="(in PyTorch v2.7)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">torch.nn.Module.to</span></code></a> for examples.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>This method modifies the module in-place.</p>
@@ -583,10 +583,10 @@ index the first one, and -1 or 9 will index the last one.</p></li>
 E.g. multiplying by the stdev ImageNet then adding the mean of ImageNet to undo
 image preprocessing.</p></li>
 <li><p><strong>ax</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.html#matplotlib.axes.Axes" title="(in Matplotlib v3.10.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Axes</span></code></a> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span>) – Axis handle on which to plot.</p></li>
-<li><p><strong>plot_complex</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – Parameter for <a class="reference internal" href="plenoptic.tools.html#plenoptic.tools.display.imshow" title="plenoptic.tools.display.imshow"><code class="xref py py-func docutils literal notranslate"><span class="pre">imshow()</span></code></a> determining how to handle
+<li><p><strong>plot_complex</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – Parameter for <a class="reference internal" href="plenoptic.tools.html#plenoptic.tools.display.imshow" title="plenoptic.tools.display.imshow"><code class="xref py py-func docutils literal notranslate"><span class="pre">imshow</span></code></a> determining how to handle
 complex values. Defaults to <code class="docutils literal notranslate"><span class="pre">'rectangular'</span></code>, which plots real and complex
 components as separate images. See that method’s docstring for details.</p></li>
-<li><p><strong>**kwargs</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code></span>) – Additional arguments for <a class="reference internal" href="plenoptic.tools.html#plenoptic.tools.display.imshow" title="plenoptic.tools.display.imshow"><code class="xref py py-func docutils literal notranslate"><span class="pre">imshow()</span></code></a>.</p></li>
+<li><p><strong>**kwargs</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code></span>) – Additional arguments for <a class="reference internal" href="plenoptic.tools.html#plenoptic.tools.display.imshow" title="plenoptic.tools.display.imshow"><code class="xref py py-func docutils literal notranslate"><span class="pre">imshow</span></code></a>.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
@@ -800,7 +800,7 @@ CPU, you’ll need this to make sure everything lines up
 properly. This should be structured like the str you would
 pass to <a class="reference external" href="https://docs.pytorch.org/docs/stable/tensor_attributes.html#torch.device" title="(in PyTorch v2.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">torch.device</span></code></a>.</p></li>
 <li><p><strong>tensor_equality_atol</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – Absolute tolerance to use when checking for tensor equality during load,
-passed to <a class="reference external" href="https://docs.pytorch.org/docs/stable/generated/torch.allclose.html#torch.allclose" title="(in PyTorch v2.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">torch.allclose()</span></code></a>. It may be necessary to increase if you are
+passed to <a class="reference external" href="https://docs.pytorch.org/docs/stable/generated/torch.allclose.html#torch.allclose" title="(in PyTorch v2.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">torch.allclose</span></code></a>. It may be necessary to increase if you are
 saving and loading on two machines with torch built by different cuda
 versions. Be careful when changing this! See
 <a class="reference external" href="https://docs.pytorch.org/docs/stable/type_info.html#torch.torch.finfo" title="(in PyTorch v2.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">torch.finfo</span></code></a> for more details about floating
@@ -808,7 +808,7 @@ point precision of different data types (especially, <code class="docutils liter
 to increase this by more than 1 or 2 decades, then you are probably not
 dealing with a numerical issue.</p></li>
 <li><p><strong>tensor_equality_rtol</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – Relative tolerance to use when checking for tensor equality during load,
-passed to <a class="reference external" href="https://docs.pytorch.org/docs/stable/generated/torch.allclose.html#torch.allclose" title="(in PyTorch v2.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">torch.allclose()</span></code></a>. It may be necessary to increase if you are
+passed to <a class="reference external" href="https://docs.pytorch.org/docs/stable/generated/torch.allclose.html#torch.allclose" title="(in PyTorch v2.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">torch.allclose</span></code></a>. It may be necessary to increase if you are
 saving and loading on two machines with torch built by different cuda
 versions. Be careful when changing this! See
 <a class="reference external" href="https://docs.pytorch.org/docs/stable/type_info.html#torch.torch.finfo" title="(in PyTorch v2.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">torch.finfo</span></code></a> for more details about floating
@@ -816,12 +816,12 @@ point precision of different data types (especially, <code class="docutils liter
 to increase this by more than 1 or 2 decades, then you are probably not
 dealing with a numerical issue.</p></li>
 <li><p><strong>**pickle_load_args</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code></span>) – Any additional kwargs will be added to <code class="docutils literal notranslate"><span class="pre">pickle_module.load</span></code> via
-<a class="reference external" href="https://docs.pytorch.org/docs/stable/generated/torch.load.html#torch.load" title="(in PyTorch v2.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">torch.load()</span></code></a>, see that function’s docstring for details.</p></li>
+<a class="reference external" href="https://docs.pytorch.org/docs/stable/generated/torch.load.html#torch.load" title="(in PyTorch v2.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">torch.load</span></code></a>, see that function’s docstring for details.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
-<li><p><strong>ValueError</strong> – If <a class="reference internal" href="#plenoptic.synthesize.mad_competition.MADCompetition.setup" title="plenoptic.synthesize.mad_competition.MADCompetition.setup"><code class="xref py py-func docutils literal notranslate"><span class="pre">setup()</span></code></a> or <a class="reference internal" href="#plenoptic.synthesize.mad_competition.MADCompetition.synthesize" title="plenoptic.synthesize.mad_competition.MADCompetition.synthesize"><code class="xref py py-func docutils literal notranslate"><span class="pre">synthesize()</span></code></a> has been called before this call
+<li><p><strong>ValueError</strong> – If <a class="reference internal" href="#plenoptic.synthesize.mad_competition.MADCompetition.setup" title="plenoptic.synthesize.mad_competition.MADCompetition.setup"><code class="xref py py-func docutils literal notranslate"><span class="pre">setup</span></code></a> or <a class="reference internal" href="#plenoptic.synthesize.mad_competition.MADCompetition.synthesize" title="plenoptic.synthesize.mad_competition.MADCompetition.synthesize"><code class="xref py py-func docutils literal notranslate"><span class="pre">synthesize</span></code></a> has been called before this call
 to <code class="docutils literal notranslate"><span class="pre">load</span></code>.</p></li>
 <li><p><strong>ValueError</strong> – If the object saved at <code class="docutils literal notranslate"><span class="pre">file_path</span></code> is not a <code class="docutils literal notranslate"><span class="pre">MADCompetition</span></code> object.</p></li>
 <li><p><strong>ValueError</strong> – If the saved and loading <code class="docutils literal notranslate"><span class="pre">MADCompetition</span></code> objects have a different value
@@ -832,14 +832,14 @@ different between the saved and loading objects.</p></li>
 </ul>
 </dd>
 <dt class="field-odd">Warns<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>UserWarning</strong> – If <a class="reference internal" href="#plenoptic.synthesize.mad_competition.MADCompetition.setup" title="plenoptic.synthesize.mad_competition.MADCompetition.setup"><code class="xref py py-func docutils literal notranslate"><span class="pre">setup()</span></code></a> will need to be called after <code class="docutils literal notranslate"><span class="pre">load</span></code>, to finish
+<dd class="field-odd"><p><strong>UserWarning</strong> – If <a class="reference internal" href="#plenoptic.synthesize.mad_competition.MADCompetition.setup" title="plenoptic.synthesize.mad_competition.MADCompetition.setup"><code class="xref py py-func docutils literal notranslate"><span class="pre">setup</span></code></a> will need to be called after <code class="docutils literal notranslate"><span class="pre">load</span></code>, to finish
 initializing <code class="xref py py-attr docutils literal notranslate"><span class="pre">optimizer</span></code> or <code class="xref py py-attr docutils literal notranslate"><span class="pre">scheduler</span></code>.</p>
 </dd>
 </dl>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
 <dl class="simple">
-<dt><a class="reference internal" href="plenoptic.tools.html#plenoptic.tools.io.examine_saved_synthesis" title="plenoptic.tools.io.examine_saved_synthesis"><code class="xref py py-func docutils literal notranslate"><span class="pre">examine_saved_synthesis()</span></code></a></dt><dd><p>Examine metadata from saved object: pytorch and plenoptic versions, name of the synthesis object, shapes of tensors, etc.</p>
+<dt><a class="reference internal" href="plenoptic.tools.html#plenoptic.tools.io.examine_saved_synthesis" title="plenoptic.tools.io.examine_saved_synthesis"><code class="xref py py-func docutils literal notranslate"><span class="pre">examine_saved_synthesis</span></code></a></dt><dd><p>Examine metadata from saved object: pytorch and plenoptic versions, name of the synthesis object, shapes of tensors, etc.</p>
 </dd>
 </dl>
 </div>
@@ -945,7 +945,7 @@ equal to <code class="docutils literal notranslate"><span class="pre">reference_
 <dd><p>Save all relevant variables in .pt file.</p>
 <p>Note that if <code class="docutils literal notranslate"><span class="pre">store_progress</span></code> is True, this will probably be very
 large.</p>
-<p>See <a class="reference internal" href="#plenoptic.synthesize.mad_competition.MADCompetition.load" title="plenoptic.synthesize.mad_competition.MADCompetition.load"><code class="xref py py-func docutils literal notranslate"><span class="pre">load()</span></code></a> docstring for an example of use.</p>
+<p>See <a class="reference internal" href="#plenoptic.synthesize.mad_competition.MADCompetition.load" title="plenoptic.synthesize.mad_competition.MADCompetition.load"><code class="xref py py-func docutils literal notranslate"><span class="pre">load</span></code></a> docstring for an example of use.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>file_path</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – The path to save the MADCompetition object to.</p>
@@ -958,7 +958,7 @@ large.</p>
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">saved_mad_image</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.7)"><span class="pre">Tensor</span></a></em><a class="headerlink" href="#plenoptic.synthesize.mad_competition.MADCompetition.saved_mad_image" title="Link to this definition"></a></dt>
 <dd><p><a class="reference internal" href="#plenoptic.synthesize.mad_competition.MADCompetition.mad_image" title="plenoptic.synthesize.mad_competition.MADCompetition.mad_image"><code class="xref py py-attr docutils literal notranslate"><span class="pre">mad_image</span></code></a>, cached over time for later examination.</p>
 <p>How often the metamer is cached is determined by the <code class="docutils literal notranslate"><span class="pre">store_progress</span></code> argument
-to the <a class="reference internal" href="#plenoptic.synthesize.mad_competition.MADCompetition.synthesize" title="plenoptic.synthesize.mad_competition.MADCompetition.synthesize"><code class="xref py py-func docutils literal notranslate"><span class="pre">synthesize()</span></code></a> function.</p>
+to the <a class="reference internal" href="#plenoptic.synthesize.mad_competition.MADCompetition.synthesize" title="plenoptic.synthesize.mad_competition.MADCompetition.synthesize"><code class="xref py py-func docutils literal notranslate"><span class="pre">synthesize</span></code></a> function.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -984,8 +984,8 @@ don’t use one.</p></li>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
-<li><p><strong>ValueError</strong> – If you try to set <code class="docutils literal notranslate"><span class="pre">initial_noise</span></code> after calling <a class="reference internal" href="#plenoptic.synthesize.mad_competition.MADCompetition.load" title="plenoptic.synthesize.mad_competition.MADCompetition.load"><code class="xref py py-func docutils literal notranslate"><span class="pre">load()</span></code></a>.</p></li>
-<li><p><strong>ValueError</strong> – If <code class="docutils literal notranslate"><span class="pre">setup</span></code> is called more than once or after <a class="reference internal" href="#plenoptic.synthesize.mad_competition.MADCompetition.synthesize" title="plenoptic.synthesize.mad_competition.MADCompetition.synthesize"><code class="xref py py-func docutils literal notranslate"><span class="pre">synthesize()</span></code></a>.</p></li>
+<li><p><strong>ValueError</strong> – If you try to set <code class="docutils literal notranslate"><span class="pre">initial_noise</span></code> after calling <a class="reference internal" href="#plenoptic.synthesize.mad_competition.MADCompetition.load" title="plenoptic.synthesize.mad_competition.MADCompetition.load"><code class="xref py py-func docutils literal notranslate"><span class="pre">load</span></code></a>.</p></li>
+<li><p><strong>ValueError</strong> – If <code class="docutils literal notranslate"><span class="pre">setup</span></code> is called more than once or after <a class="reference internal" href="#plenoptic.synthesize.mad_competition.MADCompetition.synthesize" title="plenoptic.synthesize.mad_competition.MADCompetition.synthesize"><code class="xref py py-func docutils literal notranslate"><span class="pre">synthesize</span></code></a>.</p></li>
 </ul>
 </dd>
 </dl>
@@ -1098,7 +1098,7 @@ loss has stopped decreasing (for <code class="docutils literal notranslate"><spa
 <span class="sig-name descname"><span class="pre">to</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">non_blocking</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/plenoptic/synthesize/mad_competition.html#MADCompetition.to"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id9" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
-<p>Its signature is similar to <a class="reference external" href="https://docs.pytorch.org/docs/stable/generated/torch.Tensor.to.html#torch.Tensor.to" title="(in PyTorch v2.7)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">torch.Tensor.to()</span></code></a>, but only accepts
+<p>Its signature is similar to <a class="reference external" href="https://docs.pytorch.org/docs/stable/generated/torch.Tensor.to.html#torch.Tensor.to" title="(in PyTorch v2.7)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">torch.Tensor.to</span></code></a>, but only accepts
 floating point desired <code class="xref py py-attr docutils literal notranslate"><span class="pre">dtype</span></code> s. In addition, this method will
 only cast the floating point parameters and buffers to <code class="xref py py-attr docutils literal notranslate"><span class="pre">dtype</span></code>
 (if given). The integral parameters and buffers will be moved
@@ -1106,7 +1106,7 @@ only cast the floating point parameters and buffers to <code class="xref py py-a
 <code class="xref py py-attr docutils literal notranslate"><span class="pre">non_blocking</span></code> is set, it tries to convert/move asynchronously
 with respect to the host if possible, e.g., moving CPU Tensors with
 pinned memory to CUDA devices.</p>
-<p>See <a class="reference external" href="https://docs.pytorch.org/docs/stable/generated/torch.nn.Module.html#torch.nn.Module.to" title="(in PyTorch v2.7)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">torch.nn.Module.to()</span></code></a> for examples.</p>
+<p>See <a class="reference external" href="https://docs.pytorch.org/docs/stable/generated/torch.nn.Module.html#torch.nn.Module.to" title="(in PyTorch v2.7)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">torch.nn.Module.to</span></code></a> for examples.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>This method modifies the module in-place.</p>
@@ -1203,9 +1203,9 @@ details.</p>
 <dd><p>Display MAD image.</p>
 <p>You can specify what iteration to view by using the <code class="docutils literal notranslate"><span class="pre">iteration</span></code> arg.
 The default, <code class="docutils literal notranslate"><span class="pre">None</span></code>, shows the final one.</p>
-<p>We use <a class="reference internal" href="plenoptic.tools.html#plenoptic.tools.display.imshow" title="plenoptic.tools.display.imshow"><code class="xref py py-func docutils literal notranslate"><span class="pre">imshow()</span></code></a> to display the synthesized image and
+<p>We use <a class="reference internal" href="plenoptic.tools.html#plenoptic.tools.display.imshow" title="plenoptic.tools.display.imshow"><code class="xref py py-func docutils literal notranslate"><span class="pre">imshow</span></code></a> to display the synthesized image and
 attempt to automatically find the most reasonable zoom value. You can override this
-value using the zoom arg, but remember that <a class="reference internal" href="plenoptic.tools.html#plenoptic.tools.display.imshow" title="plenoptic.tools.display.imshow"><code class="xref py py-func docutils literal notranslate"><span class="pre">imshow()</span></code></a>
+value using the zoom arg, but remember that <a class="reference internal" href="plenoptic.tools.html#plenoptic.tools.display.imshow" title="plenoptic.tools.display.imshow"><code class="xref py py-func docutils literal notranslate"><span class="pre">imshow</span></code></a>
 is opinionated about the size of the resulting image and will throw an Exception if
 the axis created is not big enough for the selected zoom.</p>
 <dl class="field-list simple">
@@ -1220,9 +1220,9 @@ of display pixels to image pixels. If <code class="docutils literal notranslate"
 attempt to find the best value ourselves.</p></li>
 <li><p><strong>iteration</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span>) – Which iteration to display. If None, the default, we show
 the most recent one. Negative values are also allowed.</p></li>
-<li><p><strong>ax</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.html#matplotlib.axes.Axes" title="(in Matplotlib v3.10.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Axes</span></code></a> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span>) – Pre-existing axes for plot. If <code class="docutils literal notranslate"><span class="pre">None</span></code>, we call <a class="reference external" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.gca.html#matplotlib.pyplot.gca" title="(in Matplotlib v3.10.3)"><code class="xref py py-func docutils literal notranslate"><span class="pre">matplotlib.pyplot.gca()</span></code></a>.</p></li>
+<li><p><strong>ax</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.html#matplotlib.axes.Axes" title="(in Matplotlib v3.10.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Axes</span></code></a> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span>) – Pre-existing axes for plot. If <code class="docutils literal notranslate"><span class="pre">None</span></code>, we call <a class="reference external" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.gca.html#matplotlib.pyplot.gca" title="(in Matplotlib v3.10.3)"><code class="xref py py-func docutils literal notranslate"><span class="pre">matplotlib.pyplot.gca</span></code></a>.</p></li>
 <li><p><strong>title</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – Title of the axis.</p></li>
-<li><p><strong>**kwargs</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code></span>) – Passed to <a class="reference internal" href="plenoptic.tools.html#plenoptic.tools.display.imshow" title="plenoptic.tools.display.imshow"><code class="xref py py-func docutils literal notranslate"><span class="pre">imshow()</span></code></a>.</p></li>
+<li><p><strong>**kwargs</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code></span>) – Passed to <a class="reference internal" href="plenoptic.tools.html#plenoptic.tools.display.imshow" title="plenoptic.tools.display.imshow"><code class="xref py py-func docutils literal notranslate"><span class="pre">imshow</span></code></a>.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
@@ -1258,8 +1258,8 @@ image from <code class="docutils literal notranslate"><span class="pre">mad_metr
 <li><p><strong>metric2_name</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span>) – Name of the second metric. If <code class="docutils literal notranslate"><span class="pre">None</span></code>, we use the name of the
 <code class="docutils literal notranslate"><span class="pre">optimized_metric</span></code> function from <code class="docutils literal notranslate"><span class="pre">mad_metric2_min</span></code>.</p></li>
 <li><p><strong>zoom</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code> | <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – Ratio of display pixels to image pixels. See
-<a class="reference internal" href="plenoptic.tools.html#plenoptic.tools.display.imshow" title="plenoptic.tools.display.imshow"><code class="xref py py-func docutils literal notranslate"><span class="pre">imshow()</span></code></a> for details.</p></li>
-<li><p><strong>**kwargs</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code></span>) – Passed to <a class="reference internal" href="plenoptic.tools.html#plenoptic.tools.display.imshow" title="plenoptic.tools.display.imshow"><code class="xref py py-func docutils literal notranslate"><span class="pre">imshow()</span></code></a>.</p></li>
+<a class="reference internal" href="plenoptic.tools.html#plenoptic.tools.display.imshow" title="plenoptic.tools.display.imshow"><code class="xref py py-func docutils literal notranslate"><span class="pre">imshow</span></code></a> for details.</p></li>
+<li><p><strong>**kwargs</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code></span>) – Passed to <a class="reference internal" href="plenoptic.tools.html#plenoptic.tools.display.imshow" title="plenoptic.tools.display.imshow"><code class="xref py py-func docutils literal notranslate"><span class="pre">imshow</span></code></a>.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
@@ -1291,8 +1291,8 @@ the final iteration.</p>
 the most recent one. Negative values are also allowed.</p></li>
 <li><p><strong>axes</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>[<a class="reference external" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.html#matplotlib.axes.Axes" title="(in Matplotlib v3.10.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Axes</span></code></a>] | <a class="reference external" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.html#matplotlib.axes.Axes" title="(in Matplotlib v3.10.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Axes</span></code></a> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span>) – Pre-existing axes for plot. If a list of axes, must be the two axes to
 use for this plot. If a single axis, we’ll split it in half
-horizontally. If None, we call <a class="reference external" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.gca.html#matplotlib.pyplot.gca" title="(in Matplotlib v3.10.3)"><code class="xref py py-func docutils literal notranslate"><span class="pre">matplotlib.pyplot.gca()</span></code></a>.</p></li>
-<li><p><strong>**kwargs</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code></span>) – Passed to <a class="reference external" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.semilogy.html#matplotlib.pyplot.semilogy" title="(in Matplotlib v3.10.3)"><code class="xref py py-func docutils literal notranslate"><span class="pre">matplotlib.pyplot.semilogy()</span></code></a>.</p></li>
+horizontally. If None, we call <a class="reference external" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.gca.html#matplotlib.pyplot.gca" title="(in Matplotlib v3.10.3)"><code class="xref py py-func docutils literal notranslate"><span class="pre">matplotlib.pyplot.gca</span></code></a>.</p></li>
+<li><p><strong>**kwargs</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code></span>) – Passed to <a class="reference external" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.semilogy.html#matplotlib.pyplot.semilogy" title="(in Matplotlib v3.10.3)"><code class="xref py py-func docutils literal notranslate"><span class="pre">matplotlib.pyplot.semilogy</span></code></a>.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
@@ -1326,13 +1326,13 @@ a two-axis figure to display the loss for this full set.</p>
 <code class="docutils literal notranslate"><span class="pre">optimized_metric</span></code> function from <code class="docutils literal notranslate"><span class="pre">mad_metric1_min</span></code>.</p></li>
 <li><p><strong>metric2_name</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span>) – Name of the second metric. If <code class="docutils literal notranslate"><span class="pre">None</span></code>, we use the name of the
 <code class="docutils literal notranslate"><span class="pre">optimized_metric</span></code> function from <code class="docutils literal notranslate"><span class="pre">mad_metric2_min</span></code>.</p></li>
-<li><p><strong>metric1_kwargs</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></span>) – Dictionary of arguments to pass to <a class="reference external" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.plot.html#matplotlib.pyplot.plot" title="(in Matplotlib v3.10.3)"><code class="xref py py-func docutils literal notranslate"><span class="pre">matplotlib.pyplot.plot()</span></code></a> to identify
+<li><p><strong>metric1_kwargs</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></span>) – Dictionary of arguments to pass to <a class="reference external" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.plot.html#matplotlib.pyplot.plot" title="(in Matplotlib v3.10.3)"><code class="xref py py-func docutils literal notranslate"><span class="pre">matplotlib.pyplot.plot</span></code></a> to identify
 synthesis instance where the first metric was being optimized.</p></li>
-<li><p><strong>metric2_kwargs</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></span>) – Dictionary of arguments to pass to <a class="reference external" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.plot.html#matplotlib.pyplot.plot" title="(in Matplotlib v3.10.3)"><code class="xref py py-func docutils literal notranslate"><span class="pre">matplotlib.pyplot.plot()</span></code></a> to identify
+<li><p><strong>metric2_kwargs</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></span>) – Dictionary of arguments to pass to <a class="reference external" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.plot.html#matplotlib.pyplot.plot" title="(in Matplotlib v3.10.3)"><code class="xref py py-func docutils literal notranslate"><span class="pre">matplotlib.pyplot.plot</span></code></a> to identify
 synthesis instance where the second metric was being optimized.</p></li>
-<li><p><strong>min_kwargs</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></span>) – Dictionary of arguments to pass to <a class="reference external" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.plot.html#matplotlib.pyplot.plot" title="(in Matplotlib v3.10.3)"><code class="xref py py-func docutils literal notranslate"><span class="pre">matplotlib.pyplot.plot()</span></code></a> to identify
+<li><p><strong>min_kwargs</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></span>) – Dictionary of arguments to pass to <a class="reference external" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.plot.html#matplotlib.pyplot.plot" title="(in Matplotlib v3.10.3)"><code class="xref py py-func docutils literal notranslate"><span class="pre">matplotlib.pyplot.plot</span></code></a> to identify
 synthesis instance where <code class="docutils literal notranslate"><span class="pre">optimized_metric</span></code> was being minimized.</p></li>
-<li><p><strong>max_kwargs</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></span>) – Dictionary of arguments to pass to <a class="reference external" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.plot.html#matplotlib.pyplot.plot" title="(in Matplotlib v3.10.3)"><code class="xref py py-func docutils literal notranslate"><span class="pre">matplotlib.pyplot.plot()</span></code></a> to identify
+<li><p><strong>max_kwargs</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></span>) – Dictionary of arguments to pass to <a class="reference external" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.plot.html#matplotlib.pyplot.plot" title="(in Matplotlib v3.10.3)"><code class="xref py py-func docutils literal notranslate"><span class="pre">matplotlib.pyplot.plot</span></code></a> to identify
 synthesis instance where <code class="docutils literal notranslate"><span class="pre">optimized_metric</span></code> was being maximized.</p></li>
 <li><p><strong>figsize</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>]</span>) – Size of the figure we create.</p></li>
 </ul>
@@ -1368,8 +1368,8 @@ the most recent one. Negative values are also allowed.</p></li>
 <li><p><strong>ylim</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>], <code class="xref py py-data docutils literal notranslate"><span class="pre">Literal</span></code>[<code class="docutils literal notranslate"><span class="pre">False</span></code>]]</span>) – If tuple, the ylimit to set for this axis. If False, we leave
 it untouched.</p></li>
 <li><p><strong>ax</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.html#matplotlib.axes.Axes" title="(in Matplotlib v3.10.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Axes</span></code></a> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span>) – Pre-existing axes for plot. If <code class="docutils literal notranslate"><span class="pre">None</span></code>, we call
-<a class="reference external" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.gca.html#matplotlib.pyplot.gca" title="(in Matplotlib v3.10.3)"><code class="xref py py-func docutils literal notranslate"><span class="pre">matplotlib.pyplot.gca()</span></code></a>.</p></li>
-<li><p><strong>**kwargs</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code></span>) – Passed to <a class="reference external" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.hist.html#matplotlib.pyplot.hist" title="(in Matplotlib v3.10.3)"><code class="xref py py-func docutils literal notranslate"><span class="pre">matplotlib.pyplot.hist()</span></code></a>.</p></li>
+<a class="reference external" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.gca.html#matplotlib.pyplot.gca" title="(in Matplotlib v3.10.3)"><code class="xref py py-func docutils literal notranslate"><span class="pre">matplotlib.pyplot.gca</span></code></a>.</p></li>
+<li><p><strong>**kwargs</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code></span>) – Passed to <a class="reference external" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.hist.html#matplotlib.pyplot.hist" title="(in Matplotlib v3.10.3)"><code class="xref py py-func docutils literal notranslate"><span class="pre">matplotlib.pyplot.hist</span></code></a>.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
@@ -1401,7 +1401,7 @@ channels (assumed use-case is RGB(A) image).</p></li>
 <li><p><strong>iteration</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span>) – Which iteration to display. If <code class="docutils literal notranslate"><span class="pre">None</span></code>, we show
 the most recent one. Negative values are also allowed.</p></li>
 <li><p><strong>vrange</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>] | <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – The vrange option to pass to <code class="docutils literal notranslate"><span class="pre">display_mad_image()</span></code>. See
-docstring of <a class="reference internal" href="plenoptic.tools.html#plenoptic.tools.display.imshow" title="plenoptic.tools.display.imshow"><code class="xref py py-func docutils literal notranslate"><span class="pre">imshow()</span></code></a> for possible values.</p></li>
+docstring of <a class="reference internal" href="plenoptic.tools.html#plenoptic.tools.display.imshow" title="plenoptic.tools.display.imshow"><code class="xref py py-func docutils literal notranslate"><span class="pre">imshow</span></code></a> for possible values.</p></li>
 <li><p><strong>zoom</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span>) – How much to zoom in / enlarge the synthesized image, the ratio
 of display pixels to image pixels. If <code class="docutils literal notranslate"><span class="pre">None</span></code>, we
 attempt to find the best value ourselves.</p></li>
@@ -1561,13 +1561,13 @@ compatible with breaking changes in torch 2.6.</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>file_path</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – The path to load the synthesis object from.</p></li>
-<li><p><strong>map_location</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span>) – Argument to pass to <a class="reference external" href="https://docs.pytorch.org/docs/stable/generated/torch.load.html#torch.load" title="(in PyTorch v2.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">torch.load()</span></code></a> as <code class="docutils literal notranslate"><span class="pre">map_location</span></code>. If you
+<li><p><strong>map_location</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span>) – Argument to pass to <a class="reference external" href="https://docs.pytorch.org/docs/stable/generated/torch.load.html#torch.load" title="(in PyTorch v2.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">torch.load</span></code></a> as <code class="docutils literal notranslate"><span class="pre">map_location</span></code>. If you
 save stuff that was being run on a GPU and are loading onto a
 CPU, you’ll need this to make sure everything lines up
 properly. This should be structured like the str you would
 pass to <a class="reference external" href="https://docs.pytorch.org/docs/stable/tensor_attributes.html#torch.device" title="(in PyTorch v2.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">torch.device</span></code></a>.</p></li>
 <li><p><strong>tensor_equality_atol</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – Absolute tolerance to use when checking for tensor equality during load,
-passed to <a class="reference external" href="https://docs.pytorch.org/docs/stable/generated/torch.allclose.html#torch.allclose" title="(in PyTorch v2.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">torch.allclose()</span></code></a>. It may be necessary to increase if you are
+passed to <a class="reference external" href="https://docs.pytorch.org/docs/stable/generated/torch.allclose.html#torch.allclose" title="(in PyTorch v2.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">torch.allclose</span></code></a>. It may be necessary to increase if you are
 saving and loading on two machines with torch built by different cuda
 versions. Be careful when changing this! See
 <a class="reference external" href="https://docs.pytorch.org/docs/stable/type_info.html#torch.torch.finfo" title="(in PyTorch v2.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">torch.finfo</span></code></a> for more details about floating
@@ -1575,7 +1575,7 @@ point precision of different data types (especially, <code class="docutils liter
 to increase this by more than 1 or 2 decades, then you are probably not
 dealing with a numerical issue.</p></li>
 <li><p><strong>tensor_equality_rtol</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – Relative tolerance to use when checking for tensor equality during load,
-passed to <a class="reference external" href="https://docs.pytorch.org/docs/stable/generated/torch.allclose.html#torch.allclose" title="(in PyTorch v2.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">torch.allclose()</span></code></a>. It may be necessary to increase if you are
+passed to <a class="reference external" href="https://docs.pytorch.org/docs/stable/generated/torch.allclose.html#torch.allclose" title="(in PyTorch v2.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">torch.allclose</span></code></a>. It may be necessary to increase if you are
 saving and loading on two machines with torch built by different cuda
 versions. Be careful when changing this! See
 <a class="reference external" href="https://docs.pytorch.org/docs/stable/type_info.html#torch.torch.finfo" title="(in PyTorch v2.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">torch.finfo</span></code></a> for more details about floating
@@ -1583,12 +1583,12 @@ point precision of different data types (especially, <code class="docutils liter
 to increase this by more than 1 or 2 decades, then you are probably not
 dealing with a numerical issue.</p></li>
 <li><p><strong>**pickle_load_args</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code></span>) – Any additional kwargs will be added to <code class="docutils literal notranslate"><span class="pre">pickle_module.load</span></code> via
-<a class="reference external" href="https://docs.pytorch.org/docs/stable/generated/torch.load.html#torch.load" title="(in PyTorch v2.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">torch.load()</span></code></a>, see that function’s docstring for details.</p></li>
+<a class="reference external" href="https://docs.pytorch.org/docs/stable/generated/torch.load.html#torch.load" title="(in PyTorch v2.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">torch.load</span></code></a>, see that function’s docstring for details.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
-<li><p><strong>ValueError</strong> – If <a class="reference internal" href="#plenoptic.synthesize.metamer.Metamer.setup" title="plenoptic.synthesize.metamer.Metamer.setup"><code class="xref py py-func docutils literal notranslate"><span class="pre">setup()</span></code></a> or <a class="reference internal" href="#plenoptic.synthesize.metamer.Metamer.synthesize" title="plenoptic.synthesize.metamer.Metamer.synthesize"><code class="xref py py-func docutils literal notranslate"><span class="pre">synthesize()</span></code></a> has been called before this call
+<li><p><strong>ValueError</strong> – If <a class="reference internal" href="#plenoptic.synthesize.metamer.Metamer.setup" title="plenoptic.synthesize.metamer.Metamer.setup"><code class="xref py py-func docutils literal notranslate"><span class="pre">setup</span></code></a> or <a class="reference internal" href="#plenoptic.synthesize.metamer.Metamer.synthesize" title="plenoptic.synthesize.metamer.Metamer.synthesize"><code class="xref py py-func docutils literal notranslate"><span class="pre">synthesize</span></code></a> has been called before this call
 to <code class="docutils literal notranslate"><span class="pre">load</span></code>.</p></li>
 <li><p><strong>ValueError</strong> – If the object saved at <code class="docutils literal notranslate"><span class="pre">file_path</span></code> is not a <code class="docutils literal notranslate"><span class="pre">Metamer</span></code> object.</p></li>
 <li><p><strong>ValueError</strong> – If the saved and loading <code class="docutils literal notranslate"><span class="pre">Metamer</span></code> objects have a different value
@@ -1599,14 +1599,14 @@ between the saved and loading objects.</p></li>
 </ul>
 </dd>
 <dt class="field-odd">Warns<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>UserWarning</strong> – If <a class="reference internal" href="#plenoptic.synthesize.metamer.Metamer.setup" title="plenoptic.synthesize.metamer.Metamer.setup"><code class="xref py py-func docutils literal notranslate"><span class="pre">setup()</span></code></a> will need to be called after load, to finish initializing
+<dd class="field-odd"><p><strong>UserWarning</strong> – If <a class="reference internal" href="#plenoptic.synthesize.metamer.Metamer.setup" title="plenoptic.synthesize.metamer.Metamer.setup"><code class="xref py py-func docutils literal notranslate"><span class="pre">setup</span></code></a> will need to be called after load, to finish initializing
 <code class="xref py py-attr docutils literal notranslate"><span class="pre">optimizer</span></code> or <code class="xref py py-attr docutils literal notranslate"><span class="pre">scheduler</span></code>.</p>
 </dd>
 </dl>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
 <dl class="simple">
-<dt><a class="reference internal" href="plenoptic.tools.html#plenoptic.tools.io.examine_saved_synthesis" title="plenoptic.tools.io.examine_saved_synthesis"><code class="xref py py-func docutils literal notranslate"><span class="pre">examine_saved_synthesis()</span></code></a></dt><dd><p>Examine metadata from saved object: pytorch and plenoptic versions, name of the synthesis object, shapes of tensors, etc.</p>
+<dt><a class="reference internal" href="plenoptic.tools.html#plenoptic.tools.io.examine_saved_synthesis" title="plenoptic.tools.io.examine_saved_synthesis"><code class="xref py py-func docutils literal notranslate"><span class="pre">examine_saved_synthesis</span></code></a></dt><dd><p>Examine metadata from saved object: pytorch and plenoptic versions, name of the synthesis object, shapes of tensors, etc.</p>
 </dd>
 </dl>
 </div>
@@ -1666,7 +1666,7 @@ between the saved and loading objects.</p></li>
 <dd><p>Save all relevant variables in .pt file.</p>
 <p>Note that if <code class="docutils literal notranslate"><span class="pre">store_progress</span></code> is True, this will probably be very
 large.</p>
-<p>See <a class="reference internal" href="#plenoptic.synthesize.metamer.Metamer.load" title="plenoptic.synthesize.metamer.Metamer.load"><code class="xref py py-func docutils literal notranslate"><span class="pre">load()</span></code></a> docstring for an example of use.</p>
+<p>See <a class="reference internal" href="#plenoptic.synthesize.metamer.Metamer.load" title="plenoptic.synthesize.metamer.Metamer.load"><code class="xref py py-func docutils literal notranslate"><span class="pre">load</span></code></a> docstring for an example of use.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>file_path</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – The path to save the metamer object to.</p>
@@ -1679,7 +1679,7 @@ large.</p>
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">saved_metamer</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.7)"><span class="pre">Tensor</span></a></em><a class="headerlink" href="#plenoptic.synthesize.metamer.Metamer.saved_metamer" title="Link to this definition"></a></dt>
 <dd><p><a class="reference internal" href="#plenoptic.synthesize.metamer.Metamer.metamer" title="plenoptic.synthesize.metamer.Metamer.metamer"><code class="xref py py-attr docutils literal notranslate"><span class="pre">metamer</span></code></a>, cached over time for later examination.</p>
 <p>How often the metamer is cached is determined by the <code class="docutils literal notranslate"><span class="pre">store_progress</span></code> argument
-to the <a class="reference internal" href="#plenoptic.synthesize.metamer.Metamer.synthesize" title="plenoptic.synthesize.metamer.Metamer.synthesize"><code class="xref py py-func docutils literal notranslate"><span class="pre">synthesize()</span></code></a> function.</p>
+to the <a class="reference internal" href="#plenoptic.synthesize.metamer.Metamer.synthesize" title="plenoptic.synthesize.metamer.Metamer.synthesize"><code class="xref py py-func docutils literal notranslate"><span class="pre">synthesize</span></code></a> function.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -1705,14 +1705,14 @@ don’t use one.</p></li>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
-<li><p><strong>ValueError</strong> – If you try to set <code class="docutils literal notranslate"><span class="pre">initial_image</span></code> after calling <a class="reference internal" href="#plenoptic.synthesize.metamer.Metamer.load" title="plenoptic.synthesize.metamer.Metamer.load"><code class="xref py py-func docutils literal notranslate"><span class="pre">load()</span></code></a>.</p></li>
-<li><p><strong>ValueError</strong> – If <code class="docutils literal notranslate"><span class="pre">setup</span></code> is called more than once or after <a class="reference internal" href="#plenoptic.synthesize.metamer.Metamer.synthesize" title="plenoptic.synthesize.metamer.Metamer.synthesize"><code class="xref py py-func docutils literal notranslate"><span class="pre">synthesize()</span></code></a>.</p></li>
-<li><p><strong>ValueError</strong> – If you try to set <code class="docutils literal notranslate"><span class="pre">optimizer_kwargs</span></code> after calling <a class="reference internal" href="#plenoptic.synthesize.metamer.Metamer.load" title="plenoptic.synthesize.metamer.Metamer.load"><code class="xref py py-func docutils literal notranslate"><span class="pre">load()</span></code></a>.</p></li>
+<li><p><strong>ValueError</strong> – If you try to set <code class="docutils literal notranslate"><span class="pre">initial_image</span></code> after calling <a class="reference internal" href="#plenoptic.synthesize.metamer.Metamer.load" title="plenoptic.synthesize.metamer.Metamer.load"><code class="xref py py-func docutils literal notranslate"><span class="pre">load</span></code></a>.</p></li>
+<li><p><strong>ValueError</strong> – If <code class="docutils literal notranslate"><span class="pre">setup</span></code> is called more than once or after <a class="reference internal" href="#plenoptic.synthesize.metamer.Metamer.synthesize" title="plenoptic.synthesize.metamer.Metamer.synthesize"><code class="xref py py-func docutils literal notranslate"><span class="pre">synthesize</span></code></a>.</p></li>
+<li><p><strong>ValueError</strong> – If you try to set <code class="docutils literal notranslate"><span class="pre">optimizer_kwargs</span></code> after calling <a class="reference internal" href="#plenoptic.synthesize.metamer.Metamer.load" title="plenoptic.synthesize.metamer.Metamer.load"><code class="xref py py-func docutils literal notranslate"><span class="pre">load</span></code></a>.</p></li>
 <li><p><strong>TypeError</strong> – If the loaded object had a non-Adam optimizer, but the <code class="docutils literal notranslate"><span class="pre">optimizer</span></code> arg
 is not specified.</p></li>
 <li><p><strong>ValueError</strong> – If the loaded object had an optimizer, and the <code class="docutils literal notranslate"><span class="pre">optimizer</span></code> arg is
 a different type.</p></li>
-<li><p><strong>ValueError</strong> – If you try to set <code class="docutils literal notranslate"><span class="pre">scheduler_kwargs</span></code> after calling <a class="reference internal" href="#plenoptic.synthesize.metamer.Metamer.load" title="plenoptic.synthesize.metamer.Metamer.load"><code class="xref py py-func docutils literal notranslate"><span class="pre">load()</span></code></a>.</p></li>
+<li><p><strong>ValueError</strong> – If you try to set <code class="docutils literal notranslate"><span class="pre">scheduler_kwargs</span></code> after calling <a class="reference internal" href="#plenoptic.synthesize.metamer.Metamer.load" title="plenoptic.synthesize.metamer.Metamer.load"><code class="xref py py-func docutils literal notranslate"><span class="pre">load</span></code></a>.</p></li>
 <li><p><strong>TypeError</strong> – If the loaded object had a scheduler, but the <code class="docutils literal notranslate"><span class="pre">scheduler</span></code> arg is not
 specified.</p></li>
 <li><p><strong>ValueError</strong> – If the loaded object had a scheduler, but the <code class="docutils literal notranslate"><span class="pre">scheduler</span></code> arg is
@@ -1823,7 +1823,7 @@ loss has stopped decreasing (for <code class="docutils literal notranslate"><spa
 <span class="sig-name descname"><span class="pre">to</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">non_blocking</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/plenoptic/synthesize/metamer.html#Metamer.to"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id14" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
-<p>Its signature is similar to <a class="reference external" href="https://docs.pytorch.org/docs/stable/generated/torch.Tensor.to.html#torch.Tensor.to" title="(in PyTorch v2.7)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">torch.Tensor.to()</span></code></a>, but only accepts
+<p>Its signature is similar to <a class="reference external" href="https://docs.pytorch.org/docs/stable/generated/torch.Tensor.to.html#torch.Tensor.to" title="(in PyTorch v2.7)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">torch.Tensor.to</span></code></a>, but only accepts
 floating point desired <code class="xref py py-attr docutils literal notranslate"><span class="pre">dtype</span></code> s. In addition, this method will
 only cast the floating point parameters and buffers to <code class="xref py py-attr docutils literal notranslate"><span class="pre">dtype</span></code>
 (if given). The integral parameters and buffers will be moved
@@ -1831,7 +1831,7 @@ only cast the floating point parameters and buffers to <code class="xref py py-a
 <code class="xref py py-attr docutils literal notranslate"><span class="pre">non_blocking</span></code> is set, it tries to convert/move asynchronously
 with respect to the host if possible, e.g., moving CPU Tensors with
 pinned memory to CUDA devices.</p>
-<p>See <a class="reference external" href="https://docs.pytorch.org/docs/stable/generated/torch.nn.Module.html#torch.nn.Module.to" title="(in PyTorch v2.7)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">torch.nn.Module.to()</span></code></a> for examples.</p>
+<p>See <a class="reference external" href="https://docs.pytorch.org/docs/stable/generated/torch.nn.Module.html#torch.nn.Module.to" title="(in PyTorch v2.7)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">torch.nn.Module.to</span></code></a> for examples.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>This method modifies the module in-place.</p>
@@ -1982,13 +1982,13 @@ ensure that <code class="docutils literal notranslate"><span class="pre">image</
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>file_path</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – The path to load the synthesis object from.</p></li>
-<li><p><strong>map_location</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span>) – Argument to pass to <a class="reference external" href="https://docs.pytorch.org/docs/stable/generated/torch.load.html#torch.load" title="(in PyTorch v2.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">torch.load()</span></code></a> as <code class="docutils literal notranslate"><span class="pre">map_location</span></code>. If you
+<li><p><strong>map_location</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span>) – Argument to pass to <a class="reference external" href="https://docs.pytorch.org/docs/stable/generated/torch.load.html#torch.load" title="(in PyTorch v2.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">torch.load</span></code></a> as <code class="docutils literal notranslate"><span class="pre">map_location</span></code>. If you
 save stuff that was being run on a GPU and are loading onto a
 CPU, you’ll need this to make sure everything lines up
 properly. This should be structured like the str you would
 pass to <a class="reference external" href="https://docs.pytorch.org/docs/stable/tensor_attributes.html#torch.device" title="(in PyTorch v2.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">torch.device</span></code></a>.</p></li>
 <li><p><strong>tensor_equality_atol</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – Absolute tolerance to use when checking for tensor equality during load,
-passed to <a class="reference external" href="https://docs.pytorch.org/docs/stable/generated/torch.allclose.html#torch.allclose" title="(in PyTorch v2.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">torch.allclose()</span></code></a>. It may be necessary to increase if you are
+passed to <a class="reference external" href="https://docs.pytorch.org/docs/stable/generated/torch.allclose.html#torch.allclose" title="(in PyTorch v2.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">torch.allclose</span></code></a>. It may be necessary to increase if you are
 saving and loading on two machines with torch built by different cuda
 versions. Be careful when changing this! See
 <a class="reference external" href="https://docs.pytorch.org/docs/stable/type_info.html#torch.torch.finfo" title="(in PyTorch v2.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">torch.finfo</span></code></a> for more details about floating
@@ -1996,7 +1996,7 @@ point precision of different data types (especially, <code class="docutils liter
 to increase this by more than 1 or 2 decades, then you are probably not
 dealing with a numerical issue.</p></li>
 <li><p><strong>tensor_equality_rtol</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – Relative tolerance to use when checking for tensor equality during load,
-passed to <a class="reference external" href="https://docs.pytorch.org/docs/stable/generated/torch.allclose.html#torch.allclose" title="(in PyTorch v2.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">torch.allclose()</span></code></a>. It may be necessary to increase if you are
+passed to <a class="reference external" href="https://docs.pytorch.org/docs/stable/generated/torch.allclose.html#torch.allclose" title="(in PyTorch v2.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">torch.allclose</span></code></a>. It may be necessary to increase if you are
 saving and loading on two machines with torch built by different cuda
 versions. Be careful when changing this! See
 <a class="reference external" href="https://docs.pytorch.org/docs/stable/type_info.html#torch.torch.finfo" title="(in PyTorch v2.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">torch.finfo</span></code></a> for more details about floating
@@ -2004,12 +2004,12 @@ point precision of different data types (especially, <code class="docutils liter
 to increase this by more than 1 or 2 decades, then you are probably not
 dealing with a numerical issue.</p></li>
 <li><p><strong>**pickle_load_args</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code></span>) – Any additional kwargs will be added to <code class="docutils literal notranslate"><span class="pre">pickle_module.load</span></code> via
-<a class="reference external" href="https://docs.pytorch.org/docs/stable/generated/torch.load.html#torch.load" title="(in PyTorch v2.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">torch.load()</span></code></a>, see that function’s docstring for details.</p></li>
+<a class="reference external" href="https://docs.pytorch.org/docs/stable/generated/torch.load.html#torch.load" title="(in PyTorch v2.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">torch.load</span></code></a>, see that function’s docstring for details.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
-<li><p><strong>ValueError</strong> – If <code class="xref py py-func docutils literal notranslate"><span class="pre">setup()</span></code> or <a class="reference internal" href="#plenoptic.synthesize.metamer.MetamerCTF.synthesize" title="plenoptic.synthesize.metamer.MetamerCTF.synthesize"><code class="xref py py-func docutils literal notranslate"><span class="pre">synthesize()</span></code></a> has been called before this call
+<li><p><strong>ValueError</strong> – If <code class="xref py py-func docutils literal notranslate"><span class="pre">setup</span></code> or <a class="reference internal" href="#plenoptic.synthesize.metamer.MetamerCTF.synthesize" title="plenoptic.synthesize.metamer.MetamerCTF.synthesize"><code class="xref py py-func docutils literal notranslate"><span class="pre">synthesize</span></code></a> has been called before this call
 to <code class="docutils literal notranslate"><span class="pre">load</span></code>.</p></li>
 <li><p><strong>ValueError</strong> – If the object saved at <code class="docutils literal notranslate"><span class="pre">file_path</span></code> is not a <code class="docutils literal notranslate"><span class="pre">MetamerCTF</span></code> object.</p></li>
 <li><p><strong>ValueError</strong> – If the saved and loading <code class="docutils literal notranslate"><span class="pre">MetamerCTF</span></code> objects have a different value
@@ -2020,7 +2020,7 @@ between the saved and loading objects.</p></li>
 </ul>
 </dd>
 <dt class="field-odd">Warns<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>UserWarning</strong> – If <code class="xref py py-func docutils literal notranslate"><span class="pre">setup()</span></code> will need to be called after load, to finish initializing
+<dd class="field-odd"><p><strong>UserWarning</strong> – If <code class="xref py py-func docutils literal notranslate"><span class="pre">setup</span></code> will need to be called after load, to finish initializing
 <code class="xref py py-attr docutils literal notranslate"><span class="pre">optimizer</span></code> or <code class="xref py py-attr docutils literal notranslate"><span class="pre">scheduler</span></code>.</p>
 </dd>
 </dl>
@@ -2145,8 +2145,8 @@ limits every N frames (we rescale as if <code class="docutils literal notranslat
 animation.</p></li>
 </ul>
 </p></li>
-<li><p><strong>vrange</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>] | <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – The vrange option to pass to <a class="reference internal" href="#plenoptic.synthesize.metamer.display_metamer" title="plenoptic.synthesize.metamer.display_metamer"><code class="xref py py-func docutils literal notranslate"><span class="pre">display_metamer()</span></code></a>. See
-docstring of <a class="reference internal" href="plenoptic.tools.html#plenoptic.tools.display.imshow" title="plenoptic.tools.display.imshow"><code class="xref py py-func docutils literal notranslate"><span class="pre">imshow()</span></code></a> for possible values.</p></li>
+<li><p><strong>vrange</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>] | <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – The vrange option to pass to <a class="reference internal" href="#plenoptic.synthesize.metamer.display_metamer" title="plenoptic.synthesize.metamer.display_metamer"><code class="xref py py-func docutils literal notranslate"><span class="pre">display_metamer</span></code></a>. See
+docstring of <a class="reference internal" href="plenoptic.tools.html#plenoptic.tools.display.imshow" title="plenoptic.tools.display.imshow"><code class="xref py py-func docutils literal notranslate"><span class="pre">imshow</span></code></a> for possible values.</p></li>
 <li><p><strong>zoom</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span>) – How much to zoom in / enlarge the metamer, the ratio
 of display pixels to image pixels. If <code class="docutils literal notranslate"><span class="pre">None</span></code>, we
 attempt to find the best value ourselves.</p></li>
@@ -2155,7 +2155,7 @@ have no way to determine whether it should be represented as an RGB
 image or not, so the user must set this flag to tell us. It will be
 ignored if the representation doesn’t look image-like or if the
 model has its own <code class="docutils literal notranslate"><span class="pre">plot_representation_error()</span></code> method. Else, it will
-be passed to <a class="reference internal" href="plenoptic.tools.html#plenoptic.tools.display.imshow" title="plenoptic.tools.display.imshow"><code class="xref py py-func docutils literal notranslate"><span class="pre">imshow()</span></code></a>, see that method’s
+be passed to <a class="reference internal" href="plenoptic.tools.html#plenoptic.tools.display.imshow" title="plenoptic.tools.display.imshow"><code class="xref py py-func docutils literal notranslate"><span class="pre">imshow</span></code></a>, see that method’s
 docstring for details.</p></li>
 <li><p><strong>fig</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.figure.Figure.html#matplotlib.figure.Figure" title="(in Matplotlib v3.10.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Figure</span></code></a> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span>) – If <code class="docutils literal notranslate"><span class="pre">None</span></code>, create the figure from scratch. Else, should be an empty
 figure with enough axes (the expected use here is have same-size
@@ -2209,9 +2209,9 @@ details.</p>
 <dd><p>Display metamer.</p>
 <p>You can specify what iteration to view by using the <code class="docutils literal notranslate"><span class="pre">iteration</span></code> arg.
 The default, <code class="docutils literal notranslate"><span class="pre">None</span></code>, shows the final one.</p>
-<p>We use <a class="reference internal" href="plenoptic.tools.html#plenoptic.tools.display.imshow" title="plenoptic.tools.display.imshow"><code class="xref py py-func docutils literal notranslate"><span class="pre">imshow()</span></code></a> to display the metamer and attempt to
+<p>We use <a class="reference internal" href="plenoptic.tools.html#plenoptic.tools.display.imshow" title="plenoptic.tools.display.imshow"><code class="xref py py-func docutils literal notranslate"><span class="pre">imshow</span></code></a> to display the metamer and attempt to
 automatically find the most reasonable zoom value. You can override this
-value using the zoom arg, but remember that <a class="reference internal" href="plenoptic.tools.html#plenoptic.tools.display.imshow" title="plenoptic.tools.display.imshow"><code class="xref py py-func docutils literal notranslate"><span class="pre">imshow()</span></code></a>
+value using the zoom arg, but remember that <a class="reference internal" href="plenoptic.tools.html#plenoptic.tools.display.imshow" title="plenoptic.tools.display.imshow"><code class="xref py py-func docutils literal notranslate"><span class="pre">imshow</span></code></a>
 is opinionated about the size of the resulting image and will throw an
 Exception if the axis created is not big enough for the selected zoom.</p>
 <dl class="field-list simple">
@@ -2226,8 +2226,8 @@ to image pixels. If <code class="docutils literal notranslate"><span class="pre"
 value ourselves.</p></li>
 <li><p><strong>iteration</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span>) – Which iteration to display. If <code class="docutils literal notranslate"><span class="pre">None</span></code>, we show
 the most recent one. Negative values are also allowed.</p></li>
-<li><p><strong>ax</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.html#matplotlib.axes.Axes" title="(in Matplotlib v3.10.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Axes</span></code></a> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span>) – Pre-existing axes for plot. If <code class="docutils literal notranslate"><span class="pre">None</span></code>, we call <a class="reference external" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.gca.html#matplotlib.pyplot.gca" title="(in Matplotlib v3.10.3)"><code class="xref py py-func docutils literal notranslate"><span class="pre">matplotlib.pyplot.gca()</span></code></a>.</p></li>
-<li><p><strong>**kwargs</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code></span>) – Passed to <a class="reference internal" href="plenoptic.tools.html#plenoptic.tools.display.imshow" title="plenoptic.tools.display.imshow"><code class="xref py py-func docutils literal notranslate"><span class="pre">imshow()</span></code></a>.</p></li>
+<li><p><strong>ax</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.html#matplotlib.axes.Axes" title="(in Matplotlib v3.10.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Axes</span></code></a> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span>) – Pre-existing axes for plot. If <code class="docutils literal notranslate"><span class="pre">None</span></code>, we call <a class="reference external" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.gca.html#matplotlib.pyplot.gca" title="(in Matplotlib v3.10.3)"><code class="xref py py-func docutils literal notranslate"><span class="pre">matplotlib.pyplot.gca</span></code></a>.</p></li>
+<li><p><strong>**kwargs</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code></span>) – Passed to <a class="reference internal" href="plenoptic.tools.html#plenoptic.tools.display.imshow" title="plenoptic.tools.display.imshow"><code class="xref py py-func docutils literal notranslate"><span class="pre">imshow</span></code></a>.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
@@ -2256,8 +2256,8 @@ dot will be at the final iteration.</p>
 <li><p><strong>iteration</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span>) – Which iteration to display. If <code class="docutils literal notranslate"><span class="pre">None</span></code>,  we show
 the most recent one. Negative values are also allowed.</p></li>
 <li><p><strong>ax</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.html#matplotlib.axes.Axes" title="(in Matplotlib v3.10.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Axes</span></code></a> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span>) – Pre-existing axes for plot. If <code class="docutils literal notranslate"><span class="pre">None</span></code>, we call
-<a class="reference external" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.gca.html#matplotlib.pyplot.gca" title="(in Matplotlib v3.10.3)"><code class="xref py py-func docutils literal notranslate"><span class="pre">matplotlib.pyplot.gca()</span></code></a>.</p></li>
-<li><p><strong>**kwargs</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code></span>) – Passed to <a class="reference external" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.semilogy.html#matplotlib.pyplot.semilogy" title="(in Matplotlib v3.10.3)"><code class="xref py py-func docutils literal notranslate"><span class="pre">matplotlib.pyplot.semilogy()</span></code></a>.</p></li>
+<a class="reference external" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.gca.html#matplotlib.pyplot.gca" title="(in Matplotlib v3.10.3)"><code class="xref py py-func docutils literal notranslate"><span class="pre">matplotlib.pyplot.gca</span></code></a>.</p></li>
+<li><p><strong>**kwargs</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code></span>) – Passed to <a class="reference external" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.semilogy.html#matplotlib.pyplot.semilogy" title="(in Matplotlib v3.10.3)"><code class="xref py py-func docutils literal notranslate"><span class="pre">matplotlib.pyplot.semilogy</span></code></a>.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
@@ -2287,8 +2287,8 @@ the most recent one. Negative values are also allowed.</p></li>
 <li><p><strong>ylim</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>], <code class="xref py py-data docutils literal notranslate"><span class="pre">Literal</span></code>[<code class="docutils literal notranslate"><span class="pre">False</span></code>]]</span>) – If tuple, the ylimit to set for this axis. If False, we leave
 it untouched.</p></li>
 <li><p><strong>ax</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.html#matplotlib.axes.Axes" title="(in Matplotlib v3.10.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Axes</span></code></a> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span>) – Pre-existing axes for plot. If <code class="docutils literal notranslate"><span class="pre">None</span></code>, we call
-<a class="reference external" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.gca.html#matplotlib.pyplot.gca" title="(in Matplotlib v3.10.3)"><code class="xref py py-func docutils literal notranslate"><span class="pre">matplotlib.pyplot.gca()</span></code></a>.</p></li>
-<li><p><strong>**kwargs</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code></span>) – Passed to <a class="reference external" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.hist.html#matplotlib.pyplot.hist" title="(in Matplotlib v3.10.3)"><code class="xref py py-func docutils literal notranslate"><span class="pre">matplotlib.pyplot.hist()</span></code></a>.</p></li>
+<a class="reference external" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.gca.html#matplotlib.pyplot.gca" title="(in Matplotlib v3.10.3)"><code class="xref py py-func docutils literal notranslate"><span class="pre">matplotlib.pyplot.gca</span></code></a>.</p></li>
+<li><p><strong>**kwargs</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code></span>) – Passed to <a class="reference external" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.hist.html#matplotlib.pyplot.hist" title="(in Matplotlib v3.10.3)"><code class="xref py py-func docutils literal notranslate"><span class="pre">matplotlib.pyplot.hist</span></code></a>.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
@@ -2305,7 +2305,7 @@ it untouched.</p></li>
 <span class="sig-name descname"><span class="pre">plot_representation_error</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">metamer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_idx</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">iteration</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ylim</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">as_rgb</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/plenoptic/synthesize/metamer.html#plot_representation_error"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#plenoptic.synthesize.metamer.plot_representation_error" title="Link to this definition"></a></dt>
 <dd><p>Plot distance ratio showing how close we are to convergence.</p>
 <p>We plot <code class="docutils literal notranslate"><span class="pre">_representation_error(metamer,</span> <span class="pre">iteration)</span></code>. For more details, see
-<a class="reference internal" href="plenoptic.tools.html#plenoptic.tools.display.plot_representation" title="plenoptic.tools.display.plot_representation"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.tools.display.plot_representation()</span></code></a>.</p>
+<a class="reference internal" href="plenoptic.tools.html#plenoptic.tools.display.plot_representation" title="plenoptic.tools.display.plot_representation"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.tools.display.plot_representation</span></code></a>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -2316,13 +2316,13 @@ the most recent one. Negative values are also allowed.</p></li>
 <li><p><strong>ylim</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>], <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Literal</span></code>[<code class="docutils literal notranslate"><span class="pre">False</span></code>]]</span>) – If <code class="docutils literal notranslate"><span class="pre">ylim</span></code> is <code class="docutils literal notranslate"><span class="pre">None</span></code>, we sets the axes’ y-limits to be <code class="docutils literal notranslate"><span class="pre">(-y_max,</span>
 <span class="pre">y_max)</span></code>, where <code class="docutils literal notranslate"><span class="pre">y_max=np.abs(data).max()</span></code>. If it’s <code class="docutils literal notranslate"><span class="pre">False</span></code>, we do
 nothing. If a tuple, we use that range.</p></li>
-<li><p><strong>ax</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.html#matplotlib.axes.Axes" title="(in Matplotlib v3.10.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Axes</span></code></a> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span>) – Pre-existing axes for plot. If <code class="docutils literal notranslate"><span class="pre">None</span></code>, we call <a class="reference external" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.gca.html#matplotlib.pyplot.gca" title="(in Matplotlib v3.10.3)"><code class="xref py py-func docutils literal notranslate"><span class="pre">matplotlib.pyplot.gca()</span></code></a>.</p></li>
+<li><p><strong>ax</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.html#matplotlib.axes.Axes" title="(in Matplotlib v3.10.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Axes</span></code></a> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span>) – Pre-existing axes for plot. If <code class="docutils literal notranslate"><span class="pre">None</span></code>, we call <a class="reference external" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.gca.html#matplotlib.pyplot.gca" title="(in Matplotlib v3.10.3)"><code class="xref py py-func docutils literal notranslate"><span class="pre">matplotlib.pyplot.gca</span></code></a>.</p></li>
 <li><p><strong>as_rgb</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></span>) – The representation can be image-like with multiple channels, and we
 have no way to determine whether it should be represented as an RGB
 image or not, so the user must set this flag to tell us. It will be
 ignored if the response doesn’t look image-like or if the model has its
 own <code class="docutils literal notranslate"><span class="pre">plot_representation_error()</span></code> method. Else, it will be passed to
-<a class="reference internal" href="plenoptic.tools.html#plenoptic.tools.display.imshow" title="plenoptic.tools.display.imshow"><code class="xref py py-func docutils literal notranslate"><span class="pre">imshow()</span></code></a>, see that methods docstring for details.</p></li>
+<a class="reference internal" href="plenoptic.tools.html#plenoptic.tools.display.imshow" title="plenoptic.tools.display.imshow"><code class="xref py py-func docutils literal notranslate"><span class="pre">imshow</span></code></a>, see that methods docstring for details.</p></li>
 <li><p><strong>**kwargs</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code></span>) – Passed to <code class="docutils literal notranslate"><span class="pre">metamer.model.forward</span></code>.</p></li>
 </ul>
 </dd>
@@ -2359,8 +2359,8 @@ channels (assumed use-case is RGB(A) image).</p></li>
 the most recent one. Negative values are also allowed.</p></li>
 <li><p><strong>ylim</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>], <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Literal</span></code>[<code class="docutils literal notranslate"><span class="pre">False</span></code>]]</span>) – The ylimit to use for the representation_error plot. We pass
 this value directly to <code class="docutils literal notranslate"><span class="pre">plot_representation_error</span></code>.</p></li>
-<li><p><strong>vrange</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>] | <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – The vrange option to pass to <a class="reference internal" href="#plenoptic.synthesize.metamer.display_metamer" title="plenoptic.synthesize.metamer.display_metamer"><code class="xref py py-func docutils literal notranslate"><span class="pre">display_metamer()</span></code></a>. See
-docstring of <a class="reference internal" href="plenoptic.tools.html#plenoptic.tools.display.imshow" title="plenoptic.tools.display.imshow"><code class="xref py py-func docutils literal notranslate"><span class="pre">imshow()</span></code></a> for possible values.</p></li>
+<li><p><strong>vrange</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>] | <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – The vrange option to pass to <a class="reference internal" href="#plenoptic.synthesize.metamer.display_metamer" title="plenoptic.synthesize.metamer.display_metamer"><code class="xref py py-func docutils literal notranslate"><span class="pre">display_metamer</span></code></a>. See
+docstring of <a class="reference internal" href="plenoptic.tools.html#plenoptic.tools.display.imshow" title="plenoptic.tools.display.imshow"><code class="xref py py-func docutils literal notranslate"><span class="pre">imshow</span></code></a> for possible values.</p></li>
 <li><p><strong>zoom</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span>) – How much to zoom in / enlarge the metamer, the ratio
 of display pixels to image pixels. If <code class="docutils literal notranslate"><span class="pre">None</span></code>, we
 attempt to find the best value ourselves.</p></li>
@@ -2369,7 +2369,7 @@ have no way to determine whether it should be represented as an RGB
 image or not, so the user must set this flag to tell us. It will be
 ignored if the response doesn’t look image-like or if the
 model has its own plot_representation_error() method. Else, it will
-be passed to <a class="reference internal" href="plenoptic.tools.html#plenoptic.tools.display.imshow" title="plenoptic.tools.display.imshow"><code class="xref py py-func docutils literal notranslate"><span class="pre">imshow()</span></code></a>, see that method’s
+be passed to <a class="reference internal" href="plenoptic.tools.html#plenoptic.tools.display.imshow" title="plenoptic.tools.display.imshow"><code class="xref py py-func docutils literal notranslate"><span class="pre">imshow</span></code></a>, see that method’s
 docstring for details.</p></li>
 <li><p><strong>fig</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.figure.Figure.html#matplotlib.figure.Figure" title="(in Matplotlib v3.10.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Figure</span></code></a> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span>) – If <code class="docutils literal notranslate"><span class="pre">None</span></code>, we create a new figure. otherwise we assume this is
 an empty figure that has the appropriate size and number of
@@ -2584,7 +2584,7 @@ sub-class and thus are marked as abstract methods here.</p>
 <li><p><strong>file_path</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – The path to load the synthesis object from.</p></li>
 <li><p><strong>empty_on_init_attr</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – The name of an attribute that will either be None or have length 0 if the
 Synthesis object has just been initialized.</p></li>
-<li><p><strong>map_location</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span>) – Argument to pass to <a class="reference external" href="https://docs.pytorch.org/docs/stable/generated/torch.load.html#torch.load" title="(in PyTorch v2.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">torch.load()</span></code></a> as <code class="docutils literal notranslate"><span class="pre">map_location</span></code>. If you save
+<li><p><strong>map_location</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span>) – Argument to pass to <a class="reference external" href="https://docs.pytorch.org/docs/stable/generated/torch.load.html#torch.load" title="(in PyTorch v2.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">torch.load</span></code></a> as <code class="docutils literal notranslate"><span class="pre">map_location</span></code>. If you save
 stuff that was being run on a GPU and are loading onto a
 CPU, you’ll need this to make sure everything lines up
 properly. This should be structured like the str you would
@@ -2601,7 +2601,7 @@ are identical and then load the state_dict. If the attribute is None on the
 initialized Synthesis object, then we set the tuple, and count on the
 Synthesis object to properly handle it when needed.</p></li>
 <li><p><strong>tensor_equality_atol</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – Absolute tolerance to use when checking for tensor equality during load,
-passed to <a class="reference external" href="https://docs.pytorch.org/docs/stable/generated/torch.allclose.html#torch.allclose" title="(in PyTorch v2.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">torch.allclose()</span></code></a>. It may be necessary to increase if you are
+passed to <a class="reference external" href="https://docs.pytorch.org/docs/stable/generated/torch.allclose.html#torch.allclose" title="(in PyTorch v2.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">torch.allclose</span></code></a>. It may be necessary to increase if you are
 saving and loading on two machines with torch built by different cuda
 versions. Be careful when changing this! See
 <a class="reference external" href="https://docs.pytorch.org/docs/stable/type_info.html#torch.torch.finfo" title="(in PyTorch v2.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">torch.finfo</span></code></a> for more details about floating
@@ -2609,7 +2609,7 @@ point precision of different data types (especially, <code class="docutils liter
 to increase this by more than 1 or 2 decades, then you are probably not
 dealing with a numerical issue.</p></li>
 <li><p><strong>tensor_equality_rtol</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – Relative tolerance to use when checking for tensor equality during load,
-passed to <a class="reference external" href="https://docs.pytorch.org/docs/stable/generated/torch.allclose.html#torch.allclose" title="(in PyTorch v2.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">torch.allclose()</span></code></a>. It may be necessary to increase if you are
+passed to <a class="reference external" href="https://docs.pytorch.org/docs/stable/generated/torch.allclose.html#torch.allclose" title="(in PyTorch v2.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">torch.allclose</span></code></a>. It may be necessary to increase if you are
 saving and loading on two machines with torch built by different cuda
 versions. Be careful when changing this! See
 <a class="reference external" href="https://docs.pytorch.org/docs/stable/type_info.html#torch.torch.finfo" title="(in PyTorch v2.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">torch.finfo</span></code></a> for more details about floating
@@ -2617,7 +2617,7 @@ point precision of different data types (especially, <code class="docutils liter
 to increase this by more than 1 or 2 decades, then you are probably not
 dealing with a numerical issue.</p></li>
 <li><p><strong>**pickle_load_args</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code></span>) – Any additional kwargs will be added to <code class="docutils literal notranslate"><span class="pre">pickle_module.load</span></code> via
-<a class="reference external" href="https://docs.pytorch.org/docs/stable/generated/torch.load.html#torch.load" title="(in PyTorch v2.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">torch.load()</span></code></a>, see that function’s docstring for details.</p></li>
+<a class="reference external" href="https://docs.pytorch.org/docs/stable/generated/torch.load.html#torch.load" title="(in PyTorch v2.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">torch.load</span></code></a>, see that function’s docstring for details.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
@@ -2634,7 +2634,7 @@ the saved and loading objects.</p></li>
 </ul>
 </dd>
 <dt class="field-odd">Warns<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>UserWarning</strong> – If <code class="xref py py-func docutils literal notranslate"><span class="pre">setup()</span></code> will need to be called after load, to finish initializing
+<dd class="field-odd"><p><strong>UserWarning</strong> – If <code class="xref py py-func docutils literal notranslate"><span class="pre">setup</span></code> will need to be called after load, to finish initializing
 one of the <code class="docutils literal notranslate"><span class="pre">state_dict_attributes</span></code></p>
 </dd>
 </dl>
@@ -2683,7 +2683,7 @@ callable attribute-to-save are not attributes of <code class="docutils literal n
 <dt class="sig sig-object py" id="plenoptic.synthesize.synthesis.Synthesis.to">
 <em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">to</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attrs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/plenoptic/synthesize/synthesis.html#Synthesis.to"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#plenoptic.synthesize.synthesis.Synthesis.to" title="Link to this definition"></a></dt>
 <dd><p>Move and/or cast the parameters and buffers.</p>
-<p>Similar to <a class="reference internal" href="#plenoptic.synthesize.synthesis.Synthesis.save" title="plenoptic.synthesize.synthesis.Synthesis.save"><code class="xref py py-func docutils literal notranslate"><span class="pre">save()</span></code></a>, this is an abstract method only because you
+<p>Similar to <a class="reference internal" href="#plenoptic.synthesize.synthesis.Synthesis.save" title="plenoptic.synthesize.synthesis.Synthesis.save"><code class="xref py py-func docutils literal notranslate"><span class="pre">save</span></code></a>, this is an abstract method only because you
 need to define the attributes to call to on.</p>
 <p>This can be called as</p>
 <dl class="py function">
@@ -2701,7 +2701,7 @@ need to define the attributes to call to on.</p>
 <span class="sig-name descname"><span class="pre">to</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">non_blocking</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/plenoptic/synthesize/synthesis.html#Synthesis.to"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id21" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
-<p>Its signature is similar to <a class="reference external" href="https://docs.pytorch.org/docs/stable/generated/torch.Tensor.to.html#torch.Tensor.to" title="(in PyTorch v2.7)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">torch.Tensor.to()</span></code></a>, but only accepts
+<p>Its signature is similar to <a class="reference external" href="https://docs.pytorch.org/docs/stable/generated/torch.Tensor.to.html#torch.Tensor.to" title="(in PyTorch v2.7)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">torch.Tensor.to</span></code></a>, but only accepts
 floating point desired <code class="xref py py-attr docutils literal notranslate"><span class="pre">dtype</span></code> s. In addition, this method will
 only cast the floating point parameters and buffers to <code class="xref py py-attr docutils literal notranslate"><span class="pre">dtype</span></code>
 (if given). The integral parameters and buffers will be moved
@@ -2711,7 +2711,7 @@ with respect to the host if possible, e.g., moving CPU Tensors with
 pinned memory to CUDA devices.</p>
 <p>When calling this method to move tensors to a CUDA device, items in <code class="docutils literal notranslate"><span class="pre">attrs</span></code>
 that start with <code class="docutils literal notranslate"><span class="pre">&quot;saved_&quot;</span></code> will not be moved.</p>
-<p>See <a class="reference external" href="https://docs.pytorch.org/docs/stable/generated/torch.nn.Module.html#torch.nn.Module.to" title="(in PyTorch v2.7)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">torch.nn.Module.to()</span></code></a> for examples.</p>
+<p>See <a class="reference external" href="https://docs.pytorch.org/docs/stable/generated/torch.nn.Module.html#torch.nn.Module.to" title="(in PyTorch v2.7)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">torch.nn.Module.to</span></code></a> for examples.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>This method modifies the module in-place.</p>
