@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>plenoptic.tools.external &mdash; plenoptic 1.3.1.dev2 documentation</title>
+  <title>plenoptic.tools.external &mdash; plenoptic 1.3.1.dev43 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/plot_directive.css" />
@@ -15,7 +15,7 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=e91cd179"></script>
+      <script src="../../../_static/documentation_options.js?v=e427f0a7"></script>
       <script src="../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -108,15 +108,17 @@
            <div itemprop="articleBody">
              
   <h1>Source code for plenoptic.tools.external</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;tools to deal with data from outside plenoptic</span>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Tools to deal with data from outside plenoptic.</span>
 
-<span class="sd">For example, pre-existing synthesized images</span>
-
+<span class="sd">For example, images synthesized using the code from another paper.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">os.path</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">op</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">imageio.v3</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">iio</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">mpl</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.lines</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">lines</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">pyrtools</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pt</span>
@@ -128,15 +130,16 @@
 <div class="viewcode-block" id="plot_MAD_results">
 <a class="viewcode-back" href="../../../api/plenoptic.tools.html#plenoptic.tools.external.plot_MAD_results">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">plot_MAD_results</span><span class="p">(</span>
-    <span class="n">original_image</span><span class="p">,</span>
-    <span class="n">noise_levels</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-    <span class="n">results_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-    <span class="n">ssim_images_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-    <span class="n">zoom</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
-    <span class="n">vrange</span><span class="o">=</span><span class="s2">&quot;indep1&quot;</span><span class="p">,</span>
-    <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
-<span class="p">):</span>
-<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;plot original MAD results, provided by Zhou Wang</span>
+    <span class="n">original_image</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">noise_levels</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">results_dir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">ssim_images_dir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">zoom</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
+    <span class="n">vrange</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;indep1&quot;</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">mpl</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">Figure</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]]]:</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Plot original MAD results, provided by Zhou Wang.</span>
 
 <span class="sd">    Plot the results of original MAD Competition, as provided in .mat</span>
 <span class="sd">    files. The figure created shows the results for one reference image</span>
@@ -145,52 +148,62 @@
 <span class="sd">    will show the initial (noisy) image and the four synthesized images,</span>
 <span class="sd">    with their respective losses for the two metrics (MSE and SSIM).</span>
 
-<span class="sd">    We also return a DataFrame that contains the losses, noise levels,</span>
-<span class="sd">    and original image name for each plotted noise level.</span>
+<span class="sd">    We also return a dictionary that contains the losses, noise levels, and original</span>
+<span class="sd">    image name for each plotted noise level.</span>
 
 <span class="sd">    This code can probably be adapted to other uses, but requires that</span>
 <span class="sd">    all images are the same size and assumes they&#39;re all 64 x 64 pixels.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    original_image : {samp1, samp2, samp3, samp4, samp5, samp6, samp7,</span>
-<span class="sd">                      samp8, samp9, samp10}</span>
-<span class="sd">        which of the sample images to plot</span>
-<span class="sd">    noise_levels : list or None, optional</span>
-<span class="sd">        which noise levels to plot. if None, will plot all. If a list,</span>
-<span class="sd">        elements must be 2**i where i is in [1, 10]</span>
-<span class="sd">    results_dir : None or str, optional</span>
-<span class="sd">        path to the results directory containing the results.mat files. If</span>
-<span class="sd">        None, we download them (requires optional dependency pooch).</span>
-<span class="sd">    ssim_images_dir : None or str, optional</span>
-<span class="sd">        path to the directory containing the .tif images used in SSIM paper. If</span>
-<span class="sd">        None, we download them (requires optional dependency pooch).</span>
-<span class="sd">    zoom : int, optional</span>
-<span class="sd">        amount to zoom each image, passed to pyrtools.imshow</span>
-<span class="sd">    vrange : str, optional</span>
-<span class="sd">        in addition to the values accepted by pyrtools.imshow, we also</span>
-<span class="sd">        accept &#39;row0/1/2/3&#39;, which is the same as &#39;auto0/1/2/3&#39;, except</span>
-<span class="sd">        that we do it on a per-row basis (all images with same noise</span>
-<span class="sd">        level)</span>
-<span class="sd">    kwargs :</span>
-<span class="sd">        passed to pyrtools.imshow. Note that we call imshow separately</span>
-<span class="sd">        on each image and so any argument that relies on imshow having</span>
-<span class="sd">        access to all images will probably not work as expected</span>
+<span class="sd">    original_image</span>
+<span class="sd">        Which of the sample images to plot. Must be of the form ``f&quot;samp{i}&quot;``</span>
+<span class="sd">        where ``i`` is an integer between 1 and 10 (inclusive).</span>
+<span class="sd">    noise_levels</span>
+<span class="sd">        Which noise levels to plot. if ``None``, will plot all. If a list,</span>
+<span class="sd">        elements must be :math:`2^i` where :math:`i\in [1, 10]`.</span>
+<span class="sd">    results_dir</span>
+<span class="sd">        Path to the results directory containing the results.mat files. If</span>
+<span class="sd">        ``None``, we download them (requires optional dependency ``pooch``).</span>
+<span class="sd">    ssim_images_dir</span>
+<span class="sd">        Path to the directory containing the .tif images used in SSIM paper. If</span>
+<span class="sd">        ``None``, we download them (requires optional dependency ``pooch``).</span>
+<span class="sd">    zoom</span>
+<span class="sd">        Ratio of display pixels to image pixels, passed to</span>
+<span class="sd">        :func:`~plenoptic.tools.display.imshow`. If &gt;1, must be an integer. If &lt;1, must</span>
+<span class="sd">        be 1/d where d is a a divisor of the size of the largest image.</span>
+<span class="sd">    vrange</span>
+<span class="sd">        How to map image values to colormap. In addition to the values accepted by</span>
+<span class="sd">        :func:`~plenoptic.tools.display.imshow`, we also accept ``&quot;row0/1/2/3&quot;``, which</span>
+<span class="sd">        is the same as ``&quot;auto0/1/2/3&quot;``, except that we do it on a per-row basis (all</span>
+<span class="sd">        images with same noise level).</span>
+<span class="sd">    **kwargs</span>
+<span class="sd">        Passed to :func:`~plenoptic.tools.display.imshow`. Note that we call imshow</span>
+<span class="sd">        separately on each image and so any argument that relies on imshow having</span>
+<span class="sd">        access to all images will probably not work as expected.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    fig : pyrtools.tools.display.Figure</span>
-<span class="sd">        figure containing the images</span>
-<span class="sd">    results : dict</span>
-<span class="sd">        dictionary containing the errors for each noise level. To</span>
+<span class="sd">    fig :</span>
+<span class="sd">        Figure containing the images.</span>
+<span class="sd">    results :</span>
+<span class="sd">        Dictionary containing the errors for each noise level. To</span>
 <span class="sd">        convert to a well-structured pandas DataFrame, run</span>
-<span class="sd">        ``pd.DataFrame(results).T``</span>
+<span class="sd">        ``pandas.DataFrame(results).T``.</span>
 
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If ``original_image`` takes an illegal value.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">results_dir</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">results_dir</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">fetch_data</span><span class="p">(</span><span class="s2">&quot;MAD_results.tar.gz&quot;</span><span class="p">))</span>
     <span class="k">if</span> <span class="n">ssim_images_dir</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">ssim_images_dir</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">fetch_data</span><span class="p">(</span><span class="s2">&quot;ssim_images.tar.gz&quot;</span><span class="p">))</span>
+    <span class="n">allowed_vals</span> <span class="o">=</span> <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;samp</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">11</span><span class="p">)]</span>
+    <span class="k">if</span> <span class="n">original_image</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">allowed_vals</span><span class="p">:</span>
+        <span class="n">err_msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;original_image must be one of </span><span class="si">{</span><span class="n">allowed_vals</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">err_msg</span><span class="p">)</span>
     <span class="n">img_path</span> <span class="o">=</span> <span class="n">op</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">op</span><span class="o">.</span><span class="n">expanduser</span><span class="p">(</span><span class="n">ssim_images_dir</span><span class="p">),</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">original_image</span><span class="si">}</span><span class="s2">.tif&quot;</span><span class="p">)</span>
     <span class="n">orig_img</span> <span class="o">=</span> <span class="n">iio</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="n">img_path</span><span class="p">)</span>
     <span class="n">blanks</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="o">*</span><span class="n">orig_img</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>

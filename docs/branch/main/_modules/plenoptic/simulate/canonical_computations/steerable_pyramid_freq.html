@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>plenoptic.simulate.canonical_computations.steerable_pyramid_freq &mdash; plenoptic 1.3.1.dev2 documentation</title>
+  <title>plenoptic.simulate.canonical_computations.steerable_pyramid_freq &mdash; plenoptic 1.3.1.dev43 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/plot_directive.css" />
@@ -15,7 +15,7 @@
   
       <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../../_static/documentation_options.js?v=e91cd179"></script>
+      <script src="../../../../_static/documentation_options.js?v=e427f0a7"></script>
       <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -176,9 +176,14 @@
 <span class="sd">        The width of the transition region of the radial lowpass function, in</span>
 <span class="sd">        octaves.</span>
 <span class="sd">    is_complex</span>
-<span class="sd">        Whether the pyramid coefficients should be complex or not. If True, the</span>
-<span class="sd">        real and imaginary parts correspond to a pair of odd and even symmetric</span>
-<span class="sd">        filters. If False, the coefficients only include the real part / odd filters.</span>
+<span class="sd">        Whether the pyramid coefficients should be complex or not. If ``True``, the real</span>
+<span class="sd">        and imaginary parts correspond to a pair of odd and even symmetric filters. If</span>
+<span class="sd">        ``False``, the coefficients only include the real part. Regardless of the value</span>
+<span class="sd">        of ``is_complex``, the symmetry of the real part is determined by the ``order``</span>
+<span class="sd">        parameter: if ``order`` is even, then the real coefficients are even symmetric;</span>
+<span class="sd">        if ``order`` is odd, then the real coefficients are odd symmetric. (If</span>
+<span class="sd">        ``is_complex=True``, then the imaginary coefficients will have the opposite</span>
+<span class="sd">        symmetry of the real ones).</span>
 <span class="sd">    downsample</span>
 <span class="sd">        Whether to downsample each scale in the pyramid or keep the output</span>
 <span class="sd">        pyramid coefficients in fixed bands of size ``image_shape``. When</span>
@@ -186,7 +191,7 @@
 <span class="sd">    tight_frame</span>
 <span class="sd">        Whether the pyramid obeys the generalized parseval theorem or not (i.e.</span>
 <span class="sd">        is a tight frame). If ``True``, the energy of the pyr_coeffs equals the energy</span>
-<span class="sd">        of the image. If not this is not true. In order to match the `matlabPyrTools</span>
+<span class="sd">        of the image. In order to match the `matlabPyrTools</span>
 <span class="sd">        &lt;http://github.com/labForComputationalVision/matlabpyrtools&gt;`_ or `pyrtools</span>
 <span class="sd">        &lt;https://github.com/labForComputationalVision/pyrtools&gt;`_ implementations, this</span>
 <span class="sd">        must be set to ``False``.</span>
@@ -1246,9 +1251,7 @@
             <span class="p">)</span>
 
             <span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="n">a</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">angles</span><span class="p">):</span>
-                <span class="n">res</span><span class="p">,</span> <span class="n">steervect</span> <span class="o">=</span> <span class="n">steer</span><span class="p">(</span>
-                    <span class="n">basis</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">return_weights</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">even_phase</span><span class="o">=</span><span class="n">even_phase</span>
-                <span class="p">)</span>
+                <span class="n">res</span><span class="p">,</span> <span class="n">steervect</span> <span class="o">=</span> <span class="n">steer</span><span class="p">(</span><span class="n">basis</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">even_phase</span><span class="o">=</span><span class="n">even_phase</span><span class="p">)</span>
                 <span class="n">resteering_weights</span><span class="p">[(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">)]</span> <span class="o">=</span> <span class="n">steervect</span>
                 <span class="n">resteered_coeffs</span><span class="p">[(</span><span class="n">i</span><span class="p">,</span> <span class="n">num_orientations</span> <span class="o">+</span> <span class="n">j</span><span class="p">)]</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span>
                     <span class="n">pyr_coeffs</span><span class="p">[(</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">)]</span><span class="o">.</span><span class="n">shape</span>

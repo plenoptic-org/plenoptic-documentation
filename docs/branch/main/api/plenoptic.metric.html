@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>plenoptic.metric package &mdash; plenoptic 1.3.1.dev2 documentation</title>
+  <title>plenoptic.metric package &mdash; plenoptic 1.3.1.dev43 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css" />
@@ -16,7 +16,7 @@
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../_static/documentation_options.js?v=e91cd179"></script>
+      <script src="../_static/documentation_options.js?v=e427f0a7"></script>
       <script src="../_static/doctools.js?v=9bcbadda"></script>
       <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -142,12 +142,13 @@
 <dd><p>Bases: <a class="reference external" href="https://docs.pytorch.org/docs/stable/generated/torch.nn.Module.html#torch.nn.Module" title="(in PyTorch v2.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code></a></p>
 <p>Simple class for implementing normalized laplacian pyramid.</p>
 <p>This class just calls
-<code class="docutils literal notranslate"><span class="pre">plenoptic.metric.normalized_laplacian_pyramid</span></code> on the image and
-returns a 3d tensor with the flattened activations.</p>
+<a class="reference internal" href="#plenoptic.metric.perceptual_distance.normalized_laplacian_pyramid" title="plenoptic.metric.perceptual_distance.normalized_laplacian_pyramid"><code class="xref py py-func docutils literal notranslate"><span class="pre">normalized_laplacian_pyramid</span></code></a>
+on the image and returns a 3d tensor with the flattened activations.</p>
 <p>NOTE: synthesis using this class will not be the exact same as
-synthesis using the <code class="docutils literal notranslate"><span class="pre">plenoptic.metric.nlpd</span></code> function (by default),
-because the <code class="docutils literal notranslate"><span class="pre">nlpd</span></code> function uses the root-mean square of the L2 distance (i.e.,
-<code class="docutils literal notranslate"><span class="pre">torch.sqrt(torch.mean(x-y)**2))</span></code> as the distance metric between representations.</p>
+synthesis using the <a class="reference internal" href="#plenoptic.metric.perceptual_distance.nlpd" title="plenoptic.metric.perceptual_distance.nlpd"><code class="xref py py-func docutils literal notranslate"><span class="pre">nlpd</span></code></a> function
+(by default), because the <code class="docutils literal notranslate"><span class="pre">nlpd</span></code> function uses the root-mean square of the
+L2 distance (i.e., <code class="docutils literal notranslate"><span class="pre">torch.sqrt(torch.mean(x-y)**2))</span></code> as the distance metric
+between representations.</p>
 <p>Model parameters are those used in <a class="reference internal" href="#rcb138e2d4399-1" id="id1">[1]</a>, copied from the matlab code used in the
 paper, found at <a class="reference internal" href="#rcb138e2d4399-2" id="id2">[2]</a>.</p>
 <p class="rubric">References</p>
@@ -306,8 +307,8 @@ account the perceptual distance between two images on different scales.</p>
 <p>SSIM is based on three comparison measurements between the two images:
 luminance, contrast, and structure. All of these are computed convolutionally
 across the images, producing three maps instead of scalars. The SSIM map is
-the elementwise product of these three maps. See <a class="reference internal" href="#plenoptic.metric.perceptual_distance.ssim" title="plenoptic.metric.perceptual_distance.ssim"><code class="xref py py-func docutils literal notranslate"><span class="pre">ssim()</span></code></a> and
-<a class="reference internal" href="#plenoptic.metric.perceptual_distance.ssim_map" title="plenoptic.metric.perceptual_distance.ssim_map"><code class="xref py py-func docutils literal notranslate"><span class="pre">ssim_map()</span></code></a> for a full description of SSIM.</p>
+the elementwise product of these three maps. See <a class="reference internal" href="#plenoptic.metric.perceptual_distance.ssim" title="plenoptic.metric.perceptual_distance.ssim"><code class="xref py py-func docutils literal notranslate"><span class="pre">ssim</span></code></a> and
+<a class="reference internal" href="#plenoptic.metric.perceptual_distance.ssim_map" title="plenoptic.metric.perceptual_distance.ssim_map"><code class="xref py py-func docutils literal notranslate"><span class="pre">ssim_map</span></code></a> for a full description of SSIM.</p>
 <p>To get images of different scales, average pooling operations with kernel
 size 2 are performed recursively on the input images. The product of
 contrast map and structure map (the “contrast-structure map”) is computed
@@ -504,14 +505,14 @@ images. See the references for more information.</p>
 <p>This implementation follows the original implementation, as found at <a class="reference internal" href="#r7636d31811ee-2" id="id12">[2]</a>,
 as well as providing the option to use the weighted version used in <a class="reference internal" href="#r7636d31811ee-4" id="id13">[4]</a>
 (which was shown to consistently improve the image quality prediction on
-the LIVE database).</p>
+the LIVE database). More info can be found at <a class="reference internal" href="#r7636d31811ee-3" id="id14">[3]</a>.</p>
 <p>Note that this is a similarity metric (not a distance), and so 1 means the
 two images are identical and 0 means they’re very different. When the two
 images are negatively correlated, SSIM can be negative. SSIM is bounded
 between -1 and 1.</p>
 <p>This function returns the mean SSIM, a scalar-valued metric giving the
 average over the whole image. For the SSIM map (showing the computed value
-across the image), call <a class="reference internal" href="#plenoptic.metric.perceptual_distance.ssim_map" title="plenoptic.metric.perceptual_distance.ssim_map"><code class="xref py py-func docutils literal notranslate"><span class="pre">ssim_map()</span></code></a>.</p>
+across the image), call <a class="reference internal" href="#plenoptic.metric.perceptual_distance.ssim_map" title="plenoptic.metric.perceptual_distance.ssim_map"><code class="xref py py-func docutils literal notranslate"><span class="pre">ssim_map</span></code></a>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -524,10 +525,10 @@ for each channel (so channels are treated in the same way as batches). Both
 images should have values between 0 and 1. Otherwise, the result may be
 inaccurate, and we will raise a warning (but will still compute it).</p></li>
 <li><p><strong>weighted</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></span>) – Whether to use the original, unweighted SSIM version (<code class="docutils literal notranslate"><span class="pre">False</span></code>) as used
-in <a class="reference internal" href="#r7636d31811ee-1" id="id14">[1]</a> or the weighted version (<code class="docutils literal notranslate"><span class="pre">True</span></code>) as used in <a class="reference internal" href="#r7636d31811ee-4" id="id15">[4]</a>. See Notes
+in <a class="reference internal" href="#r7636d31811ee-1" id="id15">[1]</a> or the weighted version (<code class="docutils literal notranslate"><span class="pre">True</span></code>) as used in <a class="reference internal" href="#r7636d31811ee-4" id="id16">[4]</a>. See Notes
 section for the weight.</p></li>
 <li><p><strong>pad</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Literal</span></code>[<code class="docutils literal notranslate"><span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">'constant'</span></code>, <code class="docutils literal notranslate"><span class="pre">'reflect'</span></code>, <code class="docutils literal notranslate"><span class="pre">'replicate'</span></code>, <code class="docutils literal notranslate"><span class="pre">'circular'</span></code>]</span>) – If not False, how to pad the image for the convolutions computing the
-local average of each image. See <a class="reference external" href="https://docs.pytorch.org/docs/stable/generated/torch.nn.functional.pad.html#torch.nn.functional.pad" title="(in PyTorch v2.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">torch.nn.functional.pad()</span></code></a> for how
+local average of each image. See <a class="reference external" href="https://docs.pytorch.org/docs/stable/generated/torch.nn.functional.pad.html#torch.nn.functional.pad" title="(in PyTorch v2.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">torch.nn.functional.pad</span></code></a> for how
 these work.</p></li>
 </ul>
 </dd>
@@ -561,13 +562,13 @@ less than 11, since SSIM uses an 11x11 convolutional kernel.</p></li>
 <div class="math notranslate nohighlight">
 \[\log((1+\frac{\sigma_1^2}{C_2})(1+\frac{\sigma_2^2}{C_2}))\]</div>
 <p>where <span class="math notranslate nohighlight">\(\sigma_1^2\)</span> and <span class="math notranslate nohighlight">\(\sigma_2^2\)</span> are the variances of <code class="docutils literal notranslate"><span class="pre">img1</span></code>
-and <code class="docutils literal notranslate"><span class="pre">img2</span></code>, respectively, and <span class="math notranslate nohighlight">\(C_2\)</span> is a constant. See <a class="reference internal" href="#r7636d31811ee-4" id="id16">[4]</a> for more
+and <code class="docutils literal notranslate"><span class="pre">img2</span></code>, respectively, and <span class="math notranslate nohighlight">\(C_2\)</span> is a constant. See <a class="reference internal" href="#r7636d31811ee-4" id="id17">[4]</a> for more
 details.</p>
 <p class="rubric">References</p>
 <div role="list" class="citation-list">
 <div class="citation" id="r7636d31811ee-1" role="doc-biblioentry">
 <span class="label"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></span>
-<span class="backrefs">(<a role="doc-backlink" href="#id11">1</a>,<a role="doc-backlink" href="#id14">2</a>)</span>
+<span class="backrefs">(<a role="doc-backlink" href="#id11">1</a>,<a role="doc-backlink" href="#id15">2</a>)</span>
 <p>Z. Wang, A. C. Bovik, H. R. Sheikh, and E. P. Simoncelli, “Image
 quality assessment: From error measurement to structural similarity”
 IEEE Transactions on Image Processing, vol. 13, no. 1, Jan. 2004.</p>
@@ -577,12 +578,12 @@ IEEE Transactions on Image Processing, vol. 13, no. 1, Jan. 2004.</p>
 <p><a class="reference external" href="https://www.cns.nyu.edu/~lcv/ssim/ssim_index.m">matlab code</a></p>
 </div>
 <div class="citation" id="r7636d31811ee-3" role="doc-biblioentry">
-<span class="label"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></span>
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id14">3</a><span class="fn-bracket">]</span></span>
 <p><a class="reference external" href="https://www.cns.nyu.edu/~lcv/ssim/">project page</a></p>
 </div>
 <div class="citation" id="r7636d31811ee-4" role="doc-biblioentry">
 <span class="label"><span class="fn-bracket">[</span>4<span class="fn-bracket">]</span></span>
-<span class="backrefs">(<a role="doc-backlink" href="#id13">1</a>,<a role="doc-backlink" href="#id15">2</a>,<a role="doc-backlink" href="#id16">3</a>)</span>
+<span class="backrefs">(<a role="doc-backlink" href="#id13">1</a>,<a role="doc-backlink" href="#id16">2</a>,<a role="doc-backlink" href="#id17">3</a>)</span>
 <p>Wang, Z., &amp; Simoncelli, E. P. (2008). Maximum differentiation (MAD)
 competition: A methodology for comparing computational models of
 perceptual discriminability. Journal of Vision, 8(12), 1–13.
@@ -604,21 +605,21 @@ perceptual discriminability. Journal of Vision, 8(12), 1–13.
 <dt class="sig sig-object py" id="plenoptic.metric.perceptual_distance.ssim_map">
 <span class="sig-name descname"><span class="pre">ssim_map</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">img1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">img2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/plenoptic/metric/perceptual_distance.html#ssim_map"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#plenoptic.metric.perceptual_distance.ssim_map" title="Link to this definition"></a></dt>
 <dd><p>Structural similarity index map.</p>
-<p>As described in <a class="reference internal" href="#rd2b7072c4613-1" id="id18">[1]</a>, the structural similarity index (SSIM) is a
+<p>As described in <a class="reference internal" href="#rd2b7072c4613-1" id="id19">[1]</a>, the structural similarity index (SSIM) is a
 perceptual distance metric, giving the distance between two images. SSIM is
 based on three comparison measurements between the two images: luminance,
 contrast, and structure. All of these are computed convolutionally across the
 images. See the references for more information.</p>
-<p>This implementation follows the original implementation, as found at <a class="reference internal" href="#rd2b7072c4613-2" id="id19">[2]</a>,
-as well as providing the option to use the weighted version used in <a class="reference internal" href="#rd2b7072c4613-4" id="id20">[4]</a>
+<p>This implementation follows the original implementation, as found at <a class="reference internal" href="#rd2b7072c4613-2" id="id20">[2]</a>,
+as well as providing the option to use the weighted version used in <a class="reference internal" href="#rd2b7072c4613-4" id="id21">[4]</a>
 (which was shown to consistently improve the image quality prediction on
-the LIVE database).</p>
+the LIVE database). More info can be found at <a class="reference internal" href="#rd2b7072c4613-3" id="id22">[3]</a>.</p>
 <p>Note that this is a similarity metric (not a distance), and so 1 means the
 two images are identical and 0 means they’re very different. When the two
 images are negatively correlated, SSIM can be negative. SSIM is bounded
 between -1 and 1.</p>
 <p>This function returns the SSIM map, showing the SSIM values across the
-image. For the mean SSIM (a single value metric), call <a class="reference internal" href="#plenoptic.metric.perceptual_distance.ssim" title="plenoptic.metric.perceptual_distance.ssim"><code class="xref py py-func docutils literal notranslate"><span class="pre">ssim()</span></code></a>.</p>
+image. For the mean SSIM (a single value metric), call <a class="reference internal" href="#plenoptic.metric.perceptual_distance.ssim" title="plenoptic.metric.perceptual_distance.ssim"><code class="xref py py-func docutils literal notranslate"><span class="pre">ssim</span></code></a>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -659,21 +660,21 @@ less than 11, since SSIM uses an 11x11 convolutional kernel.</p></li>
 <p class="rubric">References</p>
 <div role="list" class="citation-list">
 <div class="citation" id="rd2b7072c4613-1" role="doc-biblioentry">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id18">1</a><span class="fn-bracket">]</span></span>
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id19">1</a><span class="fn-bracket">]</span></span>
 <p>Z. Wang, A. C. Bovik, H. R. Sheikh, and E. P. Simoncelli, “Image
 quality assessment: From error measurement to structural similarity”
 IEEE Transactions on Image Processing, vol. 13, no. 1, Jan. 2004.</p>
 </div>
 <div class="citation" id="rd2b7072c4613-2" role="doc-biblioentry">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id19">2</a><span class="fn-bracket">]</span></span>
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id20">2</a><span class="fn-bracket">]</span></span>
 <p><a class="reference external" href="https://www.cns.nyu.edu/~lcv/ssim/ssim_index.m">matlab code</a></p>
 </div>
 <div class="citation" id="rd2b7072c4613-3" role="doc-biblioentry">
-<span class="label"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></span>
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id22">3</a><span class="fn-bracket">]</span></span>
 <p><a class="reference external" href="https://www.cns.nyu.edu/~lcv/ssim/">project page</a></p>
 </div>
 <div class="citation" id="rd2b7072c4613-4" role="doc-biblioentry">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id20">4</a><span class="fn-bracket">]</span></span>
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id21">4</a><span class="fn-bracket">]</span></span>
 <p>Wang, Z., &amp; Simoncelli, E. P. (2008). Maximum differentiation (MAD)
 competition: A methodology for comparing computational models of
 perceptual discriminability. Journal of Vision, 8(12), 1–13.

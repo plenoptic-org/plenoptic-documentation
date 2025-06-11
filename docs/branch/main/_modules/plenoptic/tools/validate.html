@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>plenoptic.tools.validate &mdash; plenoptic 1.3.1.dev2 documentation</title>
+  <title>plenoptic.tools.validate &mdash; plenoptic 1.3.1.dev43 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/plot_directive.css" />
@@ -15,7 +15,7 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=e91cd179"></script>
+      <script src="../../../_static/documentation_options.js?v=e427f0a7"></script>
       <script src="../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -108,7 +108,13 @@
            <div itemprop="articleBody">
              
   <h1>Source code for plenoptic.tools.validate</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Functions to validate synthesis inputs.&quot;&quot;&quot;</span>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Functions to validate synthesis inputs.</span>
+
+<span class="sd">These are intended to be useful both for developers and users: users can use them to</span>
+<span class="sd">ensure their models / images will work with our methods, and developers should use them</span>
+<span class="sd">to ensure a standard interface to the synthesis objects.</span>
+<span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">itertools</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
@@ -125,21 +131,20 @@
     <span class="n">no_batch</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="n">allowed_range</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Determine whether input_tensor tensor can be used for synthesis.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Determine whether ``input_tensor`` can be used for synthesis.</span>
 
 <span class="sd">    In particular, this function:</span>
 
-<span class="sd">    - Checks if input_tensor has a float or complex dtype</span>
+<span class="sd">    - Checks if input_tensor has a float or complex dtype (``TypeError``).</span>
 
 <span class="sd">    - If ``no_batch`` is True, check whether ``input_tensor.shape[0] == 1`` or</span>
-<span class="sd">      ``input_tensor.ndimension()==1``</span>
+<span class="sd">      ``input_tensor.ndimension()==1`` (``ValueError``).</span>
 
 <span class="sd">    - If ``allowed_range`` is not None, check whether all values of</span>
-<span class="sd">     ``input_tensor`` lie within the specified range.</span>
+<span class="sd">      ``input_tensor`` lie within the specified range (``ValueError``).</span>
 
-<span class="sd">    If any of the above fail, a ``ValueError`` is raised.</span>
-
-<span class="sd">    If input_tensor is not 4d, raises a ``UserWarning``.</span>
+<span class="sd">    Additionally, if input_tensor is not 4d, raises a ``UserWarning``.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -147,21 +152,26 @@
 <span class="sd">        The tensor to validate.</span>
 <span class="sd">    no_batch</span>
 <span class="sd">        If True, raise a ValueError if the batch dimension of ``input_tensor``</span>
-<span class="sd">        is greater</span>
-<span class="sd">        than 1.</span>
+<span class="sd">        is greater than 1.</span>
 <span class="sd">    allowed_range</span>
 <span class="sd">        If not None, ensure that all values of ``input_tensor`` lie within</span>
 <span class="sd">        allowed_range.</span>
 
 <span class="sd">    Raises</span>
 <span class="sd">    ------</span>
-<span class="sd">    ValueError, UserWarning :</span>
-<span class="sd">        See above</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If ``input_tensor`` fails any of the above checks.</span>
+<span class="sd">    TypeError</span>
+<span class="sd">        If ``input_tensor`` does not have a float or complex dtype.</span>
+
+<span class="sd">    Warns</span>
+<span class="sd">    -----</span>
+<span class="sd">    UserWarning</span>
+<span class="sd">        If ``input_tensor`` is not 4d.</span>
 
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
-
-<span class="sd">    Check that our built-in images work.</span>
+<span class="sd">    Check that our built-in images work:</span>
 
 <span class="sd">    &gt;&gt;&gt; import plenoptic as po</span>
 <span class="sd">    &gt;&gt;&gt; po.tools.validate.validate_input(po.data.einstein())</span>
@@ -175,7 +185,6 @@
 <span class="sd">    ... )  # doctest: +ELLIPSIS</span>
 <span class="sd">    Traceback (most recent call last):</span>
 <span class="sd">    ValueError: input_tensor range ...</span>
-
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># validate dtype</span>
     <span class="k">if</span> <span class="n">input_tensor</span><span class="o">.</span><span class="n">dtype</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span>
@@ -228,7 +237,8 @@
     <span class="n">image_dtype</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">dtype</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span>
     <span class="n">device</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span> <span class="o">=</span> <span class="s2">&quot;cpu&quot;</span><span class="p">,</span>
 <span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Determine whether model can be used for sythesis.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Determine whether model can be used for sythesis.</span>
 
 <span class="sd">    In particular, this function checks the following (with their associated</span>
 <span class="sd">    errors raised):</span>
@@ -252,11 +262,11 @@
 <span class="sd">    Finally, we raise a ``UserWarning``:</span>
 
 <span class="sd">    - If ``model`` is in training mode. Note that this is different from having</span>
-<span class="sd">      learnable parameters, see ``pytorch docs</span>
-<span class="sd">      &lt;https://pytorch.org/docs/stable/notes/autograd.html#locally-disable-grad-doc&gt;``_</span>
+<span class="sd">      learnable parameters, see `pytorch docs</span>
+<span class="sd">      &lt;https://pytorch.org/docs/stable/notes/autograd.html#locally-disable-grad-doc&gt;`_.</span>
 
-<span class="sd">    - If ``model`` returns a 3d or 4d output when given a tensor with shape</span>
-<span class="sd">      ``image_shape``</span>
+<span class="sd">    - If ``model`` returns an output with other than 3 or 4 dimensions when given a</span>
+<span class="sd">      tensor with shape ``image_shape``.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -265,26 +275,35 @@
 <span class="sd">    image_shape</span>
 <span class="sd">        Some models (e.g., the steerable pyramid) can only accept inputs of a</span>
 <span class="sd">        certain shape. If that&#39;s the case for ``model``, use this to</span>
-<span class="sd">        specify the expected shape. If None, we use an image of shape</span>
-<span class="sd">        (1,1,16,16)</span>
+<span class="sd">        specify the expected shape. If ``None``, we use an image of shape</span>
+<span class="sd">        ``(1,1,16,16)``.</span>
 <span class="sd">    image_dtype</span>
 <span class="sd">        What dtype to validate against.</span>
 <span class="sd">    device</span>
 <span class="sd">        What device to place test image on.</span>
 
-<span class="sd">    See also</span>
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If ``model`` fails one of the checks listed above.</span>
+<span class="sd">    TypeError</span>
+<span class="sd">        If ``model`` changes the precision of the input tensor.</span>
+<span class="sd">    RuntimeError</span>
+<span class="sd">        If ``model`` changes the device of the input tensor.</span>
+
+<span class="sd">    Warns</span>
+<span class="sd">    -----</span>
+<span class="sd">    UserWarning</span>
+<span class="sd">       If ``model`` is in training mode or returns an output with other than 3 or 4</span>
+<span class="sd">       dimensions.</span>
+
+<span class="sd">    See Also</span>
 <span class="sd">    --------</span>
 <span class="sd">    remove_grad</span>
 <span class="sd">        Helper function for detaching all parameters (in place).</span>
 
-<span class="sd">    Raises</span>
-<span class="sd">    ------</span>
-<span class="sd">    ValueError, UserWarning :</span>
-<span class="sd">        See above</span>
-
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
-
 <span class="sd">    Check that one of our built-in models work:</span>
 
 <span class="sd">    &gt;&gt;&gt; import plenoptic as po</span>
@@ -305,7 +324,6 @@
 <span class="sd">    &gt;&gt;&gt; po.tools.validate.validate_model(FailureModel())  # doctest: +ELLIPSIS</span>
 <span class="sd">    Traceback (most recent call last):</span>
 <span class="sd">    ValueError: model strips gradient from input, ...</span>
-
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">image_shape</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">image_shape</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">16</span><span class="p">)</span>
@@ -380,7 +398,8 @@
     <span class="n">image_shape</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">device</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span> <span class="o">=</span> <span class="s2">&quot;cpu&quot;</span><span class="p">,</span>
 <span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Determine whether a model can be used for coarse-to-fine synthesis.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Determine whether a model can be used for coarse-to-fine synthesis.</span>
 
 <span class="sd">    In particular, this function checks the following (with associated errors):</span>
 
@@ -399,14 +418,19 @@
 <span class="sd">        Some models (e.g., the steerable pyramid) can only accept inputs of a</span>
 <span class="sd">        certain shape. If that&#39;s the case for ``model``, use this to</span>
 <span class="sd">        specify the expected shape. If None, we use an image of shape</span>
-<span class="sd">        (1,1,16,16)</span>
+<span class="sd">        ``(1,1,16,16)``.</span>
 <span class="sd">    device</span>
 <span class="sd">        Which device to place the test image on.</span>
 
 <span class="sd">    Raises</span>
 <span class="sd">    ------</span>
-<span class="sd">    AttributeError, TypeError, ValueError</span>
-<span class="sd">        See above</span>
+<span class="sd">    AttributeError</span>
+<span class="sd">        If ``model`` does not have a ``scales`` attribute.</span>
+<span class="sd">    TypeError</span>
+<span class="sd">        If ``model.forward`` does not accept a ``scales`` keyword argument.</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If ``model.forward`` output does not change shape when ``scales`` keyword</span>
+<span class="sd">        argument is set.</span>
 
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
@@ -433,7 +457,6 @@
 <span class="sd">    &gt;&gt;&gt; po.tools.validate.validate_coarse_to_fine(model, shape)  # doctest: +ELLIPSIS</span>
 <span class="sd">    Traceback (most recent call last):</span>
 <span class="sd">    AttributeError: model has no scales attribute ...</span>
-
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
         <span class="s2">&quot;Validating whether model can work with coarse-to-fine synthesis --&quot;</span>
@@ -469,7 +492,8 @@
     <span class="n">image_dtype</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">dtype</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span>
     <span class="n">device</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span> <span class="o">=</span> <span class="s2">&quot;cpu&quot;</span><span class="p">,</span>
 <span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Determines whether a metric can be used for MADCompetition synthesis.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Determine whether a metric can be used for MADCompetition synthesis.</span>
 
 <span class="sd">    In particular, this functions checks the following (with associated</span>
 <span class="sd">    exceptions):</span>
@@ -492,7 +516,7 @@
 <span class="sd">        Some models (e.g., the steerable pyramid) can only accept inputs of a</span>
 <span class="sd">        certain shape. If that&#39;s the case for ``model``, use this to</span>
 <span class="sd">        specify the expected shape. If None, we use an image of shape</span>
-<span class="sd">        (1,1,16,16)</span>
+<span class="sd">        ``(1,1,16,16)``.</span>
 <span class="sd">    image_dtype</span>
 <span class="sd">        What dtype to validate against.</span>
 <span class="sd">    device</span>
@@ -500,8 +524,11 @@
 
 <span class="sd">    Raises</span>
 <span class="sd">    ------</span>
-<span class="sd">    TypeError, ValueError</span>
-<span class="sd">        See above</span>
+<span class="sd">    TypeError</span>
+<span class="sd">        If ``metric`` cannot be called with two tensors of specified shape.</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If ``metric`` does not return a scalar or doesn&#39;t return a value less than</span>
+<span class="sd">        5e-7 when given two identical tensors.</span>
 
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
@@ -517,7 +544,6 @@
 <span class="sd">    &gt;&gt;&gt; po.tools.validate.validate_metric(po.metric.ssim)  # doctest: +ELLIPSIS</span>
 <span class="sd">    Traceback (most recent call last):</span>
 <span class="sd">    ValueError: metric should return ...</span>
-
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">image_shape</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">image_shape</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">16</span><span class="p">)</span>
@@ -552,16 +578,20 @@
 <div class="viewcode-block" id="remove_grad">
 <a class="viewcode-back" href="../../../api/plenoptic.tools.html#plenoptic.tools.validate.remove_grad">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">remove_grad</span><span class="p">(</span><span class="n">model</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Detach all parameters and buffers of model (in place).</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Detach all parameters and buffers of model (in place).</span>
+
+<span class="sd">    Because models in plenoptic are fixed (i.e., we don&#39;t change their parameters),</span>
+<span class="sd">    we want to remove the gradients from their parameters to avoid unnecessary</span>
+<span class="sd">    computation.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    model</span>
-<span class="sd">        torch Module with learnable parameters</span>
+<span class="sd">        Torch Module with learnable parameters.</span>
 
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
-
 <span class="sd">    &gt;&gt;&gt; import plenoptic as po</span>
 <span class="sd">    &gt;&gt;&gt; model = po.simul.OnOff(31, pretrained=True, cache_filt=True).eval()</span>
 <span class="sd">    &gt;&gt;&gt; po.tools.validate.validate_model(model)  # doctest: +ELLIPSIS</span>

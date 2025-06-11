@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>plenoptic.tools.display &mdash; plenoptic 1.3.1.dev2 documentation</title>
+  <title>plenoptic.tools.display &mdash; plenoptic 1.3.1.dev43 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/plot_directive.css" />
@@ -15,7 +15,7 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=e91cd179"></script>
+      <script src="../../../_static/documentation_options.js?v=e427f0a7"></script>
       <script src="../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -108,10 +108,13 @@
            <div itemprop="articleBody">
              
   <h1>Source code for plenoptic.tools.display</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;various helpful utilities for plotting or displaying information&quot;&quot;&quot;</span>
+<span></span><span class="sd">&quot;&quot;&quot;Various helpful utilities for plotting or displaying information.&quot;&quot;&quot;</span>
+<span class="c1"># numpydoc ignore=ES01</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Literal</span>
 
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">mpl</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">pyrtools</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pt</span>
@@ -120,116 +123,203 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">.data</span><span class="w"> </span><span class="kn">import</span> <span class="n">to_numpy</span>
 
 
-<div class="viewcode-block" id="imshow">
-<a class="viewcode-back" href="../../../api/plenoptic.tools.html#plenoptic.tools.display.imshow">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">imshow</span><span class="p">(</span>
-    <span class="n">image</span><span class="p">,</span>
-    <span class="n">vrange</span><span class="o">=</span><span class="s2">&quot;indep1&quot;</span><span class="p">,</span>
-    <span class="n">zoom</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-    <span class="n">title</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
-    <span class="n">col_wrap</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-    <span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-    <span class="n">cmap</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-    <span class="n">plot_complex</span><span class="o">=</span><span class="s2">&quot;rectangular&quot;</span><span class="p">,</span>
-    <span class="n">batch_idx</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-    <span class="n">channel_idx</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-    <span class="n">as_rgb</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-    <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
-<span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Show image(s) correctly.</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_find_zoom</span><span class="p">(</span>
+    <span class="n">image_heights</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">image_widths</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">ax</span><span class="p">:</span> <span class="n">mpl</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">Axes</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Find best-fitting zoom based on image and axes sizes.</span>
 
-<span class="sd">    This function shows images correctly, making sure that each element in the</span>
-<span class="sd">    tensor corresponds to a pixel or an integer number of pixels, to avoid</span>
-<span class="sd">    aliasing (NOTE: this guarantee only holds for the saved image; it should</span>
-<span class="sd">    generally hold in notebooks as well, but will fail if, e.g., you plot an</span>
-<span class="sd">    image that&#39;s 2000 pixels wide on an monitor 1000 pixels wide; the notebook</span>
-<span class="sd">    handles the rescaling in a way we can&#39;t control).</span>
+<span class="sd">    If images are bigger than ``ax``, then we figure out the largest float of form</span>
+<span class="sd">    ``1/d``, where ``d`` is an integer. If ``ax`` is bigger than images, figure out the</span>
+<span class="sd">    largest integer we can use.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    image : torch.Tensor or list</span>
+<span class="sd">    image_heights, image_widths</span>
+<span class="sd">        The last two dimensions of all images to plot.</span>
+<span class="sd">    ax</span>
+<span class="sd">        The existing axis we will use for imshow.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    zoom</span>
+<span class="sd">        Our best guess at zoom.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">find_zoom_helper</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">limit</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Find zoom that works. This is only for limit &lt; x.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        x</span>
+<span class="sd">            The sizes to consider.</span>
+<span class="sd">        limit</span>
+<span class="sd">            The max possible size.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        zoom</span>
+<span class="sd">            The valid zoom level.</span>
+<span class="sd">        &quot;&quot;&quot;</span>  <span class="c1"># numpydoc ignore=ES01</span>
+        <span class="c1"># find all non-trivial divisors of x</span>
+        <span class="n">divisors</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">x</span> <span class="o">%</span> <span class="n">i</span><span class="p">]</span>
+        <span class="c1"># find the largest zoom (equivalently, smallest divisor) such that the</span>
+        <span class="c1"># zoomed in image is smaller than the limit</span>
+        <span class="k">return</span> <span class="mi">1</span> <span class="o">/</span> <span class="nb">min</span><span class="p">([</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">divisors</span> <span class="k">if</span> <span class="n">x</span> <span class="o">/</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="n">limit</span><span class="p">])</span>
+
+    <span class="k">if</span> <span class="n">ax</span><span class="o">.</span><span class="n">bbox</span><span class="o">.</span><span class="n">height</span> <span class="o">&gt;</span> <span class="nb">max</span><span class="p">(</span><span class="n">image_heights</span><span class="p">):</span>
+        <span class="n">zoom</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">bbox</span><span class="o">.</span><span class="n">height</span> <span class="o">//</span> <span class="nb">max</span><span class="p">(</span><span class="n">image_heights</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">zoom</span> <span class="o">=</span> <span class="n">find_zoom_helper</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">image_heights</span><span class="p">),</span> <span class="n">ax</span><span class="o">.</span><span class="n">bbox</span><span class="o">.</span><span class="n">height</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">ax</span><span class="o">.</span><span class="n">bbox</span><span class="o">.</span><span class="n">width</span> <span class="o">&gt;</span> <span class="nb">max</span><span class="p">(</span><span class="n">image_widths</span><span class="p">):</span>
+        <span class="n">zoom</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">zoom</span><span class="p">,</span> <span class="n">ax</span><span class="o">.</span><span class="n">bbox</span><span class="o">.</span><span class="n">width</span> <span class="o">//</span> <span class="nb">max</span><span class="p">(</span><span class="n">image_widths</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">zoom</span> <span class="o">=</span> <span class="n">find_zoom_helper</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">image_widths</span><span class="p">),</span> <span class="n">ax</span><span class="o">.</span><span class="n">bbox</span><span class="o">.</span><span class="n">width</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">zoom</span>
+
+
+<div class="viewcode-block" id="imshow">
+<a class="viewcode-back" href="../../../api/plenoptic.tools.html#plenoptic.tools.display.imshow">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">imshow</span><span class="p">(</span>
+    <span class="n">image</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">],</span>
+    <span class="n">vrange</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">|</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;indep1&quot;</span><span class="p">,</span>
+    <span class="n">zoom</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">title</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+    <span class="n">col_wrap</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">ax</span><span class="p">:</span> <span class="n">mpl</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">Axes</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">cmap</span><span class="p">:</span> <span class="n">mpl</span><span class="o">.</span><span class="n">colors</span><span class="o">.</span><span class="n">Colormap</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">plot_complex</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;rectangular&quot;</span><span class="p">,</span> <span class="s2">&quot;polar&quot;</span><span class="p">,</span> <span class="s2">&quot;logpolar&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;rectangular&quot;</span><span class="p">,</span>
+    <span class="n">batch_idx</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">channel_idx</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">as_rgb</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pt</span><span class="o">.</span><span class="n">tools</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">PyrFigure</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Show image(s), avoiding interpolation.</span>
+
+<span class="sd">    This function shows images carefully, avoiding interpolation: each element in the</span>
+<span class="sd">    input ``image`` will correspond to a pixel or an integer number of pixels. When</span>
+<span class="sd">    ``zoom&lt;1``, an integer number of input elements will be averaged into a single</span>
+<span class="sd">    pixel.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    image</span>
 <span class="sd">        The images to display. Tensors should be 4d (batch, channel, height,</span>
 <span class="sd">        width). List of tensors should be used for tensors of different height</span>
 <span class="sd">        and width: all images will automatically be rescaled so they&#39;re</span>
 <span class="sd">        displayed at the same height and width, thus, their heights and widths</span>
 <span class="sd">        must be scalar multiples of each other.</span>
-<span class="sd">    vrange : `tuple` or `str`</span>
+<span class="sd">    vrange</span>
 <span class="sd">        If a 2-tuple, specifies the image values vmin/vmax that are mapped to</span>
 <span class="sd">        the minimum and maximum value of the colormap, respectively. If a</span>
 <span class="sd">        string:</span>
 
-<span class="sd">        * `&#39;auto0&#39;`: all images have same vmin/vmax, which have the same absolute</span>
-<span class="sd">                     value, and come from the minimum or maximum across all</span>
-<span class="sd">                     images, whichever has the larger absolute value</span>
-<span class="sd">        * `&#39;auto/auto1&#39;`: all images have same vmin/vmax, which are the</span>
-<span class="sd">                          minimum/maximum values across all images</span>
-<span class="sd">        * `&#39;auto2&#39;`: all images have same vmin/vmax, which are the mean (across</span>
-<span class="sd">                     all images) minus/ plus 2 std dev (across all images)</span>
-<span class="sd">        * `&#39;auto3&#39;`: all images have same vmin/vmax, chosen so as to map the</span>
-<span class="sd">                     10th/90th percentile values to the 10th/90th percentile of</span>
-<span class="sd">                     the display intensity range. For example: vmin is the 10th</span>
-<span class="sd">                     percentile image value minus 1/8 times the difference</span>
-<span class="sd">                     between the 90th and 10th percentile</span>
-<span class="sd">        * `&#39;indep0&#39;`: each image has an independent vmin/vmax, which have the</span>
-<span class="sd">                      same absolute value, which comes from either their</span>
-<span class="sd">                      minimum or maximum value, whichever has the larger</span>
-<span class="sd">                      absolute value.</span>
-<span class="sd">        * `&#39;indep1&#39;`: each image has an independent vmin/vmax, which are their</span>
-<span class="sd">                      minimum/maximum values</span>
-<span class="sd">        * `&#39;indep2&#39;`: each image has an independent vmin/vmax, which is their</span>
-<span class="sd">                      mean minus/plus 2 std dev</span>
-<span class="sd">        * `&#39;indep3&#39;`: each image has an independent vmin/vmax, chosen so that</span>
-<span class="sd">                      the 10th/90th percentile values map to the 10th/90th</span>
-<span class="sd">                      percentile intensities.</span>
-<span class="sd">    zoom : `float` or `None`</span>
-<span class="sd">        ratio of display pixels to image pixels. if &gt;1, must be an integer. If</span>
-<span class="sd">        &lt;1, must be 1/d where d is a a divisor of the size of the largest</span>
-<span class="sd">        image. If None, we try to determine the best zoom.</span>
-<span class="sd">    title : `str`, `list`, or None, optional</span>
-<span class="sd">        Title for the plot. In addition to the specified title, we add a</span>
-<span class="sd">        subtitle giving the plotted range and dimensionality (with zoom)</span>
-<span class="sd">        * if `str`, will put the same title on every plot.</span>
-<span class="sd">        * if `list`, all values must be `str`, must be the same length as img,</span>
-<span class="sd">          assigning each title to corresponding image.</span>
-<span class="sd">        * if None, no title will be printed (and subtitle will be removed).</span>
-<span class="sd">    col_wrap : `int` or None, optional</span>
-<span class="sd">        number of axes to have in each row. If None, will fit all axes in a</span>
-<span class="sd">        single row.</span>
-<span class="sd">    ax : `matplotlib.pyplot.axis` or None, optional</span>
-<span class="sd">        if None, we make the appropriate figure. otherwise, we resize the axes</span>
-<span class="sd">        so that it&#39;s the appropriate number of pixels (done by shrinking the</span>
-<span class="sd">        bbox - if the bbox is already too small, this will throw an Exception!,</span>
-<span class="sd">        so first define a large enough figure using either make_figure or</span>
-<span class="sd">        plt.figure)</span>
-<span class="sd">    cmap : matplotlib colormap, optional</span>
-<span class="sd">        colormap to use when showing these images</span>
-<span class="sd">    plot_complex : {&#39;rectangular&#39;, &#39;polar&#39;, &#39;logpolar&#39;}</span>
-<span class="sd">        specifies handling of complex values.</span>
+<span class="sd">        * ``&quot;auto0&quot;``: All images have same vmin/vmax, which have the same</span>
+<span class="sd">          absolute value, and come from the minimum or maximum across all</span>
+<span class="sd">          images, whichever has the larger absolute value.</span>
 
-<span class="sd">        * `&#39;rectangular&#39;`: plot real and imaginary components as separate images</span>
-<span class="sd">        * `&#39;polar&#39;`: plot amplitude and phase as separate images</span>
-<span class="sd">        * `&#39;logpolar&#39;`: plot log_2 amplitude and phase as separate images</span>
-<span class="sd">        for any other value, we raise a warning and default to rectangular.</span>
-<span class="sd">    batch_idx : int or None, optional</span>
-<span class="sd">        Which element from the batch dimension to plot. If None, we plot all.</span>
-<span class="sd">    channel_idx : int or None, optional</span>
-<span class="sd">        Which element from the channel dimension to plot. If None, we plot all.</span>
-<span class="sd">        Note if this is an int, then `as_rgb=True` will fail, because we</span>
+<span class="sd">        * ``&quot;auto1&quot;``: All images have same vmin/vmax, which are the</span>
+<span class="sd">          minimum/maximum values across all images.</span>
+
+<span class="sd">        * ``&quot;auto2&quot;``: All images have same vmin/vmax, which are the mean (across</span>
+<span class="sd">          all images) minus/ plus 2 std dev (across all images).</span>
+
+<span class="sd">        * ``&quot;auto3&quot;``: All images have same vmin/vmax, chosen so as to map the 10th/90th</span>
+<span class="sd">          percentile values to the 10th/90th percentile of the display intensity range.</span>
+<span class="sd">          For example: vmin is the 10th percentile image value minus 1/8 times the</span>
+<span class="sd">          difference between the 90th and 10th percentile.</span>
+
+<span class="sd">        * ``&quot;indep0&quot;``: Each image has an independent vmin/vmax, which have the same</span>
+<span class="sd">          absolute value, which comes from either their minimum or maximum value,</span>
+<span class="sd">          whichever has the larger absolute value.</span>
+
+<span class="sd">        * ``&quot;indep1&quot;``: Each image has an independent vmin/vmax, which are their</span>
+<span class="sd">          minimum/maximum values.</span>
+
+<span class="sd">        * ``&quot;indep2&quot;``: Each image has an independent vmin/vmax, which is their</span>
+<span class="sd">          mean minus/plus 2 std dev.</span>
+
+<span class="sd">        * ``&quot;indep3&quot;``: Each image has an independent vmin/vmax, chosen so that the</span>
+<span class="sd">          10th/90th percentile values map to the 10th/90th percentile intensities.</span>
+
+<span class="sd">    zoom</span>
+<span class="sd">        Ratio of display pixels to image pixels. If greater than 1, must be an</span>
+<span class="sd">        integer. If less than 1, must be ``1/d`` where ``d`` is a a divisor of the</span>
+<span class="sd">        size of the largest image. If ``None``, we try to determine the best zoom.</span>
+<span class="sd">    title</span>
+<span class="sd">        Title for the plot. In addition to the specified title, we add a</span>
+<span class="sd">        subtitle giving the plotted range and dimensionality (with zoom).</span>
+
+<span class="sd">        * If ``str``, will put the same title on every plot.</span>
+
+<span class="sd">        * If ``list``, all values must be ``str``, must be the same length as img,</span>
+<span class="sd">          and each title will be assigned to corresponding plot.</span>
+
+<span class="sd">        * If ``None``, no title will be printed and subtitle will be removed.</span>
+
+<span class="sd">    col_wrap</span>
+<span class="sd">        Number of axes to have in each row. If ``None``, will fit all axes in a</span>
+<span class="sd">        single row.</span>
+<span class="sd">    ax</span>
+<span class="sd">        If ``None``, we make the appropriate figure. Otherwise, we resize the axes</span>
+<span class="sd">        so that it&#39;s the appropriate number of pixels (done by shrinking the</span>
+<span class="sd">        bbox - if the bbox is already too small, this will throw an Exception,</span>
+<span class="sd">        so first define a large enough figure).</span>
+<span class="sd">    cmap</span>
+<span class="sd">        Colormap to use when showing these images. If ``None``, then behavior is</span>
+<span class="sd">        determined by ``vrange``: if ``vmap in [&quot;auto0&quot;, &quot;indep0&quot;]``, we use</span>
+<span class="sd">        ``&quot;RdBu_r&quot;``, else we use ``&quot;gray&quot;`` (see `matplotlib documentation</span>
+<span class="sd">        &lt;https://matplotlib.org/stable/users/explain/colors/colormaps.html#colormaps&gt;`_).</span>
+<span class="sd">    plot_complex</span>
+<span class="sd">        Specifies handling of complex values.</span>
+
+<span class="sd">        * ``&quot;rectangular&quot;``: plot real and imaginary components as separate images.</span>
+
+<span class="sd">        * ``&quot;polar&quot;``: plot amplitude and phase as separate images.</span>
+
+<span class="sd">        * ``&quot;logpolar&quot;``: plot log (base 2) amplitude and phase as separate images.</span>
+
+<span class="sd">    batch_idx</span>
+<span class="sd">        Which element from the batch dimension to plot. If ``None``, we plot all.</span>
+<span class="sd">    channel_idx</span>
+<span class="sd">        Which element from the channel dimension to plot. If ``None``, we plot all.</span>
+<span class="sd">        Note if this is not ``None``, then ``as_rgb=True`` will fail, because we</span>
 <span class="sd">        restrict the channels.</span>
-<span class="sd">    as_rgb : bool, optional</span>
-<span class="sd">        Whether to consider the channels as encoding RGB(A) values. If True, we</span>
+<span class="sd">    as_rgb</span>
+<span class="sd">        Whether to consider the channels as encoding RGB(A) values. If ``True``, we</span>
 <span class="sd">        attempt to plot the image in color, so your tensor must have 3 (or 4 if</span>
-<span class="sd">        you want the alpha channel) elements in the channel dimension, or this</span>
-<span class="sd">        will raise an Exception. If False, we plot each channel as a separate</span>
-<span class="sd">        grayscale image.</span>
-<span class="sd">    kwargs :</span>
-<span class="sd">        Passed to `ax.imshow`</span>
+<span class="sd">        you want the alpha channel) elements in the channel dimension. If ``False``,</span>
+<span class="sd">        we plot each channel as a separate grayscale image.</span>
+<span class="sd">    **kwargs</span>
+<span class="sd">        Passed to :func:`matplotlib.pyplot.imshow`.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    fig : `PyrFigure`</span>
-<span class="sd">        figure containing the plotted images</span>
+<span class="sd">    fig</span>
+<span class="sd">        Figure containing the plotted images.</span>
 
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    TypeError</span>
+<span class="sd">        If ``batch_idx`` or ``channel_idx`` takes an illegal value.</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If ``zoom`` takes an illegal value.</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If ``as_rgb=True`` and the input ``image`` does not have 3 or 4 channels.</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If ``as_rgb=False``, ``image`` has more than one channel and one more than</span>
+<span class="sd">        one batch and neither ``batch_idx`` nor ``channel_idx`` is set.</span>
+<span class="sd">    Exception</span>
+<span class="sd">        If ``plot_complex`` takes an illegal value.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    This interpolation avoidance is only guaranteed for the saved image; it should</span>
+<span class="sd">    generally hold in notebooks as well, but will fail if, e.g., you plot an image</span>
+<span class="sd">    that&#39;s 2000 pixels wide on an monitor 1000 pixels wide; the browser handles the</span>
+<span class="sd">    rescaling in a way we can&#39;t control.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
         <span class="n">image</span> <span class="o">=</span> <span class="p">[</span><span class="n">image</span><span class="p">]</span>
@@ -263,9 +353,9 @@
             <span class="n">im</span> <span class="o">=</span> <span class="n">im</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="n">im</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">1</span><span class="p">,</span> <span class="o">*</span><span class="n">im</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">:]))</span>
         <span class="k">elif</span> <span class="n">im</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">im</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="s2">&quot;Don&#39;t know how to plot images with more than one channel and&quot;</span>
-                <span class="s2">&quot; batch! Use batch_idx / channel_idx to choose a subset for&quot;</span>
-                <span class="s2">&quot; plotting&quot;</span>
+                <span class="s2">&quot;Don&#39;t know how to plot non-rgb images with more than one channel&quot;</span>
+                <span class="s2">&quot; and batch! Use batch_idx / channel_idx to choose a subset for&quot;</span>
+                <span class="s2">&quot; plotting.&quot;</span>
             <span class="p">)</span>
         <span class="c1"># by iterating through it twice, we make sure to peel apart the batch</span>
         <span class="c1"># and channel dimensions so that they each show up as a separate image.</span>
@@ -279,25 +369,13 @@
             <span class="n">heights</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="n">i_</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">i_</span> <span class="ow">in</span> <span class="n">i</span><span class="p">])</span>
             <span class="n">widths</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="n">i_</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">i_</span> <span class="ow">in</span> <span class="n">i</span><span class="p">])</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">find_zoom</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">limit</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Find zoom that works. This is only for limit &lt; x.&quot;&quot;&quot;</span>
-        <span class="c1"># find all non-trivial divisors of x</span>
-        <span class="n">divisors</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">x</span> <span class="o">%</span> <span class="n">i</span><span class="p">]</span>
-        <span class="c1"># find the largest zoom (equivalently, smallest divisor) such that the</span>
-        <span class="c1"># zoomed in image is smaller than the limit</span>
-        <span class="k">return</span> <span class="mi">1</span> <span class="o">/</span> <span class="nb">min</span><span class="p">([</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">divisors</span> <span class="k">if</span> <span class="n">x</span> <span class="o">/</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="n">limit</span><span class="p">])</span>
-
-    <span class="k">if</span> <span class="n">ax</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">zoom</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">ax</span><span class="o">.</span><span class="n">bbox</span><span class="o">.</span><span class="n">height</span> <span class="o">&gt;</span> <span class="nb">max</span><span class="p">(</span><span class="n">heights</span><span class="p">):</span>
-            <span class="n">zoom</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">bbox</span><span class="o">.</span><span class="n">height</span> <span class="o">//</span> <span class="nb">max</span><span class="p">(</span><span class="n">heights</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">zoom</span> <span class="o">=</span> <span class="n">find_zoom</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">heights</span><span class="p">),</span> <span class="n">ax</span><span class="o">.</span><span class="n">bbox</span><span class="o">.</span><span class="n">height</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">ax</span><span class="o">.</span><span class="n">bbox</span><span class="o">.</span><span class="n">width</span> <span class="o">&gt;</span> <span class="nb">max</span><span class="p">(</span><span class="n">widths</span><span class="p">):</span>
-            <span class="n">zoom</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">zoom</span><span class="p">,</span> <span class="n">ax</span><span class="o">.</span><span class="n">bbox</span><span class="o">.</span><span class="n">width</span> <span class="o">//</span> <span class="nb">max</span><span class="p">(</span><span class="n">widths</span><span class="p">))</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">zoom</span> <span class="o">=</span> <span class="n">find_zoom</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">widths</span><span class="p">),</span> <span class="n">ax</span><span class="o">.</span><span class="n">bbox</span><span class="o">.</span><span class="n">width</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">zoom</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">ax</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">zoom</span> <span class="o">=</span> <span class="n">_find_zoom</span><span class="p">(</span><span class="n">heights</span><span class="p">,</span> <span class="n">widths</span><span class="p">,</span> <span class="n">ax</span><span class="p">)</span>
     <span class="k">elif</span> <span class="n">zoom</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">zoom</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="k">elif</span> <span class="n">zoom</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;zoom must be positive!&quot;</span><span class="p">)</span>
+
     <span class="k">return</span> <span class="n">pt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span>
         <span class="n">images_to_plot</span><span class="p">,</span>
         <span class="n">vrange</span><span class="o">=</span><span class="n">vrange</span><span class="p">,</span>
@@ -315,145 +393,172 @@
 <div class="viewcode-block" id="animshow">
 <a class="viewcode-back" href="../../../api/plenoptic.tools.html#plenoptic.tools.display.animshow">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">animshow</span><span class="p">(</span>
-    <span class="n">video</span><span class="p">,</span>
-    <span class="n">framerate</span><span class="o">=</span><span class="mf">2.0</span><span class="p">,</span>
-    <span class="n">repeat</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-    <span class="n">vrange</span><span class="o">=</span><span class="s2">&quot;indep1&quot;</span><span class="p">,</span>
-    <span class="n">zoom</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-    <span class="n">title</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
-    <span class="n">col_wrap</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-    <span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-    <span class="n">cmap</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-    <span class="n">plot_complex</span><span class="o">=</span><span class="s2">&quot;rectangular&quot;</span><span class="p">,</span>
-    <span class="n">batch_idx</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-    <span class="n">channel_idx</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-    <span class="n">as_rgb</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-    <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
-<span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Animate video(s) correctly.</span>
+    <span class="n">video</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">],</span>
+    <span class="n">framerate</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">2.0</span><span class="p">,</span>
+    <span class="n">repeat</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">vrange</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">|</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;indep1&quot;</span><span class="p">,</span>
+    <span class="n">zoom</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">title</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+    <span class="n">col_wrap</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">ax</span><span class="p">:</span> <span class="n">mpl</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">Axes</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">cmap</span><span class="p">:</span> <span class="n">mpl</span><span class="o">.</span><span class="n">colors</span><span class="o">.</span><span class="n">Colormap</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">plot_complex</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;rectangular&quot;</span><span class="p">,</span> <span class="s2">&quot;polar&quot;</span><span class="p">,</span> <span class="s2">&quot;logpolar&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;rectangular&quot;</span><span class="p">,</span>
+    <span class="n">batch_idx</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">channel_idx</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">as_rgb</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">mpl</span><span class="o">.</span><span class="n">animation</span><span class="o">.</span><span class="n">FuncAnimation</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Animate video(s), avoiding interpolation.</span>
 
-<span class="sd">    This function animates videos correctly, making sure that each element in</span>
-<span class="sd">    the tensor corresponds to a pixel or an integer number of pixels, to avoid</span>
-<span class="sd">    aliasing (NOTE: this guarantee only holds for the saved animation (assuming</span>
-<span class="sd">    video compression doesn&#39;t interfere); it should generally hold in notebooks</span>
-<span class="sd">    as well, but will fail if, e.g., your video is 2000 pixels wide on an</span>
-<span class="sd">    monitor 1000 pixels wide; the notebook handles the rescaling in a way we</span>
-<span class="sd">    can&#39;t control).</span>
+<span class="sd">    This function shows images carefully, avoiding interpolation: each element in the</span>
+<span class="sd">    input ``image`` will correspond to a pixel or an integer number of pixels. When</span>
+<span class="sd">    ``zoom&lt;1``, an integer number of input elements will be averaged into a single</span>
+<span class="sd">    pixel.</span>
 
 <span class="sd">    This functions returns a matplotlib FuncAnimation object. See our documentation</span>
-<span class="sd">    (e.g.,</span>
-<span class="sd">    [Quickstart](https://docs.plenoptic.org/docs/branch/main/tutorials/00_quickstart.html))</span>
-<span class="sd">    for examples on how to view it in a Jupyter notebook. In order to save, use</span>
+<span class="sd">    (e.g., `Quickstart</span>
+<span class="sd">    &lt;https://docs.plenoptic.org/docs/branch/main/tutorials/00_quickstart.html&gt;`_) for</span>
+<span class="sd">    examples on how to view it in a Jupyter notebook. In order to save, use</span>
 <span class="sd">    ``anim.save(filename)``. In either case, this can take a while and you&#39;ll need the</span>
 <span class="sd">    appropriate writer installed and on your path, e.g., ffmpeg, imagemagick, etc). See</span>
-<span class="sd">    [matplotlib documentation](https://matplotlib.org/stable/api/animation_api.html) for</span>
-<span class="sd">    more details.</span>
+<span class="sd">    `matplotlib documentation &lt;https://matplotlib.org/stable/api/animation_api.html&gt;`_</span>
+<span class="sd">    for more details.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    video : torch.Tensor or list</span>
-<span class="sd">        The videos to display. Tensors should be 5d (batch, channel, time,</span>
+<span class="sd">    video</span>
+<span class="sd">        The video(s) to display. Tensors should be 5d (batch, channel, time,</span>
 <span class="sd">        height, width). List of tensors should be used for tensors of different</span>
 <span class="sd">        height and width: all videos will automatically be rescaled so they&#39;re</span>
 <span class="sd">        displayed at the same height and width, thus, their heights and widths</span>
 <span class="sd">        must be scalar multiples of each other. Videos must all have the same</span>
-<span class="sd">        number of frames as well.</span>
-<span class="sd">    framerate : `float`</span>
+<span class="sd">        number of frames.</span>
+<span class="sd">    framerate</span>
 <span class="sd">        Temporal resolution of the video, in Hz (frames per second).</span>
-<span class="sd">    repeat : `bool`</span>
-<span class="sd">        whether to loop the animation or just play it once</span>
-<span class="sd">    vrange : `tuple` or `str`</span>
+<span class="sd">    repeat</span>
+<span class="sd">        Whether to loop the animation or just play it once.</span>
+<span class="sd">    vrange</span>
 <span class="sd">        If a 2-tuple, specifies the image values vmin/vmax that are mapped to</span>
 <span class="sd">        the minimum and maximum value of the colormap, respectively. If a</span>
 <span class="sd">        string:</span>
 
-<span class="sd">        * `&#39;auto0&#39;`: all images have same vmin/vmax, which have the same absolute</span>
-<span class="sd">                     value, and come from the minimum or maximum across all</span>
-<span class="sd">                     images, whichever has the larger absolute value</span>
-<span class="sd">        * `&#39;auto/auto1&#39;`: all images have same vmin/vmax, which are the</span>
-<span class="sd">                          minimum/maximum values across all images</span>
-<span class="sd">        * `&#39;auto2&#39;`: all images have same vmin/vmax, which are the mean (across</span>
-<span class="sd">                     all images) minus/ plus 2 std dev (across all images)</span>
-<span class="sd">        * `&#39;auto3&#39;`: all images have same vmin/vmax, chosen so as to map the</span>
-<span class="sd">                     10th/90th percentile values to the 10th/90th percentile of</span>
-<span class="sd">                     the display intensity range. For example: vmin is the 10th</span>
-<span class="sd">                     percentile image value minus 1/8 times the difference</span>
-<span class="sd">                     between the 90th and 10th percentile</span>
-<span class="sd">        * `&#39;indep0&#39;`: each image has an independent vmin/vmax, which have the</span>
-<span class="sd">                      same absolute value, which comes from either their</span>
-<span class="sd">                      minimum or maximum value, whichever has the larger</span>
-<span class="sd">                      absolute value.</span>
-<span class="sd">        * `&#39;indep1&#39;`: each image has an independent vmin/vmax, which are their</span>
-<span class="sd">                      minimum/maximum values</span>
-<span class="sd">        * `&#39;indep2&#39;`: each image has an independent vmin/vmax, which is their</span>
-<span class="sd">                      mean minus/plus 2 std dev</span>
-<span class="sd">        * `&#39;indep3&#39;`: each image has an independent vmin/vmax, chosen so that</span>
-<span class="sd">                      the 10th/90th percentile values map to the 10th/90th</span>
-<span class="sd">                      percentile intensities.</span>
-<span class="sd">    zoom : `float`</span>
-<span class="sd">        ratio of display pixels to image pixels. if &gt;1, must be an integer. If</span>
-<span class="sd">        &lt;1, must be 1/d where d is a a divisor of the size of the largest</span>
-<span class="sd">        image.</span>
-<span class="sd">    title : `str`, `list`, or None, optional</span>
-<span class="sd">        Title for the plot. In addition to the specified title, we add a</span>
-<span class="sd">        subtitle giving the plotted range and dimensionality (with zoom)</span>
-<span class="sd">        * if `str`, will put the same title on every plot.</span>
-<span class="sd">        * if `list`, all values must be `str`, must be the same length as img,</span>
-<span class="sd">          assigning each title to corresponding image.</span>
-<span class="sd">        * if None, no title will be printed (and subtitle will be removed).</span>
-<span class="sd">    col_wrap : `int` or None, optional</span>
-<span class="sd">        number of axes to have in each row. If None, will fit all axes in a</span>
-<span class="sd">        single row.</span>
-<span class="sd">    ax : `matplotlib.pyplot.axis` or None, optional</span>
-<span class="sd">        if None, we make the appropriate figure. otherwise, we resize the axes</span>
-<span class="sd">        so that it&#39;s the appropriate number of pixels (done by shrinking the</span>
-<span class="sd">        bbox - if the bbox is already too small, this will throw an Exception!,</span>
-<span class="sd">        so first define a large enough figure using either</span>
-<span class="sd">        pyrtools.make_figure or plt.figure)</span>
-<span class="sd">    cmap : matplotlib colormap, optional</span>
-<span class="sd">        colormap to use when showing these images</span>
-<span class="sd">    plot_complex : {&#39;rectangular&#39;, &#39;polar&#39;, &#39;logpolar&#39;}</span>
-<span class="sd">        specifies handling of complex values.</span>
+<span class="sd">        * ``&quot;auto0&quot;``: All images have same vmin/vmax, which have the same</span>
+<span class="sd">          absolute value, and come from the minimum or maximum across all</span>
+<span class="sd">          images, whichever has the larger absolute value.</span>
 
-<span class="sd">        * `&#39;rectangular&#39;`: plot real and imaginary components as separate images</span>
-<span class="sd">        * `&#39;polar&#39;`: plot amplitude and phase as separate images</span>
-<span class="sd">        * `&#39;logpolar&#39;`: plot log_2 amplitude and phase as separate images</span>
-<span class="sd">        for any other value, we raise a warning and default to rectangular.</span>
-<span class="sd">    batch_idx : int or None, optional</span>
-<span class="sd">        Which element from the batch dimension to plot. If None, we plot all.</span>
-<span class="sd">    channel_idx : int or None, optional</span>
-<span class="sd">        Which element from the channel dimension to plot. If None, we plot all.</span>
-<span class="sd">        Note if this is an int, then `as_rgb=True` will fail, because we</span>
+<span class="sd">        * ``&quot;auto1&quot;``: All images have same vmin/vmax, which are the</span>
+<span class="sd">          minimum/maximum values across all images.</span>
+
+<span class="sd">        * ``&quot;auto2&quot;``: All images have same vmin/vmax, which are the mean (across</span>
+<span class="sd">          all images) minus/ plus 2 std dev (across all images).</span>
+
+<span class="sd">        * ``&quot;auto3&quot;``: All images have same vmin/vmax, chosen so as to map the 10th/90th</span>
+<span class="sd">          percentile values to the 10th/90th percentile of the display intensity range.</span>
+<span class="sd">          For example: vmin is the 10th percentile image value minus 1/8 times the</span>
+<span class="sd">          difference between the 90th and 10th percentile.</span>
+
+<span class="sd">        * ``&quot;indep0&quot;``: Each image has an independent vmin/vmax, which have the same</span>
+<span class="sd">          absolute value, which comes from either their minimum or maximum value,</span>
+<span class="sd">          whichever has the larger absolute value.</span>
+
+<span class="sd">        * ``&quot;indep1&quot;``: Each image has an independent vmin/vmax, which are their</span>
+<span class="sd">          minimum/maximum values.</span>
+
+<span class="sd">        * ``&quot;indep2&quot;``: Each image has an independent vmin/vmax, which is their</span>
+<span class="sd">          mean minus/plus 2 std dev.</span>
+
+<span class="sd">        * ``&quot;indep3&quot;``: Each image has an independent vmin/vmax, chosen so that the</span>
+<span class="sd">          10th/90th percentile values map to the 10th/90th percentile intensities.</span>
+
+<span class="sd">    zoom</span>
+<span class="sd">        Ratio of display pixels to image pixels. If greater than 1, must be an</span>
+<span class="sd">        integer. If less than 1, must be ``1/d`` where ``d`` is a a divisor of the</span>
+<span class="sd">        size of the largest image. If ``None``, we try to determine the best zoom.</span>
+<span class="sd">    title</span>
+<span class="sd">        Title for the plot. In addition to the specified title, we add a</span>
+<span class="sd">        subtitle giving the plotted range and dimensionality (with zoom).</span>
+
+<span class="sd">        * If ``str``, will put the same title on every plot.</span>
+
+<span class="sd">        * If ``list``, all values must be ``str``, must be the same length as img,</span>
+<span class="sd">          and each title will be assigned to corresponding plot.</span>
+
+<span class="sd">        * If ``None``, no title will be printed and subtitle will be removed.</span>
+
+<span class="sd">    col_wrap</span>
+<span class="sd">        Number of axes to have in each row. If ``None``, will fit all axes in a</span>
+<span class="sd">        single row.</span>
+<span class="sd">    ax</span>
+<span class="sd">        If ``None``, we make the appropriate figure. Otherwise, we resize the axes</span>
+<span class="sd">        so that it&#39;s the appropriate number of pixels (done by shrinking the</span>
+<span class="sd">        bbox - if the bbox is already too small, this will throw an Exception,</span>
+<span class="sd">        so first define a large enough figure).</span>
+<span class="sd">    cmap</span>
+<span class="sd">        Colormap to use when showing these images. If ``None``, then behavior is</span>
+<span class="sd">        determined by ``vrange``: if ``vmap in [&quot;auto0&quot;, &quot;indep0&quot;]``, we use</span>
+<span class="sd">        ``&quot;RdBu_r&quot;``, else we use ``&quot;gray&quot;`` (see `matplotlib documentation</span>
+<span class="sd">        &lt;https://matplotlib.org/stable/users/explain/colors/colormaps.html#colormaps&gt;`_).</span>
+<span class="sd">    plot_complex</span>
+<span class="sd">        Specifies handling of complex values.</span>
+
+<span class="sd">        * ``&quot;rectangular&quot;``: plot real and imaginary components as separate images.</span>
+
+<span class="sd">        * ``&quot;polar&quot;``: plot amplitude and phase as separate images.</span>
+
+<span class="sd">        * ``&quot;logpolar&quot;``: plot log (base 2) amplitude and phase as separate images.</span>
+
+<span class="sd">    batch_idx</span>
+<span class="sd">        Which element from the batch dimension to plot. If ``None``, we plot all.</span>
+<span class="sd">    channel_idx</span>
+<span class="sd">        Which element from the channel dimension to plot. If ``None``, we plot all.</span>
+<span class="sd">        Note if this is not ``None``, then ``as_rgb=True`` will fail, because we</span>
 <span class="sd">        restrict the channels.</span>
-<span class="sd">    as_rgb : bool, optional</span>
-<span class="sd">        Whether to consider the channels as encoding RGB(A) values. If True, we</span>
+<span class="sd">    as_rgb</span>
+<span class="sd">        Whether to consider the channels as encoding RGB(A) values. If ``True``, we</span>
 <span class="sd">        attempt to plot the image in color, so your tensor must have 3 (or 4 if</span>
-<span class="sd">        you want the alpha channel) elements in the channel dimension, or this</span>
-<span class="sd">        will raise an Exception. If False, we plot each channel as a separate</span>
-<span class="sd">        grayscale image.</span>
-<span class="sd">    kwargs :</span>
-<span class="sd">        Passed to `ax.imshow`</span>
+<span class="sd">        you want the alpha channel) elements in the channel dimension. If ``False``,</span>
+<span class="sd">        we plot each channel as a separate grayscale image.</span>
+<span class="sd">    **kwargs</span>
+<span class="sd">        Passed to :func:`matplotlib.pyplot.imshow`.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    anim : matplotlib.animation.FuncAnimation</span>
+<span class="sd">    anim</span>
 <span class="sd">        The animation object. In order to view, must convert to HTML</span>
 <span class="sd">        or save.</span>
 
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    TypeError</span>
+<span class="sd">        If ``batch_idx`` or ``channel_idx`` takes an illegal value.</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If ``as_rgb=True`` and the input ``image`` does not have 3 or 4 channels.</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If ``as_rgb=False``, ``image`` has more than one channel and one more than</span>
+<span class="sd">        one batch and neither ``batch_idx`` nor ``channel_idx`` is set.</span>
+<span class="sd">    Exception</span>
+<span class="sd">        If ``plot_complex`` takes an illegal value.</span>
+
 <span class="sd">    Notes</span>
 <span class="sd">    -----</span>
+<span class="sd">    - By default, we use the ffmpeg backend, which requires that you have</span>
+<span class="sd">      ffmpeg installed and on your path (https://ffmpeg.org/download.html).</span>
+<span class="sd">      To use a different backend, use the matplotlib rcParams:</span>
+<span class="sd">      ``matplotlib.rcParams[&#39;animation.writer&#39;] = writer``, see</span>
+<span class="sd">      `matplotlib documentation</span>
+<span class="sd">      &lt;https://matplotlib.org/stable/api/animation_api.html#writer-classes&gt;`_ for more</span>
+<span class="sd">      details.</span>
 
-<span class="sd">    By default, we use the ffmpeg backend, which requires that you have</span>
-<span class="sd">    ffmpeg installed and on your path (https://ffmpeg.org/download.html).</span>
-<span class="sd">    To use a different, use the matplotlib rcParams:</span>
-<span class="sd">    `matplotlib.rcParams[&#39;animation.writer&#39;] = writer`, see</span>
-<span class="sd">    https://matplotlib.org/stable/api/animation_api.html#writer-classes for</span>
-<span class="sd">    more details.</span>
-
+<span class="sd">    - This interpolation avoidance is only guaranteed for the saved image; it should</span>
+<span class="sd">      generally hold in notebooks as well, but will fail if, e.g., you plot an image</span>
+<span class="sd">      that&#39;s 2000 pixels wide on an monitor 1000 pixels wide; the browser handles the</span>
+<span class="sd">      rescaling in a way we can&#39;t control.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">video</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
         <span class="n">video</span> <span class="o">=</span> <span class="p">[</span><span class="n">video</span><span class="p">]</span>
     <span class="n">videos_to_show</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">heights</span><span class="p">,</span> <span class="n">widths</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">vid</span> <span class="ow">in</span> <span class="n">video</span><span class="p">:</span>
         <span class="n">vid</span> <span class="o">=</span> <span class="n">to_numpy</span><span class="p">(</span><span class="n">vid</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">vid</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">batch_idx</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -482,7 +587,7 @@
             <span class="n">vid</span> <span class="o">=</span> <span class="n">vid</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="n">vid</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">1</span><span class="p">,</span> <span class="o">*</span><span class="n">vid</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">:]))</span>
         <span class="k">elif</span> <span class="n">vid</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">vid</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="s2">&quot;Don&#39;t know how to plot images with more than one channel and&quot;</span>
+                <span class="s2">&quot;Don&#39;t know how to plot non-rgb images with more than one channel and&quot;</span>
                 <span class="s2">&quot; batch! Use batch_idx / channel_idx to choose a subset for&quot;</span>
                 <span class="s2">&quot; plotting&quot;</span>
             <span class="p">)</span>
@@ -492,6 +597,16 @@
         <span class="c1"># be (b,c,t,h,w) or (b,c,t,h,w,r) where r is the RGB(A) values</span>
         <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">vid</span><span class="p">:</span>
             <span class="n">videos_to_show</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="n">v_</span><span class="o">.</span><span class="n">squeeze</span><span class="p">()</span> <span class="k">for</span> <span class="n">v_</span> <span class="ow">in</span> <span class="n">v</span><span class="p">])</span>
+            <span class="n">heights</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="n">v_</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">v_</span> <span class="ow">in</span> <span class="n">v</span><span class="p">])</span>
+            <span class="n">widths</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="n">v_</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="k">for</span> <span class="n">v_</span> <span class="ow">in</span> <span class="n">v</span><span class="p">])</span>
+
+    <span class="k">if</span> <span class="n">zoom</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">ax</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">zoom</span> <span class="o">=</span> <span class="n">_find_zoom</span><span class="p">(</span><span class="n">heights</span><span class="p">,</span> <span class="n">widths</span><span class="p">,</span> <span class="n">ax</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">zoom</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">zoom</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="k">elif</span> <span class="n">zoom</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;zoom must be positive!&quot;</span><span class="p">)</span>
+
     <span class="k">return</span> <span class="n">pt</span><span class="o">.</span><span class="n">animshow</span><span class="p">(</span>
         <span class="n">videos_to_show</span><span class="p">,</span>
         <span class="n">framerate</span><span class="o">=</span><span class="n">framerate</span><span class="p">,</span>
@@ -512,85 +627,96 @@
 <div class="viewcode-block" id="pyrshow">
 <a class="viewcode-back" href="../../../api/plenoptic.tools.html#plenoptic.tools.display.pyrshow">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">pyrshow</span><span class="p">(</span>
-    <span class="n">pyr_coeffs</span><span class="p">,</span>
-    <span class="n">vrange</span><span class="o">=</span><span class="s2">&quot;indep1&quot;</span><span class="p">,</span>
-    <span class="n">zoom</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-    <span class="n">show_residuals</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-    <span class="n">cmap</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-    <span class="n">plot_complex</span><span class="o">=</span><span class="s2">&quot;rectangular&quot;</span><span class="p">,</span>
-    <span class="n">batch_idx</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
-    <span class="n">channel_idx</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
-    <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
-<span class="p">):</span>
-<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Display steerable pyramid coefficients in orderly fashion.</span>
+    <span class="n">pyr_coeffs</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
+    <span class="n">vrange</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">|</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;indep1&quot;</span><span class="p">,</span>
+    <span class="n">zoom</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="n">show_residuals</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="n">cmap</span><span class="p">:</span> <span class="n">mpl</span><span class="o">.</span><span class="n">colors</span><span class="o">.</span><span class="n">Colormap</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">plot_complex</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;rectangular&quot;</span><span class="p">,</span> <span class="s2">&quot;polar&quot;</span><span class="p">,</span> <span class="s2">&quot;logpolar&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;rectangular&quot;</span><span class="p">,</span>
+    <span class="n">batch_idx</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="n">channel_idx</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pt</span><span class="o">.</span><span class="n">tools</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">PyrFigure</span><span class="p">:</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Display steerable pyramid coefficients in orderly fashion.</span>
 
-<span class="sd">    This function uses ``imshow`` to show the coefficients of the steeable</span>
-<span class="sd">    pyramid, such that each scale shows up on a single row, with each scale in</span>
-<span class="sd">    a given column.</span>
+<span class="sd">    This function uses :func:`~plenoptic.tools.display.imshow` to show the coefficients</span>
+<span class="sd">    of the steeable pyramid, such that each scale shows up on a single row, with each</span>
+<span class="sd">    scale in a given column.</span>
 
-<span class="sd">    Note that unlike imshow, we can only show one batch or channel at a time</span>
+<span class="sd">    Note that unlike :func:`~plenoptic.tools.display.imshow`, we can only show one batch</span>
+<span class="sd">    or channel at a time.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    pyr_coeffs : `dict`</span>
-<span class="sd">        pyramid coefficients in the standard dictionary format as returned by</span>
-<span class="sd">        ``SteerablePyramidFreq.forward()``</span>
-<span class="sd">    vrange : `tuple` or `str`</span>
+<span class="sd">    pyr_coeffs</span>
+<span class="sd">        Pyramid coefficients in the standard dictionary format as returned by</span>
+<span class="sd">        ``SteerablePyramidFreq.forward()``.</span>
+<span class="sd">    vrange</span>
 <span class="sd">        If a 2-tuple, specifies the image values vmin/vmax that are mapped to</span>
 <span class="sd">        the minimum and maximum value of the colormap, respectively. If a</span>
 <span class="sd">        string:</span>
 
-<span class="sd">        * `&#39;auto0&#39;`: all images have same vmin/vmax, which have the same absolute</span>
-<span class="sd">                     value, and come from the minimum or maximum across all</span>
-<span class="sd">                     images, whichever has the larger absolute value</span>
-<span class="sd">        * `&#39;auto/auto1&#39;`: all images have same vmin/vmax, which are the</span>
-<span class="sd">                          minimum/maximum values across all images</span>
-<span class="sd">        * `&#39;auto2&#39;`: all images have same vmin/vmax, which are the mean (across</span>
-<span class="sd">                     all images) minus/ plus 2 std dev (across all images)</span>
-<span class="sd">        * `&#39;auto3&#39;`: all images have same vmin/vmax, chosen so as to map the</span>
-<span class="sd">                     10th/90th percentile values to the 10th/90th percentile of</span>
-<span class="sd">                     the display intensity range. For example: vmin is the 10th</span>
-<span class="sd">                     percentile image value minus 1/8 times the difference</span>
-<span class="sd">                     between the 90th and 10th percentile</span>
-<span class="sd">        * `&#39;indep0&#39;`: each image has an independent vmin/vmax, which have the</span>
-<span class="sd">                      same absolute value, which comes from either their</span>
-<span class="sd">                      minimum or maximum value, whichever has the larger</span>
-<span class="sd">                      absolute value.</span>
-<span class="sd">        * `&#39;indep1&#39;`: each image has an independent vmin/vmax, which are their</span>
-<span class="sd">                      minimum/maximum values</span>
-<span class="sd">        * `&#39;indep2&#39;`: each image has an independent vmin/vmax, which is their</span>
-<span class="sd">                      mean minus/plus 2 std dev</span>
-<span class="sd">        * `&#39;indep3&#39;`: each image has an independent vmin/vmax, chosen so that</span>
-<span class="sd">                      the 10th/90th percentile values map to the 10th/90th</span>
-<span class="sd">                      percentile intensities.</span>
-<span class="sd">    zoom : `float`</span>
-<span class="sd">        ratio of display pixels to image pixels. if &gt;1, must be an integer. If</span>
-<span class="sd">        &lt;1, must be 1/d where d is a a divisor of the size of the largest</span>
-<span class="sd">        image.</span>
-<span class="sd">    show_residuals : `bool`</span>
-<span class="sd">        whether to display the residual bands (lowpass, highpass depending on the</span>
-<span class="sd">        pyramid type)</span>
-<span class="sd">    cmap : matplotlib colormap, optional</span>
-<span class="sd">        colormap to use when showing these images</span>
-<span class="sd">    plot_complex : {&#39;rectangular&#39;, &#39;polar&#39;, &#39;logpolar&#39;}</span>
-<span class="sd">        specifies handling of complex values.</span>
+<span class="sd">        * ``&quot;auto0&quot;``: All images have same vmin/vmax, which have the same</span>
+<span class="sd">          absolute value, and come from the minimum or maximum across all</span>
+<span class="sd">          images, whichever has the larger absolute value.</span>
 
-<span class="sd">        * `&#39;rectangular&#39;`: plot real and imaginary components as separate images</span>
-<span class="sd">        * `&#39;polar&#39;`: plot amplitude and phase as separate images</span>
-<span class="sd">        * `&#39;logpolar&#39;`: plot log_2 amplitude and phase as separate images</span>
-<span class="sd">        for any other value, we raise a warning and default to rectangular.</span>
-<span class="sd">    batch_idx : int, optional</span>
+<span class="sd">        * ``&quot;auto1&quot;``: All images have same vmin/vmax, which are the</span>
+<span class="sd">          minimum/maximum values across all images.</span>
+
+<span class="sd">        * ``&quot;auto2&quot;``: All images have same vmin/vmax, which are the mean (across</span>
+<span class="sd">          all images) minus/ plus 2 std dev (across all images).</span>
+
+<span class="sd">        * ``&quot;auto3&quot;``: All images have same vmin/vmax, chosen so as to map the 10th/90th</span>
+<span class="sd">          percentile values to the 10th/90th percentile of the display intensity range.</span>
+<span class="sd">          For example: vmin is the 10th percentile image value minus 1/8 times the</span>
+<span class="sd">          difference between the 90th and 10th percentile.</span>
+
+<span class="sd">        * ``&quot;indep0&quot;``: Each image has an independent vmin/vmax, which have the same</span>
+<span class="sd">          absolute value, which comes from either their minimum or maximum value,</span>
+<span class="sd">          whichever has the larger absolute value.</span>
+
+<span class="sd">        * ``&quot;indep1&quot;``: Each image has an independent vmin/vmax, which are their</span>
+<span class="sd">          minimum/maximum values.</span>
+
+<span class="sd">        * ``&quot;indep2&quot;``: Each image has an independent vmin/vmax, which is their</span>
+<span class="sd">          mean minus/plus 2 std dev.</span>
+
+<span class="sd">        * ``&quot;indep3&quot;``: Each image has an independent vmin/vmax, chosen so that the</span>
+<span class="sd">          10th/90th percentile values map to the 10th/90th percentile intensities.</span>
+
+<span class="sd">    zoom</span>
+<span class="sd">        Ratio of display pixels to image pixels. if greater than 1, must be an</span>
+<span class="sd">        integer. If less than 1, must be ``1/d`` where ``d`` is a a divisor of the</span>
+<span class="sd">        size of the largest image.</span>
+<span class="sd">    show_residuals</span>
+<span class="sd">        Whether to display the residual bands.</span>
+<span class="sd">    cmap</span>
+<span class="sd">        Colormap to use when showing these images.</span>
+<span class="sd">    plot_complex : {&#39;rectangular&#39;, &#39;polar&#39;, &#39;logpolar&#39;}</span>
+<span class="sd">        Specifies handling of complex values.</span>
+
+<span class="sd">        * ``&quot;rectangular&quot;``: plot real and imaginary components as separate images.</span>
+
+<span class="sd">        * ``&quot;polar&quot;``: plot amplitude and phase as separate images.</span>
+
+<span class="sd">        * ``&quot;logpolar&quot;``: plot log (base 2) amplitude and phase as separate images.</span>
+<span class="sd">    batch_idx</span>
 <span class="sd">        Which element from the batch dimension to plot.</span>
-<span class="sd">    channel_idx : int, optional</span>
+<span class="sd">    channel_idx</span>
 <span class="sd">        Which element from the channel dimension to plot.</span>
-<span class="sd">    kwargs :</span>
-<span class="sd">        Passed on to ``pyrtools.pyrshow``</span>
+<span class="sd">    **kwargs</span>
+<span class="sd">        Passed on to :func:`pyrtools.tools.display.pyrshow`.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    fig: `PyrFigure`</span>
-<span class="sd">        the figure displaying the coefficients.</span>
+<span class="sd">    fig</span>
+<span class="sd">        The figure displaying the coefficients.</span>
 
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    TypeError</span>
+<span class="sd">        If ``batch_idx`` or ``channel_idx`` takes an illegal value.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">pyr_coeffvis</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="n">is_complex</span> <span class="o">=</span> <span class="kc">False</span>
@@ -602,12 +728,12 @@
             <span class="c1"># this removes only the first (batch) dimension</span>
             <span class="n">im</span> <span class="o">=</span> <span class="n">im</span><span class="p">[</span><span class="n">batch_idx</span> <span class="p">:</span> <span class="n">batch_idx</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;batch_idx must be an int or None but got </span><span class="si">{</span><span class="n">batch_idx</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;batch_idx must be an int but got </span><span class="si">{</span><span class="n">batch_idx</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="c1"># this removes only the first (now channel) dimension</span>
             <span class="n">im</span> <span class="o">=</span> <span class="n">im</span><span class="p">[</span><span class="n">channel_idx</span> <span class="p">:</span> <span class="n">channel_idx</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;channel_idx must be an int or None but got </span><span class="si">{</span><span class="n">channel_idx</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;channel_idx must be an int but got </span><span class="si">{</span><span class="n">channel_idx</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="c1"># because of how we&#39;ve handled everything above, we know that im will</span>
         <span class="c1"># be (h,w).</span>
         <span class="n">pyr_coeffvis</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">im</span>
@@ -628,32 +754,44 @@
 <div class="viewcode-block" id="clean_up_axes">
 <a class="viewcode-back" href="../../../api/plenoptic.tools.html#plenoptic.tools.display.clean_up_axes">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">clean_up_axes</span><span class="p">(</span>
-    <span class="n">ax</span><span class="p">,</span>
-    <span class="n">ylim</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-    <span class="n">spines_to_remove</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;top&quot;</span><span class="p">,</span> <span class="s2">&quot;right&quot;</span><span class="p">,</span> <span class="s2">&quot;bottom&quot;</span><span class="p">],</span>
-    <span class="n">axes_to_remove</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;x&quot;</span><span class="p">],</span>
-<span class="p">):</span>
-<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Clean up an axis, as desired when making a stem plot of the representation</span>
+    <span class="n">ax</span><span class="p">:</span> <span class="n">mpl</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">Axes</span><span class="p">,</span>
+    <span class="n">ylim</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">|</span> <span class="n">Literal</span><span class="p">[</span><span class="kc">False</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">spines_to_remove</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;top&quot;</span><span class="p">,</span> <span class="s2">&quot;right&quot;</span><span class="p">,</span> <span class="s2">&quot;bottom&quot;</span><span class="p">,</span> <span class="s2">&quot;left&quot;</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="s2">&quot;top&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;right&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;bottom&quot;</span><span class="p">,</span>
+    <span class="p">],</span>
+    <span class="n">axes_to_remove</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="s2">&quot;y&quot;</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;x&quot;</span><span class="p">],</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">mpl</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">Axes</span><span class="p">:</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Clean up an axis, as desired when making a stem plot of the representation.</span>
+
+<span class="sd">    This function can:</span>
+
+<span class="sd">    - Remove the spines from axis (the axis lines and tick marks).</span>
+
+<span class="sd">    - Set axis objects themselves invisible (includes not just spines but also tick</span>
+<span class="sd">      labels and axis label).</span>
+
+<span class="sd">    - Set ylim.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    ax : `matplotlib.pyplot.axis`</span>
+<span class="sd">    ax</span>
 <span class="sd">        The axis to clean up.</span>
-<span class="sd">    ylim : `tuple`, False, or None</span>
-<span class="sd">        If a tuple, the y-limits to use for this plot. If None, we use the</span>
-<span class="sd">        default, slightly adjusted so that the minimum is 0. If False,</span>
+<span class="sd">    ylim</span>
+<span class="sd">        If a tuple, the y-limits to use for this plot. If ``None``, we use the</span>
+<span class="sd">        default, slightly adjusted so that the minimum is 0. If ``False``,</span>
 <span class="sd">        we do nothing.</span>
-<span class="sd">    spines_to_remove : `list`</span>
-<span class="sd">        Some combination of &#39;top&#39;, &#39;right&#39;, &#39;bottom&#39;, and &#39;left&#39;. The spines we</span>
-<span class="sd">        remove from the axis.</span>
-<span class="sd">    axes_to_remove : `list`</span>
-<span class="sd">        Some combination of &#39;x&#39;, &#39;y&#39;. The axes to set as invisible.</span>
+<span class="sd">    spines_to_remove</span>
+<span class="sd">        The spines to remove from the axis.</span>
+<span class="sd">    axes_to_remove</span>
+<span class="sd">        The axes to set as invisible.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    ax : matplotlib.pyplot.axis</span>
-<span class="sd">        The cleaned-up axis</span>
-
+<span class="sd">    ax</span>
+<span class="sd">        The cleaned-up axis.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">spines_to_remove</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">spines_to_remove</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;top&quot;</span><span class="p">,</span> <span class="s2">&quot;right&quot;</span><span class="p">,</span> <span class="s2">&quot;bottom&quot;</span><span class="p">]</span>
@@ -677,8 +815,11 @@
 
 <div class="viewcode-block" id="update_stem">
 <a class="viewcode-back" href="../../../api/plenoptic.tools.html#plenoptic.tools.display.update_stem">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">update_stem</span><span class="p">(</span><span class="n">stem_container</span><span class="p">,</span> <span class="n">ydata</span><span class="p">):</span>
-<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Update the information in a stem plot</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">update_stem</span><span class="p">(</span>
+    <span class="n">stem_container</span><span class="p">:</span> <span class="n">mpl</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="n">StemContainer</span><span class="p">,</span> <span class="n">ydata</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">mpl</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="n">StemContainer</span><span class="p">:</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Update the information in a stem plot.</span>
 
 <span class="sd">    We update the information in a single stem plot to match that given</span>
 <span class="sd">    by ``ydata``. We update the position of the markers and and the</span>
@@ -687,21 +828,19 @@
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    stem_container : `matplotlib.container.StemContainer`</span>
-<span class="sd">        Single container for the artists created in a ``plt.stem``</span>
-<span class="sd">        plot. It can be treated like a namedtuple ``(markerline,</span>
-<span class="sd">        stemlines, baseline)``. In order to get this from an axis</span>
-<span class="sd">        ``ax``, try ``ax.containers[0]`` (obviously if you have more</span>
-<span class="sd">        than one container in that axis, it may not be the first one).</span>
-<span class="sd">    ydata : array_like</span>
-<span class="sd">        The new y-data to show on the plot. Importantly, must be the</span>
-<span class="sd">        same length as the existing y-data.</span>
+<span class="sd">    stem_container</span>
+<span class="sd">        Single container for the artists created in a :func:`matplotlib.pyplot.stem`</span>
+<span class="sd">        plot. It can be treated like a namedtuple ``(markerline, stemlines, baseline)``.</span>
+<span class="sd">        In order to get this from an axis ``ax``, try ``ax.containers[0]`` (if you have</span>
+<span class="sd">        more than one container in that axis, it may not be the first one).</span>
+<span class="sd">    ydata</span>
+<span class="sd">        The new y-data to show on the plot. Importantly, must be the same length as</span>
+<span class="sd">        the existing y-data.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    stem_container : `matplotlib.container.StemContainer`</span>
+<span class="sd">    stem_container</span>
 <span class="sd">        The StemContainer containing the updated artists.</span>
-
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">stem_container</span><span class="o">.</span><span class="n">markerline</span><span class="o">.</span><span class="n">set_ydata</span><span class="p">(</span><span class="n">ydata</span><span class="p">)</span>
     <span class="n">segments</span> <span class="o">=</span> <span class="n">stem_container</span><span class="o">.</span><span class="n">stemlines</span><span class="o">.</span><span class="n">get_segments</span><span class="p">()</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
@@ -719,23 +858,36 @@
 
 <div class="viewcode-block" id="rescale_ylim">
 <a class="viewcode-back" href="../../../api/plenoptic.tools.html#plenoptic.tools.display.rescale_ylim">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">rescale_ylim</span><span class="p">(</span><span class="n">axes</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
-<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;rescale y-limits nicely</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">rescale_ylim</span><span class="p">(</span><span class="n">axes</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">mpl</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">Axes</span><span class="p">],</span> <span class="n">data</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">):</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Rescale y-limits nicely.</span>
 
 <span class="sd">    We take the axes and set their limits to be ``(-y_max, y_max)``,</span>
-<span class="sd">    where ``y_max=np.abs(data).max()``</span>
+<span class="sd">    where ``y_max=np.abs(data).max()``.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    axes : `list`</span>
-<span class="sd">        A list of matplotlib axes to rescale</span>
-<span class="sd">    data : array_like or dict</span>
-<span class="sd">        The data to use when rescaling (or a dictiontary of those</span>
-<span class="sd">        values)</span>
+<span class="sd">    axes</span>
+<span class="sd">        A list of matplotlib axes to rescale.</span>
+<span class="sd">    data</span>
+<span class="sd">        The data to use when rescaling (or a dictionary of such values).</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">find_ymax</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">find_ymax</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Find appropriate ymax.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        data</span>
+<span class="sd">            The tensor whose ymax we should grab.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        ymax</span>
+<span class="sd">            The appropriate ymax.</span>
+<span class="sd">        &quot;&quot;&quot;</span>  <span class="c1"># numpydoc ignore=ES01</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">data</span><span class="p">)</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
         <span class="k">except</span> <span class="ne">RuntimeError</span><span class="p">:</span>
@@ -755,47 +907,51 @@
 
 <div class="viewcode-block" id="clean_stem_plot">
 <a class="viewcode-back" href="../../../api/plenoptic.tools.html#plenoptic.tools.display.clean_stem_plot">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">clean_stem_plot</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">ylim</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">xvals</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;convenience wrapper for plotting stem plots</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">clean_stem_plot</span><span class="p">(</span>
+    <span class="n">data</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">ax</span><span class="p">:</span> <span class="n">mpl</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">Axes</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">title</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+    <span class="n">ylim</span><span class="p">:</span> <span class="nb">tuple</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">|</span> <span class="n">Literal</span><span class="p">[</span><span class="kc">False</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">xvals</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">mpl</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">Axes</span><span class="p">:</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Create a simple stem plot.</span>
 
 <span class="sd">    This plots the data, baseline, cleans up the axis, and sets the</span>
-<span class="sd">    title</span>
+<span class="sd">    title.</span>
 
-<span class="sd">    Should not be called by users directly, but is a helper function for</span>
-<span class="sd">    the various plot_representation() functions</span>
+<span class="sd">    Helper function for :func:`~plenoptic.tools.display.plot_representation()`.</span>
 
-<span class="sd">    By default, stem plot would have a baseline that covers the entire</span>
-<span class="sd">    range of the data. We want to be able to break that up visually (so</span>
-<span class="sd">    there&#39;s a line from 0 to 9, from 10 to 19, etc), and passing xvals</span>
-<span class="sd">    separately allows us to do that. If you want the default stem plot</span>
-<span class="sd">    behavior, leave xvals as None.</span>
+<span class="sd">    By default, stem plot would have a baseline that covers the entire range of the</span>
+<span class="sd">    data. We want to be able to break that up visually (so there&#39;s a line from 0 to 9,</span>
+<span class="sd">    from 10 to 19, etc), and passing ``xvals`` separately allows us to do that. If you</span>
+<span class="sd">    want the default stem plot behavior, leave ``xvals=None``.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    data : `np.ndarray`</span>
-<span class="sd">        The data to plot (as a stem plot)</span>
-<span class="sd">    ax : `matplotlib.pyplot.axis` or `None`, optional</span>
-<span class="sd">        The axis to plot the data on. If None, we plot on the current</span>
-<span class="sd">        axis</span>
-<span class="sd">    title : str or None, optional</span>
-<span class="sd">        The title to put on the axis if not None. If None, we don&#39;t call</span>
-<span class="sd">        ``ax.set_title`` (useful if you want to avoid changing the title</span>
-<span class="sd">        on an existing plot)</span>
-<span class="sd">    ylim : tuple or None, optional</span>
-<span class="sd">        If not None, the y-limits to use for this plot. If None, we use the</span>
-<span class="sd">        default, slightly adjusted so that the minimum is 0. If False, do not</span>
-<span class="sd">        change y-limits.</span>
-<span class="sd">    xvals : `tuple` or `None`, optional</span>
+<span class="sd">    data</span>
+<span class="sd">        The data to plot (as a stem plot).</span>
+<span class="sd">    ax</span>
+<span class="sd">        The axis to plot the data on. If ``None``, we plot on the current axis</span>
+<span class="sd">        (grabbed with :func:`matplotlib.pyplot.gca`).</span>
+<span class="sd">    title</span>
+<span class="sd">        The title to put on the axis. If ``None``, we don&#39;t call ``ax.set_title``</span>
+<span class="sd">        (useful if you want to avoid changing the title on an existing plot).</span>
+<span class="sd">    ylim</span>
+<span class="sd">        The y-limits to use for this plot. If ``None``, we use the default, slightly</span>
+<span class="sd">        adjusted so that the minimum is 0. If ``False``, do not change y-limits.</span>
+<span class="sd">    xvals</span>
 <span class="sd">        A 2-tuple of lists, containing the start (``xvals[0]``) and stop</span>
-<span class="sd">        (``xvals[1]``) x values for plotting. If None, we use the</span>
+<span class="sd">        (``xvals[1]``) x values for plotting. If ``None``, we use the</span>
 <span class="sd">        default stem plot behavior.</span>
-<span class="sd">    kwargs :</span>
-<span class="sd">        passed to ax.stem</span>
+<span class="sd">    **kwargs</span>
+<span class="sd">        Passed to :func:`matplotlib.pyplot.stem`.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    ax : `matplotlib.pyplot.axis`</span>
-<span class="sd">        The axis with the plot</span>
+<span class="sd">    ax</span>
+<span class="sd">        The axis with the plot.</span>
 
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
@@ -834,7 +990,6 @@
 <span class="sd">      y = np.abs(np.random.randn(55))</span>
 <span class="sd">      po.tools.display.clean_stem_plot(y)</span>
 <span class="sd">      plt.show()</span>
-
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">ax</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span>
@@ -852,27 +1007,36 @@
 
 
 
-<span class="k">def</span><span class="w"> </span><span class="nf">_get_artists_from_axes</span><span class="p">(</span><span class="n">axes</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Grab artists from axes.</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_get_artists_from_axes</span><span class="p">(</span>
+    <span class="n">axes</span><span class="p">:</span> <span class="n">mpl</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">Axes</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="n">mpl</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">Axes</span><span class="p">],</span>
+    <span class="n">data</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span> <span class="o">|</span> <span class="nb">dict</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Grab artists from axes.</span>
 
 <span class="sd">    For now, we only grab containers (stem plots), images, or lines</span>
 
-<span class="sd">    See the docstring of :meth:`update_plot()` for details on how `axes` and</span>
-<span class="sd">    `data` should be structured</span>
+<span class="sd">    See the docstring of :meth:`~plenoptic.tools.display.update_plot()` for details on</span>
+<span class="sd">    how ``axes`` and ``data`` should be structured.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    axes : list or matplotlib.axes.Axes</span>
+<span class="sd">    axes</span>
 <span class="sd">        The axis/axes to update.</span>
-<span class="sd">    data : torch.Tensor or dict</span>
+<span class="sd">    data</span>
 <span class="sd">        The new data to plot.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    artists : dict</span>
-<span class="sd">        dictionary of artists for updating plots. values are the artists to</span>
-<span class="sd">        use, keys are the corresponding keys for data</span>
+<span class="sd">    artists</span>
+<span class="sd">        Dictionary of artists for updating plots. Values are the artists to</span>
+<span class="sd">        use, keys are the corresponding keys from data.</span>
 
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If the number of artists in ``axes`` is different from the size of the</span>
+<span class="sd">        dimension-to-plot of ``data``.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">axes</span><span class="p">,</span> <span class="s2">&quot;__iter__&quot;</span><span class="p">):</span>
         <span class="c1"># then we only have one axis, so we may be able to update more than one</span>
@@ -955,68 +1119,79 @@
 
 <div class="viewcode-block" id="update_plot">
 <a class="viewcode-back" href="../../../api/plenoptic.tools.html#plenoptic.tools.display.update_plot">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">update_plot</span><span class="p">(</span><span class="n">axes</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">batch_idx</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
-<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Update the information in some axes.</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">update_plot</span><span class="p">(</span>
+    <span class="n">axes</span><span class="p">:</span> <span class="n">mpl</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">Axes</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="n">mpl</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">Axes</span><span class="p">],</span>
+    <span class="n">data</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span> <span class="o">|</span> <span class="nb">dict</span><span class="p">,</span>
+    <span class="n">model</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">batch_idx</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Update the information in some axes.</span>
 
-<span class="sd">    This is used for creating an animation over time. In order to create</span>
-<span class="sd">    the animation, we need to know how to update the matplotlib Artists,</span>
-<span class="sd">    and this provides a simple way of doing that. It assumes the plot</span>
-<span class="sd">    has been created by something like ``plot_representation``, which</span>
-<span class="sd">    initializes all the artists.</span>
+<span class="sd">    This is used for creating an animation over time. In order to create the animation,</span>
+<span class="sd">    we need to know how to update the matplotlib Artists, and this provides a simple way</span>
+<span class="sd">    of doing that. It assumes the plot has been created by something like</span>
+<span class="sd">    :func:`~plenoptic.tools.display.plot_representation`, which initializes all the</span>
+<span class="sd">    artists.</span>
 
-<span class="sd">    We can update stem plots, lines (as returned by ``plt.plot``), scatter</span>
-<span class="sd">    plots, or images (RGB, RGBA, or grayscale).</span>
+<span class="sd">    We can update stem plots, lines (as returned by :func:`matplotlib.pyplot.plot`),</span>
+<span class="sd">    scatter plots, or images (RGB, RGBA, or grayscale).</span>
 
 <span class="sd">    There are two modes for this:</span>
 
-<span class="sd">    - single axis: axes is a single axis, which may contain multiple artists</span>
-<span class="sd">      (all of the same type) to update. data should be a Tensor with multiple</span>
-<span class="sd">      channels (one per artist in the same order) or be a dictionary whose keys</span>
-<span class="sd">      give the label(s) of the corresponding artist(s) and whose values are</span>
-<span class="sd">      Tensors.</span>
+<span class="sd">    - Single axis: ``axes`` is a single axis, which may contain multiple artists (all of</span>
+<span class="sd">      the same type) to update. ``data`` should be a :class:`torch.Tensor` with multiple</span>
+<span class="sd">      channels (one per artist in the same order) or be a dictionary whose keys give the</span>
+<span class="sd">      label(s) of the corresponding artist(s) and whose values are</span>
+<span class="sd">      :class:`torch.Tensor`.</span>
 
-<span class="sd">    - multiple axes: axes is a list of axes, each of which contains a single</span>
-<span class="sd">      artist to update (artists can be different types). data should be a</span>
-<span class="sd">      Tensor with multiple channels (one per axis in the same order) or a</span>
-<span class="sd">      dictionary with the same number of keys as axes, which we can iterate</span>
-<span class="sd">      through in order, and whose values are Tensors.</span>
+<span class="sd">    - Multiple axes: ``axes`` is a list of axes, each of which contains a single artist</span>
+<span class="sd">      to update (artists can be different types). ``data`` should be a</span>
+<span class="sd">      :class:`torch.Tensor` with multiple channels (one per axis in the same order) or a</span>
+<span class="sd">      dictionary with the same number of keys as ``axes``, which we can iterate through</span>
+<span class="sd">      in order, and whose values are :class:`torch.Tensor`.</span>
 
-<span class="sd">    In all cases, data Tensors should be 3d (if the plot we&#39;re updating is a</span>
+<span class="sd">    In all cases, ``data`` Tensors should be 3d (if the plot we&#39;re updating is a</span>
 <span class="sd">    line or stem plot) or 4d (if it&#39;s an image or scatter plot).</span>
 
 <span class="sd">    RGB(A) images are special, since we store that info along the channel</span>
 <span class="sd">    dimension, so they only work with single-axis mode (which will only have a</span>
 <span class="sd">    single artist, because that&#39;s how imshow works).</span>
 
-<span class="sd">    If you have multiple axes, each with multiple artists you want to update,</span>
-<span class="sd">    that&#39;s too complicated for us, and so you should write a</span>
-<span class="sd">    ``model.update_plot()`` function which handles that.</span>
+<span class="sd">    If you have multiple axes, each with multiple artists you want to update, that&#39;s too</span>
+<span class="sd">    complicated for us, and so you should write a ``model.update_plot()`` function which</span>
+<span class="sd">    handles that (see</span>
+<span class="sd">    :func:`plenoptic.simulate.models.portilla_simoncelli.PortillaSimoncelli.update_plot`</span>
+<span class="sd">    for an example).</span>
 
-<span class="sd">    If ``model`` is set, we try to call ``model.update_plot()`` (which</span>
-<span class="sd">    must also return artists). If model doesn&#39;t have an ``update_plot``</span>
-<span class="sd">    method, then we try to figure out how to update the axes ourselves,</span>
-<span class="sd">    based on the shape of the data.</span>
+<span class="sd">    If ``model`` is set, we try to call ``model.update_plot()`` (which must also return</span>
+<span class="sd">    artists). If ``model`` doesn&#39;t have an ``update_plot`` method, then we try to figure</span>
+<span class="sd">    out how to update the axes ourselves, based on the shape of the data.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    axes : `list` or `matplotlib.pyplot.axis`</span>
-<span class="sd">        The axis or list of axes to update. We assume that these are the axes</span>
-<span class="sd">        created by ``plot_representation`` and so contain stem plots in the</span>
-<span class="sd">        correct order.</span>
-<span class="sd">    data : `torch.Tensor` or `dict`</span>
+<span class="sd">    axes</span>
+<span class="sd">        The axis or list of axes to update. We assume that these are the axes created by</span>
+<span class="sd">        :func:`~plenoptic.tools.display.plot_representation` and so contain artists</span>
+<span class="sd">        in the correct order.</span>
+<span class="sd">    data</span>
 <span class="sd">        The new data to plot.</span>
-<span class="sd">    model : `torch.nn.Module` or `None`, optional</span>
-<span class="sd">        A differentiable model that tells us how to plot ``data``. See</span>
-<span class="sd">        above for behavior if ``None``.</span>
-<span class="sd">    batch_idx : int, optional</span>
-<span class="sd">        Which index to take from the batch dimension</span>
+<span class="sd">    model</span>
+<span class="sd">        A differentiable model that tells us how to plot ``data``. See above for</span>
+<span class="sd">        behavior if ``None``.</span>
+<span class="sd">    batch_idx</span>
+<span class="sd">        Which index to take from the batch dimension.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    artists : `list`</span>
+<span class="sd">    artists</span>
 <span class="sd">        A list of the artists used to update the information on the</span>
-<span class="sd">        plots</span>
+<span class="sd">        plots.</span>
 
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If ``data`` (or its values, if it&#39;s a ``dict``) are not 3 or 4 dimensional.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
         <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
@@ -1105,29 +1280,31 @@
 <div class="viewcode-block" id="plot_representation">
 <a class="viewcode-back" href="../../../api/plenoptic.tools.html#plenoptic.tools.display.plot_representation">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">plot_representation</span><span class="p">(</span>
-    <span class="n">model</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-    <span class="n">data</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-    <span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-    <span class="n">figsize</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-    <span class="n">ylim</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-    <span class="n">batch_idx</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
-    <span class="n">title</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
-    <span class="n">as_rgb</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-<span class="p">):</span>
-<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Helper function for plotting model representation</span>
+    <span class="n">model</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">data</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">dict</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">ax</span><span class="p">:</span> <span class="n">mpl</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">Axes</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">figsize</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">ylim</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">|</span> <span class="n">Literal</span><span class="p">[</span><span class="kc">False</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">batch_idx</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="n">title</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+    <span class="n">as_rgb</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">mpl</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">Axes</span><span class="p">]:</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Plot model representation.</span>
 
-<span class="sd">    We are trying to plot ``data`` on ``ax``, using</span>
-<span class="sd">    ``model.plot_representation`` method, if it has it, and otherwise</span>
-<span class="sd">    default to a function that makes sense based on the shape of ``data``.</span>
+<span class="sd">    We try to plot ``data`` on ``ax``, using the ``model.plot_representation`` method,</span>
+<span class="sd">    if it has it, and otherwise default to a function that makes sense based on the</span>
+<span class="sd">    shape of ``data``.</span>
 
 <span class="sd">    All of these arguments are optional, but at least some of them need</span>
 <span class="sd">    to be set:</span>
 
-<span class="sd">    - If ``model`` is ``None``, we fall-back to a type of plot based on the</span>
-<span class="sd">      shape of ``data``. If it looks image-like, we&#39;ll use ``plenoptic.imshow``</span>
-<span class="sd">      and if it looks vector-like, we&#39;ll use ``plenoptic.clean_stem_plot``. If</span>
-<span class="sd">      it&#39;s a dictionary, we&#39;ll assume each key, value pair gives the title and</span>
-<span class="sd">      data to plot on a separate sub-plot.</span>
+<span class="sd">    - If ``model`` is ``None``, we fall-back to a type of plot based on the shape of</span>
+<span class="sd">      ``data``. If it looks image-like, we&#39;ll use</span>
+<span class="sd">      :func:`~plenoptic.tools.display.imshow` and if it looks vector-like, we&#39;ll use</span>
+<span class="sd">      :func:`~plenoptic.tools.display.clean_stem_plot`. If it&#39;s a dictionary, we&#39;ll</span>
+<span class="sd">      assume each key, value pair gives the title and data to plot on a separate</span>
+<span class="sd">      sub-plot.</span>
 
 <span class="sd">    - If ``data`` is ``None``, we can only do something if</span>
 <span class="sd">      ``model.plot_representation`` has some default behavior when</span>
@@ -1138,43 +1315,48 @@
 <span class="sd">    - If ``ax`` is ``None``, we create a one-subplot figure using ``figsize``.</span>
 <span class="sd">      If ``ax`` is not ``None``, we therefore ignore ``figsize``.</span>
 
-<span class="sd">    - If ``ylim`` is ``None``, we call ``rescale_ylim``, which sets the axes&#39;</span>
-<span class="sd">      y-limits to be ``(-y_max, y_max)``, where ``y_max=np.abs(data).max()``.</span>
-<span class="sd">      If it&#39;s ``False``, we do nothing.</span>
+<span class="sd">    - If ``ylim`` is ``None``, we call :func:`~plenoptic.tools.display.rescale_ylim`,</span>
+<span class="sd">      which sets the axes&#39; y-limits to be ``(-y_max, y_max)``, where</span>
+<span class="sd">      ``y_max=np.abs(data).max()``. If it&#39;s ``False``, we do nothing.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    model : `torch.nn.Module` or None, optional</span>
+<span class="sd">    model</span>
 <span class="sd">        A differentiable model that tells us how to plot ``data``. See</span>
 <span class="sd">        above for behavior if ``None``.</span>
-<span class="sd">    data : `array_like`, `dict`, or `None`, optional</span>
+<span class="sd">    data</span>
 <span class="sd">        The data to plot. See above for behavior if ``None``.</span>
-<span class="sd">    ax : matplotlib.pyplot.axis or None, optional</span>
+<span class="sd">    ax</span>
 <span class="sd">        The axis to plot on. See above for behavior if ``None``.</span>
-<span class="sd">    figsize : `tuple`, optional</span>
+<span class="sd">    figsize</span>
 <span class="sd">        The size of the figure to create. Must be ``None`` if ax is not ``None``. If</span>
-<span class="sd">        both figsize and ax are ``None``, then we set ``figsize=(5, 5)``</span>
-<span class="sd">    ylim : `tuple`, `None`, or `False`, optional</span>
-<span class="sd">        If not None, the y-limits to use for this plot. See above for</span>
-<span class="sd">        behavior if ``None``. If False, we do nothing.</span>
-<span class="sd">    batch_idx : `int`, optional</span>
-<span class="sd">        Which index to take from the batch dimension</span>
-<span class="sd">    title : `str`, optional</span>
+<span class="sd">        both figsize and ax are ``None``, then we use ``figsize=(5, 5)``.</span>
+<span class="sd">    ylim</span>
+<span class="sd">        The y-limits to use for this plot. See above for behavior if ``None``.</span>
+<span class="sd">        If ``False``, we do nothing. Ignored if ``data`` looks image-like.</span>
+<span class="sd">    batch_idx</span>
+<span class="sd">        Which index to take from the batch dimension.</span>
+<span class="sd">    title</span>
 <span class="sd">        The title to put above this axis. If you want no title, pass</span>
-<span class="sd">        the empty string (``&#39;&#39;``)</span>
-<span class="sd">    as_rgb : bool, optional</span>
-<span class="sd">        The representation can be image-like with multiple channels, and we</span>
-<span class="sd">        have no way to determine whether it should be represented as an RGB</span>
-<span class="sd">        image or not, so the user must set this flag to tell us. It will be</span>
+<span class="sd">        the empty string (``&quot;&quot;``).</span>
+<span class="sd">    as_rgb</span>
+<span class="sd">        Whether to consider the channels as encoding RGB(A) values. It will be</span>
 <span class="sd">        ignored if the representation doesn&#39;t look image-like or if the</span>
 <span class="sd">        model has its own plot_representation_error() method. Else, it will</span>
-<span class="sd">        be passed to `po.imshow()`, see that methods docstring for details.</span>
+<span class="sd">        be passed to :func:`~plenoptic.tools.display.imshow`, see that method&#39;s</span>
+<span class="sd">        docstring for details.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    axes : list</span>
+<span class="sd">    axes</span>
 <span class="sd">        List of created axes.</span>
 
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If both ``figsize`` and ``ax`` are not ``None``.</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If ``data`` (or its values, if it&#39;s a ``dict``) are not 3 or 4 dimensional.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">ax</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">figsize</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
