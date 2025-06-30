@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>plenoptic.synthesize.eigendistortion &mdash; plenoptic 1.3.1.dev103 documentation</title>
+  <title>plenoptic.synthesize.eigendistortion &mdash; plenoptic 1.3.1.dev118 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/plot_directive.css" />
@@ -17,7 +17,7 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=c431c63c"></script>
+      <script src="../../../_static/documentation_options.js?v=b495af1d"></script>
       <script src="../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -59,8 +59,8 @@
 <p class="caption" role="heading"><span class="caption-text">Synthesis method introductions</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../tutorials/intro/Eigendistortions.html">Eigendistortions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/intro/MAD_Competition.html">MAD Competition Usage</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/intro/MAD_Simple.html">MAD Competition Conceptual Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/intro/MAD_Competition_1.html">MAD Competition Conceptual Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/intro/MAD_Competition_2.html">MAD Competition Usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../tutorials/intro/Metamer.html">Metamers</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Models and metrics</span></p>
@@ -969,7 +969,7 @@
     <span class="n">eigendistortion</span><span class="p">:</span> <span class="n">Eigendistortion</span><span class="p">,</span>
     <span class="n">eigenindex</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span>
     <span class="n">alpha</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="mf">5.0</span><span class="p">,</span>
-    <span class="n">process_image</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">Tensor</span><span class="p">],</span> <span class="n">Tensor</span><span class="p">]</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">,</span>
+    <span class="n">process_image</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">Tensor</span><span class="p">],</span> <span class="n">Tensor</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">plot_complex</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;rectangular&quot;</span><span class="p">,</span>
     <span class="n">as_rgb</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="n">suptitle</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;Eigendistortions&quot;</span><span class="p">,</span>
@@ -999,7 +999,7 @@
 <span class="sd">        A function to process all images before display. E.g. multiplying by the</span>
 <span class="sd">        stdev ImageNet then adding the mean of ImageNet to undo image</span>
 <span class="sd">        preprocessing. If ``None`` and ``as_rgb is True``, will add 0.5 to the</span>
-<span class="sd">        distortion(s) (to avoid matplotlib clipping).</span>
+<span class="sd">        distortion(s) (to avoid matplotlib clipping), else if ``None`` do nothing.</span>
 <span class="sd">    plot_complex</span>
 <span class="sd">        Parameter for :func:`~plenoptic.tools.display.imshow` determining how to handle</span>
 <span class="sd">        complex values. Defaults to ``&#39;rectangular&#39;``, which plots real and complex</span>
@@ -1039,6 +1039,27 @@
 <span class="sd">    --------</span>
 <span class="sd">    display_eigendistortion</span>
 <span class="sd">        Display single eigendistortion added to image.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    .. plot::</span>
+
+<span class="sd">      &gt;&gt;&gt; import plenoptic as po</span>
+<span class="sd">      &gt;&gt;&gt; from plenoptic.data.fetch import fetch_data</span>
+<span class="sd">      &gt;&gt;&gt; img = po.data.einstein()</span>
+<span class="sd">      &gt;&gt;&gt; lg = po.simul.LuminanceGainControl(</span>
+<span class="sd">      ...     (31, 31), pad_mode=&quot;circular&quot;, pretrained=True, cache_filt=True</span>
+<span class="sd">      ... ).eval()</span>
+<span class="sd">      &gt;&gt;&gt; po.tools.remove_grad(lg)</span>
+<span class="sd">      &gt;&gt;&gt; eig = po.synth.Eigendistortion(img, lg)</span>
+<span class="sd">      &gt;&gt;&gt; # grab saved example eigendistortion, which runs the above to completion.</span>
+<span class="sd">      &gt;&gt;&gt; eig.load(</span>
+<span class="sd">      ...     fetch_data(&quot;example_eigendistortion.pt&quot;),</span>
+<span class="sd">      ...     map_location=&quot;cpu&quot;,</span>
+<span class="sd">      ...     tensor_equality_atol=1e-7,</span>
+<span class="sd">      ... )</span>
+<span class="sd">      &gt;&gt;&gt; po.synth.eigendistortion.display_eigendistortion_all(eig)</span>
+<span class="sd">      &lt;PyrFigure size ...&gt;</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># reshape so channel dim is last</span>
     <span class="n">im_shape</span> <span class="o">=</span> <span class="n">eigendistortion</span><span class="o">.</span><span class="n">_image_shape</span>
@@ -1054,21 +1075,30 @@
         <span class="p">)</span>
     <span class="n">distortions</span> <span class="o">=</span> <span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">image</span><span class="p">)]</span>
     <span class="n">distortion_titles</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;&quot;</span><span class="p">]</span>
-    <span class="n">img_processed</span> <span class="o">=</span> <span class="p">[</span><span class="n">process_image</span><span class="p">(</span><span class="n">image</span><span class="p">)]</span>
     <span class="n">img_titles</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Original image&quot;</span><span class="p">]</span>
     <span class="n">dist_suffix</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">process_image</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">as_rgb</span><span class="p">:</span>
+    <span class="n">process_dist</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">if</span> <span class="n">process_image</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
 
-        <span class="k">def</span><span class="w"> </span><span class="nf">process_dist</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">x</span> <span class="o">+</span> <span class="mf">0.5</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">process_image</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">x</span>
 
-        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
-            <span class="s2">&quot;Adding 0.5 to distortion to plot as RGB image, else matplotlib&quot;</span>
-            <span class="s2">&quot; clipping will result in a strange looking image...&quot;</span>
-        <span class="p">)</span>
-        <span class="n">dist_suffix</span> <span class="o">=</span> <span class="s2">&quot; + 0.5&quot;</span>
-    <span class="k">elif</span> <span class="n">process_image</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">as_rgb</span><span class="p">:</span>
+
+            <span class="k">def</span><span class="w"> </span><span class="nf">process_dist</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">x</span> <span class="o">+</span> <span class="mf">0.5</span>
+
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+                <span class="s2">&quot;Adding 0.5 to distortion to plot as RGB image, else matplotlib&quot;</span>
+                <span class="s2">&quot; clipping will result in a strange looking image...&quot;</span>
+            <span class="p">)</span>
+            <span class="n">dist_suffix</span> <span class="o">=</span> <span class="s2">&quot; + 0.5&quot;</span>
+    <span class="c1"># the only situation in which the following is not true is if process_image</span>
+    <span class="c1"># was None and as_rgb=True</span>
+    <span class="k">if</span> <span class="n">process_dist</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">process_dist</span> <span class="o">=</span> <span class="n">process_image</span>
+
+    <span class="n">img_processed</span> <span class="o">=</span> <span class="p">[</span><span class="n">process_image</span><span class="p">(</span><span class="n">image</span><span class="p">)]</span>
 
     <span class="k">for</span> <span class="n">a</span><span class="p">,</span> <span class="n">idx</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">alpha</span><span class="p">,</span> <span class="n">eigenindex</span><span class="p">):</span>
         <span class="n">dist</span> <span class="o">=</span> <span class="p">(</span>
