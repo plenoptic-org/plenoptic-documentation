@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>plenoptic.simulate.canonical_computations.non_linearities &mdash; plenoptic 1.3.1.dev49 documentation</title>
+  <title>plenoptic.simulate.canonical_computations.non_linearities &mdash; plenoptic 1.3.1.dev97 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/plot_directive.css" />
@@ -15,7 +15,7 @@
   
       <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../../_static/documentation_options.js?v=5434cddb"></script>
+      <script src="../../../../_static/documentation_options.js?v=a44bf3b7"></script>
       <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -155,6 +155,22 @@
 <span class="sd">        The inverse operation.</span>
 <span class="sd">    local_gain_control_dict</span>
 <span class="sd">        The analogous function for complex-valued signals.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    .. plot::</span>
+
+<span class="sd">        &gt;&gt;&gt; import plenoptic as po</span>
+<span class="sd">        &gt;&gt;&gt; img = po.data.einstein()</span>
+<span class="sd">        &gt;&gt;&gt; spyr = po.simul.SteerablePyramidFreq(</span>
+<span class="sd">        ...     img.shape[-2:], is_complex=True, height=3</span>
+<span class="sd">        ... )</span>
+<span class="sd">        &gt;&gt;&gt; coeffs = spyr(img)</span>
+<span class="sd">        &gt;&gt;&gt; energy, state = po.simul.non_linearities.rectangular_to_polar_dict(coeffs)</span>
+<span class="sd">        &gt;&gt;&gt; po.pyrshow(energy)</span>
+<span class="sd">        &lt;PyrFigure size ...&gt;</span>
+<span class="sd">        &gt;&gt;&gt; po.pyrshow(state)</span>
+<span class="sd">        &lt;PyrFigure size ...&gt;</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">energy</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="n">state</span> <span class="o">=</span> <span class="p">{}</span>
@@ -174,13 +190,15 @@
 <div class="viewcode-block" id="polar_to_rectangular_dict">
 <a class="viewcode-back" href="../../../../api/plenoptic.simulate.canonical_computations.html#plenoptic.simulate.canonical_computations.non_linearities.polar_to_rectangular_dict">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">polar_to_rectangular_dict</span><span class="p">(</span>
-    <span class="n">energy</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">state</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">residuals</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">energy</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
+    <span class="n">state</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Return the real and imaginary parts of tensor in a dictionary.</span>
 
-<span class="sd">    Keys are preserved, with the option of dropping ``&quot;residual_lowpass&quot;`` and</span>
-<span class="sd">    ``&quot;residual_highpass&quot;`` by setting ``residuals=False``.</span>
+<span class="sd">    Keys in the output are identical to those in the input. Will grab residuals from</span>
+<span class="sd">    ``energy``, if present, with keys ``&quot;residual_highpass&quot;`` and</span>
+<span class="sd">    ``&quot;residual_lowpass&quot;``.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -189,8 +207,6 @@
 <span class="sd">        modulus.</span>
 <span class="sd">    state</span>
 <span class="sd">        The dictionary of :class:`torch.Tensor` containing the local phase.</span>
-<span class="sd">    residuals</span>
-<span class="sd">        An option to carry around residuals in the energy branch.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -205,15 +221,37 @@
 <span class="sd">        The inverse operation.</span>
 <span class="sd">    local_gain_release_dict</span>
 <span class="sd">        The analogous function for real-valued signals.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    .. plot::</span>
+
+<span class="sd">        &gt;&gt;&gt; import plenoptic as po</span>
+<span class="sd">        &gt;&gt;&gt; import numpy as np</span>
+<span class="sd">        &gt;&gt;&gt; import torch</span>
+<span class="sd">        &gt;&gt;&gt; img = po.data.einstein()</span>
+<span class="sd">        &gt;&gt;&gt; spyr = po.simul.SteerablePyramidFreq(</span>
+<span class="sd">        ...     img.shape[-2:], is_complex=True, height=3</span>
+<span class="sd">        ... )</span>
+<span class="sd">        &gt;&gt;&gt; coeffs = spyr(img)</span>
+<span class="sd">        &gt;&gt;&gt; energy, state = po.simul.non_linearities.rectangular_to_polar_dict(</span>
+<span class="sd">        ...     coeffs, residuals=True</span>
+<span class="sd">        ... )</span>
+<span class="sd">        &gt;&gt;&gt; coeffs_back = po.simul.non_linearities.polar_to_rectangular_dict(</span>
+<span class="sd">        ...     energy, state</span>
+<span class="sd">        ... )</span>
+<span class="sd">        &gt;&gt;&gt; all(torch.allclose(coeffs[key], coeffs_back[key]) for key in coeffs)</span>
+<span class="sd">        True</span>
+<span class="sd">        &gt;&gt;&gt; po.pyrshow(coeffs_back)</span>
+<span class="sd">        &lt;PyrFigure size ...&gt;</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">coeff_dict</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">energy</span><span class="p">:</span>
-        <span class="c1"># ignore residuals</span>
-
+        <span class="c1"># ignore residuals here</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">key</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;residual&quot;</span><span class="p">):</span>
             <span class="n">coeff_dict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">signal</span><span class="o">.</span><span class="n">polar_to_rectangular</span><span class="p">(</span><span class="n">energy</span><span class="p">[</span><span class="n">key</span><span class="p">],</span> <span class="n">state</span><span class="p">[</span><span class="n">key</span><span class="p">])</span>
 
-    <span class="k">if</span> <span class="n">residuals</span><span class="p">:</span>
+    <span class="k">if</span> <span class="s2">&quot;residual_lowpass&quot;</span> <span class="ow">in</span> <span class="n">energy</span><span class="p">:</span>
         <span class="n">coeff_dict</span><span class="p">[</span><span class="s2">&quot;residual_lowpass&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">energy</span><span class="p">[</span><span class="s2">&quot;residual_lowpass&quot;</span><span class="p">]</span>
         <span class="n">coeff_dict</span><span class="p">[</span><span class="s2">&quot;residual_highpass&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">energy</span><span class="p">[</span><span class="s2">&quot;residual_highpass&quot;</span><span class="p">]</span>
 
@@ -266,6 +304,16 @@
 <span class="sd">    the norm (modulus), indeed the signal only has one real component. This is a</span>
 <span class="sd">    normalization operation (local unit vector), hence the connection to local gain</span>
 <span class="sd">    control.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    .. plot::</span>
+
+<span class="sd">        &gt;&gt;&gt; import plenoptic as po</span>
+<span class="sd">        &gt;&gt;&gt; img = po.data.einstein()</span>
+<span class="sd">        &gt;&gt;&gt; norm, direction = po.simul.non_linearities.local_gain_control(img)</span>
+<span class="sd">        &gt;&gt;&gt; po.imshow([img, norm, direction], title=[&quot;image&quot;, &quot;norm&quot;, &quot;direction&quot;])</span>
+<span class="sd">        &lt;PyrFigure size ...&gt;</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># these could be parameters, but no use case so far</span>
     <span class="n">p</span> <span class="o">=</span> <span class="mf">2.0</span>
@@ -323,6 +371,20 @@
 <span class="sd">    the norm (modulus), indeed the signal only has one real component. This is a</span>
 <span class="sd">    normalization operation (local unit vector), hence the connection to local gain</span>
 <span class="sd">    control.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    .. plot::</span>
+
+<span class="sd">        &gt;&gt;&gt; import plenoptic as po</span>
+<span class="sd">        &gt;&gt;&gt; img = po.data.einstein()</span>
+<span class="sd">        &gt;&gt;&gt; norm, direction = po.simul.non_linearities.local_gain_control(img)</span>
+<span class="sd">        &gt;&gt;&gt; x = po.simul.non_linearities.local_gain_release(norm, direction)</span>
+<span class="sd">        &gt;&gt;&gt; po.imshow(</span>
+<span class="sd">        ...     [img, x, img - x],</span>
+<span class="sd">        ...     title=[&quot;Original image&quot;, &quot;Gain release output&quot;, &quot;Difference&quot;],</span>
+<span class="sd">        ... )</span>
+<span class="sd">        &lt;PyrFigure size ...&gt;</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">odd</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">as_tensor</span><span class="p">(</span><span class="n">direction</span><span class="o">.</span><span class="n">shape</span><span class="p">)[</span><span class="mi">2</span><span class="p">:</span><span class="mi">4</span><span class="p">]</span> <span class="o">%</span> <span class="mi">2</span>
     <span class="n">x</span> <span class="o">=</span> <span class="n">direction</span> <span class="o">*</span> <span class="p">(</span><span class="n">upsample_blur</span><span class="p">(</span><span class="n">norm</span><span class="p">,</span> <span class="n">odd</span><span class="p">)</span> <span class="o">+</span> <span class="n">epsilon</span><span class="p">)</span>
@@ -370,6 +432,20 @@
 <span class="sd">    Notes</span>
 <span class="sd">    -----</span>
 <span class="sd">    Note that energy and state are not computed on the residuals.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    .. plot::</span>
+
+<span class="sd">        &gt;&gt;&gt; import plenoptic as po</span>
+<span class="sd">        &gt;&gt;&gt; img = po.data.einstein()</span>
+<span class="sd">        &gt;&gt;&gt; spyr = po.simul.SteerablePyramidFreq(img.shape[-2:], height=3)</span>
+<span class="sd">        &gt;&gt;&gt; coeffs = spyr(img)</span>
+<span class="sd">        &gt;&gt;&gt; energy, state = po.simul.non_linearities.local_gain_control_dict(coeffs)</span>
+<span class="sd">        &gt;&gt;&gt; po.pyrshow(energy)</span>
+<span class="sd">        &lt;PyrFigure size ...&gt;</span>
+<span class="sd">        &gt;&gt;&gt; po.pyrshow(state)</span>
+<span class="sd">        &lt;PyrFigure size ...&gt;</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">energy</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="n">state</span> <span class="o">=</span> <span class="p">{}</span>
@@ -420,6 +496,24 @@
 <span class="sd">        The inverse operation.</span>
 <span class="sd">    polar_to_rectangular_dict</span>
 <span class="sd">        The analogous function for complex-valued signals.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    .. plot::</span>
+
+<span class="sd">        &gt;&gt;&gt; import plenoptic as po</span>
+<span class="sd">        &gt;&gt;&gt; import torch</span>
+<span class="sd">        &gt;&gt;&gt; img = po.data.einstein()</span>
+<span class="sd">        &gt;&gt;&gt; spyr = po.simul.SteerablePyramidFreq(img.shape[-2:], height=3)</span>
+<span class="sd">        &gt;&gt;&gt; coeffs = spyr(img)</span>
+<span class="sd">        &gt;&gt;&gt; energy, state = po.simul.non_linearities.local_gain_control_dict(coeffs)</span>
+<span class="sd">        &gt;&gt;&gt; coeffs_dict = po.simul.non_linearities.local_gain_release_dict(</span>
+<span class="sd">        ...     energy, state</span>
+<span class="sd">        ... )</span>
+<span class="sd">        &gt;&gt;&gt; all([torch.allclose(coeffs[k], coeffs_dict[k]) for k in coeffs.keys()])</span>
+<span class="sd">        True</span>
+<span class="sd">        &gt;&gt;&gt; po.pyrshow(coeffs_dict)</span>
+<span class="sd">        &lt;PyrFigure size ...&gt;</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">coeff_dict</span> <span class="o">=</span> <span class="p">{}</span>
 
