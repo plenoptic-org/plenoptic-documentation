@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>plenoptic.simulate.models.portilla_simoncelli &mdash; plenoptic 1.3.1.dev93 documentation</title>
+  <title>plenoptic.simulate.models.portilla_simoncelli &mdash; plenoptic 1.3.1.dev96 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/plot_directive.css" />
@@ -15,7 +15,7 @@
   
       <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../../_static/documentation_options.js?v=583ae910"></script>
+      <script src="../../../../_static/documentation_options.js?v=003377ae"></script>
       <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -782,24 +782,50 @@
 <span class="sd">        --------</span>
 <span class="sd">        &gt;&gt;&gt; import plenoptic as po</span>
 <span class="sd">        &gt;&gt;&gt; img = po.data.curie()</span>
-<span class="sd">        &gt;&gt;&gt; portilla_simoncelli_model = po.simul.PortillaSimoncelli(img.shape[2:])</span>
+<span class="sd">        &gt;&gt;&gt; portilla_simoncelli_model = po.simul.PortillaSimoncelli(</span>
+<span class="sd">        ...     img.shape[2:], n_scales=3</span>
+<span class="sd">        ... )</span>
 <span class="sd">        &gt;&gt;&gt; representation_tensor = portilla_simoncelli_model(img)</span>
 <span class="sd">        &gt;&gt;&gt; representation_dict = portilla_simoncelli_model.convert_to_dict(</span>
 <span class="sd">        ...     representation_tensor</span>
 <span class="sd">        ... )</span>
-<span class="sd">        &gt;&gt;&gt; for k, v in representation_dict.items():</span>
-<span class="sd">        ...     print(k, v.shape)</span>
-<span class="sd">        pixel_statistics torch.Size([1, 1, 6])</span>
-<span class="sd">        auto_correlation_magnitude torch.Size([1, 1, 9, 9, 4, 4])</span>
-<span class="sd">        skew_reconstructed torch.Size([1, 1, 5])</span>
-<span class="sd">        kurtosis_reconstructed torch.Size([1, 1, 5])</span>
-<span class="sd">        auto_correlation_reconstructed torch.Size([1, 1, 9, 9, 5])</span>
-<span class="sd">        std_reconstructed torch.Size([1, 1, 5])</span>
-<span class="sd">        cross_orientation_correlation_magnitude torch.Size([1, 1, 4, 4, 4])</span>
-<span class="sd">        magnitude_std torch.Size([1, 1, 4, 4])</span>
-<span class="sd">        cross_scale_correlation_magnitude torch.Size([1, 1, 4, 4, 3])</span>
-<span class="sd">        cross_scale_correlation_real torch.Size([1, 1, 4, 8, 3])</span>
-<span class="sd">        var_highpass_residual torch.Size([1, 1, 1])</span>
+<span class="sd">        &gt;&gt;&gt; # We will go through and examine each of these keys individually</span>
+<span class="sd">        &gt;&gt;&gt; # Shape is (batch, channel, 6): first four moments plus min and max</span>
+<span class="sd">        &gt;&gt;&gt; # of input image</span>
+<span class="sd">        &gt;&gt;&gt; representation_dict[&quot;pixel_statistics&quot;].shape</span>
+<span class="sd">        torch.Size([1, 1, 6])</span>
+<span class="sd">        &gt;&gt;&gt; # Shape is (batch, channel, spatial_corr_width, spatial_corr_width,</span>
+<span class="sd">        &gt;&gt;&gt; # n_orientations, n_scales)</span>
+<span class="sd">        &gt;&gt;&gt; representation_dict[&quot;auto_correlation_magnitude&quot;].shape</span>
+<span class="sd">        torch.Size([1, 1, 9, 9, 4, 3])</span>
+<span class="sd">        &gt;&gt;&gt; # Shape is (batch, channel, n_scales+1)</span>
+<span class="sd">        &gt;&gt;&gt; representation_dict[&quot;skew_reconstructed&quot;].shape</span>
+<span class="sd">        torch.Size([1, 1, 4])</span>
+<span class="sd">        &gt;&gt;&gt; # Shape is (batch, channel, n_scales+1)</span>
+<span class="sd">        &gt;&gt;&gt; representation_dict[&quot;kurtosis_reconstructed&quot;].shape</span>
+<span class="sd">        torch.Size([1, 1, 4])</span>
+<span class="sd">        &gt;&gt;&gt; # Shape is (batch, channel, spatial_corr_width, spatial_corr_width,</span>
+<span class="sd">        &gt;&gt;&gt; # n_scales+1)</span>
+<span class="sd">        &gt;&gt;&gt; representation_dict[&quot;auto_correlation_reconstructed&quot;].shape</span>
+<span class="sd">        torch.Size([1, 1, 9, 9, 4])</span>
+<span class="sd">        &gt;&gt;&gt; # Shape is (batch, channel, n_scales+1)</span>
+<span class="sd">        &gt;&gt;&gt; representation_dict[&quot;std_reconstructed&quot;].shape</span>
+<span class="sd">        torch.Size([1, 1, 4])</span>
+<span class="sd">        &gt;&gt;&gt; # Shape is (batch, channel, n_orientations, n_orientations, n_scales)</span>
+<span class="sd">        &gt;&gt;&gt; representation_dict[&quot;cross_orientation_correlation_magnitude&quot;].shape</span>
+<span class="sd">        torch.Size([1, 1, 4, 4, 3])</span>
+<span class="sd">        &gt;&gt;&gt; # Shape is (batch, channel, n_orientations, n_scales)</span>
+<span class="sd">        &gt;&gt;&gt; representation_dict[&quot;magnitude_std&quot;].shape</span>
+<span class="sd">        torch.Size([1, 1, 4, 3])</span>
+<span class="sd">        &gt;&gt;&gt; # Shape is (batch, channel, n_orientations, n_orientations, n_scales-1)</span>
+<span class="sd">        &gt;&gt;&gt; representation_dict[&quot;cross_scale_correlation_magnitude&quot;].shape</span>
+<span class="sd">        torch.Size([1, 1, 4, 4, 2])</span>
+<span class="sd">        &gt;&gt;&gt; # Shape is (batch, channel, n_orientations, 2*n_orientations, n_scales-1)</span>
+<span class="sd">        &gt;&gt;&gt; representation_dict[&quot;cross_scale_correlation_real&quot;].shape</span>
+<span class="sd">        torch.Size([1, 1, 4, 8, 2])</span>
+<span class="sd">        &gt;&gt;&gt; # Shape is (batch, channel, 1)</span>
+<span class="sd">        &gt;&gt;&gt; representation_dict[&quot;var_highpass_residual&quot;].shape</span>
+<span class="sd">        torch.Size([1, 1, 1])</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">representation_tensor</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_representation_scales</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
