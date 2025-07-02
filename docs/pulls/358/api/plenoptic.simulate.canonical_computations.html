@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>plenoptic.simulate.canonical_computations package &mdash; plenoptic 1.3.1.dev118 documentation</title>
+  <title>plenoptic.simulate.canonical_computations package &mdash; plenoptic 1.3.1.dev168 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css" />
@@ -18,7 +18,7 @@
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../_static/documentation_options.js?v=b495af1d"></script>
+      <script src="../_static/documentation_options.js?v=518b9880"></script>
       <script src="../_static/doctools.js?v=9bcbadda"></script>
       <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -533,6 +533,18 @@ the frequency domain). Here computing the direction (phase) reduces to dividing 
 the norm (modulus), indeed the signal only has one real component. This is a
 normalization operation (local unit vector), hence the connection to local gain
 control.</p>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">plenoptic</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">po</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">img</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">einstein</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">norm</span><span class="p">,</span> <span class="n">direction</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">simul</span><span class="o">.</span><span class="n">non_linearities</span><span class="o">.</span><span class="n">local_gain_control</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">po</span><span class="o">.</span><span class="n">imshow</span><span class="p">([</span><span class="n">img</span><span class="p">,</span> <span class="n">norm</span><span class="p">,</span> <span class="n">direction</span><span class="p">],</span> <span class="n">title</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;image&quot;</span><span class="p">,</span> <span class="s2">&quot;norm&quot;</span><span class="p">,</span> <span class="s2">&quot;direction&quot;</span><span class="p">])</span>
+<span class="go">&lt;PyrFigure size ...&gt;</span>
+</pre></div>
+</div>
+<p>(<a class="reference download internal" download="" href="../_downloads/084477bf803c9d600f50f81af71aa36a/plenoptic-simulate-canonical_computations-7.png"><code class="xref download docutils literal notranslate"><span class="pre">png</span></code></a>, <a class="reference download internal" download="" href="../_downloads/f4749b598defeac63e2f15a2dbbc02a0/plenoptic-simulate-canonical_computations-7.hires.png"><code class="xref download docutils literal notranslate"><span class="pre">hires.png</span></code></a>, <a class="reference download internal" download="" href="../_downloads/c09ddc3d92565f7f082ab8b6b1588bd8/plenoptic-simulate-canonical_computations-7.pdf"><code class="xref download docutils literal notranslate"><span class="pre">pdf</span></code></a>)</p>
+<figure class="align-default">
+<img alt="../_images/plenoptic-simulate-canonical_computations-7.png" class="plot-directive" src="../_images/plenoptic-simulate-canonical_computations-7.png" />
+</figure>
 </dd></dl>
 
 <dl class="py function">
@@ -575,6 +587,30 @@ that is dictionary elements with a key starting in “residual”.</p></li>
 </div>
 <p class="rubric">Notes</p>
 <p>Note that energy and state are not computed on the residuals.</p>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">plenoptic</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">po</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">img</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">einstein</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">spyr</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">simul</span><span class="o">.</span><span class="n">SteerablePyramidFreq</span><span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">:],</span> <span class="n">height</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">coeffs</span> <span class="o">=</span> <span class="n">spyr</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">energy</span><span class="p">,</span> <span class="n">state</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">simul</span><span class="o">.</span><span class="n">non_linearities</span><span class="o">.</span><span class="n">local_gain_control_dict</span><span class="p">(</span><span class="n">coeffs</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">po</span><span class="o">.</span><span class="n">pyrshow</span><span class="p">(</span><span class="n">energy</span><span class="p">)</span>
+<span class="go">&lt;PyrFigure size ...&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">po</span><span class="o">.</span><span class="n">pyrshow</span><span class="p">(</span><span class="n">state</span><span class="p">)</span>
+<span class="go">&lt;PyrFigure size ...&gt;</span>
+</pre></div>
+</div>
+<figure class="align-default" id="id5">
+<img alt="../_images/plenoptic-simulate-canonical_computations-8_00.png" class="plot-directive" src="../_images/plenoptic-simulate-canonical_computations-8_00.png" />
+<figcaption>
+<p><span class="caption-number">Fig. 9 </span><span class="caption-text">(<a class="reference download internal" download="" href="../_downloads/fa57b2f7fe5de9316c3ca5b10e621e57/plenoptic-simulate-canonical_computations-8_00.png"><code class="xref download docutils literal notranslate"><span class="pre">png</span></code></a>, <a class="reference download internal" download="" href="../_downloads/b07f01f503c9469772f51475ff562786/plenoptic-simulate-canonical_computations-8_00.hires.png"><code class="xref download docutils literal notranslate"><span class="pre">hires.png</span></code></a>, <a class="reference download internal" download="" href="../_downloads/dd25e0e407906b812b72a9e496854f83/plenoptic-simulate-canonical_computations-8_00.pdf"><code class="xref download docutils literal notranslate"><span class="pre">pdf</span></code></a>)</span><a class="headerlink" href="#id5" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<figure class="align-default" id="id6">
+<img alt="../_images/plenoptic-simulate-canonical_computations-8_01.png" class="plot-directive" src="../_images/plenoptic-simulate-canonical_computations-8_01.png" />
+<figcaption>
+<p><span class="caption-number">Fig. 10 </span><span class="caption-text">(<a class="reference download internal" download="" href="../_downloads/05e00089217a9bdc982d2d3104e9d664/plenoptic-simulate-canonical_computations-8_01.png"><code class="xref download docutils literal notranslate"><span class="pre">png</span></code></a>, <a class="reference download internal" download="" href="../_downloads/bddc8d8f2b6bb23cb8a2a2d3f6ad3323/plenoptic-simulate-canonical_computations-8_01.hires.png"><code class="xref download docutils literal notranslate"><span class="pre">hires.png</span></code></a>, <a class="reference download internal" download="" href="../_downloads/75793bde1395cb0f6a286b024696d74e/plenoptic-simulate-canonical_computations-8_01.pdf"><code class="xref download docutils literal notranslate"><span class="pre">pdf</span></code></a>)</span><a class="headerlink" href="#id6" title="Link to this image"></a></p>
+</figcaption>
+</figure>
 </dd></dl>
 
 <dl class="py function">
@@ -619,6 +655,22 @@ the frequency domain). Here computing the direction (phase) reduces to dividing 
 the norm (modulus), indeed the signal only has one real component. This is a
 normalization operation (local unit vector), hence the connection to local gain
 control.</p>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">plenoptic</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">po</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">img</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">einstein</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">norm</span><span class="p">,</span> <span class="n">direction</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">simul</span><span class="o">.</span><span class="n">non_linearities</span><span class="o">.</span><span class="n">local_gain_control</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">simul</span><span class="o">.</span><span class="n">non_linearities</span><span class="o">.</span><span class="n">local_gain_release</span><span class="p">(</span><span class="n">norm</span><span class="p">,</span> <span class="n">direction</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">po</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="p">[</span><span class="n">img</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">img</span> <span class="o">-</span> <span class="n">x</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="n">title</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Original image&quot;</span><span class="p">,</span> <span class="s2">&quot;Gain release output&quot;</span><span class="p">,</span> <span class="s2">&quot;Difference&quot;</span><span class="p">],</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="go">&lt;PyrFigure size ...&gt;</span>
+</pre></div>
+</div>
+<p>(<a class="reference download internal" download="" href="../_downloads/8342e5194a4cf5d3cd7a67ac8117abb2/plenoptic-simulate-canonical_computations-9.png"><code class="xref download docutils literal notranslate"><span class="pre">png</span></code></a>, <a class="reference download internal" download="" href="../_downloads/c05405267d139610898da1c4589ec8fa/plenoptic-simulate-canonical_computations-9.hires.png"><code class="xref download docutils literal notranslate"><span class="pre">hires.png</span></code></a>, <a class="reference download internal" download="" href="../_downloads/cca9339ab34c12e631b576216dedc5c5/plenoptic-simulate-canonical_computations-9.pdf"><code class="xref download docutils literal notranslate"><span class="pre">pdf</span></code></a>)</p>
+<figure class="align-default">
+<img alt="../_images/plenoptic-simulate-canonical_computations-9.png" class="plot-directive" src="../_images/plenoptic-simulate-canonical_computations-9.png" />
+</figure>
 </dd></dl>
 
 <dl class="py function">
@@ -656,21 +708,41 @@ that is dictionary elements with a key starting in “residual”.</p></li>
 </dd>
 </dl>
 </div>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">plenoptic</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">po</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">img</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">einstein</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">spyr</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">simul</span><span class="o">.</span><span class="n">SteerablePyramidFreq</span><span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">:],</span> <span class="n">height</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">coeffs</span> <span class="o">=</span> <span class="n">spyr</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">energy</span><span class="p">,</span> <span class="n">state</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">simul</span><span class="o">.</span><span class="n">non_linearities</span><span class="o">.</span><span class="n">local_gain_control_dict</span><span class="p">(</span><span class="n">coeffs</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">coeffs_dict</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">simul</span><span class="o">.</span><span class="n">non_linearities</span><span class="o">.</span><span class="n">local_gain_release_dict</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">energy</span><span class="p">,</span> <span class="n">state</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">all</span><span class="p">([</span><span class="n">torch</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">coeffs</span><span class="p">[</span><span class="n">k</span><span class="p">],</span> <span class="n">coeffs_dict</span><span class="p">[</span><span class="n">k</span><span class="p">])</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">coeffs</span><span class="o">.</span><span class="n">keys</span><span class="p">()])</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">po</span><span class="o">.</span><span class="n">pyrshow</span><span class="p">(</span><span class="n">coeffs_dict</span><span class="p">)</span>
+<span class="go">&lt;PyrFigure size ...&gt;</span>
+</pre></div>
+</div>
+<p>(<a class="reference download internal" download="" href="../_downloads/79051422f212320969b718598a35fb82/plenoptic-simulate-canonical_computations-10.png"><code class="xref download docutils literal notranslate"><span class="pre">png</span></code></a>, <a class="reference download internal" download="" href="../_downloads/0bde94350b3fb1cd797017fd1b9c1ee8/plenoptic-simulate-canonical_computations-10.hires.png"><code class="xref download docutils literal notranslate"><span class="pre">hires.png</span></code></a>, <a class="reference download internal" download="" href="../_downloads/6cec9b10b026b3315be641ccb30becdf/plenoptic-simulate-canonical_computations-10.pdf"><code class="xref download docutils literal notranslate"><span class="pre">pdf</span></code></a>)</p>
+<figure class="align-default">
+<img alt="../_images/plenoptic-simulate-canonical_computations-10.png" class="plot-directive" src="../_images/plenoptic-simulate-canonical_computations-10.png" />
+</figure>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="plenoptic.simulate.canonical_computations.non_linearities.polar_to_rectangular_dict">
-<span class="sig-name descname"><span class="pre">polar_to_rectangular_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">energy</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">state</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">residuals</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/plenoptic/simulate/canonical_computations/non_linearities.html#polar_to_rectangular_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#plenoptic.simulate.canonical_computations.non_linearities.polar_to_rectangular_dict" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">polar_to_rectangular_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">energy</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">state</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/plenoptic/simulate/canonical_computations/non_linearities.html#polar_to_rectangular_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#plenoptic.simulate.canonical_computations.non_linearities.polar_to_rectangular_dict" title="Link to this definition"></a></dt>
 <dd><p>Return the real and imaginary parts of tensor in a dictionary.</p>
-<p>Keys are preserved, with the option of dropping <code class="docutils literal notranslate"><span class="pre">&quot;residual_lowpass&quot;</span></code> and
-<code class="docutils literal notranslate"><span class="pre">&quot;residual_highpass&quot;</span></code> by setting <code class="docutils literal notranslate"><span class="pre">residuals=False</span></code>.</p>
+<p>Keys in the output are identical to those in the input. Will grab residuals from
+<code class="docutils literal notranslate"><span class="pre">energy</span></code>, if present, with keys <code class="docutils literal notranslate"><span class="pre">&quot;residual_highpass&quot;</span></code> and
+<code class="docutils literal notranslate"><span class="pre">&quot;residual_lowpass&quot;</span></code>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>energy</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></span>) – The dictionary of <a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">torch.Tensor</span></code></a> containing the local complex
 modulus.</p></li>
 <li><p><strong>state</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></span>) – The dictionary of <a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">torch.Tensor</span></code></a> containing the local phase.</p></li>
-<li><p><strong>residuals</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></span>) – An option to carry around residuals in the energy branch.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
@@ -691,6 +763,31 @@ modulus.</p></li>
 </dd>
 </dl>
 </div>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">plenoptic</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">po</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">img</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">einstein</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">spyr</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">simul</span><span class="o">.</span><span class="n">SteerablePyramidFreq</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">img</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">:],</span> <span class="n">is_complex</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">3</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">coeffs</span> <span class="o">=</span> <span class="n">spyr</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">energy</span><span class="p">,</span> <span class="n">state</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">simul</span><span class="o">.</span><span class="n">non_linearities</span><span class="o">.</span><span class="n">rectangular_to_polar_dict</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">coeffs</span><span class="p">,</span> <span class="n">residuals</span><span class="o">=</span><span class="kc">True</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">coeffs_back</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">simul</span><span class="o">.</span><span class="n">non_linearities</span><span class="o">.</span><span class="n">polar_to_rectangular_dict</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">energy</span><span class="p">,</span> <span class="n">state</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">all</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">coeffs</span><span class="p">[</span><span class="n">key</span><span class="p">],</span> <span class="n">coeffs_back</span><span class="p">[</span><span class="n">key</span><span class="p">])</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">coeffs</span><span class="p">)</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">po</span><span class="o">.</span><span class="n">pyrshow</span><span class="p">(</span><span class="n">coeffs_back</span><span class="p">)</span>
+<span class="go">&lt;PyrFigure size ...&gt;</span>
+</pre></div>
+</div>
+<p>(<a class="reference download internal" download="" href="../_downloads/5e9c626aaa1052c4558ad7da8a98ce25/plenoptic-simulate-canonical_computations-11.png"><code class="xref download docutils literal notranslate"><span class="pre">png</span></code></a>, <a class="reference download internal" download="" href="../_downloads/f64c3b8e3fcdaf2f882e2ee40b6f28bc/plenoptic-simulate-canonical_computations-11.hires.png"><code class="xref download docutils literal notranslate"><span class="pre">hires.png</span></code></a>, <a class="reference download internal" download="" href="../_downloads/a483d5f8a1bbce0ca07780613bd49629/plenoptic-simulate-canonical_computations-11.pdf"><code class="xref download docutils literal notranslate"><span class="pre">pdf</span></code></a>)</p>
+<figure class="align-default">
+<img alt="../_images/plenoptic-simulate-canonical_computations-11.png" class="plot-directive" src="../_images/plenoptic-simulate-canonical_computations-11.png" />
+</figure>
 </dd></dl>
 
 <dl class="py function">
@@ -730,6 +827,32 @@ modulus of <code class="docutils literal notranslate"><span class="pre">coeff_di
 </dd>
 </dl>
 </div>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">plenoptic</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">po</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">img</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">einstein</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">spyr</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">simul</span><span class="o">.</span><span class="n">SteerablePyramidFreq</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">img</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">:],</span> <span class="n">is_complex</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">3</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">coeffs</span> <span class="o">=</span> <span class="n">spyr</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">energy</span><span class="p">,</span> <span class="n">state</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">simul</span><span class="o">.</span><span class="n">non_linearities</span><span class="o">.</span><span class="n">rectangular_to_polar_dict</span><span class="p">(</span><span class="n">coeffs</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">po</span><span class="o">.</span><span class="n">pyrshow</span><span class="p">(</span><span class="n">energy</span><span class="p">)</span>
+<span class="go">&lt;PyrFigure size ...&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">po</span><span class="o">.</span><span class="n">pyrshow</span><span class="p">(</span><span class="n">state</span><span class="p">)</span>
+<span class="go">&lt;PyrFigure size ...&gt;</span>
+</pre></div>
+</div>
+<figure class="align-default" id="id7">
+<img alt="../_images/plenoptic-simulate-canonical_computations-12_00.png" class="plot-directive" src="../_images/plenoptic-simulate-canonical_computations-12_00.png" />
+<figcaption>
+<p><span class="caption-number">Fig. 11 </span><span class="caption-text">(<a class="reference download internal" download="" href="../_downloads/e4778155f084555deb051c45588f2932/plenoptic-simulate-canonical_computations-12_00.png"><code class="xref download docutils literal notranslate"><span class="pre">png</span></code></a>, <a class="reference download internal" download="" href="../_downloads/634cee02102e95e537ff32035f4c9602/plenoptic-simulate-canonical_computations-12_00.hires.png"><code class="xref download docutils literal notranslate"><span class="pre">hires.png</span></code></a>, <a class="reference download internal" download="" href="../_downloads/378f9e7a2659f27f6c9d55a3026c8a4b/plenoptic-simulate-canonical_computations-12_00.pdf"><code class="xref download docutils literal notranslate"><span class="pre">pdf</span></code></a>)</span><a class="headerlink" href="#id7" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<figure class="align-default" id="id8">
+<img alt="../_images/plenoptic-simulate-canonical_computations-12_01.png" class="plot-directive" src="../_images/plenoptic-simulate-canonical_computations-12_01.png" />
+<figcaption>
+<p><span class="caption-number">Fig. 12 </span><span class="caption-text">(<a class="reference download internal" download="" href="../_downloads/13ff5de3c43d03f3939c4ac49134f4dc/plenoptic-simulate-canonical_computations-12_01.png"><code class="xref download docutils literal notranslate"><span class="pre">png</span></code></a>, <a class="reference download internal" download="" href="../_downloads/df55c08d2b4d0c8f38bff5f0ee26375e/plenoptic-simulate-canonical_computations-12_01.hires.png"><code class="xref download docutils literal notranslate"><span class="pre">hires.png</span></code></a>, <a class="reference download internal" download="" href="../_downloads/5e4885f0549ba707b64097ace656acee/plenoptic-simulate-canonical_computations-12_01.pdf"><code class="xref download docutils literal notranslate"><span class="pre">pdf</span></code></a>)</span><a class="headerlink" href="#id8" title="Link to this image"></a></p>
+</figcaption>
+</figure>
 </dd></dl>
 
 </section>
@@ -981,9 +1104,9 @@ scales, because each scale is a different size.</p>
 <span class="go">&lt;PyrFigure ...&gt;</span>
 </pre></div>
 </div>
-<p>(<a class="reference download internal" download="" href="../_downloads/084477bf803c9d600f50f81af71aa36a/plenoptic-simulate-canonical_computations-7.png"><code class="xref download docutils literal notranslate"><span class="pre">png</span></code></a>, <a class="reference download internal" download="" href="../_downloads/f4749b598defeac63e2f15a2dbbc02a0/plenoptic-simulate-canonical_computations-7.hires.png"><code class="xref download docutils literal notranslate"><span class="pre">hires.png</span></code></a>, <a class="reference download internal" download="" href="../_downloads/c09ddc3d92565f7f082ab8b6b1588bd8/plenoptic-simulate-canonical_computations-7.pdf"><code class="xref download docutils literal notranslate"><span class="pre">pdf</span></code></a>)</p>
+<p>(<a class="reference download internal" download="" href="../_downloads/027cc349758805c35f9c0a8b0b1712d9/plenoptic-simulate-canonical_computations-13.png"><code class="xref download docutils literal notranslate"><span class="pre">png</span></code></a>, <a class="reference download internal" download="" href="../_downloads/8dff0fcc294242fe5cf67bc78b1b982b/plenoptic-simulate-canonical_computations-13.hires.png"><code class="xref download docutils literal notranslate"><span class="pre">hires.png</span></code></a>, <a class="reference download internal" download="" href="../_downloads/251310617215a97032502243cf20729a/plenoptic-simulate-canonical_computations-13.pdf"><code class="xref download docutils literal notranslate"><span class="pre">pdf</span></code></a>)</p>
 <figure class="align-default">
-<img alt="../_images/plenoptic-simulate-canonical_computations-7.png" class="plot-directive" src="../_images/plenoptic-simulate-canonical_computations-7.png" />
+<img alt="../_images/plenoptic-simulate-canonical_computations-13.png" class="plot-directive" src="../_images/plenoptic-simulate-canonical_computations-13.png" />
 </figure>
 </dd></dl>
 
@@ -1084,9 +1207,9 @@ from fine to coarse: <code class="docutils literal notranslate"><span class="pre
 <span class="go">&lt;PyrFigure ...&gt;</span>
 </pre></div>
 </div>
-<p>(<a class="reference download internal" download="" href="../_downloads/35417ed3166bffe46d54cd97f77a765a/plenoptic-simulate-canonical_computations-8.png"><code class="xref download docutils literal notranslate"><span class="pre">png</span></code></a>, <a class="reference download internal" download="" href="../_downloads/a5a3c93f3c162a7f2f8c46e9b4cd022a/plenoptic-simulate-canonical_computations-8.hires.png"><code class="xref download docutils literal notranslate"><span class="pre">hires.png</span></code></a>, <a class="reference download internal" download="" href="../_downloads/15d28401aba7b62fecc3db1505f84e49/plenoptic-simulate-canonical_computations-8.pdf"><code class="xref download docutils literal notranslate"><span class="pre">pdf</span></code></a>)</p>
+<p>(<a class="reference download internal" download="" href="../_downloads/8f6c9ddb690fcc9f346195070399481c/plenoptic-simulate-canonical_computations-14.png"><code class="xref download docutils literal notranslate"><span class="pre">png</span></code></a>, <a class="reference download internal" download="" href="../_downloads/16d0b5d25cd64ff7ae9ccbdbd062ca51/plenoptic-simulate-canonical_computations-14.hires.png"><code class="xref download docutils literal notranslate"><span class="pre">hires.png</span></code></a>, <a class="reference download internal" download="" href="../_downloads/f78f868759e00e215d47488160e63758/plenoptic-simulate-canonical_computations-14.pdf"><code class="xref download docutils literal notranslate"><span class="pre">pdf</span></code></a>)</p>
 <figure class="align-default">
-<img alt="../_images/plenoptic-simulate-canonical_computations-8.png" class="plot-directive" src="../_images/plenoptic-simulate-canonical_computations-8.png" />
+<img alt="../_images/plenoptic-simulate-canonical_computations-14.png" class="plot-directive" src="../_images/plenoptic-simulate-canonical_computations-14.png" />
 </figure>
 </dd></dl>
 
@@ -1141,9 +1264,9 @@ orientations.</p></li>
 <span class="go">&lt;PyrFigure ...&gt;</span>
 </pre></div>
 </div>
-<p>(<a class="reference download internal" download="" href="../_downloads/8342e5194a4cf5d3cd7a67ac8117abb2/plenoptic-simulate-canonical_computations-9.png"><code class="xref download docutils literal notranslate"><span class="pre">png</span></code></a>, <a class="reference download internal" download="" href="../_downloads/c05405267d139610898da1c4589ec8fa/plenoptic-simulate-canonical_computations-9.hires.png"><code class="xref download docutils literal notranslate"><span class="pre">hires.png</span></code></a>, <a class="reference download internal" download="" href="../_downloads/cca9339ab34c12e631b576216dedc5c5/plenoptic-simulate-canonical_computations-9.pdf"><code class="xref download docutils literal notranslate"><span class="pre">pdf</span></code></a>)</p>
+<p>(<a class="reference download internal" download="" href="../_downloads/7c1582796560222738da45163352a848/plenoptic-simulate-canonical_computations-15.png"><code class="xref download docutils literal notranslate"><span class="pre">png</span></code></a>, <a class="reference download internal" download="" href="../_downloads/5c383ab392d00a55ea012940a78502f8/plenoptic-simulate-canonical_computations-15.hires.png"><code class="xref download docutils literal notranslate"><span class="pre">hires.png</span></code></a>, <a class="reference download internal" download="" href="../_downloads/f4026d1dda8e7f05d22b90997ced0275/plenoptic-simulate-canonical_computations-15.pdf"><code class="xref download docutils literal notranslate"><span class="pre">pdf</span></code></a>)</p>
 <figure class="align-default">
-<img alt="../_images/plenoptic-simulate-canonical_computations-9.png" class="plot-directive" src="../_images/plenoptic-simulate-canonical_computations-9.png" />
+<img alt="../_images/plenoptic-simulate-canonical_computations-15.png" class="plot-directive" src="../_images/plenoptic-simulate-canonical_computations-15.png" />
 </figure>
 </dd></dl>
 
@@ -1178,6 +1301,25 @@ will have the same keys as <code class="docutils literal notranslate"><span clas
 </p>
 </dd>
 </dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">plenoptic</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">po</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">img</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">einstein</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">spyr</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">simul</span><span class="o">.</span><span class="n">SteerablePyramidFreq</span><span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">:],</span> <span class="n">height</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">coeffs</span> <span class="o">=</span> <span class="n">spyr</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">resteered_coeffs</span><span class="p">,</span> <span class="n">resteering_weights</span> <span class="o">=</span> <span class="n">spyr</span><span class="o">.</span><span class="n">steer_coeffs</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">coeffs</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="mi">64</span><span class="p">)</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">resteered_coeffs</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="p">[</span><span class="n">resteered_coeffs</span><span class="p">[(</span><span class="mi">2</span><span class="p">,</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">4</span><span class="p">)]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">64</span><span class="p">)],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">2</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ani</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">animshow</span><span class="p">(</span><span class="n">resteered_coeffs</span><span class="p">,</span> <span class="n">repeat</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">framerate</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">zoom</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Save the video (here we&#39;re saving it as a .gif), and open it.</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ani</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">&quot;resteered_coeffs.gif&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<img alt="../_images/resteered_coeffs.gif" src="../_images/resteered_coeffs.gif" />
 </dd></dl>
 
 </dd></dl>
