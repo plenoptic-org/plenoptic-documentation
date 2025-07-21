@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>plenoptic.tools.data &mdash; plenoptic 1.3.1.dev188 documentation</title>
+  <title>plenoptic.tools.data &mdash; plenoptic 1.3.1.dev205 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/plot_directive.css" />
@@ -17,7 +17,7 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=40c6f1fb"></script>
+      <script src="../../../_static/documentation_options.js?v=39bf0c03"></script>
       <script src="../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -115,6 +115,7 @@
 <span class="kn">import</span><span class="w"> </span><span class="nn">contextlib</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">pathlib</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Callable</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Literal</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">imageio.v3</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">iio</span>
@@ -180,7 +181,11 @@
 
 <div class="viewcode-block" id="load_images">
 <a class="viewcode-back" href="../../../api/plenoptic.tools.html#plenoptic.tools.data.load_images">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">load_images</span><span class="p">(</span><span class="n">paths</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">as_gray</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">load_images</span><span class="p">(</span>
+    <span class="n">paths</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">],</span>
+    <span class="n">as_gray</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="n">sorted_key</span><span class="p">:</span> <span class="kc">None</span> <span class="o">|</span> <span class="n">Callable</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Load in images.</span>
 
@@ -208,6 +213,12 @@
 <span class="sd">        loading them. If ``False``, we do nothing. If ``True``, we call</span>
 <span class="sd">        skimage.color.rgb2gray on them, which will result in a single</span>
 <span class="sd">        channel.</span>
+<span class="sd">    sorted_key</span>
+<span class="sd">        How to sort the images. If ``None`` and ``paths`` is a directory,</span>
+<span class="sd">        will sort the paths alphabetically. If ``paths`` is a list of files,</span>
+<span class="sd">        must be ``None`` and is ignored. See :ref:`python:sortinghowto`</span>
+<span class="sd">        for details on other possible values, and note that the objects to sort</span>
+<span class="sd">        are :class:`pathlib.Path` objects.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -220,37 +231,71 @@
 <span class="sd">        If any of the explicit image paths do not exist.</span>
 <span class="sd">    ValueError</span>
 <span class="sd">        If the images we attempt to load are not all the same shape.</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If ``paths`` is a single file or list of files and ``sorted_key`` is not</span>
+<span class="sd">        ``None``.</span>
 
 <span class="sd">    Warns</span>
 <span class="sd">    -----</span>
 <span class="sd">    UserWarning</span>
 <span class="sd">        If ``paths`` is a directory and any of the files it contains</span>
 <span class="sd">        are non-images.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    When ``sorted_key=None``, images from a directory are sorted alphabetically</span>
+<span class="sd">    by filename.</span>
+
+<span class="sd">    .. plot::</span>
+
+<span class="sd">      &gt;&gt;&gt; import plenoptic as po</span>
+<span class="sd">      &gt;&gt;&gt; from plenoptic.data.fetch import fetch_data</span>
+<span class="sd">      &gt;&gt;&gt; img_dir = fetch_data(&quot;test_images.tar.gz&quot;) / &quot;256&quot;</span>
+<span class="sd">      &gt;&gt;&gt; titles = [&quot;color_wheel&quot;, &quot;curie&quot;, &quot;einstein&quot;, &quot;metal&quot;, &quot;nuts&quot;]</span>
+<span class="sd">      &gt;&gt;&gt; imgs = po.load_images(img_dir)</span>
+<span class="sd">      &gt;&gt;&gt; po.imshow(imgs, title=titles)</span>
+<span class="sd">      &lt;PyrFigure size ... with 5 Axes&gt;</span>
+
+<span class="sd">    Sort the images by the second letter of their filename:</span>
+
+<span class="sd">    .. plot::</span>
+
+<span class="sd">      &gt;&gt;&gt; import plenoptic as po</span>
+<span class="sd">      &gt;&gt;&gt; from plenoptic.data.fetch import fetch_data</span>
+<span class="sd">      &gt;&gt;&gt; img_dir = fetch_data(&quot;test_images.tar.gz&quot;) / &quot;256&quot;</span>
+<span class="sd">      &gt;&gt;&gt; titles = [&quot;metal&quot;, &quot;einstein&quot;, &quot;color_wheel&quot;, &quot;curie&quot;, &quot;nuts&quot;]</span>
+<span class="sd">      &gt;&gt;&gt; imgs = po.load_images(img_dir, sorted_key=lambda x: x.name[1])</span>
+<span class="sd">      &gt;&gt;&gt; po.imshow(imgs, title=titles)</span>
+<span class="sd">      &lt;PyrFigure size ... with 5 Axes&gt;</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">paths</span> <span class="o">=</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">(</span><span class="n">paths</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">paths</span><span class="o">.</span><span class="n">is_file</span><span class="p">():</span>
-            <span class="n">paths</span> <span class="o">=</span> <span class="p">[</span><span class="n">paths</span><span class="p">]</span>
-        <span class="k">elif</span> <span class="n">paths</span><span class="o">.</span><span class="n">is_dir</span><span class="p">():</span>
-            <span class="n">paths</span> <span class="o">=</span> <span class="p">[</span><span class="n">path</span> <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">paths</span><span class="o">.</span><span class="n">iterdir</span><span class="p">()]</span>
+        <span class="k">if</span> <span class="n">paths</span><span class="o">.</span><span class="n">is_dir</span><span class="p">():</span>
+            <span class="n">paths</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">paths</span><span class="o">.</span><span class="n">iterdir</span><span class="p">(),</span> <span class="n">key</span><span class="o">=</span><span class="n">sorted_key</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="n">paths</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
-                <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;File </span><span class="si">{</span><span class="n">paths</span><span class="si">}</span><span class="s2"> not found!&quot;</span><span class="p">)</span>
+            <span class="n">paths</span> <span class="o">=</span> <span class="p">[</span><span class="n">paths</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">sorted_key</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="s2">&quot;When paths argument is a single file, sorted_key must be None!&quot;</span>
+                <span class="p">)</span>
 
     <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
-        <span class="c1"># assume it is an iterable of paths already</span>
-        <span class="k">pass</span>
+        <span class="c1"># assume it is an iterable of paths</span>
+        <span class="n">paths</span> <span class="o">=</span> <span class="p">[</span><span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">paths</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">sorted_key</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;When paths argument is a list of paths, sorted_key must be None!&quot;</span>
+            <span class="p">)</span>
 
     <span class="n">images</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">paths</span><span class="p">:</span>
-        <span class="c1"># convert to pathlib path</span>
-        <span class="n">p</span> <span class="o">=</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">p</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
             <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;File </span><span class="si">{</span><span class="n">p</span><span class="si">}</span><span class="s2"> not found!&quot;</span><span class="p">)</span>
-
         <span class="k">try</span><span class="p">:</span>
-            <span class="n">im</span> <span class="o">=</span> <span class="n">iio</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
-        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+            <span class="c1"># this makes sure we close the file properly on except</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                <span class="n">im</span> <span class="o">=</span> <span class="n">iio</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+        <span class="k">except</span> <span class="p">(</span><span class="ne">ValueError</span><span class="p">,</span> <span class="ne">OSError</span><span class="p">):</span>
             <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
                 <span class="sa">f</span><span class="s2">&quot;Unable to load in file </span><span class="si">{</span><span class="n">p</span><span class="si">}</span><span class="s2">, it&#39;s probably not an image, skipping...&quot;</span>
             <span class="p">)</span>
@@ -279,6 +324,9 @@
             <span class="s2">&quot;All images must be the same shape but got the following: &quot;</span>
             <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="p">[</span><span class="n">i</span><span class="o">.</span><span class="n">shape</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">images</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
         <span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">images</span><span class="p">:</span>
+        <span class="n">paths</span> <span class="o">=</span> <span class="p">[</span><span class="n">p</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">paths</span><span class="p">]</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;None of the files found at </span><span class="si">{</span><span class="n">paths</span><span class="si">}</span><span class="s2"> were images!&quot;</span><span class="p">)</span>
     <span class="n">images</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">as_tensor</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">images</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">as_gray</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">images</span><span class="o">.</span><span class="n">ndimension</span><span class="p">()</span> <span class="o">!=</span> <span class="mi">3</span><span class="p">:</span>
