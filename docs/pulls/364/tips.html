@@ -6,11 +6,12 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Tips and Tricks &mdash; plenoptic 1.3.1.dev207 documentation</title>
+  <title>Tips and Tricks &mdash; plenoptic 1.3.1.dev261 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="_static/plot_directive.css" />
       <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=13237357" />
       <link rel="stylesheet" type="text/css" href="_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
       <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
       <link rel="stylesheet" type="text/css" href="_static/custom.css?v=a2d047e6" />
@@ -18,11 +19,16 @@
   
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="_static/documentation_options.js?v=aa3f0270"></script>
+      <script src="_static/documentation_options.js?v=441ff17d"></script>
       <script src="_static/doctools.js?v=9bcbadda"></script>
       <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="_static/clipboard.min.js?v=a7894cd8"></script>
       <script src="_static/copybutton.js?v=35a8b989"></script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="_static/togglebutton.js?v=4a39c7ea"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
       <script src="_static/design-tabs.js?v=f930bc37"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
@@ -69,7 +75,7 @@
 <p class="caption" role="heading"><span class="caption-text">Models and metrics</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="tutorials/models/Perceptual_distance.html">Perceptual distance</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tutorials/models/Portilla-Simoncelli.html">Portilla-Simoncelli Texture Metamer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials/models/Portilla_Simoncelli.html">Portilla-Simoncelli Texture Metamer</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tutorials/models/Steerable_Pyramid.html">Steerable Pyramid</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Synthesis method examples</span></p>
@@ -142,7 +148,7 @@
 <span id="tips-model-tweak"></span><h3>Tweaking the model<a class="headerlink" href="#tweaking-the-model" title="Link to this heading"></a></h3>
 <p>You can also improve your changes of finding a good synthesis by tweaking the model. For example, the loss function used for metamer synthesis by default is mean-squared error. This implicitly weights all aspects of the model’s representation equally. Thus, if there are portions of the representation whose magnitudes are significantly smaller than the others, they might not be matched at the same rate as the others. You can address this using coarse-to-fine synthesis or picking a more suitable loss function, but it’s generally a good idea for all of a model’s representation to have roughly the same magnitude. You can do this in a principled or empirical manner:</p>
 <ul class="simple">
-<li><p>Principled: compose your representation of statistics that you know lie within the same range. For example, use correlations instead of covariances (see the Portilla-Simoncelli model, and in particular <a class="reference internal" href="tutorials/models/Portilla-Simoncelli.html#ps-mat-diffs"><span class="std std-ref">how plenoptic’s implementation differs from matlab</span></a> for an example of this).</p></li>
+<li><p>Principled: compose your representation of statistics that you know lie within the same range. For example, use correlations instead of covariances (see the Portilla-Simoncelli model, and in particular <a class="reference internal" href="tutorials/models/Portilla_Simoncelli.html#ps-mat-diffs"><span class="std std-ref">how plenoptic’s implementation differs from matlab</span></a> for an example of this).</p></li>
 <li><p>Empirical: measure your model’s representation on a dataset of relevant natural images and then use this output to z-score your model’s representation on each pass (see <span id="id1"><a class="reference internal" href="citation.html#id34" title="Corey M. Ziemba and Eero P. Simoncelli. Opposing effects of selectivity and invariance in peripheral vision. Nature Communications, jul 2021. URL: https://doi.org/10.1038/s41467-021-24880-5, doi:10.1038/s41467-021-24880-5.">Ziemba and Simoncelli, 2021</a></span> for an example; this is what the Van Hateren database is used for).</p></li>
 <li><p>In the middle: normalize statistics based on their value in the original image (note: not the image the model is taking as input! this will likely make optimization very difficult).</p></li>
 </ul>
@@ -153,7 +159,7 @@
 <h2>None of the existing synthesis methods meet my needs<a class="headerlink" href="#none-of-the-existing-synthesis-methods-meet-my-needs" title="Link to this heading"></a></h2>
 <p><code class="docutils literal notranslate"><span class="pre">plenoptic</span></code> provides three synthesis methods, but you may find you wish to do something slightly outside the capabilities of the existing methods. There are generally two ways to do this: by tweaking your model or by extending one of the methods.</p>
 <ul class="simple">
-<li><p>See the <a class="reference internal" href="tutorials/models/Portilla-Simoncelli.html#ps-nb"><span class="std std-ref">Portilla-Simoncelli texture model notebook</span></a> for examples on how to get different metamer results by tweaking your model or extending the <a class="reference internal" href="api/plenoptic.synthesize.html#plenoptic.synthesize.metamer.Metamer" title="plenoptic.synthesize.metamer.Metamer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Metamer</span></code></a> class.</p></li>
+<li><p>See the <a class="reference internal" href="tutorials/models/Portilla_Simoncelli.html#ps-nb"><span class="std std-ref">Portilla-Simoncelli texture model notebook</span></a> for examples on how to get different metamer results by tweaking your model or extending the <a class="reference internal" href="api/plenoptic.synthesize.html#plenoptic.synthesize.metamer.Metamer" title="plenoptic.synthesize.metamer.Metamer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Metamer</span></code></a> class.</p></li>
 <li><p>The coarse-to-fine optimization, discussed in the <a class="reference internal" href="tutorials/intro/Metamer.html#metamer-coarse-to-fine"><span class="std std-ref">metamer notebook</span></a>, is an example of changing optimization by extending the <a class="reference internal" href="api/plenoptic.synthesize.html#plenoptic.synthesize.metamer.Metamer" title="plenoptic.synthesize.metamer.Metamer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Metamer</span></code></a> class.</p></li>
 <li><p>The <a class="reference internal" href="tutorials/advanced/Synthesis_extensions.html#synthesis-extensions"><span class="std std-ref">Synthesis extensions notebook</span></a> contains a discussion focused on this as well.</p></li>
 </ul>
