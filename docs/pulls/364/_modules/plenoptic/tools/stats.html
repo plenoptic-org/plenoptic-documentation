@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>plenoptic.tools.stats &mdash; plenoptic 1.3.1.dev271 documentation</title>
+  <title>plenoptic.tools.stats &mdash; plenoptic 1.3.1.dev273 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/plot_directive.css" />
@@ -18,7 +18,7 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=20d02139"></script>
+      <script src="../../../_static/documentation_options.js?v=b3502f4a"></script>
       <script src="../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -168,23 +168,26 @@
 <span class="sd">        &gt;&gt;&gt; from plenoptic.tools.stats import variance</span>
 <span class="sd">        &gt;&gt;&gt; from plenoptic.tools import set_seed</span>
 <span class="sd">        &gt;&gt;&gt; set_seed(42)</span>
-<span class="sd">        &gt;&gt;&gt; x1 = torch.randn(10000)</span>
-<span class="sd">        &gt;&gt;&gt; v1 = variance(x1)</span>
-<span class="sd">        &gt;&gt;&gt; x2 = x1 * 3</span>
-<span class="sd">        &gt;&gt;&gt; v2 = variance(x2)</span>
-<span class="sd">        &gt;&gt;&gt; fig, (ax1, ax2) = plt.subplots(</span>
-<span class="sd">        ...     1, 2, sharex=True, sharey=True, figsize=(8, 4)</span>
+<span class="sd">        &gt;&gt;&gt; x = torch.randn(10000)</span>
+<span class="sd">        &gt;&gt;&gt; v = variance(x)</span>
+<span class="sd">        &gt;&gt;&gt; x_more = x * 3</span>
+<span class="sd">        &gt;&gt;&gt; v_more = variance(x_more)</span>
+<span class="sd">        &gt;&gt;&gt; x_less = x * 0.3</span>
+<span class="sd">        &gt;&gt;&gt; v_less = variance(x_less)</span>
+<span class="sd">        &gt;&gt;&gt; fig, (ax_less, ax, ax_more) = plt.subplots(</span>
+<span class="sd">        ...     1, 3, sharex=True, sharey=True, figsize=(12, 4)</span>
 <span class="sd">        ... )</span>
-<span class="sd">        &gt;&gt;&gt; _ = ax1.hist(x1, bins=50)</span>
-<span class="sd">        &gt;&gt;&gt; _ = ax1.set_title(f&quot;Variance: {v1:.4f}&quot;)</span>
-<span class="sd">        &gt;&gt;&gt; _ = ax1.set_ylabel(&quot;Frequency&quot;)</span>
-<span class="sd">        &gt;&gt;&gt; _ = ax2.hist(x2, bins=50)</span>
-<span class="sd">        &gt;&gt;&gt; _ = ax2.set_title(f&quot;Variance: {v2:.4f}&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; _ = ax_less.hist(x_less, bins=50)</span>
+<span class="sd">        &gt;&gt;&gt; _ = ax_less.set(title=f&quot;σ=0.3\nVariance: {v_less:.4f}&quot;, ylabel=&quot;Frequency&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; _ = ax.hist(x, bins=50)</span>
+<span class="sd">        &gt;&gt;&gt; _ = ax.set(title=f&quot;Standard Gaussian, σ=1\nVariance: {v:.4f}&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; _ = ax_more.hist(x_more, bins=50)</span>
+<span class="sd">        &gt;&gt;&gt; _ = ax_more.set(title=f&quot;σ=3\nVariance: {v_more:.4f}&quot;)</span>
 
 <span class="sd">    If you have precomputed the mean, you can pass it and avoid recomputing it:</span>
 
-<span class="sd">    &gt;&gt;&gt; precomputed_mean = torch.mean(x1)</span>
-<span class="sd">    &gt;&gt;&gt; v = variance(x1, mean=precomputed_mean)</span>
+<span class="sd">    &gt;&gt;&gt; precomputed_mean = torch.mean(x)</span>
+<span class="sd">    &gt;&gt;&gt; v = variance(x, mean=precomputed_mean)</span>
 <span class="sd">    &gt;&gt;&gt; v</span>
 <span class="sd">    tensor(1.0088)</span>
 
@@ -261,26 +264,33 @@
 
 <span class="sd">        &gt;&gt;&gt; import matplotlib.pyplot as plt</span>
 <span class="sd">        &gt;&gt;&gt; import torch</span>
-<span class="sd">        &gt;&gt;&gt; from plenoptic.tools.stats import skew, variance</span>
+<span class="sd">        &gt;&gt;&gt; from plenoptic.tools.stats import skew</span>
 <span class="sd">        &gt;&gt;&gt; from plenoptic.tools import set_seed</span>
 <span class="sd">        &gt;&gt;&gt; set_seed(42)</span>
-<span class="sd">        &gt;&gt;&gt; x1 = torch.randn(10000)</span>
-<span class="sd">        &gt;&gt;&gt; s1 = skew(x1)</span>
-<span class="sd">        &gt;&gt;&gt; x2 = torch.exp(x1 / 2)</span>
-<span class="sd">        &gt;&gt;&gt; s2 = skew(x2)</span>
-<span class="sd">        &gt;&gt;&gt; fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(8, 4))</span>
-<span class="sd">        &gt;&gt;&gt; _ = ax1.hist(x1, bins=50)</span>
-<span class="sd">        &gt;&gt;&gt; _ = ax1.set_title(f&quot;Skew: {s1:.4f}&quot;)</span>
-<span class="sd">        &gt;&gt;&gt; _ = ax1.set_ylabel(&quot;Frequency&quot;)</span>
-<span class="sd">        &gt;&gt;&gt; _ = ax2.hist(x2, bins=50)</span>
-<span class="sd">        &gt;&gt;&gt; _ = ax2.set_title(f&quot;Skew: {s2:.4f}&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; x = torch.randn(10000)</span>
+<span class="sd">        &gt;&gt;&gt; s = skew(x)</span>
+<span class="sd">        &gt;&gt;&gt; x_right = torch.exp(x / 2)</span>
+<span class="sd">        &gt;&gt;&gt; s_right = skew(x_right)</span>
+<span class="sd">        &gt;&gt;&gt; x_left = -torch.exp(x / 2)</span>
+<span class="sd">        &gt;&gt;&gt; s_left = skew(x_left)</span>
+<span class="sd">        &gt;&gt;&gt; fig, (ax_left, ax, ax_right) = plt.subplots(</span>
+<span class="sd">        ...     1, 3, sharex=True, figsize=(12, 4)</span>
+<span class="sd">        ... )</span>
+<span class="sd">        &gt;&gt;&gt; _ = ax_left.hist(x_left, bins=50)</span>
+<span class="sd">        &gt;&gt;&gt; _ = ax_left.set(</span>
+<span class="sd">        ...     title=f&quot;Left skew: {s_left:.4f}&quot;, ylabel=&quot;Frequency&quot;, xlim=(-5, 5)</span>
+<span class="sd">        ... )</span>
+<span class="sd">        &gt;&gt;&gt; _ = ax.hist(x, bins=50)</span>
+<span class="sd">        &gt;&gt;&gt; _ = ax.set(title=f&quot;Standard Gaussian\nSkew: {s:.4f}&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; _ = ax_right.hist(x_right, bins=50)</span>
+<span class="sd">        &gt;&gt;&gt; _ = ax_right.set(title=f&quot;Right skew: {s_right:.4f}&quot;)</span>
 
 <span class="sd">    If you have precomputed the mean and/or variance,</span>
 <span class="sd">    you can pass them and avoid recomputing:</span>
 
-<span class="sd">    &gt;&gt;&gt; precomputed_mean = torch.mean(x1)</span>
-<span class="sd">    &gt;&gt;&gt; precomputed_var = variance(x1)</span>
-<span class="sd">    &gt;&gt;&gt; s = skew(x1, mean=precomputed_mean, var=precomputed_var)</span>
+<span class="sd">    &gt;&gt;&gt; precomputed_mean = torch.mean(x)</span>
+<span class="sd">    &gt;&gt;&gt; precomputed_var = variance(x)</span>
+<span class="sd">    &gt;&gt;&gt; s = skew(x, mean=precomputed_mean, var=precomputed_var)</span>
 <span class="sd">    &gt;&gt;&gt; s</span>
 <span class="sd">    tensor(-0.0010)</span>
 
@@ -350,26 +360,35 @@
 
 <span class="sd">        &gt;&gt;&gt; import matplotlib.pyplot as plt</span>
 <span class="sd">        &gt;&gt;&gt; import torch</span>
-<span class="sd">        &gt;&gt;&gt; from plenoptic.tools.stats import kurtosis, variance</span>
+<span class="sd">        &gt;&gt;&gt; from plenoptic.tools.stats import kurtosis</span>
 <span class="sd">        &gt;&gt;&gt; from plenoptic.tools import set_seed</span>
 <span class="sd">        &gt;&gt;&gt; set_seed(42)</span>
-<span class="sd">        &gt;&gt;&gt; x1 = torch.randn(10000)</span>
-<span class="sd">        &gt;&gt;&gt; k1 = kurtosis(x1)</span>
-<span class="sd">        &gt;&gt;&gt; x2 = x1 * torch.abs(x1)</span>
-<span class="sd">        &gt;&gt;&gt; k2 = kurtosis(x2)</span>
-<span class="sd">        &gt;&gt;&gt; fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(8, 4))</span>
-<span class="sd">        &gt;&gt;&gt; _ = ax1.hist(x1, bins=50)</span>
-<span class="sd">        &gt;&gt;&gt; _ = ax1.set_title(f&quot;Kurtosis: {k1:.4f}&quot;)</span>
-<span class="sd">        &gt;&gt;&gt; _ = ax1.set_ylabel(&quot;Frequency&quot;)</span>
-<span class="sd">        &gt;&gt;&gt; _ = ax2.hist(x2, bins=50)</span>
-<span class="sd">        &gt;&gt;&gt; _ = ax2.set_title(f&quot;Kurtosis: {k2:.4f}&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; x = torch.randn(10000)</span>
+<span class="sd">        &gt;&gt;&gt; k = kurtosis(x)</span>
+<span class="sd">        &gt;&gt;&gt; x_platy = torch.rand(10000) * 10 - 5</span>
+<span class="sd">        &gt;&gt;&gt; k_platy = kurtosis(x_platy)</span>
+<span class="sd">        &gt;&gt;&gt; x_lepto = torch.distributions.Laplace(loc=0.0, scale=1.0).sample((10000,))</span>
+<span class="sd">        &gt;&gt;&gt; k_lepto = kurtosis(x_lepto)</span>
+<span class="sd">        &gt;&gt;&gt; fig, (ax_platy, ax, ax_lepto) = plt.subplots(</span>
+<span class="sd">        ...     1, 3, sharex=True, figsize=(12, 4)</span>
+<span class="sd">        ... )</span>
+<span class="sd">        &gt;&gt;&gt; _ = ax_platy.hist(x_platy.numpy(), bins=50)</span>
+<span class="sd">        &gt;&gt;&gt; _ = ax_platy.set(</span>
+<span class="sd">        ...     title=f&quot;Platykurtic (Uniform)\nKurtosis: {k_platy:.4f}&quot;,</span>
+<span class="sd">        ...     ylabel=&quot;Frequency&quot;,</span>
+<span class="sd">        ...     xlim=(-5, 5),</span>
+<span class="sd">        ... )</span>
+<span class="sd">        &gt;&gt;&gt; _ = ax.hist(x.numpy(), bins=50)</span>
+<span class="sd">        &gt;&gt;&gt; _ = ax.set(title=f&quot;Standard Gaussian\nKurtosis: {k:.4f}&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; _ = ax_lepto.hist(x_lepto.numpy(), bins=50)</span>
+<span class="sd">        &gt;&gt;&gt; _ = ax_lepto.set(title=f&quot;Leptokurtic (Laplace)\nKurtosis: {k_lepto:.4f}&quot;)</span>
 
 <span class="sd">    If you have precomputed the mean and/or variance,</span>
 <span class="sd">    you can pass them and avoid recomputing:</span>
 
-<span class="sd">    &gt;&gt;&gt; precomputed_mean = torch.mean(x1)</span>
-<span class="sd">    &gt;&gt;&gt; precomputed_var = variance(x1)</span>
-<span class="sd">    &gt;&gt;&gt; k = kurtosis(x1, mean=precomputed_mean, var=precomputed_var)</span>
+<span class="sd">    &gt;&gt;&gt; precomputed_mean = torch.mean(x)</span>
+<span class="sd">    &gt;&gt;&gt; precomputed_var = variance(x)</span>
+<span class="sd">    &gt;&gt;&gt; k = kurtosis(x, mean=precomputed_mean, var=precomputed_var)</span>
 <span class="sd">    &gt;&gt;&gt; k</span>
 <span class="sd">    tensor(2.9354)</span>
 
@@ -378,7 +397,7 @@
 <span class="sd">    &gt;&gt;&gt; x = torch.randn(10000, 2)</span>
 <span class="sd">    &gt;&gt;&gt; k = kurtosis(x, dim=0)</span>
 <span class="sd">    &gt;&gt;&gt; k</span>
-<span class="sd">    tensor([2.9602, 3.0129])</span>
+<span class="sd">    tensor([3.0057, 2.9506])</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">dim</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">dim</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">ndim</span><span class="p">))</span>
