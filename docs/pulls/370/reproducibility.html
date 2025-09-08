@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Reproducibility &mdash; plenoptic 1.3.1.dev300 documentation</title>
+  <title>Reproducibility and Compatibility &mdash; plenoptic 1.3.1.dev310 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="_static/plot_directive.css" />
@@ -19,7 +19,7 @@
   
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="_static/documentation_options.js?v=1063d8e4"></script>
+      <script src="_static/documentation_options.js?v=74ac08a0"></script>
       <script src="_static/doctools.js?v=9bcbadda"></script>
       <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="_static/clipboard.min.js?v=a7894cd8"></script>
@@ -87,7 +87,15 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="synthesis.html">Synthesis object design</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tips.html">Tips and Tricks</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Reproducibility</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Reproducibility and Compatibility</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#reprodubility">Reprodubility</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#compatibility">Compatibility</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#breaking-change-to-load-in-plenoptic-1-2">Breaking change to load in plenoptic 1.2</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#futurewarning-in-load-in-plenoptic-1-4">FutureWarning in load in plenoptic 1.4</a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="api/modules.html">API Documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tutorials/advanced/Display.html">Display and animate functions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tutorials/advanced/Synthesis_extensions.html">Extending existing synthesis objects</a></li>
@@ -107,7 +115,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">Reproducibility</li>
+      <li class="breadcrumb-item active">Reproducibility and Compatibility</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/reproducibility.md.txt" rel="nofollow"> View page source</a>
       </li>
@@ -117,8 +125,10 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section class="tex2jax_ignore mathjax_ignore" id="reproducibility">
-<span id="reproduce"></span><h1>Reproducibility<a class="headerlink" href="#reproducibility" title="Link to this heading"></a></h1>
+  <section class="tex2jax_ignore mathjax_ignore" id="reproducibility-and-compatibility">
+<span id="reproduce"></span><h1>Reproducibility and Compatibility<a class="headerlink" href="#reproducibility-and-compatibility" title="Link to this heading"></a></h1>
+<section id="reprodubility">
+<h2>Reprodubility<a class="headerlink" href="#reprodubility" title="Link to this heading"></a></h2>
 <p><code class="docutils literal notranslate"><span class="pre">plenoptic</span></code> includes several results reproduced from the literature and aims to facilitate reproducible research. However, we are limited by our dependencies and PyTorch, in particular, comes with the <a class="reference external" href="https://pytorch.org/docs/stable/notes/randomness.html">caveat</a> that “Completely reproducible results are not guaranteed across PyTorch releases, individual commits, or different platforms. Furthermore, results may not be reproducible between CPU and GPU executions, even when using identical seeds” (quote from the <a class="reference external" href="https://pytorch.org/docs/1.12/notes/randomness.html">v1.12</a> documentation).</p>
 <p>This means that you should note the <code class="docutils literal notranslate"><span class="pre">plenoptic</span></code> version and the <code class="docutils literal notranslate"><span class="pre">pytorch</span></code> version your synthesis used in order to guarantee reproducibility (some versions of <code class="docutils literal notranslate"><span class="pre">pytorch</span></code> will give consistent results with each other, but it’s not guaranteed and hard to predict). We do not believe reproducibility depends on the python version or any other packages.</p>
 <p>However, in general, the CPU and GPU will always give different results, and you may also end up with different outputs on GPU devices with different CUDA or driver versions.</p>
@@ -127,6 +137,40 @@
 <li><p>PyTorch 1.8 and 1.9 give the same results, but 1.10 changes results in changes, probably due to the difference in how the sub-gradient for <code class="docutils literal notranslate"><span class="pre">torch.min</span></code> and <code class="docutils literal notranslate"><span class="pre">torch.max</span></code> are computed (<a class="reference external" href="https://github.com/plenoptic-org/plenoptic/pull/96#issuecomment-973318291">see this PR</a>).</p></li>
 <li><p>PyTorch 1.12 breaks reproducibility with 1.10 and 1.11, unclear why (<a class="reference external" href="https://github.com/plenoptic-org/plenoptic/issues/165">see this issue</a>).</p></li>
 </ul>
+</section>
+<section id="compatibility">
+<span id="compat"></span><h2>Compatibility<a class="headerlink" href="#compatibility" title="Link to this heading"></a></h2>
+<p>While we try to maintain compatibility between <code class="docutils literal notranslate"><span class="pre">plenoptic</span></code> versions, <code class="docutils literal notranslate"><span class="pre">plenoptic</span></code> is under active development and so the API of its objects may change. While we will try to maintain compatibility, similar to the comments on reproducibility above, we cannot guarantee that you will be able to load a <code class="docutils literal notranslate"><span class="pre">plenoptic</span></code> object saved with a different version of <code class="docutils literal notranslate"><span class="pre">plenoptic</span></code> or <code class="docutils literal notranslate"><span class="pre">pytorch</span></code>. The following notes known breaking changes and how, if possible, to load your object anyway.</p>
+<p>Note that you should always be able to load in the saved object using <code class="docutils literal notranslate"><span class="pre">pytorch</span></code> directly, like so:</p>
+<p>If your object was saved in plenoptic 1.1 or earlier:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+<span class="n">plen_object</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;saved_plen_object.pt&quot;</span><span class="p">,</span> <span class="n">weights_only</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Note that setting <code class="docutils literal notranslate"><span class="pre">weights_only=False</span></code> allows arbitrary code execution and thus is unsafe — only run the above code when you know and trust what the saved file! (See <a class="reference external" href="https://github.com/plenoptic-org/plenoptic/issues/313">related issue</a> for more details.)</p>
+<p>If your object was saved in plenoptic 1.2 or later, <code class="docutils literal notranslate"><span class="pre">weights_only=False</span></code> is unnecessary:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+<span class="n">plen_object</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;saved_plen_object.pt&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The object you have loaded is a dictionary with strings as keys. Once you’ve loaded your object, you can extract the outcome of your synthesis (e.g., by looking at the <code class="docutils literal notranslate"><span class="pre">&quot;metamer&quot;</span></code> key). <a class="reference external" href="https://github.com/plenoptic-org/plenoptic/issues/new/choose">Post an issue</a> if you need help!</p>
+<section id="breaking-change-to-load-in-plenoptic-1-2">
+<h3>Breaking change to load in plenoptic 1.2<a class="headerlink" href="#breaking-change-to-load-in-plenoptic-1-2" title="Link to this heading"></a></h3>
+<p>Prior to plenoptic 1.2, we were saving python functions and pytorch optimization objects. This was incompatible with a breaking change made to :func:<code class="docutils literal notranslate"><span class="pre">torch.load</span></code> in <code class="docutils literal notranslate"><span class="pre">pytorch</span></code> version 2.6. Unfortunately, there is no way to make an object saved prior to 1.2 compatible with later <code class="docutils literal notranslate"><span class="pre">plenoptic</span></code> releases; see <a class="reference internal" href="#compat"><span class="std std-ref">Compatibility</span></a> for how to extract the outputs of your synthesis.</p>
+</section>
+<section id="futurewarning-in-load-in-plenoptic-1-4">
+<h3>FutureWarning in load in plenoptic 1.4<a class="headerlink" href="#futurewarning-in-load-in-plenoptic-1-4" title="Link to this heading"></a></h3>
+<p>A small change was made to the <a class="reference internal" href="api/plenoptic.synthesize.html#plenoptic.synthesize.metamer.Metamer" title="plenoptic.synthesize.metamer.Metamer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Metamer</span></code></a> and <a class="reference internal" href="api/plenoptic.synthesize.html#plenoptic.synthesize.mad_competition.MADCompetition" title="plenoptic.synthesize.mad_competition.MADCompetition"><code class="xref py py-class docutils literal notranslate"><span class="pre">MADCompetition</span></code></a> APIs in <code class="docutils literal notranslate"><span class="pre">plenoptic</span></code> 1.4. You will be able to load <a class="reference internal" href="api/plenoptic.synthesize.html#plenoptic.synthesize.metamer.Metamer" title="plenoptic.synthesize.metamer.Metamer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Metamer</span></code></a> and <a class="reference internal" href="api/plenoptic.synthesize.html#plenoptic.synthesize.mad_competition.MADCompetition" title="plenoptic.synthesize.mad_competition.MADCompetition"><code class="xref py py-class docutils literal notranslate"><span class="pre">MADCompetition</span></code></a> objects saved with version 1.2 and 1.3 for some time, but doing so will raise a <code class="docutils literal notranslate"><span class="pre">FutureWarning</span></code> and this compatibility will eventually be removed.</p>
+<p>In order to make an object compatible with future releases, you can either load it in with <code class="docutils literal notranslate"><span class="pre">plenoptic</span></code> 1.4 and re-save it, or do the following:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+<span class="n">old_save</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;old_save.pt&quot;</span><span class="p">)</span>
+<span class="n">old_save</span><span class="p">[</span><span class="s2">&quot;_current_loss&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="n">torch</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">old_save</span><span class="p">,</span> <span class="s2">&quot;old_save.pt&quot;</span><span class="p">)</span>
+<span class="c1"># and then load as normal</span>
+</pre></div>
+</div>
+</section>
+</section>
 </section>
 
 

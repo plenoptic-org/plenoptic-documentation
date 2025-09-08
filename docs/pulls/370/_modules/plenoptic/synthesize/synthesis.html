@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>plenoptic.synthesize.synthesis &mdash; plenoptic 1.3.1.dev300 documentation</title>
+  <title>plenoptic.synthesize.synthesis &mdash; plenoptic 1.3.1.dev310 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/plot_directive.css" />
@@ -18,7 +18,7 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=1063d8e4"></script>
+      <script src="../../../_static/documentation_options.js?v=74ac08a0"></script>
       <script src="../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -84,7 +84,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../synthesis.html">Synthesis object design</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../tips.html">Tips and Tricks</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../reproducibility.html">Reproducibility</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../reproducibility.html">Reproducibility and Compatibility</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../api/modules.html">API Documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../tutorials/advanced/Display.html">Display and animate functions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../tutorials/advanced/Synthesis_extensions.html">Extending existing synthesis objects</a></li>
@@ -125,8 +125,9 @@
 <span class="kn">import</span><span class="w"> </span><span class="nn">abc</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">importlib</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">inspect</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Literal</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
@@ -385,13 +386,26 @@
         <span class="c1"># all attributes set at initialization should be present in the saved dictionary</span>
         <span class="n">init_not_save</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="nb">vars</span><span class="p">(</span><span class="bp">self</span><span class="p">))</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="n">tmp_dict</span><span class="p">)</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">init_not_save</span><span class="p">):</span>
-            <span class="n">init_not_save_str</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2"> &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
-                <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="w"> </span><span class="n">k</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">init_not_save</span><span class="p">]</span>
-            <span class="p">)</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;Initialized object has </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">init_not_save</span><span class="p">)</span><span class="si">}</span><span class="s2"> attribute(s) &quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;not present in the saved object!</span><span class="se">\n</span><span class="s2"> </span><span class="si">{</span><span class="n">init_not_save_str</span><span class="si">}</span><span class="s2">&quot;</span>
-            <span class="p">)</span>
+            <span class="c1"># in PR #370 (release 1.4), added _current_loss attribute, which we&#39;ll</span>
+            <span class="c1"># handle for now, but warn about.</span>
+            <span class="k">if</span> <span class="n">init_not_save</span> <span class="o">==</span> <span class="p">{</span><span class="s2">&quot;_current_loss&quot;</span><span class="p">}:</span>
+                <span class="n">tmp_dict</span><span class="p">[</span><span class="s2">&quot;_current_loss&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+                <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+                    <span class="s2">&quot;The saved object was saved with plenoptic 1.3 or earlier and will &quot;</span>
+                    <span class="s2">&quot;not be compatible with future releases. Save this object with &quot;</span>
+                    <span class="s2">&quot;current version of plenoptic or see the &#39;Reproducibility and &quot;</span>
+                    <span class="s2">&quot;Compatibility&#39; page of the documentation for how to make the &quot;</span>
+                    <span class="s2">&quot;saved object futureproof and avoid this warning.&quot;</span><span class="p">,</span>
+                    <span class="n">category</span><span class="o">=</span><span class="ne">FutureWarning</span><span class="p">,</span>
+                <span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">init_not_save_str</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2"> &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                    <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="w"> </span><span class="n">k</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">init_not_save</span><span class="p">]</span>
+                <span class="p">)</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;Initialized object has </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">init_not_save</span><span class="p">)</span><span class="si">}</span><span class="s2"> attribute(s) &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;not present in the saved object!</span><span class="se">\n</span><span class="s2"> </span><span class="si">{</span><span class="n">init_not_save_str</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="p">)</span>
         <span class="c1"># there shouldn&#39;t be any extra keys in the saved dictionary (we removed</span>
         <span class="c1"># save_metadata above)</span>
         <span class="n">save_not_init</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">tmp_dict</span><span class="p">)</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="nb">vars</span><span class="p">(</span><span class="bp">self</span><span class="p">))</span>
@@ -857,6 +871,191 @@
                     <span class="c1"># then we do want to pass the loss to scheduler.step</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">_scheduler_step_arg</span> <span class="o">=</span> <span class="kc">True</span>
 
+    <span class="k">def</span><span class="w"> </span><span class="nf">_convert_iteration</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">iteration</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">iteration_to_progress</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">store_progress_behavior</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;floor&quot;</span><span class="p">,</span> <span class="s2">&quot;ceiling&quot;</span><span class="p">,</span> <span class="s2">&quot;round&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;round&quot;</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Convert between synthesis iteration and ``store_progress``&#39;s iteration.</span>
+
+<span class="sd">        Several of the ``OptimizedSynthesis`` attributes are not updated every</span>
+<span class="sd">        single iteration but every ``self.store_progress`` iterations. This</span>
+<span class="sd">        converts between the two.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        iteration</span>
+<span class="sd">            Synthesis iteration to summarize.</span>
+<span class="sd">        iteration_to_progress</span>
+<span class="sd">            Whether to convert from synthesis iteration to ``store_progress``</span>
+<span class="sd">            iteration (in which case, behavior is controlled by</span>
+<span class="sd">            ``store_progress_behavior``) or vice-versa (in which case we return</span>
+<span class="sd">            ``iteration * self.store_progress``).</span>
+<span class="sd">        store_progress_behavior</span>
+
+<span class="sd">            How to handle the situations where ``iteration`` is not evenly</span>
+<span class="sd">            divided by ``self.store_progress``:</span>
+
+<span class="sd">            * ``&quot;floor&quot;``: take the closest preceding iteration.</span>
+
+<span class="sd">            * ``&quot;ceiling&quot;``: take the closest following iteration.</span>
+
+<span class="sd">            * ``&quot;round&quot;``: take the closest iteration.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        converted_iteration</span>
+<span class="sd">            Converted iteration.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">iteration_to_progress</span><span class="p">:</span>
+            <span class="c1"># round and ceiling may be one greater than e.g., len(self._saved_metamer).</span>
+            <span class="c1"># however, self.saved_metamer always has the current metamer appended, and</span>
+            <span class="c1"># so this will be okay</span>
+            <span class="k">if</span> <span class="n">store_progress_behavior</span> <span class="o">==</span> <span class="s2">&quot;floor&quot;</span><span class="p">:</span>
+                <span class="nb">iter</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">iteration</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">store_progress</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">store_progress_behavior</span> <span class="o">==</span> <span class="s2">&quot;round&quot;</span><span class="p">:</span>
+                <span class="nb">iter</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">iteration</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">store_progress</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">store_progress_behavior</span> <span class="o">==</span> <span class="s2">&quot;ceiling&quot;</span><span class="p">:</span>
+                <span class="nb">iter</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">iteration</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">store_progress</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">iter</span> <span class="o">=</span> <span class="n">iteration</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">store_progress</span>
+            <span class="c1"># this might go off the end</span>
+            <span class="k">if</span> <span class="nb">iter</span> <span class="o">&gt;=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">losses</span><span class="p">):</span>
+                <span class="nb">iter</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">losses</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="nb">iter</span>
+
+<div class="viewcode-block" id="OptimizedSynthesis.get_progress">
+<a class="viewcode-back" href="../../../api/plenoptic.synthesize.html#plenoptic.synthesize.synthesis.OptimizedSynthesis.get_progress">[docs]</a>
+    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_progress</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">iteration</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">store_progress_behavior</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;floor&quot;</span><span class="p">,</span> <span class="s2">&quot;ceiling&quot;</span><span class="p">,</span> <span class="s2">&quot;round&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;round&quot;</span><span class="p">,</span>
+        <span class="n">addt_every_iter_attributes</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[],</span>
+        <span class="n">store_progress_attributes</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[],</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">|</span> <span class="nb">int</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return dictionary summarizing synthesis progress at ``iteration``.</span>
+
+<span class="sd">        Note that for the most recent iteration (``iteration=-1`` or ``iteration=None``</span>
+<span class="sd">        or ``iteration==len(self.losses)-1``), we do not have values for</span>
+<span class="sd">        :attr:`pixel_change_norm`, :attr:`gradient_norm` or</span>
+<span class="sd">        ``addt_every_iter_attributes``, since in this case we are showing the loss and</span>
+<span class="sd">        value for the current synthesis output.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        iteration</span>
+<span class="sd">            Synthesis iteration to summarize. If ``None``, grab the most recent.</span>
+<span class="sd">            Negative values are allowed.</span>
+<span class="sd">        store_progress_behavior</span>
+
+<span class="sd">            How to determine the relevant iteration from :attr:`saved_metamer`</span>
+<span class="sd">            when synthesis was run with ``store_progress&gt;1``:</span>
+
+<span class="sd">            * ``&quot;floor&quot;``: take the closest preceding iteration.</span>
+
+<span class="sd">            * ``&quot;ceiling&quot;``: take the closest following iteration.</span>
+
+<span class="sd">            * ``&quot;round&quot;``: take the closest iteration.</span>
+
+<span class="sd">        addt_every_iter_attributes</span>
+<span class="sd">            Additional attributes that have values appended every iteration.</span>
+<span class="sd">            ``losses``, ``pixel_change_norm`` and ``gradient_norm`` are always</span>
+<span class="sd">            included.</span>
+<span class="sd">        store_progress_attributes</span>
+<span class="sd">            Attributes that have values appended every ``self.store_progress``</span>
+<span class="sd">            iterations (and may thus be ``None``).</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        progress_info</span>
+<span class="sd">            Dictionary summarizing synthesis progress.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        IndexError</span>
+<span class="sd">            If ``iteration`` takes an illegal value.</span>
+
+<span class="sd">        Warns</span>
+<span class="sd">        -----</span>
+<span class="sd">        UserWarning</span>
+<span class="sd">            If the iteration used for ``store_progress_attributes`` is not the same as</span>
+<span class="sd">            the argument ``iteration`` (because e.g., you set ``iteration=3`` but</span>
+<span class="sd">            ``self.store_progress=2``).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">iteration</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="nb">iter</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">losses</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
+        <span class="k">elif</span> <span class="n">iteration</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="nb">iter</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">losses</span><span class="p">)</span> <span class="o">+</span> <span class="n">iteration</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">iter</span> <span class="o">=</span> <span class="n">iteration</span>
+
+        <span class="k">if</span> <span class="nb">iter</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="c1"># if this is negative after our remapping above, then it was too large</span>
+            <span class="c1"># and it wrapped around again (e.g., -100 when there were only 90</span>
+            <span class="c1"># iterations)</span>
+            <span class="k">raise</span> <span class="ne">IndexError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">iteration</span><span class="si">=}</span><span class="s2"> out of bounds with &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">losses</span><span class="p">)</span><span class="si">}</span><span class="s2"> iterations of synthesis&quot;</span>
+            <span class="p">)</span>
+
+        <span class="c1"># len(self.losses) is the number of synthesis iterations plus 1 (for the current</span>
+        <span class="c1"># loss), so we grab the hidden version, which has the proper length</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">loss</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">losses</span><span class="p">[</span><span class="nb">iter</span><span class="p">]</span>
+        <span class="k">except</span> <span class="ne">IndexError</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">IndexError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">iteration</span><span class="si">=}</span><span class="s2"> out of bounds with &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">losses</span><span class="p">)</span><span class="si">}</span><span class="s2"> iterations of synthesis&quot;</span>
+            <span class="p">)</span>
+        <span class="n">progress_info</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;losses&quot;</span><span class="p">:</span> <span class="n">loss</span><span class="p">,</span> <span class="s2">&quot;iteration&quot;</span><span class="p">:</span> <span class="nb">iter</span><span class="p">}</span>
+        <span class="c1"># then this is the most recent one, which we don&#39;t have pixel_change_norm or</span>
+        <span class="c1"># gradient_norm for</span>
+        <span class="k">if</span> <span class="nb">iter</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">losses</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">progress_info</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;pixel_change_norm&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;gradient_norm&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">})</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">progress_info</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
+                <span class="p">{</span>
+                    <span class="s2">&quot;pixel_change_norm&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">pixel_change_norm</span><span class="p">[</span><span class="nb">iter</span><span class="p">],</span>
+                    <span class="s2">&quot;gradient_norm&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">gradient_norm</span><span class="p">[</span><span class="nb">iter</span><span class="p">],</span>
+                <span class="p">}</span>
+            <span class="p">)</span>
+        <span class="n">progress_info</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
+            <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="p">)[</span><span class="nb">iter</span><span class="p">]</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">addt_every_iter_attributes</span><span class="p">}</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">store_progress</span><span class="p">:</span>
+            <span class="c1"># treat None special: always grab current one</span>
+            <span class="k">if</span> <span class="n">iteration</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">store_progress_iter</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">store_progress_iter</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_convert_iteration</span><span class="p">(</span>
+                    <span class="nb">iter</span><span class="p">,</span> <span class="n">store_progress_behavior</span><span class="o">=</span><span class="n">store_progress_behavior</span>
+                <span class="p">)</span>
+            <span class="n">progress_info</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
+                <span class="p">{</span>
+                    <span class="n">k</span><span class="p">:</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="p">)[</span><span class="n">store_progress_iter</span><span class="p">]</span>
+                    <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">store_progress_attributes</span>
+                <span class="p">}</span>
+            <span class="p">)</span>
+            <span class="c1"># treat None special: always grab current one</span>
+            <span class="k">if</span> <span class="n">iteration</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">store_progress_iter</span> <span class="o">=</span> <span class="nb">iter</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">store_progress_iter</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_convert_iteration</span><span class="p">(</span>
+                    <span class="n">store_progress_iter</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="n">store_progress_behavior</span>
+                <span class="p">)</span>
+            <span class="k">if</span> <span class="n">store_progress_iter</span> <span class="o">!=</span> <span class="nb">iter</span><span class="p">:</span>
+                <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;loss iteration and iteration for </span><span class="si">{</span><span class="n">store_progress_attributes</span><span class="si">}</span><span class="s2"> are&quot;</span>
+                    <span class="s2">&quot; not the same&quot;</span>
+                <span class="p">)</span>
+            <span class="n">progress_info</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;store_progress_iteration&quot;</span><span class="p">:</span> <span class="n">store_progress_iter</span><span class="p">})</span>
+        <span class="k">return</span> <span class="n">progress_info</span></div>
+
+
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">range_penalty_lambda</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Magnitude of the penalty on pixel values outside :attr:`allowed_range`.&quot;&quot;&quot;</span>
@@ -887,7 +1086,10 @@
                 <span class="c1"># compute current loss, no need to compute gradient</span>
                 <span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
                     <span class="n">current_loss</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">objective_function</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
-            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="k">except</span> <span class="ne">RuntimeError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="n">exp_msg</span> <span class="o">=</span> <span class="s2">&quot;a Tensor with 0 elements cannot be converted to Scalar&quot;</span>
+                <span class="k">if</span> <span class="n">e</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="n">exp_msg</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="n">e</span>
                 <span class="c1"># this will happen if setup() has not been called and so we can&#39;t</span>
                 <span class="c1"># compute loss because synthesis hasn&#39;t been initialized.</span>
                 <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>

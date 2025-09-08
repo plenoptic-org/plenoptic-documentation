@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Synthesis object design &mdash; plenoptic 1.3.1.dev300 documentation</title>
+  <title>Synthesis object design &mdash; plenoptic 1.3.1.dev310 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="_static/plot_directive.css" />
@@ -19,7 +19,7 @@
   
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="_static/documentation_options.js?v=1063d8e4"></script>
+      <script src="_static/documentation_options.js?v=74ac08a0"></script>
       <script src="_static/doctools.js?v=9bcbadda"></script>
       <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="_static/clipboard.min.js?v=a7894cd8"></script>
@@ -93,7 +93,7 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="tips.html">Tips and Tricks</a></li>
-<li class="toctree-l1"><a class="reference internal" href="reproducibility.html">Reproducibility</a></li>
+<li class="toctree-l1"><a class="reference internal" href="reproducibility.html">Reproducibility and Compatibility</a></li>
 <li class="toctree-l1"><a class="reference internal" href="api/modules.html">API Documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tutorials/advanced/Display.html">Display and animate functions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tutorials/advanced/Synthesis_extensions.html">Extending existing synthesis objects</a></li>
@@ -173,6 +173,7 @@
 <li><p>the object may have a <code class="docutils literal notranslate"><span class="pre">_closure</span></code> method, which performs the gradient calculation. This (when passed to <code class="docutils literal notranslate"><span class="pre">optimizer.step</span></code> during the synthesis loop in <code class="docutils literal notranslate"><span class="pre">synthesize</span></code> <!-- skip-lint -->) enables optimization algorithms that perform several evaluations of the gradient before taking a step (e.g., second-order methods). See <code class="docutils literal notranslate"><span class="pre">OptimizedSynthesis._closure</span></code> for the simplest version of this.</p></li>
 <li><p>the <code class="docutils literal notranslate"><span class="pre">synthesize</span></code> <!-- skip-lint --> method should accept a <code class="docutils literal notranslate"><span class="pre">store_progress</span></code> argument, which optionally stores additional information over iteration, such as the synthesis output-in-progress. <a class="reference internal" href="api/plenoptic.synthesize.html#plenoptic.synthesize.synthesis.OptimizedSynthesis" title="plenoptic.synthesize.synthesis.OptimizedSynthesis"><code class="xref py py-class docutils literal notranslate"><span class="pre">OptimizedSynthesis</span></code></a> has a setter method for this attribute, which will ensure things are correct. This argument can be an integer (in which case, the attributes are updated every <code class="docutils literal notranslate"><span class="pre">store_progress</span></code> <!-- skip-lint --> iterations), <code class="docutils literal notranslate"><span class="pre">True</span></code> (same behavior as <code class="docutils literal notranslate"><span class="pre">1</span></code>), or <code class="docutils literal notranslate"><span class="pre">False</span></code> (no updating of attributes). This should probably be done in a method named <code class="docutils literal notranslate"><span class="pre">_store</span></code>.</p></li>
 <li><p>the <code class="docutils literal notranslate"><span class="pre">synthesize</span></code> <!-- skip-lint --> method should be callable multiple times with the same object, in which case progress is resumed. On all subsequent calls, <code class="docutils literal notranslate"><span class="pre">store_progress</span></code> <!-- skip-lint -->, <code class="docutils literal notranslate"><span class="pre">stop_criterion</span></code>, and <code class="docutils literal notranslate"><span class="pre">stop_iters_to_check</span></code> must have the same values.</p></li>
+<li><p>must implement <code class="docutils literal notranslate"><span class="pre">get_progress</span></code> <!-- skip-lint --> method, which calls the superclass version of that method, specifying the names of the attributes that are updated every iteration and every <code class="docutils literal notranslate"><span class="pre">store_progress</span></code> <!-- skip-lint --> iterations.</p></li>
 </ul>
 </section>
 <section id="how-to-order-methods">
