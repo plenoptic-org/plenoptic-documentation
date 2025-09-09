@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>plenoptic.synthesize.metamer &mdash; plenoptic 1.3.1.dev313 documentation</title>
+  <title>plenoptic.synthesize.metamer &mdash; plenoptic 1.3.1.dev317 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/plot_directive.css" />
@@ -18,7 +18,7 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=435482ca"></script>
+      <script src="../../../_static/documentation_options.js?v=bf25986d"></script>
       <script src="../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -1148,6 +1148,7 @@
         <span class="c1"># if setup hasn&#39;t been called manually, call it now.</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_metamer</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_scheduler</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">setup</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_current_loss</span> <span class="o">=</span> <span class="kc">None</span>
 
         <span class="c1"># get ready to store progress</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">store_progress</span> <span class="o">=</span> <span class="n">store_progress</span>
@@ -1171,6 +1172,10 @@
             <span class="p">):</span>
                 <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Loss has converged, stopping synthesis&quot;</span><span class="p">)</span>
                 <span class="k">break</span>
+
+        <span class="c1"># compute current loss, no need to compute gradient</span>
+        <span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_current_loss</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">objective_function</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
 
         <span class="n">pbar</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
 
@@ -1238,14 +1243,17 @@
             <span class="c1"># Reset ctf target representation for the next update</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_ctf_target_representation</span> <span class="o">=</span> <span class="kc">None</span>
 
+        <span class="c1"># the loss returned by objective_function is from *before* updating the metamer,</span>
+        <span class="c1"># so to compute the equivalent for display purposes, we need to call this before</span>
+        <span class="c1"># calling step()</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">scales</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;all&quot;</span><span class="p">:</span>
+            <span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
+                <span class="n">overall_loss</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">objective_function</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+
         <span class="n">loss</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_closure</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">scales</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;all&quot;</span><span class="p">:</span>
             <span class="c1"># then the loss computed above includes all scales</span>
             <span class="n">overall_loss</span> <span class="o">=</span> <span class="n">loss</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="c1"># then we compute it for display purposes</span>
-            <span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
-                <span class="n">overall_loss</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">objective_function</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_scales_loss</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">loss</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_losses</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">overall_loss</span><span class="p">)</span>
