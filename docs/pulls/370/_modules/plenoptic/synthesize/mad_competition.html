@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>plenoptic.synthesize.mad_competition &mdash; plenoptic 1.3.1.dev321 documentation</title>
+  <title>plenoptic.synthesize.mad_competition &mdash; plenoptic 1.3.1.dev324 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/plot_directive.css" />
@@ -18,7 +18,7 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=7d84fc75"></script>
+      <script src="../../../_static/documentation_options.js?v=258d62cb"></script>
       <script src="../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -517,7 +517,7 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">get_progress</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">iteration</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
-        <span class="n">store_progress_behavior</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;floor&quot;</span><span class="p">,</span> <span class="s2">&quot;ceiling&quot;</span><span class="p">,</span> <span class="s2">&quot;round&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;round&quot;</span><span class="p">,</span>
+        <span class="n">iteration_selection</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;floor&quot;</span><span class="p">,</span> <span class="s2">&quot;ceiling&quot;</span><span class="p">,</span> <span class="s2">&quot;round&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;round&quot;</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Return dictionary summarizing synthesis progress at ``iteration``.</span>
@@ -529,7 +529,7 @@
 <span class="sd">        :attr:`saved_mad_image`), then that key will be missing. If synthesis was</span>
 <span class="sd">        run with ``store_progress&gt;1``, we will grab the corresponding tensor</span>
 <span class="sd">        from :attr:`saved_mad_image`, with behavior determined by</span>
-<span class="sd">        ``store_progress_behavior``.</span>
+<span class="sd">        ``iteration_selection``.</span>
 
 <span class="sd">        The returned dictionary will additionally contain the keys:</span>
 
@@ -551,7 +551,7 @@
 <span class="sd">        iteration</span>
 <span class="sd">            Synthesis iteration to summarize. If ``None``, grab the most recent.</span>
 <span class="sd">            Negative values are allowed.</span>
-<span class="sd">        store_progress_behavior</span>
+<span class="sd">        iteration_selection</span>
 
 <span class="sd">            How to determine the relevant iteration from :attr:`saved_mad_image`</span>
 <span class="sd">            when synthesis was run with ``store_progress&gt;1``:</span>
@@ -581,7 +581,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">get_progress</span><span class="p">(</span>
             <span class="n">iteration</span><span class="p">,</span>
-            <span class="n">store_progress_behavior</span><span class="p">,</span>
+            <span class="n">iteration_selection</span><span class="p">,</span>
             <span class="p">[</span><span class="s2">&quot;reference_metric_loss&quot;</span><span class="p">,</span> <span class="s2">&quot;optimized_metric_loss&quot;</span><span class="p">],</span>
             <span class="n">store_progress_attributes</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;saved_mad_image&quot;</span><span class="p">],</span>
         <span class="p">)</span></div>
@@ -1097,7 +1097,9 @@
 <span class="sd">        attempt to find the best value ourselves.</span>
 <span class="sd">    iteration</span>
 <span class="sd">        Which iteration to display. If ``None``, we show the most recent one.</span>
-<span class="sd">        Negative values are also allowed.</span>
+<span class="sd">        Negative values are also allowed. If ``iteration!=None`` and</span>
+<span class="sd">        ``mad.store_progress&gt;1`` (that is, the MAD image was not cached on every</span>
+<span class="sd">        iteration), then we show the cached MAD image from the nearest iteration.</span>
 <span class="sd">    ax</span>
 <span class="sd">        Pre-existing axes for plot. If ``None``, we call :func:`matplotlib.pyplot.gca`.</span>
 <span class="sd">    title</span>
@@ -1189,7 +1191,9 @@
 <span class="sd">        channels (assumed use-case is RGB(A) images).</span>
 <span class="sd">    iteration</span>
 <span class="sd">        Which iteration to display. If ``None``, we show the most recent one.</span>
-<span class="sd">        Negative values are also allowed.</span>
+<span class="sd">        Negative values are also allowed. If ``iteration!=None`` and</span>
+<span class="sd">        ``mad.store_progress&gt;1`` (that is, the MAD image was not cached on every</span>
+<span class="sd">        iteration), then we use the cached MAD image from the nearest iteration.</span>
 <span class="sd">    ylim</span>
 <span class="sd">        If tuple, the ylimit to set for this axis. If ``False``, we leave</span>
 <span class="sd">        it untouched.</span>
@@ -1471,8 +1475,10 @@
 <span class="sd">        Which index to take from the channel dimension. If ``None``, we use all</span>
 <span class="sd">        channels (assumed use-case is RGB(A) image).</span>
 <span class="sd">    iteration</span>
-<span class="sd">        Which iteration to display. If ``None``, we show</span>
-<span class="sd">        the most recent one. Negative values are also allowed.</span>
+<span class="sd">        Which iteration to display. If ``None``, we show the most recent one.</span>
+<span class="sd">        Negative values are also allowed. If ``iteration!=None`` and</span>
+<span class="sd">        ``mad.store_progress&gt;1`` (that is, the MAD image was not cached on every</span>
+<span class="sd">        iteration), then we use the cached MAD image from the nearest iteration.</span>
 <span class="sd">    vrange</span>
 <span class="sd">        The vrange option to pass to ``display_mad_image()``. See</span>
 <span class="sd">        docstring of :func:`~plenoptic.tools.display.imshow` for possible values.</span>
