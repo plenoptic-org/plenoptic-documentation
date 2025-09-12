@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>plenoptic.synthesize package &mdash; plenoptic 1.3.1.dev324 documentation</title>
+  <title>plenoptic.synthesize package &mdash; plenoptic 1.3.1.dev325 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css" />
@@ -19,7 +19,7 @@
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../_static/documentation_options.js?v=258d62cb"></script>
+      <script src="../_static/documentation_options.js?v=81f5e6d2"></script>
       <script src="../_static/doctools.js?v=9bcbadda"></script>
       <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -897,12 +897,18 @@ showing the loss and value for the current MAD image.</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>iteration</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></span>) – Synthesis iteration to summarize. If <code class="docutils literal notranslate"><span class="pre">None</span></code>, grab the most recent.
 Negative values are allowed.</p></li>
-<li><p><strong>iteration_selection</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Literal" title="(in Python v3.13)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Literal</span></code></a>[<code class="docutils literal notranslate"><span class="pre">'floor'</span></code>, <code class="docutils literal notranslate"><span class="pre">'ceiling'</span></code>, <code class="docutils literal notranslate"><span class="pre">'round'</span></code>]</span>) – <p>How to determine the relevant iteration from <a class="reference internal" href="#plenoptic.synthesize.mad_competition.MADCompetition.saved_mad_image" title="plenoptic.synthesize.mad_competition.MADCompetition.saved_mad_image"><code class="xref py py-attr docutils literal notranslate"><span class="pre">saved_mad_image</span></code></a>
-when synthesis was run with <code class="docutils literal notranslate"><span class="pre">store_progress&gt;1</span></code>:</p>
+<li><p><strong>iteration_selection</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Literal" title="(in Python v3.13)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Literal</span></code></a>[<code class="docutils literal notranslate"><span class="pre">'floor'</span></code>, <code class="docutils literal notranslate"><span class="pre">'ceiling'</span></code>, <code class="docutils literal notranslate"><span class="pre">'round'</span></code>]</span>) – <p>How to select the relevant iteration from <a class="reference internal" href="#plenoptic.synthesize.mad_competition.MADCompetition.saved_mad_image" title="plenoptic.synthesize.mad_competition.MADCompetition.saved_mad_image"><code class="xref py py-attr docutils literal notranslate"><span class="pre">saved_mad_image</span></code></a>
+when the request iteration wasn’t stored.</p>
+<p>When synthesis was run with <code class="docutils literal notranslate"><span class="pre">store_progress=n</span></code> (where <code class="docutils literal notranslate"><span class="pre">n&gt;1</span></code>),
+MAD images are only saved every <code class="docutils literal notranslate"><span class="pre">n</span></code> iterations. If you request an
+iteration where a MAD image wasn’t saved, this determines which available
+iteration is used instead:</p>
 <ul>
-<li><p><code class="docutils literal notranslate"><span class="pre">&quot;floor&quot;</span></code>: take the closest preceding iteration.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">&quot;ceiling&quot;</span></code>: take the closest following iteration.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">&quot;round&quot;</span></code>: take the closest iteration.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;floor&quot;</span></code>: use the closest saved iteration <strong>before</strong> the
+requested one.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;ceiling&quot;</span></code>: use the closest saved iteration <strong>after</strong> the
+requested one.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;round&quot;</span></code>: use the closest saved iteration.</p></li>
 </ul>
 </p></li>
 </ul>
@@ -2801,12 +2807,18 @@ value for the current synthesis output.</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>iteration</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a> | <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span>) – Synthesis iteration to summarize. If <code class="docutils literal notranslate"><span class="pre">None</span></code>, grab the most recent.
 Negative values are allowed.</p></li>
-<li><p><strong>iteration_selection</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Literal" title="(in Python v3.13)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Literal</span></code></a>[<code class="docutils literal notranslate"><span class="pre">'floor'</span></code>, <code class="docutils literal notranslate"><span class="pre">'ceiling'</span></code>, <code class="docutils literal notranslate"><span class="pre">'round'</span></code>]</span>) – <p>How to determine the relevant iteration from <code class="xref py py-attr docutils literal notranslate"><span class="pre">saved_metamer</span></code>
-when synthesis was run with <code class="docutils literal notranslate"><span class="pre">store_progress&gt;1</span></code>:</p>
+<li><p><strong>iteration_selection</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Literal" title="(in Python v3.13)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Literal</span></code></a>[<code class="docutils literal notranslate"><span class="pre">'floor'</span></code>, <code class="docutils literal notranslate"><span class="pre">'ceiling'</span></code>, <code class="docutils literal notranslate"><span class="pre">'round'</span></code>]</span>) – <p>How to select the relevant iteration from the saved synthesis attribute
+when the request iteration wasn’t stored.</p>
+<p>When synthesis was run with <code class="docutils literal notranslate"><span class="pre">store_progress=n</span></code> (where <code class="docutils literal notranslate"><span class="pre">n&gt;1</span></code>),
+synthesis outputs are only saved every <code class="docutils literal notranslate"><span class="pre">n</span></code> iterations. If you request an
+iteration where synthesis wasn’t saved, this determines which available
+iteration is used instead:</p>
 <ul>
-<li><p><code class="docutils literal notranslate"><span class="pre">&quot;floor&quot;</span></code>: take the closest preceding iteration.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">&quot;ceiling&quot;</span></code>: take the closest following iteration.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">&quot;round&quot;</span></code>: take the closest iteration.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;floor&quot;</span></code>: use the closest saved iteration <strong>before</strong> the
+requested one.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;ceiling&quot;</span></code>: use the closest saved iteration <strong>after</strong> the
+requested one.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;round&quot;</span></code>: use the closest saved iteration.</p></li>
 </ul>
 </p></li>
 <li><p><strong>addt_every_iter_attributes</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>]</span>) – Additional attributes that have values appended every iteration.

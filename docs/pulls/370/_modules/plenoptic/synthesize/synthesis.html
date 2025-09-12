@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>plenoptic.synthesize.synthesis &mdash; plenoptic 1.3.1.dev324 documentation</title>
+  <title>plenoptic.synthesize.synthesis &mdash; plenoptic 1.3.1.dev325 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/plot_directive.css" />
@@ -18,7 +18,7 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=258d62cb"></script>
+      <script src="../../../_static/documentation_options.js?v=81f5e6d2"></script>
       <script src="../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -895,14 +895,21 @@
 <span class="sd">            ``iteration * self.store_progress``).</span>
 <span class="sd">        iteration_selection</span>
 
-<span class="sd">            How to handle the situations where ``iteration`` is not evenly</span>
-<span class="sd">            divided by ``self.store_progress``:</span>
+<span class="sd">            How to select the relevant iteration from the saved synthesis attribute</span>
+<span class="sd">            when the request iteration wasn&#39;t stored.</span>
 
-<span class="sd">            * ``&quot;floor&quot;``: take the closest preceding iteration.</span>
+<span class="sd">            When synthesis was run with ``store_progress=n`` (where ``n&gt;1``),</span>
+<span class="sd">            synthesis outputs are only saved every ``n`` iterations. If you request an</span>
+<span class="sd">            iteration where synthesis wasn&#39;t saved, this determines which available</span>
+<span class="sd">            iteration is used instead:</span>
 
-<span class="sd">            * ``&quot;ceiling&quot;``: take the closest following iteration.</span>
+<span class="sd">            * ``&quot;floor&quot;``: use the closest saved iteration **before** the</span>
+<span class="sd">              requested one.</span>
 
-<span class="sd">            * ``&quot;round&quot;``: take the closest iteration.</span>
+<span class="sd">            * ``&quot;ceiling&quot;``: use the closest saved iteration **after** the</span>
+<span class="sd">              requested one.</span>
+
+<span class="sd">            * ``&quot;round&quot;``: use the closest saved iteration.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -952,14 +959,21 @@
 <span class="sd">            Negative values are allowed.</span>
 <span class="sd">        iteration_selection</span>
 
-<span class="sd">            How to determine the relevant iteration from :attr:`saved_metamer`</span>
-<span class="sd">            when synthesis was run with ``store_progress&gt;1``:</span>
+<span class="sd">            How to select the relevant iteration from the saved synthesis attribute</span>
+<span class="sd">            when the request iteration wasn&#39;t stored.</span>
 
-<span class="sd">            * ``&quot;floor&quot;``: take the closest preceding iteration.</span>
+<span class="sd">            When synthesis was run with ``store_progress=n`` (where ``n&gt;1``),</span>
+<span class="sd">            synthesis outputs are only saved every ``n`` iterations. If you request an</span>
+<span class="sd">            iteration where synthesis wasn&#39;t saved, this determines which available</span>
+<span class="sd">            iteration is used instead:</span>
 
-<span class="sd">            * ``&quot;ceiling&quot;``: take the closest following iteration.</span>
+<span class="sd">            * ``&quot;floor&quot;``: use the closest saved iteration **before** the</span>
+<span class="sd">              requested one.</span>
 
-<span class="sd">            * ``&quot;round&quot;``: take the closest iteration.</span>
+<span class="sd">            * ``&quot;ceiling&quot;``: use the closest saved iteration **after** the</span>
+<span class="sd">              requested one.</span>
+
+<span class="sd">            * ``&quot;round&quot;``: use the closest saved iteration.</span>
 
 <span class="sd">        addt_every_iter_attributes</span>
 <span class="sd">            Additional attributes that have values appended every iteration.</span>
@@ -1126,7 +1140,7 @@
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        store_progress : bool or int, optional</span>
-<span class="sd">            Whether we should store the metamer image in progress on every</span>
+<span class="sd">            Whether we should store the synthesis output in progress on every</span>
 <span class="sd">            iteration. If ``False``, we don&#39;t save anything. If ``True``, we save</span>
 <span class="sd">            every iteration. If an int, we save every ``store_progress`` iterations</span>
 <span class="sd">            (note then that 0 is the same as ``False`` and 1 the same as ``True``).</span>
