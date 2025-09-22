@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>plenoptic.synthesize.metamer &mdash; plenoptic 1.3.1.dev332 documentation</title>
+  <title>plenoptic.synthesize.metamer &mdash; plenoptic 1.3.1.dev339 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/plot_directive.css" />
@@ -18,7 +18,7 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=2eb3a65b"></script>
+      <script src="../../../_static/documentation_options.js?v=3ad81f3e"></script>
       <script src="../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -1384,6 +1384,56 @@
 <span class="sd">        &quot;&quot;&quot;</span>  <span class="c1"># noqa: E501</span>
         <span class="n">loss_conv</span> <span class="o">=</span> <span class="n">loss_convergence</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stop_criterion</span><span class="p">,</span> <span class="n">stop_iters_to_check</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">loss_conv</span> <span class="ow">and</span> <span class="n">coarse_to_fine_enough</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">ctf_iters_to_check</span><span class="p">)</span>
+
+<div class="viewcode-block" id="MetamerCTF.to">
+<a class="viewcode-back" href="../../../api/plenoptic.synthesize.html#plenoptic.synthesize.metamer.MetamerCTF.to">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">):</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Move and/or cast the parameters and buffers.</span>
+
+<span class="sd">        This can be called as</span>
+
+<span class="sd">        .. function:: to(device=None, dtype=None, non_blocking=False)</span>
+
+<span class="sd">        .. function:: to(dtype, non_blocking=False)</span>
+
+<span class="sd">        .. function:: to(tensor, non_blocking=False)</span>
+
+<span class="sd">        Its signature is similar to :meth:`torch.Tensor.to`, but only accepts</span>
+<span class="sd">        floating point desired :attr:`dtype` s. In addition, this method will</span>
+<span class="sd">        only cast the floating point parameters and buffers to :attr:`dtype`</span>
+<span class="sd">        (if given). The integral parameters and buffers will be moved</span>
+<span class="sd">        :attr:`device`, if that is given, but with dtypes unchanged. When</span>
+<span class="sd">        :attr:`non_blocking` is set, it tries to convert/move asynchronously</span>
+<span class="sd">        with respect to the host if possible, e.g., moving CPU Tensors with</span>
+<span class="sd">        pinned memory to CUDA devices.</span>
+
+<span class="sd">        See :meth:`torch.nn.Module.to` for examples.</span>
+
+<span class="sd">        .. note::</span>
+<span class="sd">            This method modifies the module in-place.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        device : torch.device</span>
+<span class="sd">            The desired device of the parameters and buffers in this module.</span>
+<span class="sd">        dtype : torch.dtype</span>
+<span class="sd">            The desired floating point type of the floating point parameters and</span>
+<span class="sd">            buffers in this module.</span>
+<span class="sd">        tensor : torch.Tensor</span>
+<span class="sd">            Tensor whose dtype and device are the desired dtype and device for</span>
+<span class="sd">            all parameters and buffers in this module.</span>
+<span class="sd">        &quot;&quot;&quot;</span>  <span class="c1"># numpydoc ignore=PR01,PR02</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="c1"># if synthesize has been called at least once and we have not finished moving</span>
+        <span class="c1"># through all scales, _ctf_target_representation will be a Tensor which get</span>
+        <span class="c1"># passed to objective_function at some point. thus, need to make sure it&#39;s also</span>
+        <span class="c1"># updated.</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ctf_target_representation</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_ctf_target_representation</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ctf_target_representation</span><span class="o">.</span><span class="n">to</span><span class="p">(</span>
+                <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
+            <span class="p">)</span></div>
+
 
 <div class="viewcode-block" id="MetamerCTF.load">
 <a class="viewcode-back" href="../../../api/plenoptic.synthesize.html#plenoptic.synthesize.metamer.MetamerCTF.load">[docs]</a>
