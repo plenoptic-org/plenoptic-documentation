@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>plenoptic.simulate.models.portilla_simoncelli &mdash; plenoptic 1.3.2.dev9 documentation</title>
+  <title>plenoptic.simulate.models.portilla_simoncelli &mdash; plenoptic 1.3.2.dev55 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/plot_directive.css" />
@@ -18,7 +18,7 @@
   
       <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../../_static/documentation_options.js?v=87c1d3f3"></script>
+      <script src="../../../../_static/documentation_options.js?v=dfd67d65"></script>
       <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -908,10 +908,7 @@
         <span class="c1"># This is a list of tensors, one for each scale, where each tensor is</span>
         <span class="c1"># of shape (batch, channel, n_orientations, height, width) (note that</span>
         <span class="c1"># height and width halves on each scale)</span>
-        <span class="n">coeffs_list</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">pyr_coeffs</span><span class="p">[(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">)]</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_orientations</span><span class="p">)],</span> <span class="mi">2</span><span class="p">)</span>
-            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_scales</span><span class="p">)</span>
-        <span class="p">]</span>
+        <span class="n">coeffs_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">pyr_coeffs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_scales</span><span class="p">)]</span>
         <span class="k">return</span> <span class="n">pyr_coeffs</span><span class="p">,</span> <span class="n">coeffs_list</span><span class="p">,</span> <span class="n">highpass</span><span class="p">,</span> <span class="n">lowpass</span>
 
     <span class="nd">@staticmethod</span>
@@ -950,7 +947,7 @@
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">_compute_intermediate_representations</span><span class="p">(</span>
-        <span class="n">pyr_coeffs</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span>
+        <span class="n">pyr_coeffs</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Tensor</span><span class="p">],</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="n">Tensor</span><span class="p">],</span> <span class="nb">list</span><span class="p">[</span><span class="n">Tensor</span><span class="p">]]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Compute useful intermediate representations.</span>
@@ -1072,12 +1069,14 @@
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
                 <span class="s2">&quot;coeffs_list must contain tensors of either 4 or 5 dimensions!&quot;</span>
             <span class="p">)</span>
-        <span class="n">acs</span> <span class="o">=</span> <span class="p">[</span><span class="n">signal</span><span class="o">.</span><span class="n">autocorrelation</span><span class="p">(</span><span class="n">coeff</span><span class="p">)</span> <span class="k">for</span> <span class="n">coeff</span> <span class="ow">in</span> <span class="n">coeffs_list</span><span class="p">]</span>
-        <span class="n">var</span> <span class="o">=</span> <span class="p">[</span><span class="n">signal</span><span class="o">.</span><span class="n">center_crop</span><span class="p">(</span><span class="n">ac</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">ac</span> <span class="ow">in</span> <span class="n">acs</span><span class="p">]</span>
-        <span class="n">acs</span> <span class="o">=</span> <span class="p">[</span><span class="n">ac</span> <span class="o">/</span> <span class="n">v</span> <span class="k">for</span> <span class="n">ac</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">acs</span><span class="p">,</span> <span class="n">var</span><span class="p">)]</span>
-        <span class="n">var</span> <span class="o">=</span> <span class="n">einops</span><span class="o">.</span><span class="n">rearrange</span><span class="p">(</span><span class="n">var</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;s b c </span><span class="si">{</span><span class="n">dims</span><span class="si">}</span><span class="s2"> 1 1 -&gt; b c </span><span class="si">{</span><span class="n">dims</span><span class="si">}</span><span class="s2"> s&quot;</span><span class="p">)</span>
-        <span class="n">acs</span> <span class="o">=</span> <span class="p">[</span><span class="n">signal</span><span class="o">.</span><span class="n">center_crop</span><span class="p">(</span><span class="n">ac</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">spatial_corr_width</span><span class="p">)</span> <span class="k">for</span> <span class="n">ac</span> <span class="ow">in</span> <span class="n">acs</span><span class="p">]</span>
+        <span class="n">acs</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">signal</span><span class="o">.</span><span class="n">center_crop</span><span class="p">(</span><span class="n">signal</span><span class="o">.</span><span class="n">autocorrelation</span><span class="p">(</span><span class="n">coeff</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">spatial_corr_width</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">coeff</span> <span class="ow">in</span> <span class="n">coeffs_list</span>
+        <span class="p">]</span>
         <span class="n">acs</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="n">acs</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="n">var</span> <span class="o">=</span> <span class="n">signal</span><span class="o">.</span><span class="n">center_crop</span><span class="p">(</span><span class="n">acs</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">acs</span> <span class="o">=</span> <span class="n">acs</span> <span class="o">/</span> <span class="n">var</span>
+        <span class="n">var</span> <span class="o">=</span> <span class="n">einops</span><span class="o">.</span><span class="n">rearrange</span><span class="p">(</span><span class="n">var</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;b c s </span><span class="si">{</span><span class="n">dims</span><span class="si">}</span><span class="s2"> 1 1 -&gt; b c </span><span class="si">{</span><span class="n">dims</span><span class="si">}</span><span class="s2"> s&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">einops</span><span class="o">.</span><span class="n">rearrange</span><span class="p">(</span><span class="n">acs</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;b c s </span><span class="si">{</span><span class="n">dims</span><span class="si">}</span><span class="s2"> a1 a2 -&gt; b c a1 a2 </span><span class="si">{</span><span class="n">dims</span><span class="si">}</span><span class="s2"> s&quot;</span><span class="p">),</span> <span class="n">var</span>
 
     <span class="nd">@staticmethod</span>
