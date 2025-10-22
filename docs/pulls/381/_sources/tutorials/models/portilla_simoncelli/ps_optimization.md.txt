@@ -19,6 +19,8 @@ For the texture model, good metamer synthesis also means that, when your target 
 
 In an ideal world, these criteria would be identical to "has a low loss value". However, the Portilla-Simoncelli texture statistics are not all of equal perceptual importance: the **variance of the highpass residuals**, for example, is related to the presence of high frequencies in the image, where are present in the white noise samples used to initialize metamer synthesis, but which are largely absent from natural images. This statistic only makes a small contribution to the overall loss, but is very important to metamer perceptual quality, which is important for the results laid out in this notebook.
 
+And note, as discussed in [](ps-limitations), this model was developed to align with human perception **only for textures**. Matching the Portilla-Simoncelli model output on a non-texture image will almost certainly not meet the first two desiderata in the list above.
+
 :::
 
 ## Optimizer configuration
@@ -54,6 +56,22 @@ As mentioned, increasing `history_size` leads to more memory being used. In our 
 Finally, as with all iterative optimization procedures, we must decide how long to run synthesis for. In our experiments, for 10 to 200 iterations, the loss decreases as approximately one over the number of iterations, and the synthesis duration (in [wall time](https://en.wikipedia.org/wiki/Elapsed_real_time)) increases approximately linearly with the number of iterations (the exact duration will depend on your hardware). For our documentation and tests, we have decided to use `max_iter=100`, though users may want to run synthesis for longer.
 
 If you are interested, more details about the experiments that lead to the above recommendations can be found in [Issue #365](https://github.com/plenoptic-org/plenoptic/issues/365).
+
+(threads)=
+## Threads and CPU efficiency
+
+PyTorch allows users to control the number of [threads](https://en.wikipedia.org/wiki/Thread_(computing)) used for parallelism on the CPU. By default, pytorch seems to be greedy, grabbing more threads than are helpful, especially if you are running several less memory-intensive jobs (like Portilla-Simoncelli metamer synthesis) at once. This problem is exacerbated when using the LBFGS optimizer.
+
+Thus, we have found that CPU-only performance can be increased by about three times when doing the following to restrict the number of threads:
+
+- Put {func}`torch.set_num_threads(1) <torch.set_num_threads>` at the top of your script.
+- Set the `OMP_NUM_THREADS` environment variable to 1 (this controls the number of threads available to [OpenMP]((https://docs.pytorch.org/tutorials/recipes/recipes/tuning_guide.html#utilize-openmp))). This can be done on the command-line by prepending `OMP_NUM_THREADS=1` before calling python (or ipython or jupyter or however you run your scripts), e.g., `OMP_NUM_THREADS=1 python my_awesome_script.py` or by adding the following at the top of your script:
+    ```{code-block} python
+    import os
+    os.environ["OMP_NUM_THREADS"] = 1
+    ```
+
+In practice, you are encouraged to experiment with the two above settings to find the best configuration for your problem.
 
 (ps-loss-function)=
 ## Custom loss function

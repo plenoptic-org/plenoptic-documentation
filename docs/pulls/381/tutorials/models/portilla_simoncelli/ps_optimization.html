@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Portilla-Simoncelli optimization details &mdash; plenoptic 1.3.2.dev90 documentation</title>
+  <title>Portilla-Simoncelli optimization details &mdash; plenoptic 1.3.2.dev98 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/plot_directive.css" />
@@ -19,7 +19,7 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=5f0d2a28"></script>
+      <script src="../../../_static/documentation_options.js?v=7c9e1927"></script>
       <script src="../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -144,6 +144,7 @@
 <li><p>Is not identical to the original image.</p></li>
 </ol>
 <p>In an ideal world, these criteria would be identical to “has a low loss value”. However, the Portilla-Simoncelli texture statistics are not all of equal perceptual importance: the <strong>variance of the highpass residuals</strong>, for example, is related to the presence of high frequencies in the image, where are present in the white noise samples used to initialize metamer synthesis, but which are largely absent from natural images. This statistic only makes a small contribution to the overall loss, but is very important to metamer perceptual quality, which is important for the results laid out in this notebook.</p>
+<p>And note, as discussed in <a class="reference internal" href="ps_limitations.html#ps-limitations"><span class="std std-ref">Portilla-Simoncelli Model Limitations</span></a>, this model was developed to align with human perception <strong>only for textures</strong>. Matching the Portilla-Simoncelli model output on a non-texture image will almost certainly not meet the first two desiderata in the list above.</p>
 </div>
 </section>
 <section id="optimizer-configuration">
@@ -172,6 +173,21 @@
 </div>
 <p>Finally, as with all iterative optimization procedures, we must decide how long to run synthesis for. In our experiments, for 10 to 200 iterations, the loss decreases as approximately one over the number of iterations, and the synthesis duration (in <a class="reference external" href="https://en.wikipedia.org/wiki/Elapsed_real_time">wall time</a>) increases approximately linearly with the number of iterations (the exact duration will depend on your hardware). For our documentation and tests, we have decided to use <code class="docutils literal notranslate"><span class="pre">max_iter=100</span></code>, though users may want to run synthesis for longer.</p>
 <p>If you are interested, more details about the experiments that lead to the above recommendations can be found in <a class="reference external" href="https://github.com/plenoptic-org/plenoptic/issues/365">Issue #365</a>.</p>
+</section>
+<section id="threads-and-cpu-efficiency">
+<span id="threads"></span><h2>Threads and CPU efficiency<a class="headerlink" href="#threads-and-cpu-efficiency" title="Link to this heading"></a></h2>
+<p>PyTorch allows users to control the number of <a class="reference external" href="https://en.wikipedia.org/wiki/Thread_(computing)">threads</a> used for parallelism on the CPU. By default, pytorch seems to be greedy, grabbing more threads than are helpful, especially if you are running several less memory-intensive jobs (like Portilla-Simoncelli metamer synthesis) at once. This problem is exacerbated when using the LBFGS optimizer.</p>
+<p>Thus, we have found that CPU-only performance can be increased by about three times when doing the following to restrict the number of threads:</p>
+<ul>
+<li><p>Put <a class="reference external" href="https://docs.pytorch.org/docs/stable/generated/torch.set_num_threads.html#torch.set_num_threads" title="(in PyTorch v2.9)"><code class="xref py py-func docutils literal notranslate"><span class="pre">torch.set_num_threads(1)</span></code></a> at the top of your script.</p></li>
+<li><p>Set the <code class="docutils literal notranslate"><span class="pre">OMP_NUM_THREADS</span></code> environment variable to 1 (this controls the number of threads available to <a class="reference internal" href="#(https://docs.pytorch.org/tutorials/recipes/recipes/tuning_guide.html#utilize-openmp)"><span class="xref myst">OpenMP</span></a>). This can be done on the command-line by prepending <code class="docutils literal notranslate"><span class="pre">OMP_NUM_THREADS=1</span></code> before calling python (or ipython or jupyter or however you run your scripts), e.g., <code class="docutils literal notranslate"><span class="pre">OMP_NUM_THREADS=1</span> <span class="pre">python</span> <span class="pre">my_awesome_script.py</span></code> or by adding the following at the top of your script:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;OMP_NUM_THREADS&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+</pre></div>
+</div>
+</li>
+</ul>
+<p>In practice, you are encouraged to experiment with the two above settings to find the best configuration for your problem.</p>
 </section>
 <section id="custom-loss-function">
 <span id="ps-loss-function"></span><h2>Custom loss function<a class="headerlink" href="#custom-loss-function" title="Link to this heading"></a></h2>
