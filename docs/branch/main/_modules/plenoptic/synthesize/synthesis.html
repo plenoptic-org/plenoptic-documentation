@@ -5,9 +5,9 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>plenoptic.synthesize.synthesis &mdash; plenoptic 1.3.2.dev57 documentation</title>
+  <title>plenoptic.synthesize.synthesis &mdash; plenoptic 1.3.2.dev124 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
-      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../_static/plot_directive.css" />
       <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
       <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css?v=13237357" />
@@ -18,7 +18,7 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=4c567316"></script>
+      <script src="../../../_static/documentation_options.js?v=437209e8"></script>
       <script src="../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -72,8 +72,8 @@
 <p class="caption" role="heading"><span class="caption-text">Models and metrics</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../tutorials/models/Perceptual_distance.html">Perceptual distance</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/models/Portilla_Simoncelli.html">Portilla-Simoncelli Texture Metamer</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../tutorials/models/Steerable_Pyramid.html">Steerable Pyramid</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/models/portilla_simoncelli/ps_index.html">Portilla-Simoncelli Texture Model</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Synthesis method examples</span></p>
 <ul>
@@ -134,6 +134,7 @@
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">..tools</span><span class="w"> </span><span class="kn">import</span> <span class="n">examine_saved_synthesis</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">..tools.data</span><span class="w"> </span><span class="kn">import</span> <span class="n">_check_tensor_equality</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..tools.io</span><span class="w"> </span><span class="kn">import</span> <span class="n">_parse_save_io_attr_name</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_get_name</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="nb">object</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
@@ -248,12 +249,14 @@
         <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">input_names</span> <span class="ow">in</span> <span class="n">save_io_attrs</span><span class="p">:</span>
             <span class="n">attr</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span>
             <span class="n">name</span> <span class="o">=</span> <span class="n">_get_name</span><span class="p">(</span><span class="n">attr</span><span class="p">)</span>
-            <span class="n">tensors</span> <span class="o">=</span> <span class="p">[</span><span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">input_names</span><span class="p">]</span>
+            <span class="n">tensors</span><span class="p">,</span> <span class="n">input_names_test</span> <span class="o">=</span> <span class="n">_parse_save_io_attr_name</span><span class="p">(</span>
+                <span class="nb">vars</span><span class="p">(</span><span class="bp">self</span><span class="p">),</span> <span class="n">input_names</span>
+            <span class="p">)</span>
             <span class="n">save_dict</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">input_names</span><span class="p">,</span> <span class="n">attr</span><span class="p">(</span><span class="o">*</span><span class="n">tensors</span><span class="p">))</span>
-            <span class="k">if</span> <span class="nb">any</span><span class="p">([</span><span class="n">n</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">save_dict</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">input_names</span><span class="p">]):</span>
+            <span class="k">if</span> <span class="nb">any</span><span class="p">([</span><span class="n">n</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">save_dict</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">input_names_test</span><span class="p">]):</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
                     <span class="s2">&quot;input_name must be included in save dictionary, &quot;</span>
-                    <span class="sa">f</span><span class="s2">&quot;but got </span><span class="si">{</span><span class="n">input_names</span><span class="si">}</span><span class="s2">!&quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;but got </span><span class="si">{</span><span class="n">input_names_test</span><span class="si">}</span><span class="s2">!&quot;</span>
                 <span class="p">)</span>
         <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">save_state_dict_attrs</span><span class="p">:</span>
             <span class="n">attr</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span>
@@ -459,7 +462,38 @@
         <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">input_names</span> <span class="ow">in</span> <span class="n">check_io_attributes</span><span class="p">:</span>
             <span class="c1"># same as above</span>
             <span class="n">display_k</span> <span class="o">=</span> <span class="n">k</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="k">if</span> <span class="n">k</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">)</span> <span class="k">else</span> <span class="n">k</span>
-            <span class="n">tensors</span> <span class="o">=</span> <span class="p">[</span><span class="n">tmp_dict</span><span class="p">[</span><span class="n">t</span><span class="p">]</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">tmp_dict</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="mi">1</span><span class="p">]]</span>
+            <span class="k">if</span> <span class="n">input_names</span> <span class="o">!=</span> <span class="n">tmp_dict</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="mi">1</span><span class="p">]:</span>
+                <span class="c1"># PR #381 (release 1.3.2) fixed how Metamer loss is computed for</span>
+                <span class="c1"># checking during save/load. previously, it used image and metamer,</span>
+                <span class="c1"># which is incorrect since loss is computed on model outputs, not</span>
+                <span class="c1"># inputs. that means we can&#39;t check loss, which we just raise a warning</span>
+                <span class="c1"># about for now.</span>
+                <span class="k">if</span> <span class="p">(</span>
+                    <span class="n">input_names</span>
+                    <span class="o">==</span> <span class="p">(</span><span class="s2">&quot;_target_representation&quot;</span><span class="p">,</span> <span class="s2">&quot;2 * _target_representation&quot;</span><span class="p">)</span>
+                    <span class="ow">and</span> <span class="n">tmp_dict</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="p">(</span><span class="s2">&quot;_image&quot;</span><span class="p">,</span> <span class="s2">&quot;_metamer&quot;</span><span class="p">)</span>
+                    <span class="ow">and</span> <span class="n">display_k</span> <span class="o">==</span> <span class="s2">&quot;loss_function&quot;</span>
+                <span class="p">):</span>
+                    <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+                        <span class="s2">&quot;The saved object was saved with plenoptic 1.3.1 or earlier and&quot;</span>
+                        <span class="s2">&quot; will not be compatible with future releases. We therefore &quot;</span>
+                        <span class="sa">f</span><span class="s2">&quot;cannot check </span><span class="si">{</span><span class="n">display_k</span><span class="si">}</span><span class="s2"> is the same in initialized and saved&quot;</span>
+                        <span class="s2">&quot; objects. Save this object with current version of plenoptic &quot;</span>
+                        <span class="s2">&quot;to make the saved object futureproof and avoid this warning.&quot;</span><span class="p">,</span>
+                        <span class="n">category</span><span class="o">=</span><span class="ne">FutureWarning</span><span class="p">,</span>
+                    <span class="p">)</span>
+                    <span class="k">continue</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="c1"># in general/the future, we want to raise a more informative error</span>
+                    <span class="c1"># message about this problem.</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                        <span class="s2">&quot;Initialized and saved objects use different inputs to check &quot;</span>
+                        <span class="sa">f</span><span class="s2">&quot;identity of </span><span class="si">{</span><span class="n">display_k</span><span class="si">}</span><span class="s2">, unsure how to proceed! If you trust &quot;</span>
+                        <span class="s2">&quot;this object, see &#39;Reproducibility and Compatibility&#39; page of &quot;</span>
+                        <span class="s2">&quot;the documentation for how to load it anyway.&quot;</span>
+                        <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Saved: </span><span class="si">{</span><span class="n">tmp_dict</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="se">\n</span><span class="s2">Initialized: </span><span class="si">{</span><span class="n">input_names</span><span class="si">}</span><span class="s2">&quot;</span>
+                    <span class="p">)</span>
+            <span class="n">tensors</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">_parse_save_io_attr_name</span><span class="p">(</span><span class="n">tmp_dict</span><span class="p">,</span> <span class="n">input_names</span><span class="p">)</span>
             <span class="n">init_name</span> <span class="o">=</span> <span class="n">_get_name</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="p">))</span>
             <span class="n">saved_name</span> <span class="o">=</span> <span class="n">tmp_dict</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
             <span class="n">init_loss</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="p">)(</span><span class="o">*</span><span class="n">tensors</span><span class="p">)</span>
@@ -505,7 +539,11 @@
             <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
         <span class="n">setup_attrs</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">optim</span> <span class="o">=</span> <span class="n">tmp_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;_optimizer&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">optim</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)</span> <span class="ow">and</span> <span class="n">optim</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="n">_get_name</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">Adam</span><span class="p">):</span>
+        <span class="k">if</span> <span class="p">(</span>
+            <span class="nb">isinstance</span><span class="p">(</span><span class="n">optim</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)</span>
+            <span class="ow">and</span> <span class="n">optim</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+            <span class="ow">and</span> <span class="n">optim</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="n">_get_name</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">Adam</span><span class="p">)</span>
+        <span class="p">):</span>
             <span class="n">setup_attrs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;optimizer&quot;</span><span class="p">)</span>
         <span class="n">sched</span> <span class="o">=</span> <span class="n">tmp_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;_scheduler&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">sched</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)</span> <span class="ow">and</span> <span class="n">sched</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
