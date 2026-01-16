@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>plenoptic.synthesize.metamer &mdash; plenoptic 1.3.2.dev171 documentation</title>
+  <title>plenoptic.synthesize.metamer &mdash; plenoptic 1.3.2.dev173 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../_static/plot_directive.css" />
@@ -18,7 +18,7 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=37fa0043"></script>
+      <script src="../../../_static/documentation_options.js?v=a47a0e30"></script>
       <script src="../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -140,7 +140,7 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">tqdm.auto</span><span class="w"> </span><span class="kn">import</span> <span class="n">tqdm</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">..tools</span><span class="w"> </span><span class="kn">import</span> <span class="n">data</span><span class="p">,</span> <span class="n">display</span><span class="p">,</span> <span class="n">optim</span><span class="p">,</span> <span class="n">signal</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">..tools.convergence</span><span class="w"> </span><span class="kn">import</span> <span class="n">coarse_to_fine_enough</span><span class="p">,</span> <span class="n">loss_convergence</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..tools.convergence</span><span class="w"> </span><span class="kn">import</span> <span class="n">_coarse_to_fine_enough</span><span class="p">,</span> <span class="n">_loss_convergence</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">..tools.validate</span><span class="w"> </span><span class="kn">import</span> <span class="n">validate_coarse_to_fine</span><span class="p">,</span> <span class="n">validate_input</span><span class="p">,</span> <span class="n">validate_model</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.synthesis</span><span class="w"> </span><span class="kn">import</span> <span class="n">OptimizedSynthesis</span>
 
@@ -367,9 +367,9 @@
 <span class="sd">        Update the pixels of :attr:`metamer` until its representation matches that of</span>
 <span class="sd">        :attr:`image`.</span>
 
-<span class="sd">        We run this until either we reach ``max_iter`` or the change over the</span>
-<span class="sd">        past ``stop_iters_to_check`` iterations is less than</span>
-<span class="sd">        ``stop_criterion``, whichever comes first.</span>
+<span class="sd">        We run this until either we reach ``max_iter`` or the loss changes less than</span>
+<span class="sd">        ``stop_criterion`` over the past ``stop_iters_to_check`` iterations,</span>
+<span class="sd">        whichever comes first.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -601,7 +601,7 @@
 <span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Check whether the loss has stabilized and, if so, return True.</span>
 
-<span class="sd">        Uses :func:`loss_convergence`.</span>
+<span class="sd">        Uses :func:`~plenoptic.tools.convergence._loss_convergence`.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -617,7 +617,7 @@
 <span class="sd">        loss_stabilized</span>
 <span class="sd">            Whether the loss has stabilized or not.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">loss_convergence</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stop_criterion</span><span class="p">,</span> <span class="n">stop_iters_to_check</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">_loss_convergence</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stop_criterion</span><span class="p">,</span> <span class="n">stop_iters_to_check</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_store</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -1397,8 +1397,8 @@
 <span class="sd">        loss_stabilized</span>
 <span class="sd">            Whether the loss has stabilized and we&#39;ve synthesized all scales.</span>
 <span class="sd">        &quot;&quot;&quot;</span>  <span class="c1"># noqa: E501</span>
-        <span class="n">loss_conv</span> <span class="o">=</span> <span class="n">loss_convergence</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stop_criterion</span><span class="p">,</span> <span class="n">stop_iters_to_check</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">loss_conv</span> <span class="ow">and</span> <span class="n">coarse_to_fine_enough</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">ctf_iters_to_check</span><span class="p">)</span>
+        <span class="n">loss_conv</span> <span class="o">=</span> <span class="n">_loss_convergence</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stop_criterion</span><span class="p">,</span> <span class="n">stop_iters_to_check</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">loss_conv</span> <span class="ow">and</span> <span class="n">_coarse_to_fine_enough</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">ctf_iters_to_check</span><span class="p">)</span>
 
 <div class="viewcode-block" id="MetamerCTF.to">
 <a class="viewcode-back" href="../../../generated/plenoptic.synthesize.metamer.MetamerCTF.html#plenoptic.synthesize.metamer.MetamerCTF.to">[docs]</a>
