@@ -6,12 +6,12 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>API Reference &mdash; plenoptic 1.3.2.dev155 documentation</title>
+  <title>API Reference &mdash; plenoptic 1.3.2.dev170 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="_static/plot_directive.css" />
       <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
-      <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=13237357" />
+      <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=9c3e77be" />
       <link rel="stylesheet" type="text/css" href="_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
       <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
       <link rel="stylesheet" type="text/css" href="_static/custom.css?v=a2d047e6" />
@@ -19,7 +19,7 @@
   
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="_static/documentation_options.js?v=0214ba6c"></script>
+      <script src="_static/documentation_options.js?v=9382845a"></script>
       <script src="_static/doctools.js?v=9bcbadda"></script>
       <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="_static/clipboard.min.js?v=a7894cd8"></script>
@@ -27,7 +27,7 @@
       <script>let toggleHintShow = 'Click to show';</script>
       <script>let toggleHintHide = 'Click to hide';</script>
       <script>let toggleOpenOnPrint = 'true';</script>
-      <script src="_static/togglebutton.js?v=4a39c7ea"></script>
+      <script src="_static/togglebutton.js?v=1ae7504c"></script>
       <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
       <script src="_static/design-tabs.js?v=f930bc37"></script>
     <script src="_static/js/theme.js"></script>
@@ -86,7 +86,7 @@
 <p class="caption" role="heading"><span class="caption-text">Advanced usage</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">API Documentation</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#synthesis">Synthesis</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#synthesis-objects">Synthesis objects</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="generated/plenoptic.synthesize.metamer.Metamer.html">plenoptic.synthesize.metamer.Metamer</a></li>
 <li class="toctree-l3"><a class="reference internal" href="generated/plenoptic.synthesize.metamer.MetamerCTF.html">plenoptic.synthesize.metamer.MetamerCTF</a></li>
 <li class="toctree-l3"><a class="reference internal" href="generated/plenoptic.synthesize.eigendistortion.Eigendistortion.html">plenoptic.synthesize.eigendistortion.Eigendistortion</a></li>
@@ -95,21 +95,24 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#models">Models</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#metrics">Metrics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#synthesis-helper-functions">Synthesis helper functions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#canonical-computations">Canonical Computations</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#loading-creating-and-dealing-with-images">Loading, creating, and dealing with images</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#loading-creating-and-accessing-images">Loading, creating, and accessing images</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#validation">Validation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#display">Display</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#optimization">Optimization</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#computations">Computations</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#debugging">Debugging</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#external">External</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="synthesis.html">Synthesis object design</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tips.html">Tips and Tricks</a></li>
 <li class="toctree-l1"><a class="reference internal" href="reproducibility.html">Reproducibility and Compatibility</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tutorials/advanced/Display.html">Display and animate functions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tutorials/advanced/Synthesis_extensions.html">Extending existing synthesis objects</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">For Developers</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="synthesis.html">Synthesis object design</a></li>
 </ul>
 
         </div>
@@ -138,84 +141,22 @@
              
   <section id="api-reference">
 <span id="api"></span><h1>API Reference<a class="headerlink" href="#api-reference" title="Link to this heading"></a></h1>
-<section id="synthesis">
-<h2>Synthesis<a class="headerlink" href="#synthesis" title="Link to this heading"></a></h2>
-<h3 class="rubric">Synthesis objects</h3>
+<section id="synthesis-objects">
+<span id="synthesis-api"></span><h2>Synthesis objects<a class="headerlink" href="#synthesis-objects" title="Link to this heading"></a></h2>
+<p>Synthesis objects generate novel stimuli which allow researchers to better understand how their computational models make sense of their inputs.</p>
 <table class="autosummary longtable docutils align-default">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/plenoptic.synthesize.metamer.Metamer.html#plenoptic.synthesize.metamer.Metamer" title="plenoptic.synthesize.metamer.Metamer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Metamer</span></code></a>(image, model[, loss_function, ...])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/plenoptic.synthesize.metamer.Metamer.html#plenoptic.synthesize.metamer.Metamer" title="plenoptic.synthesize.metamer.Metamer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Metamer</span></code></a></p></td>
 <td><p>Synthesize metamers for image-computable differentiable models.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/plenoptic.synthesize.metamer.MetamerCTF.html#plenoptic.synthesize.metamer.MetamerCTF" title="plenoptic.synthesize.metamer.MetamerCTF"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MetamerCTF</span></code></a>(image, model[, loss_function, ...])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/plenoptic.synthesize.metamer.MetamerCTF.html#plenoptic.synthesize.metamer.MetamerCTF" title="plenoptic.synthesize.metamer.MetamerCTF"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MetamerCTF</span></code></a></p></td>
 <td><p>Synthesize model metamers with coarse-to-fine synthesis.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/plenoptic.synthesize.eigendistortion.Eigendistortion.html#plenoptic.synthesize.eigendistortion.Eigendistortion" title="plenoptic.synthesize.eigendistortion.Eigendistortion"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Eigendistortion</span></code></a>(image, model)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/plenoptic.synthesize.eigendistortion.Eigendistortion.html#plenoptic.synthesize.eigendistortion.Eigendistortion" title="plenoptic.synthesize.eigendistortion.Eigendistortion"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Eigendistortion</span></code></a></p></td>
 <td><p>Synthesize eigendistortions induced by a model on a given input image.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/plenoptic.synthesize.mad_competition.MADCompetition.html#plenoptic.synthesize.mad_competition.MADCompetition" title="plenoptic.synthesize.mad_competition.MADCompetition"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MADCompetition</span></code></a>(image, optimized_metric, ...)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/plenoptic.synthesize.mad_competition.MADCompetition.html#plenoptic.synthesize.mad_competition.MADCompetition" title="plenoptic.synthesize.mad_competition.MADCompetition"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MADCompetition</span></code></a></p></td>
 <td><p>Synthesize a single maximally-differentiating image for two metrics.</p></td>
-</tr>
-</tbody>
-</table>
-<h3 class="rubric">Synthesis helper functions</h3>
-<p>These helper functions all are intended to help visualize the status and outputs of the synthesis objects above.</p>
-<h4 class="rubric">Metamer / MetamerCTF</h4>
-<table class="autosummary longtable docutils align-default">
-<tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/plenoptic.synthesize.metamer.html#plenoptic.synthesize.metamer.plot_loss" title="plenoptic.synthesize.metamer.plot_loss"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_loss</span></code></a>(metamer[, iteration, ax])</p></td>
-<td><p>Plot synthesis loss with log-scaled y axis.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/plenoptic.synthesize.metamer.html#plenoptic.synthesize.metamer.display_metamer" title="plenoptic.synthesize.metamer.display_metamer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">display_metamer</span></code></a>(metamer[, batch_idx, ...])</p></td>
-<td><p>Display metamer.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/plenoptic.synthesize.metamer.html#plenoptic.synthesize.metamer.plot_pixel_values" title="plenoptic.synthesize.metamer.plot_pixel_values"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_pixel_values</span></code></a>(metamer[, batch_idx, ...])</p></td>
-<td><p>Plot histogram of pixel values of target image and its metamer.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/plenoptic.synthesize.metamer.html#plenoptic.synthesize.metamer.plot_representation_error" title="plenoptic.synthesize.metamer.plot_representation_error"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_representation_error</span></code></a>(metamer[, ...])</p></td>
-<td><p>Plot distance ratio showing how close we are to convergence.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/plenoptic.synthesize.metamer.html#plenoptic.synthesize.metamer.plot_synthesis_status" title="plenoptic.synthesize.metamer.plot_synthesis_status"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_synthesis_status</span></code></a>(metamer[, batch_idx, ...])</p></td>
-<td><p>Make a plot showing synthesis status.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/plenoptic.synthesize.metamer.html#plenoptic.synthesize.metamer.animate" title="plenoptic.synthesize.metamer.animate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">animate</span></code></a>(metamer[, framerate, batch_idx, ...])</p></td>
-<td><p>Animate synthesis progress.</p></td>
-</tr>
-</tbody>
-</table>
-<h4 class="rubric">MAD Competition</h4>
-<table class="autosummary longtable docutils align-default">
-<tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/plenoptic.synthesize.mad_competition.html#plenoptic.synthesize.mad_competition.display_mad_image" title="plenoptic.synthesize.mad_competition.display_mad_image"><code class="xref py py-obj docutils literal notranslate"><span class="pre">display_mad_image</span></code></a>(mad[, batch_idx, ...])</p></td>
-<td><p>Display MAD image.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/plenoptic.synthesize.mad_competition.html#plenoptic.synthesize.mad_competition.display_mad_image_all" title="plenoptic.synthesize.mad_competition.display_mad_image_all"><code class="xref py py-obj docutils literal notranslate"><span class="pre">display_mad_image_all</span></code></a>(mad_metric1_min, ...)</p></td>
-<td><p>Display all MAD Competition images.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/plenoptic.synthesize.mad_competition.html#plenoptic.synthesize.mad_competition.plot_loss" title="plenoptic.synthesize.mad_competition.plot_loss"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_loss</span></code></a>(mad[, iteration, axes])</p></td>
-<td><p>Plot metric losses.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/plenoptic.synthesize.mad_competition.html#plenoptic.synthesize.mad_competition.plot_loss_all" title="plenoptic.synthesize.mad_competition.plot_loss_all"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_loss_all</span></code></a>(mad_metric1_min, ...[, ...])</p></td>
-<td><p>Plot loss for full set of MAD Competiton instances.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/plenoptic.synthesize.mad_competition.html#plenoptic.synthesize.mad_competition.plot_pixel_values" title="plenoptic.synthesize.mad_competition.plot_pixel_values"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_pixel_values</span></code></a>(mad[, batch_idx, ...])</p></td>
-<td><p>Plot histogram of pixel values of reference and MAD images.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/plenoptic.synthesize.mad_competition.html#plenoptic.synthesize.mad_competition.plot_synthesis_status" title="plenoptic.synthesize.mad_competition.plot_synthesis_status"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_synthesis_status</span></code></a>(mad[, batch_idx, ...])</p></td>
-<td><p>Make a plot showing synthesis status.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/plenoptic.synthesize.mad_competition.html#plenoptic.synthesize.mad_competition.animate" title="plenoptic.synthesize.mad_competition.animate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">animate</span></code></a>(mad[, framerate, batch_idx, ...])</p></td>
-<td><p>Animate synthesis progress.</p></td>
-</tr>
-</tbody>
-</table>
-<h4 class="rubric">Eigendistortion</h4>
-<table class="autosummary longtable docutils align-default">
-<tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/plenoptic.synthesize.eigendistortion.html#plenoptic.synthesize.eigendistortion.display_eigendistortion" title="plenoptic.synthesize.eigendistortion.display_eigendistortion"><code class="xref py py-obj docutils literal notranslate"><span class="pre">display_eigendistortion</span></code></a>(eigendistortion[, ...])</p></td>
-<td><p>Display specified eigendistortion added to the image.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/plenoptic.synthesize.eigendistortion.html#plenoptic.synthesize.eigendistortion.display_eigendistortion_all" title="plenoptic.synthesize.eigendistortion.display_eigendistortion_all"><code class="xref py py-obj docutils literal notranslate"><span class="pre">display_eigendistortion_all</span></code></a>(eigendistortion)</p></td>
-<td><p>Display base image, eigendistortions alone, and eigendistortions added to the image.</p></td>
 </tr>
 </tbody>
 </table>
@@ -231,8 +172,8 @@
 </tr>
 </tbody>
 </table>
-<h3 class="rubric">Front End Models</h3>
-<p>These “front end” models are inspired by the retina, come from <span id="id1"><a class="reference internal" href="citation.html#id16" title="A Berardino, V Laparra, J Ballé, and E P Simoncelli. Eigen-distortions of hierarchical representations. In I Guyon, UV Luxburg, S Bengio, H Wallach, R Fergus, S Vishwanathan, and R Garnett, editors, Adv. Neural Information Processing Systems (NIPS*17), volume 30, 1–10. Curran Associates, Inc., Dec 2017. Presented at: Neural Information Processing Systems 30, Dec 2017, Long Beach, CA.">Berardino <em>et al.</em>, 2017</a></span>, and are nested, increasing in complexity as you move down the list.</p>
+<h3 class="rubric">LGN-inspired Models</h3>
+<p>These “front end” models are inspired by the lateral geniculate nucleus (LGN; the first non-retinal stage of the primate visual system), come from <span id="id1"><a class="reference internal" href="citation.html#id16" title="A Berardino, V Laparra, J Ballé, and E P Simoncelli. Eigen-distortions of hierarchical representations. In I Guyon, UV Luxburg, S Bengio, H Wallach, R Fergus, S Vishwanathan, and R Garnett, editors, Adv. Neural Information Processing Systems (NIPS*17), volume 30, 1–10. Curran Associates, Inc., Dec 2017. Presented at: Neural Information Processing Systems 30, Dec 2017, Long Beach, CA.">Berardino <em>et al.</em>, 2017</a></span>, and are nested, increasing in complexity as you move down the list.</p>
 <table class="autosummary longtable docutils align-default">
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/plenoptic.simulate.frontend.html#plenoptic.simulate.frontend.LinearNonlinear" title="plenoptic.simulate.frontend.LinearNonlinear"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LinearNonlinear</span></code></a></p></td>
@@ -303,6 +244,70 @@
 </tbody>
 </table>
 </section>
+<section id="synthesis-helper-functions">
+<h2>Synthesis helper functions<a class="headerlink" href="#synthesis-helper-functions" title="Link to this heading"></a></h2>
+<p>These helper functions all are intended to help visualize the status and outputs of <a class="reference external" href="synthesis-api">synthesis objects</a>.</p>
+<h4 class="rubric">Metamer / MetamerCTF</h4>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/plenoptic.synthesize.metamer.html#plenoptic.synthesize.metamer.plot_loss" title="plenoptic.synthesize.metamer.plot_loss"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_loss</span></code></a></p></td>
+<td><p>Plot synthesis loss with log-scaled y axis.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/plenoptic.synthesize.metamer.html#plenoptic.synthesize.metamer.display_metamer" title="plenoptic.synthesize.metamer.display_metamer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">display_metamer</span></code></a></p></td>
+<td><p>Display metamer.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/plenoptic.synthesize.metamer.html#plenoptic.synthesize.metamer.plot_pixel_values" title="plenoptic.synthesize.metamer.plot_pixel_values"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_pixel_values</span></code></a></p></td>
+<td><p>Plot histogram of pixel values of target image and its metamer.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/plenoptic.synthesize.metamer.html#plenoptic.synthesize.metamer.plot_representation_error" title="plenoptic.synthesize.metamer.plot_representation_error"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_representation_error</span></code></a></p></td>
+<td><p>Plot distance ratio showing how close we are to convergence.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/plenoptic.synthesize.metamer.html#plenoptic.synthesize.metamer.plot_synthesis_status" title="plenoptic.synthesize.metamer.plot_synthesis_status"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_synthesis_status</span></code></a></p></td>
+<td><p>Make a plot showing synthesis status.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/plenoptic.synthesize.metamer.html#plenoptic.synthesize.metamer.animate" title="plenoptic.synthesize.metamer.animate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">animate</span></code></a></p></td>
+<td><p>Animate synthesis progress.</p></td>
+</tr>
+</tbody>
+</table>
+<h4 class="rubric">MAD Competition</h4>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/plenoptic.synthesize.mad_competition.html#plenoptic.synthesize.mad_competition.display_mad_image" title="plenoptic.synthesize.mad_competition.display_mad_image"><code class="xref py py-obj docutils literal notranslate"><span class="pre">display_mad_image</span></code></a></p></td>
+<td><p>Display MAD image.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/plenoptic.synthesize.mad_competition.html#plenoptic.synthesize.mad_competition.display_mad_image_all" title="plenoptic.synthesize.mad_competition.display_mad_image_all"><code class="xref py py-obj docutils literal notranslate"><span class="pre">display_mad_image_all</span></code></a></p></td>
+<td><p>Display all MAD Competition images.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/plenoptic.synthesize.mad_competition.html#plenoptic.synthesize.mad_competition.plot_loss" title="plenoptic.synthesize.mad_competition.plot_loss"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_loss</span></code></a></p></td>
+<td><p>Plot metric losses.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/plenoptic.synthesize.mad_competition.html#plenoptic.synthesize.mad_competition.plot_loss_all" title="plenoptic.synthesize.mad_competition.plot_loss_all"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_loss_all</span></code></a></p></td>
+<td><p>Plot loss for full set of MAD Competiton instances.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/plenoptic.synthesize.mad_competition.html#plenoptic.synthesize.mad_competition.plot_pixel_values" title="plenoptic.synthesize.mad_competition.plot_pixel_values"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_pixel_values</span></code></a></p></td>
+<td><p>Plot histogram of pixel values of reference and MAD images.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/plenoptic.synthesize.mad_competition.html#plenoptic.synthesize.mad_competition.plot_synthesis_status" title="plenoptic.synthesize.mad_competition.plot_synthesis_status"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_synthesis_status</span></code></a></p></td>
+<td><p>Make a plot showing synthesis status.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/plenoptic.synthesize.mad_competition.html#plenoptic.synthesize.mad_competition.animate" title="plenoptic.synthesize.mad_competition.animate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">animate</span></code></a></p></td>
+<td><p>Animate synthesis progress.</p></td>
+</tr>
+</tbody>
+</table>
+<h4 class="rubric">Eigendistortion</h4>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/plenoptic.synthesize.eigendistortion.html#plenoptic.synthesize.eigendistortion.display_eigendistortion" title="plenoptic.synthesize.eigendistortion.display_eigendistortion"><code class="xref py py-obj docutils literal notranslate"><span class="pre">display_eigendistortion</span></code></a></p></td>
+<td><p>Display specified eigendistortion added to the image.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/plenoptic.synthesize.eigendistortion.html#plenoptic.synthesize.eigendistortion.display_eigendistortion_all" title="plenoptic.synthesize.eigendistortion.display_eigendistortion_all"><code class="xref py py-obj docutils literal notranslate"><span class="pre">display_eigendistortion_all</span></code></a></p></td>
+<td><p>Display base image, eigendistortions alone, and eigendistortions added to the image.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
 <section id="canonical-computations">
 <h2>Canonical Computations<a class="headerlink" href="#canonical-computations" title="Link to this heading"></a></h2>
 <p>These classes and functions may be helpful for constructing your own models. As is, they are not compatible with any of the synthesis methods.</p>
@@ -331,8 +336,8 @@
 </tr>
 </tbody>
 </table>
-<h3 class="rubric">Non-linearities</h3>
-<p>These functions perform some useful image-processing non-linearities on tensors or dictionaries of tensors.</p>
+<h3 class="rubric">Coordinate transformations</h3>
+<p>This related set of functions convert between the rectangular and polar representations of a signal (or computing the norm and direction, which are the analogues for real-valued signals).</p>
 <table class="autosummary longtable docutils align-default">
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/plenoptic.tools.signal.html#plenoptic.tools.signal.rectangular_to_polar" title="plenoptic.tools.signal.rectangular_to_polar"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rectangular_to_polar</span></code></a></p></td>
@@ -348,7 +353,7 @@
 <td><p>Spatially local gain release.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/plenoptic.simulate.canonical_computations.non_linearities.html#plenoptic.simulate.canonical_computations.non_linearities.rectangular_to_polar_dict" title="plenoptic.simulate.canonical_computations.non_linearities.rectangular_to_polar_dict"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rectangular_to_polar_dict</span></code></a></p></td>
-<td><p>Return the complex modulus and the phase of each complex tensor in a dictionary.</p></td>
+<td><p>Return the complex amplitude and the phase of each complex tensor in a dictionary.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="generated/plenoptic.simulate.canonical_computations.non_linearities.html#plenoptic.simulate.canonical_computations.non_linearities.polar_to_rectangular_dict" title="plenoptic.simulate.canonical_computations.non_linearities.polar_to_rectangular_dict"><code class="xref py py-obj docutils literal notranslate"><span class="pre">polar_to_rectangular_dict</span></code></a></p></td>
 <td><p>Return the real and imaginary parts of tensor in a dictionary.</p></td>
@@ -361,9 +366,124 @@
 </tr>
 </tbody>
 </table>
+<p>The following table summarizes the relationship among these functions (where ➡ denotes from rectangular to polar and ⬅ is the inverse):</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>function</p></th>
+<th class="head"><p>dtype</p></th>
+<th class="head"><p>input object</p></th>
+<th class="head"><p>direction</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>rectangular_to_polar</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">complex*</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">tensor</span></code></p></td>
+<td><p>➡</p></td>
+</tr>
+<tr class="row-odd"><td><p>polar_to_rectangular</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">complex*</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">tensor</span></code></p></td>
+<td><p>⬅</p></td>
+</tr>
+<tr class="row-even"><td><p>local_gain_control</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">float*</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">tensor</span></code></p></td>
+<td><p>➡</p></td>
+</tr>
+<tr class="row-odd"><td><p>local_gain_release</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">float*</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">tensor</span></code></p></td>
+<td><p>⬅</p></td>
+</tr>
+<tr class="row-even"><td><p>rectangular_to_polar_dict</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">complex*</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">dict</span></code></p></td>
+<td><p>➡</p></td>
+</tr>
+<tr class="row-odd"><td><p>polar_to_rectangular_dict</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">complex*</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">dict</span></code></p></td>
+<td><p>⬅</p></td>
+</tr>
+<tr class="row-even"><td><p>local_gain_control_dict</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">float*</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">dict</span></code></p></td>
+<td><p>➡</p></td>
+</tr>
+<tr class="row-odd"><td><p>local_gain_release_dict</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">float*</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">dict</span></code></p></td>
+<td><p>⬅</p></td>
+</tr>
+</tbody>
+</table>
+<h3 class="rubric">Image resizing</h3>
+<p>The following functions return a version of their input whose size has increased or decreased without further modifying its contents.</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/plenoptic.tools.conv.html#plenoptic.tools.conv.correlate_downsample" title="plenoptic.tools.conv.correlate_downsample"><code class="xref py py-obj docutils literal notranslate"><span class="pre">correlate_downsample</span></code></a></p></td>
+<td><p>Correlate with a filter and downsample by a factor of 2.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/plenoptic.tools.conv.html#plenoptic.tools.conv.blur_downsample" title="plenoptic.tools.conv.blur_downsample"><code class="xref py py-obj docutils literal notranslate"><span class="pre">blur_downsample</span></code></a></p></td>
+<td><p>Correlate with a named filter and downsample by 2.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/plenoptic.tools.conv.html#plenoptic.tools.conv.upsample_convolve" title="plenoptic.tools.conv.upsample_convolve"><code class="xref py py-obj docutils literal notranslate"><span class="pre">upsample_convolve</span></code></a></p></td>
+<td><p>Upsample by 2 and convolve with a filter.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/plenoptic.tools.conv.html#plenoptic.tools.conv.upsample_blur" title="plenoptic.tools.conv.upsample_blur"><code class="xref py py-obj docutils literal notranslate"><span class="pre">upsample_blur</span></code></a></p></td>
+<td><p>Upsample by 2 and convolve with named filter.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/plenoptic.tools.conv.html#plenoptic.tools.conv.same_padding" title="plenoptic.tools.conv.same_padding"><code class="xref py py-obj docutils literal notranslate"><span class="pre">same_padding</span></code></a></p></td>
+<td><p>Pad a tensor so that 2D convolution will result in output with same dims.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/plenoptic.tools.signal.html#plenoptic.tools.signal.shrink" title="plenoptic.tools.signal.shrink"><code class="xref py py-obj docutils literal notranslate"><span class="pre">shrink</span></code></a></p></td>
+<td><p>Shrink a signal by a factor.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/plenoptic.tools.signal.html#plenoptic.tools.signal.expand" title="plenoptic.tools.signal.expand"><code class="xref py py-obj docutils literal notranslate"><span class="pre">expand</span></code></a></p></td>
+<td><p>Expand a signal by a factor.</p></td>
+</tr>
+</tbody>
+</table>
+<h3 class="rubric">Image modification</h3>
+<p>The following functions return a modified version of their input.</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/plenoptic.tools.signal.html#plenoptic.tools.signal.rescale" title="plenoptic.tools.signal.rescale"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rescale</span></code></a></p></td>
+<td><p>Linearly rescale the dynamic range of the input to <code class="docutils literal notranslate"><span class="pre">[a,</span> <span class="pre">b]</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/plenoptic.tools.signal.html#plenoptic.tools.signal.add_noise" title="plenoptic.tools.signal.add_noise"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_noise</span></code></a></p></td>
+<td><p>Add normally distributed noise to an image.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/plenoptic.tools.signal.html#plenoptic.tools.signal.center_crop" title="plenoptic.tools.signal.center_crop"><code class="xref py py-obj docutils literal notranslate"><span class="pre">center_crop</span></code></a></p></td>
+<td><p>Crop out the center of a signal.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/plenoptic.tools.signal.html#plenoptic.tools.signal.modulate_phase" title="plenoptic.tools.signal.modulate_phase"><code class="xref py py-obj docutils literal notranslate"><span class="pre">modulate_phase</span></code></a></p></td>
+<td><p>Modulate the phase of a complex signal.</p></td>
+</tr>
+</tbody>
+</table>
+<h3 class="rubric">Image statistics</h3>
+<p>The following functions compute summary statistics of their inputs.</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/plenoptic.tools.signal.html#plenoptic.tools.signal.autocorrelation" title="plenoptic.tools.signal.autocorrelation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">autocorrelation</span></code></a></p></td>
+<td><p>Compute the autocorrelation of <code class="docutils literal notranslate"><span class="pre">x</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/plenoptic.tools.stats.html#plenoptic.tools.stats.variance" title="plenoptic.tools.stats.variance"><code class="xref py py-obj docutils literal notranslate"><span class="pre">variance</span></code></a></p></td>
+<td><p>Calculate sample variance.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/plenoptic.tools.stats.html#plenoptic.tools.stats.skew" title="plenoptic.tools.stats.skew"><code class="xref py py-obj docutils literal notranslate"><span class="pre">skew</span></code></a></p></td>
+<td><p>Calculate sample estimate of <em>asymmetry</em> about input's mean.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/plenoptic.tools.stats.html#plenoptic.tools.stats.kurtosis" title="plenoptic.tools.stats.kurtosis"><code class="xref py py-obj docutils literal notranslate"><span class="pre">kurtosis</span></code></a></p></td>
+<td><p>Calculate sample estimate of <em>tailedness</em> (presence of outliers).</p></td>
+</tr>
+</tbody>
+</table>
 </section>
-<section id="loading-creating-and-dealing-with-images">
-<h2>Loading, creating, and dealing with images<a class="headerlink" href="#loading-creating-and-dealing-with-images" title="Link to this heading"></a></h2>
+<section id="loading-creating-and-accessing-images">
+<h2>Loading, creating, and accessing images<a class="headerlink" href="#loading-creating-and-accessing-images" title="Link to this heading"></a></h2>
 <table class="autosummary longtable docutils align-default">
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/plenoptic.tools.data.html#plenoptic.tools.data.load_images" title="plenoptic.tools.data.load_images"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_images</span></code></a></p></td>
@@ -548,59 +668,6 @@
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/plenoptic.tools.convergence.html#plenoptic.tools.convergence.coarse_to_fine_enough" title="plenoptic.tools.convergence.coarse_to_fine_enough"><code class="xref py py-obj docutils literal notranslate"><span class="pre">coarse_to_fine_enough</span></code></a></p></td>
 <td><p>Check whether we've been synthesized all scales for long enough.</p></td>
-</tr>
-</tbody>
-</table>
-</section>
-<section id="computations">
-<h2>Computations<a class="headerlink" href="#computations" title="Link to this heading"></a></h2>
-<p>The following functions perform computations or transformations on image-like tensors and may be useful in building new models.</p>
-<table class="autosummary longtable docutils align-default">
-<tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/plenoptic.tools.conv.html#plenoptic.tools.conv.correlate_downsample" title="plenoptic.tools.conv.correlate_downsample"><code class="xref py py-obj docutils literal notranslate"><span class="pre">correlate_downsample</span></code></a></p></td>
-<td><p>Correlate with a filter and downsample by a factor of 2.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/plenoptic.tools.conv.html#plenoptic.tools.conv.blur_downsample" title="plenoptic.tools.conv.blur_downsample"><code class="xref py py-obj docutils literal notranslate"><span class="pre">blur_downsample</span></code></a></p></td>
-<td><p>Correlate with a named filter and downsample by 2.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/plenoptic.tools.conv.html#plenoptic.tools.conv.upsample_convolve" title="plenoptic.tools.conv.upsample_convolve"><code class="xref py py-obj docutils literal notranslate"><span class="pre">upsample_convolve</span></code></a></p></td>
-<td><p>Upsample by 2 and convolve with a filter.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/plenoptic.tools.conv.html#plenoptic.tools.conv.upsample_blur" title="plenoptic.tools.conv.upsample_blur"><code class="xref py py-obj docutils literal notranslate"><span class="pre">upsample_blur</span></code></a></p></td>
-<td><p>Upsample by 2 and convolve with named filter.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/plenoptic.tools.conv.html#plenoptic.tools.conv.same_padding" title="plenoptic.tools.conv.same_padding"><code class="xref py py-obj docutils literal notranslate"><span class="pre">same_padding</span></code></a></p></td>
-<td><p>Pad a tensor so that 2D convolution will result in output with same dims.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/plenoptic.tools.signal.html#plenoptic.tools.signal.shrink" title="plenoptic.tools.signal.shrink"><code class="xref py py-obj docutils literal notranslate"><span class="pre">shrink</span></code></a></p></td>
-<td><p>Shrink a signal by a factor.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/plenoptic.tools.signal.html#plenoptic.tools.signal.expand" title="plenoptic.tools.signal.expand"><code class="xref py py-obj docutils literal notranslate"><span class="pre">expand</span></code></a></p></td>
-<td><p>Expand a signal by a factor.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/plenoptic.tools.signal.html#plenoptic.tools.signal.autocorrelation" title="plenoptic.tools.signal.autocorrelation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">autocorrelation</span></code></a></p></td>
-<td><p>Compute the autocorrelation of <code class="docutils literal notranslate"><span class="pre">x</span></code>.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/plenoptic.tools.signal.html#plenoptic.tools.signal.rescale" title="plenoptic.tools.signal.rescale"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rescale</span></code></a></p></td>
-<td><p>Linearly rescale the dynamic range of the input to <code class="docutils literal notranslate"><span class="pre">[a,</span> <span class="pre">b]</span></code>.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/plenoptic.tools.signal.html#plenoptic.tools.signal.add_noise" title="plenoptic.tools.signal.add_noise"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_noise</span></code></a></p></td>
-<td><p>Add normally distributed noise to an image.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/plenoptic.tools.signal.html#plenoptic.tools.signal.center_crop" title="plenoptic.tools.signal.center_crop"><code class="xref py py-obj docutils literal notranslate"><span class="pre">center_crop</span></code></a></p></td>
-<td><p>Crop out the center of a signal.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/plenoptic.tools.signal.html#plenoptic.tools.signal.modulate_phase" title="plenoptic.tools.signal.modulate_phase"><code class="xref py py-obj docutils literal notranslate"><span class="pre">modulate_phase</span></code></a></p></td>
-<td><p>Modulate the phase of a complex signal.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/plenoptic.tools.stats.html#plenoptic.tools.stats.variance" title="plenoptic.tools.stats.variance"><code class="xref py py-obj docutils literal notranslate"><span class="pre">variance</span></code></a></p></td>
-<td><p>Calculate sample variance.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/plenoptic.tools.stats.html#plenoptic.tools.stats.skew" title="plenoptic.tools.stats.skew"><code class="xref py py-obj docutils literal notranslate"><span class="pre">skew</span></code></a></p></td>
-<td><p>Calculate sample estimate of <em>asymmetry</em> about input's mean.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/plenoptic.tools.stats.html#plenoptic.tools.stats.kurtosis" title="plenoptic.tools.stats.kurtosis"><code class="xref py py-obj docutils literal notranslate"><span class="pre">kurtosis</span></code></a></p></td>
-<td><p>Calculate sample estimate of <em>tailedness</em> (presence of outliers).</p></td>
 </tr>
 </tbody>
 </table>

@@ -6,12 +6,12 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>plenoptic.data &mdash; plenoptic 1.3.2.dev155 documentation</title>
+  <title>plenoptic.data &mdash; plenoptic 1.3.2.dev170 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css" />
       <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
-      <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+      <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=9c3e77be" />
       <link rel="stylesheet" type="text/css" href="../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
       <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
       <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=a2d047e6" />
@@ -19,7 +19,7 @@
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../_static/documentation_options.js?v=0214ba6c"></script>
+      <script src="../_static/documentation_options.js?v=9382845a"></script>
       <script src="../_static/doctools.js?v=9bcbadda"></script>
       <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -27,7 +27,7 @@
       <script>let toggleHintShow = 'Click to show';</script>
       <script>let toggleHintHide = 'Click to hide';</script>
       <script>let toggleOpenOnPrint = 'true';</script>
-      <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+      <script src="../_static/togglebutton.js?v=1ae7504c"></script>
       <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>
     <script src="../_static/js/theme.js"></script>
@@ -84,11 +84,14 @@
 <p class="caption" role="heading"><span class="caption-text">Advanced usage</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../api.html">API Documentation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../synthesis.html">Synthesis object design</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tips.html">Tips and Tricks</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../reproducibility.html">Reproducibility and Compatibility</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tutorials/advanced/Display.html">Display and animate functions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tutorials/advanced/Synthesis_extensions.html">Extending existing synthesis objects</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">For Developers</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../synthesis.html">Synthesis object design</a></li>
 </ul>
 
         </div>
@@ -253,6 +256,46 @@
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="plenoptic.data.fetch_data">
+<span class="sig-name descname"><span class="pre">fetch_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dataset_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/plenoptic/data/fetch.html#fetch_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#plenoptic.data.fetch_data" title="Link to this definition"></a></dt>
+<dd><p>Download data, using pooch. These are largely used for testing.</p>
+<p>To view list of downloadable files, look at
+<a class="reference internal" href="plenoptic.data.fetch.html#plenoptic.data.fetch.DOWNLOADABLE_FILES" title="plenoptic.data.fetch.DOWNLOADABLE_FILES"><code class="xref py py-const docutils literal notranslate"><span class="pre">DOWNLOADABLE_FILES</span></code></a>.</p>
+<p>This checks whether the data already exists and is unchanged and downloads
+again, if necessary. If dataset_name ends in .tar.gz, this also
+decompresses and extracts the archive, returning the Path to the resulting
+directory. Else, it just returns the Path to the downloaded file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>dataset_name</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></span>) – Name of the dataset to download.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Path</span></code></a></span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>path</em> – Path of the downloaded dataset.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ImportError" title="(in Python v3.14)"><strong>ImportError</strong></a> – If <code class="docutils literal notranslate"><span class="pre">pooch</span></code> isn’t installed.</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">plenoptic</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">po</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">path</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">fetch_data</span><span class="p">(</span><span class="s2">&quot;portilla_simoncelli_images.tar.gz&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">len</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">path</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s2">&quot;*&quot;</span><span class="p">)))</span>
+<span class="go">38</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">img</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">load_images</span><span class="p">(</span><span class="n">path</span> <span class="o">/</span> <span class="s2">&quot;fig3b.jpg&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">po</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
+<span class="go">&lt;PyrFigure size ...&gt;</span>
+</pre></div>
+</div>
+<p>(<a class="reference download internal" download="" href="../_downloads/a17bea1790e7d6f8a3cc4dde635ea576/plenoptic-data-5.png"><code class="xref download docutils literal notranslate"><span class="pre">png</span></code></a>, <a class="reference download internal" download="" href="../_downloads/2b24a7cfae5739a4d4169efc923058c0/plenoptic-data-5.hires.png"><code class="xref download docutils literal notranslate"><span class="pre">hires.png</span></code></a>, <a class="reference download internal" download="" href="../_downloads/c67ba43927ba8cfb87fdc31f46e70d22/plenoptic-data-5.pdf"><code class="xref download docutils literal notranslate"><span class="pre">pdf</span></code></a>)</p>
+<figure class="align-default">
+<img alt="../_images/plenoptic-data-5.png" class="plot-directive" src="../_images/plenoptic-data-5.png" />
+</figure>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="plenoptic.data.parrot">
 <span class="sig-name descname"><span class="pre">parrot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">as_gray</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/plenoptic/data.html#parrot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#plenoptic.data.parrot" title="Link to this definition"></a></dt>
 <dd><p>Return an example grayscale image of a parrot.</p>
@@ -276,9 +319,9 @@
 <span class="go">&lt;PyrFigure size ...&gt;</span>
 </pre></div>
 </div>
-<p>(<a class="reference download internal" download="" href="../_downloads/a17bea1790e7d6f8a3cc4dde635ea576/plenoptic-data-5.png"><code class="xref download docutils literal notranslate"><span class="pre">png</span></code></a>, <a class="reference download internal" download="" href="../_downloads/2b24a7cfae5739a4d4169efc923058c0/plenoptic-data-5.hires.png"><code class="xref download docutils literal notranslate"><span class="pre">hires.png</span></code></a>, <a class="reference download internal" download="" href="../_downloads/c67ba43927ba8cfb87fdc31f46e70d22/plenoptic-data-5.pdf"><code class="xref download docutils literal notranslate"><span class="pre">pdf</span></code></a>)</p>
+<p>(<a class="reference download internal" download="" href="../_downloads/865480714fcb797856ae1bfac495ff94/plenoptic-data-6.png"><code class="xref download docutils literal notranslate"><span class="pre">png</span></code></a>, <a class="reference download internal" download="" href="../_downloads/afde3afcb9a7d7dab7ca2ef5e1167919/plenoptic-data-6.hires.png"><code class="xref download docutils literal notranslate"><span class="pre">hires.png</span></code></a>, <a class="reference download internal" download="" href="../_downloads/4b7001374a70c2d09d40f25af88bb7ef/plenoptic-data-6.pdf"><code class="xref download docutils literal notranslate"><span class="pre">pdf</span></code></a>)</p>
 <figure class="align-default">
-<img alt="../_images/plenoptic-data-5.png" class="plot-directive" src="../_images/plenoptic-data-5.png" />
+<img alt="../_images/plenoptic-data-6.png" class="plot-directive" src="../_images/plenoptic-data-6.png" />
 </figure>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">plenoptic</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">po</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">parrot_rgb</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">parrot</span><span class="p">(</span><span class="n">as_gray</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
@@ -312,9 +355,9 @@
 <span class="go">&lt;PyrFigure size ...&gt;</span>
 </pre></div>
 </div>
-<p>(<a class="reference download internal" download="" href="../_downloads/865480714fcb797856ae1bfac495ff94/plenoptic-data-6.png"><code class="xref download docutils literal notranslate"><span class="pre">png</span></code></a>, <a class="reference download internal" download="" href="../_downloads/afde3afcb9a7d7dab7ca2ef5e1167919/plenoptic-data-6.hires.png"><code class="xref download docutils literal notranslate"><span class="pre">hires.png</span></code></a>, <a class="reference download internal" download="" href="../_downloads/4b7001374a70c2d09d40f25af88bb7ef/plenoptic-data-6.pdf"><code class="xref download docutils literal notranslate"><span class="pre">pdf</span></code></a>)</p>
+<p>(<a class="reference download internal" download="" href="../_downloads/1a218a20c09baa24b2787e37411c4ff6/plenoptic-data-7.png"><code class="xref download docutils literal notranslate"><span class="pre">png</span></code></a>, <a class="reference download internal" download="" href="../_downloads/b8c14265b6e69d073587cde73e35e6ab/plenoptic-data-7.hires.png"><code class="xref download docutils literal notranslate"><span class="pre">hires.png</span></code></a>, <a class="reference download internal" download="" href="../_downloads/47619d761b0ba91f6aa4e4f8cc5f535e/plenoptic-data-7.pdf"><code class="xref download docutils literal notranslate"><span class="pre">pdf</span></code></a>)</p>
 <figure class="align-default">
-<img alt="../_images/plenoptic-data-6.png" class="plot-directive" src="../_images/plenoptic-data-6.png" />
+<img alt="../_images/plenoptic-data-7.png" class="plot-directive" src="../_images/plenoptic-data-7.png" />
 </figure>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">plenoptic</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">po</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">reptile_skin_rgb</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">reptile_skin</span><span class="p">(</span><span class="n">as_gray</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
