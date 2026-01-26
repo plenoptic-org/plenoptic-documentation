@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>plenoptic.tools.signal &mdash; plenoptic 1.3.2.dev146 documentation</title>
+  <title>plenoptic.tools.signal &mdash; plenoptic 1.3.2.dev206 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../_static/plot_directive.css" />
@@ -18,11 +18,11 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=5123e042"></script>
-      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../_static/documentation_options.js?v=8b1279f8"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
-      <script src="../../../_static/copybutton.js?v=35a8b989"></script>
+      <script src="../../../_static/copybutton.js?v=6dbb43f8"></script>
       <script>let toggleHintShow = 'Click to show';</script>
       <script>let toggleHintHide = 'Click to hide';</script>
       <script>let toggleOpenOnPrint = 'true';</script>
@@ -82,12 +82,15 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Advanced usage</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../synthesis.html">Synthesis object design</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api.html">API Documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../tips.html">Tips and Tricks</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../reproducibility.html">Reproducibility and Compatibility</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../api/modules.html">API Documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../tutorials/advanced/Display.html">Display and animate functions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../tutorials/advanced/Synthesis_extensions.html">Extending existing synthesis objects</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">For Developers</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../synthesis.html">Synthesis object design</a></li>
 </ul>
 
         </div>
@@ -125,7 +128,7 @@
 
 
 <div class="viewcode-block" id="rescale">
-<a class="viewcode-back" href="../../../api/plenoptic.tools.html#plenoptic.tools.signal.rescale">[docs]</a>
+<a class="viewcode-back" href="../../../generated/plenoptic.tools.signal.html#plenoptic.tools.signal.rescale">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">rescale</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span> <span class="n">a</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Linearly rescale the dynamic range of the input to ``[a, b]``.</span>
@@ -150,9 +153,7 @@
 
 
 
-<div class="viewcode-block" id="raised_cosine">
-<a class="viewcode-back" href="../../../api/plenoptic.tools.html#plenoptic.tools.signal.raised_cosine">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">raised_cosine</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_raised_cosine</span><span class="p">(</span>
     <span class="n">width</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">position</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">values</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -164,7 +165,7 @@
 <span class="sd">           + (VALUES(2)-VALUES(1))</span>
 <span class="sd">           * cos^2( PI/2 * (X - POSITION + WIDTH)/WIDTH )</span>
 
-<span class="sd">    This lookup table is suitable for use by :func:`interpolate1d`.</span>
+<span class="sd">    This lookup table is suitable for use by :func:`_interpolate1d`.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -194,13 +195,10 @@
 
     <span class="n">X</span> <span class="o">=</span> <span class="n">position</span> <span class="o">+</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">width</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">X</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">4</span><span class="p">)</span>
 
-    <span class="k">return</span> <span class="n">X</span><span class="p">,</span> <span class="n">Y</span></div>
+    <span class="k">return</span> <span class="n">X</span><span class="p">,</span> <span class="n">Y</span>
 
 
-
-<div class="viewcode-block" id="interpolate1d">
-<a class="viewcode-back" href="../../../api/plenoptic.tools.html#plenoptic.tools.signal.interpolate1d">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">interpolate1d</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_interpolate1d</span><span class="p">(</span>
     <span class="n">x_new</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span> <span class="n">Y</span><span class="p">:</span> <span class="n">Tensor</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">Tensor</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
@@ -227,12 +225,11 @@
 <span class="sd">        Interpolated values of shape identical to ``x_new``.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">out</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">interp</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">x_new</span><span class="o">.</span><span class="n">flatten</span><span class="p">(),</span> <span class="n">xp</span><span class="o">=</span><span class="n">X</span><span class="p">,</span> <span class="n">fp</span><span class="o">=</span><span class="n">Y</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">out</span><span class="p">,</span> <span class="n">x_new</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span></div>
-
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">out</span><span class="p">,</span> <span class="n">x_new</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="rectangular_to_polar">
-<a class="viewcode-back" href="../../../api/plenoptic.tools.html#plenoptic.tools.signal.rectangular_to_polar">[docs]</a>
+<a class="viewcode-back" href="../../../generated/plenoptic.tools.signal.html#plenoptic.tools.signal.rectangular_to_polar">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">rectangular_to_polar</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">Tensor</span><span class="p">]:</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Rectangular to polar coordinate transform.</span>
@@ -254,8 +251,12 @@
 
 <span class="sd">    See Also</span>
 <span class="sd">    --------</span>
+<span class="sd">    :func:`~plenoptic.simulate.canonical_computations.non_linearities.rectangular_to_polar_dict`</span>
+<span class="sd">        Same operation on dictionaries.</span>
 <span class="sd">    polar_to_rectangular</span>
 <span class="sd">        The inverse operation.</span>
+<span class="sd">    :func:`~plenoptic.simulate.canonical_computations.non_linearities.local_gain_control`</span>
+<span class="sd">        The analogous function for real-valued signals.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">amplitude</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
     <span class="n">phase</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">angle</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
@@ -264,7 +265,7 @@
 
 
 <div class="viewcode-block" id="polar_to_rectangular">
-<a class="viewcode-back" href="../../../api/plenoptic.tools.html#plenoptic.tools.signal.polar_to_rectangular">[docs]</a>
+<a class="viewcode-back" href="../../../generated/plenoptic.tools.signal.html#plenoptic.tools.signal.polar_to_rectangular">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">polar_to_rectangular</span><span class="p">(</span><span class="n">amplitude</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span> <span class="n">phase</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Polar to rectangular coordinate transform.</span>
@@ -288,8 +289,12 @@
 
 <span class="sd">    See Also</span>
 <span class="sd">    --------</span>
+<span class="sd">    :func:`~plenoptic.simulate.canonical_computations.non_linearities.polar_to_rectangular_dict`</span>
+<span class="sd">        Same operation on dictionaries.</span>
 <span class="sd">    rectangular_to_polar</span>
 <span class="sd">        The inverse operation.</span>
+<span class="sd">    :func:`~plenoptic.simulate.canonical_computations.non_linearities.local_gain_release`</span>
+<span class="sd">        The analogous function for real-valued signals.</span>
 <span class="sd">    &quot;&quot;&quot;</span>  <span class="c1"># numpydoc ignore=ES01</span>
     <span class="k">if</span> <span class="p">(</span><span class="n">amplitude</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">any</span><span class="p">():</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Amplitudes must be non-negative.&quot;</span><span class="p">)</span>
@@ -300,9 +305,7 @@
 
 
 
-<div class="viewcode-block" id="steer">
-<a class="viewcode-back" href="../../../api/plenoptic.tools.html#plenoptic.tools.signal.steer">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">steer</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_steer</span><span class="p">(</span>
     <span class="n">basis</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span>
     <span class="n">angle</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="n">Tensor</span> <span class="o">|</span> <span class="nb">float</span><span class="p">,</span>
     <span class="n">harmonics</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -399,12 +402,11 @@
         <span class="n">res</span> <span class="o">=</span> <span class="n">tmp</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">.</span><span class="n">t</span><span class="p">()</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">res</span> <span class="o">=</span> <span class="n">basis</span> <span class="o">@</span> <span class="n">steervect</span><span class="o">.</span><span class="n">t</span><span class="p">()</span>
-    <span class="k">return</span> <span class="n">res</span><span class="p">,</span> <span class="n">steervect</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">num</span><span class="p">)</span></div>
-
+    <span class="k">return</span> <span class="n">res</span><span class="p">,</span> <span class="n">steervect</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">num</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="make_disk">
-<a class="viewcode-back" href="../../../api/plenoptic.tools.html#plenoptic.tools.signal.make_disk">[docs]</a>
+<a class="viewcode-back" href="../../../generated/plenoptic.tools.signal.html#plenoptic.tools.signal.make_disk">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">make_disk</span><span class="p">(</span>
     <span class="n">img_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">|</span> <span class="n">torch</span><span class="o">.</span><span class="n">Size</span><span class="p">,</span>
     <span class="n">outer_radius</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -462,7 +464,7 @@
 
 
 <div class="viewcode-block" id="add_noise">
-<a class="viewcode-back" href="../../../api/plenoptic.tools.html#plenoptic.tools.signal.add_noise">[docs]</a>
+<a class="viewcode-back" href="../../../generated/plenoptic.tools.signal.html#plenoptic.tools.signal.add_noise">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">add_noise</span><span class="p">(</span><span class="n">img</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span> <span class="n">noise_mse</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Add normally distributed noise to an image.</span>
@@ -503,7 +505,7 @@
 
 
 <div class="viewcode-block" id="modulate_phase">
-<a class="viewcode-back" href="../../../api/plenoptic.tools.html#plenoptic.tools.signal.modulate_phase">[docs]</a>
+<a class="viewcode-back" href="../../../generated/plenoptic.tools.signal.html#plenoptic.tools.signal.modulate_phase">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">modulate_phase</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span> <span class="n">phase_factor</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">2.0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Modulate the phase of a complex signal.</span>
@@ -542,7 +544,7 @@
 
 
 <div class="viewcode-block" id="autocorrelation">
-<a class="viewcode-back" href="../../../api/plenoptic.tools.html#plenoptic.tools.signal.autocorrelation">[docs]</a>
+<a class="viewcode-back" href="../../../generated/plenoptic.tools.signal.html#plenoptic.tools.signal.autocorrelation">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">autocorrelation</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Compute the autocorrelation of ``x``.</span>
@@ -588,7 +590,7 @@
 
 
 <div class="viewcode-block" id="center_crop">
-<a class="viewcode-back" href="../../../api/plenoptic.tools.html#plenoptic.tools.signal.center_crop">[docs]</a>
+<a class="viewcode-back" href="../../../generated/plenoptic.tools.signal.html#plenoptic.tools.signal.center_crop">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">center_crop</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span> <span class="n">output_size</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Crop out the center of a signal.</span>
@@ -647,7 +649,7 @@
 
 
 <div class="viewcode-block" id="expand">
-<a class="viewcode-back" href="../../../api/plenoptic.tools.html#plenoptic.tools.signal.expand">[docs]</a>
+<a class="viewcode-back" href="../../../generated/plenoptic.tools.signal.html#plenoptic.tools.signal.expand">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">expand</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span> <span class="n">factor</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Expand a signal by a factor.</span>
@@ -743,7 +745,7 @@
 
 
 <div class="viewcode-block" id="shrink">
-<a class="viewcode-back" href="../../../api/plenoptic.tools.html#plenoptic.tools.signal.shrink">[docs]</a>
+<a class="viewcode-back" href="../../../generated/plenoptic.tools.signal.html#plenoptic.tools.signal.shrink">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">shrink</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span> <span class="n">factor</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Shrink a signal by a factor.</span>

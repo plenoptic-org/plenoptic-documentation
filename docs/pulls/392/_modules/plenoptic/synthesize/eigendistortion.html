@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>plenoptic.synthesize.eigendistortion &mdash; plenoptic 1.3.2.dev146 documentation</title>
+  <title>plenoptic.synthesize.eigendistortion &mdash; plenoptic 1.3.2.dev206 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../_static/plot_directive.css" />
@@ -18,11 +18,11 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=5123e042"></script>
-      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../_static/documentation_options.js?v=8b1279f8"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
-      <script src="../../../_static/copybutton.js?v=35a8b989"></script>
+      <script src="../../../_static/copybutton.js?v=6dbb43f8"></script>
       <script>let toggleHintShow = 'Click to show';</script>
       <script>let toggleHintHide = 'Click to hide';</script>
       <script>let toggleOpenOnPrint = 'true';</script>
@@ -82,12 +82,15 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Advanced usage</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../synthesis.html">Synthesis object design</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api.html">API Documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../tips.html">Tips and Tricks</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../reproducibility.html">Reproducibility and Compatibility</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../api/modules.html">API Documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../tutorials/advanced/Display.html">Display and animate functions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../tutorials/advanced/Synthesis_extensions.html">Extending existing synthesis objects</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">For Developers</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../synthesis.html">Synthesis object design</a></li>
 </ul>
 
         </div>
@@ -118,7 +121,9 @@
 <span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Eigendistortions.</span>
 
-<span class="sd">Classes to perform the synthesis of eigendistortions.</span>
+<span class="sd">Eigendistortions are images which make changes that a model thinks are most or least</span>
+<span class="sd">noticeable to an image, given a constrained pixel budget. They allow researchers to see</span>
+<span class="sd">which features drive a model&#39;s response and which have no effect.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
@@ -134,91 +139,15 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">..tools.display</span><span class="w"> </span><span class="kn">import</span> <span class="n">imshow</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">..tools.validate</span><span class="w"> </span><span class="kn">import</span> <span class="n">validate_input</span><span class="p">,</span> <span class="n">validate_model</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.autodiff</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
-    <span class="n">jacobian</span><span class="p">,</span>
-    <span class="n">jacobian_vector_product</span><span class="p">,</span>
-    <span class="n">vector_jacobian_product</span><span class="p">,</span>
+    <span class="n">_fisher_info_matrix_eigenvalue</span><span class="p">,</span>
+    <span class="n">_fisher_info_matrix_vector_product</span><span class="p">,</span>
+    <span class="n">_jacobian</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.synthesis</span><span class="w"> </span><span class="kn">import</span> <span class="n">Synthesis</span>
 
 
-<div class="viewcode-block" id="fisher_info_matrix_vector_product">
-<a class="viewcode-back" href="../../../api/plenoptic.synthesize.html#plenoptic.synthesize.eigendistortion.fisher_info_matrix_vector_product">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">fisher_info_matrix_vector_product</span><span class="p">(</span>
-    <span class="n">y</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span> <span class="n">v</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span> <span class="n">dummy_vec</span><span class="p">:</span> <span class="n">Tensor</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
-<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Compute Fisher Information Matrix Vector Product: :math:`Fv`.</span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    y</span>
-<span class="sd">        Output tensor with gradient attached.</span>
-<span class="sd">    x</span>
-<span class="sd">        Input tensor with gradient attached.</span>
-<span class="sd">    v</span>
-<span class="sd">        The vectors with which to compute Fisher vector products.</span>
-<span class="sd">    dummy_vec</span>
-<span class="sd">        Dummy vector for Jacobian vector product trick.</span>
-
-<span class="sd">    Returns</span>
-<span class="sd">    -------</span>
-<span class="sd">    Fv</span>
-<span class="sd">        Vector, Fisher vector product.</span>
-
-<span class="sd">    Notes</span>
-<span class="sd">    -----</span>
-<span class="sd">    Under white Gaussian noise assumption, :math:`F` is matrix multiplication</span>
-<span class="sd">    of Jacobian transpose and Jacobian:</span>
-<span class="sd">    :math:`F = J^T J`. Hence:</span>
-<span class="sd">    :math:`Fv = J^T (Jv)`</span>
-<span class="sd">    &quot;&quot;&quot;</span>  <span class="c1"># numpydoc ignore=ES01</span>
-    <span class="n">Jv</span> <span class="o">=</span> <span class="n">jacobian_vector_product</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">dummy_vec</span><span class="p">)</span>
-    <span class="n">Fv</span> <span class="o">=</span> <span class="n">vector_jacobian_product</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">Jv</span><span class="p">,</span> <span class="n">detach</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-
-    <span class="k">return</span> <span class="n">Fv</span></div>
-
-
-
-<div class="viewcode-block" id="fisher_info_matrix_eigenvalue">
-<a class="viewcode-back" href="../../../api/plenoptic.synthesize.html#plenoptic.synthesize.eigendistortion.fisher_info_matrix_eigenvalue">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">fisher_info_matrix_eigenvalue</span><span class="p">(</span>
-    <span class="n">y</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span> <span class="n">v</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span> <span class="n">dummy_vec</span><span class="p">:</span> <span class="n">Tensor</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
-<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Compute eigenvalues of Fisher vector products.</span>
-
-<span class="sd">    We compute the Fisher Information Matrix corresponding to eigenvectors in ``v``:</span>
-<span class="sd">    :math:`\lambda= v^T F v`.</span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    y</span>
-<span class="sd">        Output tensor with gradient attached.</span>
-<span class="sd">    x</span>
-<span class="sd">        Input tensor with gradient attached.</span>
-<span class="sd">    v</span>
-<span class="sd">        The vectors with which to compute Fisher vector products.</span>
-<span class="sd">    dummy_vec</span>
-<span class="sd">        Dummy vector for Jacobian vector product trick.</span>
-
-<span class="sd">    Returns</span>
-<span class="sd">    -------</span>
-<span class="sd">    lmbda</span>
-<span class="sd">        The computed eigenvalues.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">dummy_vec</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">dummy_vec</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">requires_grad</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-
-    <span class="n">Fv</span> <span class="o">=</span> <span class="n">fisher_info_matrix_vector_product</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">dummy_vec</span><span class="p">)</span>
-
-    <span class="c1"># compute eigenvalues for all vectors in v</span>
-    <span class="n">lmbda</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">a</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">b</span><span class="p">)</span> <span class="k">for</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">Fv</span><span class="o">.</span><span class="n">T</span><span class="p">)])</span>
-    <span class="k">return</span> <span class="n">lmbda</span></div>
-
-
-
 <div class="viewcode-block" id="Eigendistortion">
-<a class="viewcode-back" href="../../../api/plenoptic.synthesize.html#plenoptic.synthesize.eigendistortion.Eigendistortion">[docs]</a>
+<a class="viewcode-back" href="../../../generated/plenoptic.synthesize.eigendistortion.Eigendistortion.html#plenoptic.synthesize.eigendistortion.Eigendistortion">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">Eigendistortion</span><span class="p">(</span><span class="n">Synthesis</span><span class="p">):</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Synthesize eigendistortions induced by a model on a given input image.</span>
@@ -245,15 +174,14 @@
 <span class="sd">    differentiable) mapping from the input pixels :math:`x \in \mathbb{R}^n` to a mean</span>
 <span class="sd">    output response vector :math:`y\in \mathbb{R}^m`, where we assume additive white</span>
 <span class="sd">    Gaussian noise in the response space.</span>
-<span class="sd">    The Jacobian matrix at :math:`x` is:</span>
-<span class="sd">        :math:`J(x) = J = dydx`,</span>
-<span class="sd">        :math:`J\in\mathbb{R}^{m \times n}` (ie. output_dim x input_dim)</span>
+
+<span class="sd">    The Jacobian matrix at :math:`x` is: :math:`J(x) = J = dydx`, where</span>
+<span class="sd">    :math:`J\in\mathbb{R}^{m \times n}` (i.e. output_dim x input_dim).</span>
+
 <span class="sd">    The matrix consists of all partial derivatives of the vector-valued function</span>
 <span class="sd">    :math:`f`. The Fisher Information Matrix (FIM) at :math:`x`, under white Gaussian</span>
-<span class="sd">    noise in the response space, is:</span>
-<span class="sd">        :math:`F = J^T J`</span>
-<span class="sd">    It is a quadratic approximation of the discriminability of distortions</span>
-<span class="sd">    relative to :math:`x`.</span>
+<span class="sd">    noise in the response space, is: :math:`F = J^T J` It is a quadratic approximation</span>
+<span class="sd">    of the discriminability of distortions relative to :math:`x`.</span>
 
 <span class="sd">    References</span>
 <span class="sd">    ----------</span>
@@ -304,7 +232,7 @@
             <span class="p">)</span>
 
 <div class="viewcode-block" id="Eigendistortion.synthesize">
-<a class="viewcode-back" href="../../../api/plenoptic.synthesize.html#plenoptic.synthesize.eigendistortion.Eigendistortion.synthesize">[docs]</a>
+<a class="viewcode-back" href="../../../generated/plenoptic.synthesize.eigendistortion.Eigendistortion.html#plenoptic.synthesize.eigendistortion.Eigendistortion.synthesize">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">synthesize</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">method</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;exact&quot;</span><span class="p">,</span> <span class="s2">&quot;power&quot;</span><span class="p">,</span> <span class="s2">&quot;randomized_svd&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;power&quot;</span><span class="p">,</span>
@@ -335,12 +263,12 @@
 <span class="sd">            computation. Ignored for other methods.</span>
 <span class="sd">        p</span>
 <span class="sd">            Oversampling parameter for randomized SVD. k+p vectors will be sampled,</span>
-<span class="sd">            and k will be returned. See docstring of :meth:`_synthesize_randomized_svd`</span>
+<span class="sd">            and k will be returned. See docstring of ``_synthesize_randomized_svd``</span>
 <span class="sd">            for more details including algorithm reference.</span>
 <span class="sd">        q</span>
 <span class="sd">            Matrix power parameter for randomized SVD. This is an effective trick for</span>
 <span class="sd">            the algorithm to converge to the correct eigenvectors when the</span>
-<span class="sd">            eigenspectrum does not decay quickly. See :meth:`_synthesize_randomized_svd`</span>
+<span class="sd">            eigenspectrum does not decay quickly. See ``_synthesize_randomized_svd``</span>
 <span class="sd">            for more details including algorithm reference.</span>
 <span class="sd">        stop_criterion</span>
 <span class="sd">            Used if ``method=&#39;power&#39;`` to check for convergence. If the L2-norm</span>
@@ -438,10 +366,14 @@
         <span class="k">return</span> <span class="n">eig_vals</span><span class="p">,</span> <span class="n">eig_vecs</span>
 
 <div class="viewcode-block" id="Eigendistortion.compute_jacobian">
-<a class="viewcode-back" href="../../../api/plenoptic.synthesize.html#plenoptic.synthesize.eigendistortion.Eigendistortion.compute_jacobian">[docs]</a>
+<a class="viewcode-back" href="../../../generated/plenoptic.synthesize.eigendistortion.Eigendistortion.html#plenoptic.synthesize.eigendistortion.Eigendistortion.compute_jacobian">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">compute_jacobian</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
 <span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Compute (via :func:`autodiff.jacobian`), cache, and return jacobian.</span>
+<span class="sd">        Compute, cache, and return jacobian.</span>
+
+<span class="sd">        If the jacobian has not been cached: compute, cache, and return.</span>
+
+<span class="sd">        If the jacobian has already been cached, we simply return it.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -453,9 +385,9 @@
 <span class="sd">        UserWarning</span>
 <span class="sd">            If input dimensionality is greater than 1e4, in which case we believe that</span>
 <span class="sd">            this calculation will take too long.</span>
-<span class="sd">        &quot;&quot;&quot;</span>  <span class="c1"># numpydoc ignore=ES01</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">jacobian</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">J</span> <span class="o">=</span> <span class="n">jacobian</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_representation_flat</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_image_flat</span><span class="p">)</span>
+            <span class="n">J</span> <span class="o">=</span> <span class="n">_jacobian</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_representation_flat</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_image_flat</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_jacobian</span> <span class="o">=</span> <span class="n">J</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">J</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">jacobian</span>
@@ -474,7 +406,7 @@
 <span class="sd">        Apply the algorithm to approximate the extremal eigenvalues and eigenvectors</span>
 <span class="sd">        of the Fisher Information Matrix, without explicitly representing that matrix.</span>
 
-<span class="sd">        This method repeatedly calls :func:`fisher_info_matrix_vector_product` with a</span>
+<span class="sd">        This method repeatedly calls :func:`_fisher_info_matrix_vector_product` with a</span>
 <span class="sd">        single (``k=1``), or multiple (``k&gt;1``) vectors.</span>
 
 <span class="sd">        Parameters</span>
@@ -513,9 +445,9 @@
         <span class="n">v</span> <span class="o">=</span> <span class="n">v</span> <span class="o">/</span> <span class="n">torch</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">vector_norm</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">keepdim</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="nb">ord</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 
         <span class="n">_dummy_vec</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">requires_grad</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>  <span class="c1"># cache a dummy vec for jvp</span>
-        <span class="n">Fv</span> <span class="o">=</span> <span class="n">fisher_info_matrix_vector_product</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">_dummy_vec</span><span class="p">)</span>
+        <span class="n">Fv</span> <span class="o">=</span> <span class="n">_fisher_info_matrix_vector_product</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">_dummy_vec</span><span class="p">)</span>
         <span class="n">v</span> <span class="o">=</span> <span class="n">Fv</span> <span class="o">/</span> <span class="n">torch</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">vector_norm</span><span class="p">(</span><span class="n">Fv</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">keepdim</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="nb">ord</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-        <span class="n">lmbda</span> <span class="o">=</span> <span class="n">fisher_info_matrix_eigenvalue</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">_dummy_vec</span><span class="p">)</span>
+        <span class="n">lmbda</span> <span class="o">=</span> <span class="n">_fisher_info_matrix_eigenvalue</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">_dummy_vec</span><span class="p">)</span>
 
         <span class="n">d_lambda</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">as_tensor</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="s2">&quot;inf&quot;</span><span class="p">))</span>
         <span class="n">lmbda_new</span><span class="p">,</span> <span class="n">v_new</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span>
@@ -531,12 +463,12 @@
                 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">desc</span><span class="si">}</span><span class="s2"> computed | Stop criterion </span><span class="si">{</span><span class="n">tol</span><span class="si">:</span><span class="s2">.2E</span><span class="si">}</span><span class="s2"> reached.&quot;</span><span class="p">)</span>
                 <span class="k">break</span>
 
-            <span class="n">Fv</span> <span class="o">=</span> <span class="n">fisher_info_matrix_vector_product</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">_dummy_vec</span><span class="p">)</span>
+            <span class="n">Fv</span> <span class="o">=</span> <span class="n">_fisher_info_matrix_vector_product</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">_dummy_vec</span><span class="p">)</span>
             <span class="n">Fv</span> <span class="o">=</span> <span class="n">Fv</span> <span class="o">-</span> <span class="n">shift</span> <span class="o">*</span> <span class="n">v</span>  <span class="c1"># optionally shift: (F - shift*I)v</span>
 
             <span class="n">v_new</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">qr</span><span class="p">(</span><span class="n">Fv</span><span class="p">,</span> <span class="s2">&quot;reduced&quot;</span><span class="p">)</span>  <span class="c1"># (ortho)normalize vector(s)</span>
 
-            <span class="n">lmbda_new</span> <span class="o">=</span> <span class="n">fisher_info_matrix_eigenvalue</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">v_new</span><span class="p">,</span> <span class="n">_dummy_vec</span><span class="p">)</span>
+            <span class="n">lmbda_new</span> <span class="o">=</span> <span class="n">_fisher_info_matrix_eigenvalue</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">v_new</span><span class="p">,</span> <span class="n">_dummy_vec</span><span class="p">)</span>
 
             <span class="n">d_lambda</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">vector_norm</span><span class="p">(</span>
                 <span class="n">lmbda</span> <span class="o">-</span> <span class="n">lmbda_new</span><span class="p">,</span> <span class="nb">ord</span><span class="o">=</span><span class="mi">2</span>
@@ -591,22 +523,22 @@
         <span class="c1"># orthogonalize first for numerical stability</span>
         <span class="n">P</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">qr</span><span class="p">(</span><span class="n">P</span><span class="p">,</span> <span class="s2">&quot;reduced&quot;</span><span class="p">)</span>
         <span class="n">_dummy_vec</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">requires_grad</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="n">Z</span> <span class="o">=</span> <span class="n">fisher_info_matrix_vector_product</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">_dummy_vec</span><span class="p">)</span>
+        <span class="n">Z</span> <span class="o">=</span> <span class="n">_fisher_info_matrix_vector_product</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">_dummy_vec</span><span class="p">)</span>
 
         <span class="c1"># optional power iteration to squeeze the spectrum for more accurate</span>
         <span class="c1"># estimate</span>
         <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">q</span><span class="p">):</span>
-            <span class="n">Z</span> <span class="o">=</span> <span class="n">fisher_info_matrix_vector_product</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">Z</span><span class="p">,</span> <span class="n">_dummy_vec</span><span class="p">)</span>
+            <span class="n">Z</span> <span class="o">=</span> <span class="n">_fisher_info_matrix_vector_product</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">Z</span><span class="p">,</span> <span class="n">_dummy_vec</span><span class="p">)</span>
 
         <span class="n">Q</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">qr</span><span class="p">(</span><span class="n">Z</span><span class="p">,</span> <span class="s2">&quot;reduced&quot;</span><span class="p">)</span>
         <span class="c1"># B = Q.T @ A @ Q</span>
-        <span class="n">B</span> <span class="o">=</span> <span class="n">Q</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">fisher_info_matrix_vector_product</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">Q</span><span class="p">,</span> <span class="n">_dummy_vec</span><span class="p">)</span>
+        <span class="n">B</span> <span class="o">=</span> <span class="n">Q</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">_fisher_info_matrix_vector_product</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">Q</span><span class="p">,</span> <span class="n">_dummy_vec</span><span class="p">)</span>
         <span class="n">_</span><span class="p">,</span> <span class="n">S</span><span class="p">,</span> <span class="n">Vh</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">svd</span><span class="p">(</span><span class="n">B</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>  <span class="c1"># eigendecomp of small matrix</span>
         <span class="n">V</span> <span class="o">=</span> <span class="n">Vh</span><span class="o">.</span><span class="n">T</span>
         <span class="n">V</span> <span class="o">=</span> <span class="n">Q</span> <span class="o">@</span> <span class="n">V</span>  <span class="c1"># lift up to original dimensionality</span>
 
         <span class="c1"># estimate error in Q estimate of range space</span>
-        <span class="n">omega</span> <span class="o">=</span> <span class="n">fisher_info_matrix_vector_product</span><span class="p">(</span>
+        <span class="n">omega</span> <span class="o">=</span> <span class="n">_fisher_info_matrix_vector_product</span><span class="p">(</span>
             <span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">device</span><span class="p">),</span> <span class="n">_dummy_vec</span>
         <span class="p">)</span>
         <span class="n">error_approx</span> <span class="o">=</span> <span class="n">omega</span> <span class="o">-</span> <span class="p">(</span><span class="n">Q</span> <span class="o">@</span> <span class="n">Q</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">omega</span><span class="p">)</span>
@@ -667,7 +599,7 @@
         <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">all_idx</span> <span class="o">==</span> <span class="n">i</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
 
 <div class="viewcode-block" id="Eigendistortion.save">
-<a class="viewcode-back" href="../../../api/plenoptic.synthesize.html#plenoptic.synthesize.eigendistortion.Eigendistortion.save">[docs]</a>
+<a class="viewcode-back" href="../../../generated/plenoptic.synthesize.eigendistortion.Eigendistortion.html#plenoptic.synthesize.eigendistortion.Eigendistortion.save">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
 <span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Save all relevant variables in .pt file.</span>
@@ -684,25 +616,31 @@
 
 
 <div class="viewcode-block" id="Eigendistortion.to">
-<a class="viewcode-back" href="../../../api/plenoptic.synthesize.html#plenoptic.synthesize.eigendistortion.Eigendistortion.to">[docs]</a>
+<a class="viewcode-back" href="../../../generated/plenoptic.synthesize.eigendistortion.Eigendistortion.html#plenoptic.synthesize.eigendistortion.Eigendistortion.to">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">):</span>
 <span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Move and/or cast the parameters and buffers.</span>
 
 <span class="sd">        This can be called as</span>
 
-<span class="sd">        .. function:: to(device=None, dtype=None, non_blocking=False)</span>
+<span class="sd">        .. code:: python</span>
 
-<span class="sd">        .. function:: to(dtype, non_blocking=False)</span>
+<span class="sd">            to(device=None, dtype=None, non_blocking=False)</span>
 
-<span class="sd">        .. function:: to(tensor, non_blocking=False)</span>
+<span class="sd">        .. code:: python</span>
+
+<span class="sd">            to(dtype, non_blocking=False)</span>
+
+<span class="sd">        .. code:: python</span>
+
+<span class="sd">            to(tensor, non_blocking=False)</span>
 
 <span class="sd">        Its signature is similar to :meth:`torch.Tensor.to`, but only accepts</span>
-<span class="sd">        floating point desired :attr:`dtype` s. In addition, this method will</span>
-<span class="sd">        only cast the floating point parameters and buffers to :attr:`dtype`</span>
+<span class="sd">        floating point desired ``dtype``. In addition, this method will</span>
+<span class="sd">        only cast the floating point parameters and buffers to ``dtype``</span>
 <span class="sd">        (if given). The integral parameters and buffers will be moved</span>
-<span class="sd">        :attr:`device`, if that is given, but with dtypes unchanged. When</span>
-<span class="sd">        :attr:`non_blocking` is set, it tries to convert/move asynchronously</span>
+<span class="sd">        ``device``, if that is given, but with dtypes unchanged. When</span>
+<span class="sd">        `on_blocking`` is set, it tries to convert/move asynchronously</span>
 <span class="sd">        with respect to the host if possible, e.g., moving CPU Tensors with</span>
 <span class="sd">        pinned memory to CUDA devices.</span>
 
@@ -745,7 +683,7 @@
 
 
 <div class="viewcode-block" id="Eigendistortion.load">
-<a class="viewcode-back" href="../../../api/plenoptic.synthesize.html#plenoptic.synthesize.eigendistortion.Eigendistortion.load">[docs]</a>
+<a class="viewcode-back" href="../../../generated/plenoptic.synthesize.eigendistortion.Eigendistortion.html#plenoptic.synthesize.eigendistortion.Eigendistortion.load">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">load</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
@@ -896,7 +834,7 @@
 
 
 <div class="viewcode-block" id="display_eigendistortion">
-<a class="viewcode-back" href="../../../api/plenoptic.synthesize.html#plenoptic.synthesize.eigendistortion.display_eigendistortion">[docs]</a>
+<a class="viewcode-back" href="../../../generated/plenoptic.synthesize.eigendistortion.html#plenoptic.synthesize.eigendistortion.display_eigendistortion">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">display_eigendistortion</span><span class="p">(</span>
     <span class="n">eigendistortion</span><span class="p">:</span> <span class="n">Eigendistortion</span><span class="p">,</span>
     <span class="n">eigenindex</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
@@ -969,7 +907,7 @@
 
 
 <div class="viewcode-block" id="display_eigendistortion_all">
-<a class="viewcode-back" href="../../../api/plenoptic.synthesize.html#plenoptic.synthesize.eigendistortion.display_eigendistortion_all">[docs]</a>
+<a class="viewcode-back" href="../../../generated/plenoptic.synthesize.eigendistortion.html#plenoptic.synthesize.eigendistortion.display_eigendistortion_all">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">display_eigendistortion_all</span><span class="p">(</span>
     <span class="n">eigendistortion</span><span class="p">:</span> <span class="n">Eigendistortion</span><span class="p">,</span>
     <span class="n">eigenindex</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span>

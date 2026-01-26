@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>plenoptic.synthesize.metamer &mdash; plenoptic 1.3.2.dev146 documentation</title>
+  <title>plenoptic.synthesize.metamer &mdash; plenoptic 1.3.2.dev206 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../_static/plot_directive.css" />
@@ -18,11 +18,11 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=5123e042"></script>
-      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../_static/documentation_options.js?v=8b1279f8"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
-      <script src="../../../_static/copybutton.js?v=35a8b989"></script>
+      <script src="../../../_static/copybutton.js?v=6dbb43f8"></script>
       <script>let toggleHintShow = 'Click to show';</script>
       <script>let toggleHintHide = 'Click to hide';</script>
       <script>let toggleOpenOnPrint = 'true';</script>
@@ -82,12 +82,15 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Advanced usage</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../synthesis.html">Synthesis object design</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api.html">API Documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../tips.html">Tips and Tricks</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../reproducibility.html">Reproducibility and Compatibility</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../api/modules.html">API Documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../tutorials/advanced/Display.html">Display and animate functions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../tutorials/advanced/Synthesis_extensions.html">Extending existing synthesis objects</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">For Developers</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../synthesis.html">Synthesis object design</a></li>
 </ul>
 
         </div>
@@ -118,7 +121,9 @@
 <span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Model metamers.</span>
 
-<span class="sd">Classes to perform the synthesis of model metamers.</span>
+<span class="sd">Model metamers are images whose pixel values differ but whose model outputs are</span>
+<span class="sd">identical. They allow researchers to better understand the information which have no</span>
+<span class="sd">effect on a model&#39;s output, also known as their invariances.</span>
 <span class="sd">&quot;&quot;&quot;</span>  <span class="c1"># numpydoc ignore=EX01</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
@@ -135,13 +140,13 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">tqdm.auto</span><span class="w"> </span><span class="kn">import</span> <span class="n">tqdm</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">..tools</span><span class="w"> </span><span class="kn">import</span> <span class="n">data</span><span class="p">,</span> <span class="n">display</span><span class="p">,</span> <span class="n">optim</span><span class="p">,</span> <span class="n">signal</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">..tools.convergence</span><span class="w"> </span><span class="kn">import</span> <span class="n">coarse_to_fine_enough</span><span class="p">,</span> <span class="n">loss_convergence</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..tools.convergence</span><span class="w"> </span><span class="kn">import</span> <span class="n">_coarse_to_fine_enough</span><span class="p">,</span> <span class="n">_loss_convergence</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">..tools.validate</span><span class="w"> </span><span class="kn">import</span> <span class="n">validate_coarse_to_fine</span><span class="p">,</span> <span class="n">validate_input</span><span class="p">,</span> <span class="n">validate_model</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.synthesis</span><span class="w"> </span><span class="kn">import</span> <span class="n">OptimizedSynthesis</span>
 
 
 <div class="viewcode-block" id="Metamer">
-<a class="viewcode-back" href="../../../api/plenoptic.synthesize.html#plenoptic.synthesize.metamer.Metamer">[docs]</a>
+<a class="viewcode-back" href="../../../generated/plenoptic.synthesize.metamer.Metamer.html#plenoptic.synthesize.metamer.Metamer">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">Metamer</span><span class="p">(</span><span class="n">OptimizedSynthesis</span><span class="p">):</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Synthesize metamers for image-computable differentiable models.</span>
@@ -198,6 +203,9 @@
 <span class="sd">      &lt;Figure size ...&gt;</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
+    <span class="n">loss_function</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">Tensor</span><span class="p">],</span> <span class="n">Tensor</span><span class="p">]</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Callable which specifies how close metamer representation is to target.&quot;&quot;&quot;</span>
+
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">image</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span>
@@ -226,7 +234,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_metamer</span> <span class="o">=</span> <span class="kc">None</span>
 
 <div class="viewcode-block" id="Metamer.setup">
-<a class="viewcode-back" href="../../../api/plenoptic.synthesize.html#plenoptic.synthesize.metamer.Metamer.setup">[docs]</a>
+<a class="viewcode-back" href="../../../generated/plenoptic.synthesize.metamer.Metamer.html#plenoptic.synthesize.metamer.Metamer.setup">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">setup</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">initial_image</span><span class="p">:</span> <span class="n">Tensor</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -297,7 +305,6 @@
 <span class="sd">        &gt;&gt;&gt; po.tools.remove_grad(model)</span>
 <span class="sd">        &gt;&gt;&gt; met = po.synth.Metamer(img, model)</span>
 <span class="sd">        &gt;&gt;&gt; met.setup(po.data.curie())</span>
-<span class="sd">        &gt;&gt;&gt; met.synthesize(5)</span>
 
 <span class="sd">        Set optimizer:</span>
 
@@ -308,7 +315,6 @@
 <span class="sd">        &gt;&gt;&gt; po.tools.remove_grad(model)</span>
 <span class="sd">        &gt;&gt;&gt; met = po.synth.Metamer(img, model)</span>
 <span class="sd">        &gt;&gt;&gt; met.setup(optimizer=torch.optim.SGD, optimizer_kwargs={&quot;lr&quot;: 0.01})</span>
-<span class="sd">        &gt;&gt;&gt; met.synthesize(5)</span>
 
 <span class="sd">        Set optimizer and scheduler:</span>
 
@@ -323,7 +329,6 @@
 <span class="sd">        ...     optimizer_kwargs={&quot;lr&quot;: 0.01},</span>
 <span class="sd">        ...     scheduler=torch.optim.lr_scheduler.ReduceLROnPlateau,</span>
 <span class="sd">        ... )</span>
-<span class="sd">        &gt;&gt;&gt; met.synthesize(5)</span>
 
 <span class="sd">        Use with save/load. Only the optimizer/scheduler objects are necessary, their</span>
 <span class="sd">        kwargs and the initial image are handled by load.</span>
@@ -348,7 +353,6 @@
 <span class="sd">        ...     optimizer=torch.optim.SGD,</span>
 <span class="sd">        ...     scheduler=torch.optim.lr_scheduler.ReduceLROnPlateau,</span>
 <span class="sd">        ... )</span>
-<span class="sd">        &gt;&gt;&gt; met.synthesize(5)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_metamer</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">initial_image</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -388,7 +392,7 @@
 
 
 <div class="viewcode-block" id="Metamer.synthesize">
-<a class="viewcode-back" href="../../../api/plenoptic.synthesize.html#plenoptic.synthesize.metamer.Metamer.synthesize">[docs]</a>
+<a class="viewcode-back" href="../../../generated/plenoptic.synthesize.metamer.Metamer.html#plenoptic.synthesize.metamer.Metamer.synthesize">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">synthesize</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">max_iter</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span>
@@ -402,9 +406,9 @@
 <span class="sd">        Update the pixels of :attr:`metamer` until its representation matches that of</span>
 <span class="sd">        :attr:`image`.</span>
 
-<span class="sd">        We run this until either we reach ``max_iter`` or the change over the</span>
-<span class="sd">        past ``stop_iters_to_check`` iterations is less than</span>
-<span class="sd">        ``stop_criterion``, whichever comes first.</span>
+<span class="sd">        We run this until either we reach ``max_iter`` or the loss changes less than</span>
+<span class="sd">        ``stop_criterion`` over the past ``stop_iters_to_check`` iterations,</span>
+<span class="sd">        whichever comes first.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -415,7 +419,10 @@
 <span class="sd">            Whether we should store the metamer image in progress during</span>
 <span class="sd">            synthesis. If ``False``, we don&#39;t save anything. If True, we save every</span>
 <span class="sd">            iteration. If an int, we save every ``store_progress`` iterations</span>
-<span class="sd">            (note then that 0 is the same as False and 1 the same as True).</span>
+<span class="sd">            (note then that 0 is the same as False and 1 the same as True). This is</span>
+<span class="sd">            primarily useful for using</span>
+<span class="sd">            :func:`~plenoptic.synthesize.metamer.animate` to create a video of the</span>
+<span class="sd">            course of synthesis.</span>
 <span class="sd">        stop_criterion</span>
 <span class="sd">            If the loss over the past ``stop_iters_to_check`` has changed</span>
 <span class="sd">            less than ``stop_criterion``, we terminate synthesis.</span>
@@ -428,6 +435,14 @@
 <span class="sd">        ValueError</span>
 <span class="sd">            If we find a NaN during optimization.</span>
 
+<span class="sd">        See Also</span>
+<span class="sd">        --------</span>
+<span class="sd">        :func:`~plenoptic.synthesize.metamer.plot_synthesis_status`</span>
+<span class="sd">            Create a plot summarizing synthesis status at a given iteration.</span>
+<span class="sd">        :func:`~plenoptic.synthesize.metamer.animate`</span>
+<span class="sd">            Create a video of the metamer changing over the course of</span>
+<span class="sd">            synthesis.</span>
+
 <span class="sd">        Examples</span>
 <span class="sd">        --------</span>
 <span class="sd">        &gt;&gt;&gt; import plenoptic as po</span>
@@ -436,23 +451,18 @@
 <span class="sd">        &gt;&gt;&gt; model = po.simul.Gaussian(30).eval()</span>
 <span class="sd">        &gt;&gt;&gt; po.tools.remove_grad(model)</span>
 <span class="sd">        &gt;&gt;&gt; met = po.synth.Metamer(img, model)</span>
-<span class="sd">        &gt;&gt;&gt; # this isn&#39;t enough to run synthesis to completion, just to demonstrate</span>
-<span class="sd">        &gt;&gt;&gt; # use</span>
+<span class="sd">        &gt;&gt;&gt; # this isn&#39;t enough to run synthesis to completion, just an example</span>
 <span class="sd">        &gt;&gt;&gt; met.synthesize(5)</span>
 <span class="sd">        &gt;&gt;&gt; met.losses</span>
 <span class="sd">        tensor([0.0194, 0.0198, 0.0179, 0.0160, 0.0145, 0.0132])</span>
 
 <span class="sd">        Synthesize a metamer, using ``store_progress`` so we can examine progress</span>
-<span class="sd">        later.</span>
+<span class="sd">        later. (This also enables us to create a video of the metamer changing over</span>
+<span class="sd">        the course of synthesis, see</span>
+<span class="sd">        :func:`~plenoptic.synthesize.metamer.animate`.)</span>
 
-<span class="sd">        &gt;&gt;&gt; import plenoptic as po</span>
-<span class="sd">        &gt;&gt;&gt; po.tools.set_seed(0)</span>
-<span class="sd">        &gt;&gt;&gt; img = po.data.einstein()</span>
-<span class="sd">        &gt;&gt;&gt; model = po.simul.Gaussian(30).eval()</span>
-<span class="sd">        &gt;&gt;&gt; po.tools.remove_grad(model)</span>
 <span class="sd">        &gt;&gt;&gt; met = po.synth.Metamer(img, model)</span>
-<span class="sd">        &gt;&gt;&gt; # this isn&#39;t enough to run synthesis to completion, just to demonstrate</span>
-<span class="sd">        &gt;&gt;&gt; # use</span>
+<span class="sd">        &gt;&gt;&gt; # this isn&#39;t enough to run synthesis to completion, just an example</span>
 <span class="sd">        &gt;&gt;&gt; met.synthesize(5, store_progress=2)</span>
 <span class="sd">        &gt;&gt;&gt; met.saved_metamer.shape</span>
 <span class="sd">        torch.Size([4, 1, 1, 256, 256])</span>
@@ -461,19 +471,15 @@
 <span class="sd">        &gt;&gt;&gt; progress.keys()</span>
 <span class="sd">        dict_keys([&#39;losses&#39;, ..., &#39;saved_metamer&#39;, &#39;store_progress_iteration&#39;])</span>
 <span class="sd">        &gt;&gt;&gt; progress[&quot;losses&quot;]</span>
-<span class="sd">        tensor(0.0145)</span>
+<span class="sd">        tensor(0.0139)</span>
 
 <span class="sd">        Adjust ``stop_criterion`` and ``stop_iters_to_check`` to change how convergence</span>
 <span class="sd">        is determined. In this case, we stop early by making ``stop_criterion`` fairly</span>
 <span class="sd">        large. In practice, you&#39;re more likely to make ``stop_criterion`` smaller to let</span>
 <span class="sd">        synthesis run for longer.</span>
 
-<span class="sd">        &gt;&gt;&gt; import plenoptic as po</span>
-<span class="sd">        &gt;&gt;&gt; po.tools.set_seed(1)</span>
-<span class="sd">        &gt;&gt;&gt; img = po.data.einstein()</span>
-<span class="sd">        &gt;&gt;&gt; model = po.simul.Gaussian(30).eval()</span>
-<span class="sd">        &gt;&gt;&gt; po.tools.remove_grad(model)</span>
 <span class="sd">        &gt;&gt;&gt; met = po.synth.Metamer(img, model)</span>
+<span class="sd">        &gt;&gt;&gt; # this isn&#39;t enough to run synthesis to completion, just an example</span>
 <span class="sd">        &gt;&gt;&gt; met.synthesize(12, stop_criterion=0.001, stop_iters_to_check=2)</span>
 <span class="sd">        &gt;&gt;&gt; len(met.losses)</span>
 <span class="sd">        9</span>
@@ -510,7 +516,7 @@
 
 
 <div class="viewcode-block" id="Metamer.objective_function">
-<a class="viewcode-back" href="../../../api/plenoptic.synthesize.html#plenoptic.synthesize.metamer.Metamer.objective_function">[docs]</a>
+<a class="viewcode-back" href="../../../generated/plenoptic.synthesize.metamer.Metamer.html#plenoptic.synthesize.metamer.Metamer.objective_function">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">objective_function</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">metamer</span><span class="p">:</span> <span class="n">Tensor</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -550,49 +556,53 @@
 <span class="sd">        &gt;&gt;&gt; model = po.simul.Gaussian(30).eval()</span>
 <span class="sd">        &gt;&gt;&gt; po.tools.remove_grad(model)</span>
 <span class="sd">        &gt;&gt;&gt; met = po.synth.Metamer(img, model)</span>
-<span class="sd">        &gt;&gt;&gt; # before setup() or synthesize() is called, this returns an empty</span>
-<span class="sd">        &gt;&gt;&gt; # tensor because the metamer attribute hasn&#39;t been initialized.</span>
+
+<span class="sd">        Before :meth:`setup` or :meth:`synthesize` is called, this returns an</span>
+<span class="sd">        empty tensor because the metamer attribute hasn&#39;t been initialized:</span>
+
 <span class="sd">        &gt;&gt;&gt; met.objective_function()</span>
 <span class="sd">        tensor([])</span>
 <span class="sd">        &gt;&gt;&gt; met.synthesize(5, store_progress=True)</span>
-<span class="sd">        &gt;&gt;&gt; # when called without any arguments, this returns the current loss.</span>
+
+<span class="sd">        When called without any arguments, this returns the current loss:</span>
+
 <span class="sd">        &gt;&gt;&gt; met.objective_function()</span>
 <span class="sd">        tensor(0.0132, grad_fn=&lt;AddBackward0&gt;)</span>
 <span class="sd">        &gt;&gt;&gt; met.losses[-1]</span>
 <span class="sd">        tensor(0.0132)</span>
-<span class="sd">        &gt;&gt;&gt; # can be called with a different image.</span>
+
+<span class="sd">        Can be called with a different image. (Note that, because we called</span>
+<span class="sd">        :meth:`synthesize` with ``store_progress=True``, we cached the metamer</span>
+<span class="sd">        over the course of synthesis):</span>
+
 <span class="sd">        &gt;&gt;&gt; met.objective_function(met.saved_metamer[0])</span>
 <span class="sd">        tensor(0.0194, grad_fn=&lt;AddBackward0&gt;)</span>
 <span class="sd">        &gt;&gt;&gt; met.losses[0]</span>
 <span class="sd">        tensor(0.0194)</span>
 
 <span class="sd">        This method differs from the :attr:`loss_function` attribute because of its</span>
-<span class="sd">        inclusion of the penalty:</span>
+<span class="sd">        inclusion of the penalty. In the following block, the pixels of</span>
+<span class="sd">        ``rand_img`` all lie within $[0, 1]$, and so the outputs of</span>
+<span class="sd">        :attr:`objective_function` and :attr:`loss_function` are the same:</span>
 
-<span class="sd">        &gt;&gt;&gt; import plenoptic as po</span>
-<span class="sd">        &gt;&gt;&gt; po.tools.set_seed(0)</span>
-<span class="sd">        &gt;&gt;&gt; img = po.data.einstein()</span>
-<span class="sd">        &gt;&gt;&gt; model = po.simul.Gaussian(30).eval()</span>
-<span class="sd">        &gt;&gt;&gt; po.tools.remove_grad(model)</span>
-<span class="sd">        &gt;&gt;&gt; met = po.synth.Metamer(img, model)</span>
 <span class="sd">        &gt;&gt;&gt; rand_img = torch.rand_like(img)</span>
-<span class="sd">        &gt;&gt;&gt; # since this image&#39;s pixels all lie within (0, 1), the outputs of</span>
-<span class="sd">        &gt;&gt;&gt; # objective_function and loss_function are the same</span>
 <span class="sd">        &gt;&gt;&gt; rand_img.min(), rand_img.max()</span>
-<span class="sd">        (tensor(5.4061e-05), tensor(1.0000))</span>
+<span class="sd">        (tensor(7.9870e-06), tensor(1.0000))</span>
 <span class="sd">        &gt;&gt;&gt; met.objective_function(rand_img)</span>
-<span class="sd">        tensor(0.0194)</span>
+<span class="sd">        tensor(0.0190)</span>
 <span class="sd">        &gt;&gt;&gt; met.loss_function(model(img), model(rand_img))</span>
-<span class="sd">        tensor(0.0194)</span>
+<span class="sd">        tensor(0.0190)</span>
+
+<span class="sd">        In this block, the image&#39;s lie outside $[0, 1]$, and so the outputs of</span>
+<span class="sd">        :attr:`objective_function` and :attr:`loss_function` are different:</span>
+
 <span class="sd">        &gt;&gt;&gt; rand_img *= 2</span>
-<span class="sd">        &gt;&gt;&gt; # since this image&#39;s lie outside (0, 1), the outputs of object_function</span>
-<span class="sd">        &gt;&gt;&gt; # and loss_function are different.</span>
 <span class="sd">        &gt;&gt;&gt; rand_img.min(), rand_img.max()</span>
 <span class="sd">        (tensor(0.0001), tensor(2.0000))</span>
 <span class="sd">        &gt;&gt;&gt; met.objective_function(rand_img)</span>
-<span class="sd">        tensor(1097.9097)</span>
+<span class="sd">        tensor(1100.9663)</span>
 <span class="sd">        &gt;&gt;&gt; met.loss_function(model(img), model(rand_img))</span>
-<span class="sd">        tensor(0.3153)</span>
+<span class="sd">        tensor(0.3133)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">metamer</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">metamer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">metamer</span>
@@ -608,7 +618,7 @@
 
 
 <div class="viewcode-block" id="Metamer.get_progress">
-<a class="viewcode-back" href="../../../api/plenoptic.synthesize.html#plenoptic.synthesize.metamer.Metamer.get_progress">[docs]</a>
+<a class="viewcode-back" href="../../../generated/plenoptic.synthesize.metamer.Metamer.html#plenoptic.synthesize.metamer.Metamer.get_progress">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_progress</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">iteration</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
@@ -681,6 +691,14 @@
 <span class="sd">            ``iteration`` (because e.g., you set ``iteration=3`` but</span>
 <span class="sd">            ``self.store_progress=2``).</span>
 
+<span class="sd">        See Also</span>
+<span class="sd">        --------</span>
+<span class="sd">        :func:`~plenoptic.synthesize.metamer.plot_synthesis_status`</span>
+<span class="sd">            Create a plot summarizing synthesis status at a given iteration.</span>
+<span class="sd">        :func:`~plenoptic.synthesize.metamer.animate`</span>
+<span class="sd">            Create a video of the metamer changing over the course of</span>
+<span class="sd">            synthesis.</span>
+
 <span class="sd">        Examples</span>
 <span class="sd">        --------</span>
 <span class="sd">        &gt;&gt;&gt; import plenoptic as po</span>
@@ -690,41 +708,42 @@
 <span class="sd">        &gt;&gt;&gt; po.tools.remove_grad(model)</span>
 <span class="sd">        &gt;&gt;&gt; met = po.synth.Metamer(img, model)</span>
 <span class="sd">        &gt;&gt;&gt; met.synthesize(5)</span>
-<span class="sd">        &gt;&gt;&gt; # get values from the first iteration.</span>
+
+<span class="sd">        Get values from the first iteration:</span>
+
 <span class="sd">        &gt;&gt;&gt; met.get_progress(0)</span>
 <span class="sd">        {&#39;losses&#39;: tensor(0.0194),</span>
 <span class="sd">        &#39;iteration&#39;: 0,</span>
 <span class="sd">        &#39;pixel_change_norm&#39;: tensor(2.5326),</span>
 <span class="sd">        &#39;gradient_norm&#39;: tensor(0.0010)}</span>
-<span class="sd">        &gt;&gt;&gt; # get values from most recent iteration.</span>
+
+<span class="sd">        Get values from most last iteration of synthesis:</span>
+
 <span class="sd">        &gt;&gt;&gt; print(met.get_progress(-2))</span>
 <span class="sd">        {&#39;losses&#39;: tensor(0.0145),</span>
 <span class="sd">        &#39;iteration&#39;: 4,</span>
 <span class="sd">        &#39;pixel_change_norm&#39;: tensor(2.2698),</span>
 <span class="sd">        &#39;gradient_norm&#39;: tensor(0.0268)}</span>
-<span class="sd">        &gt;&gt;&gt; # get current values.</span>
+
+<span class="sd">        Get current values:</span>
+
 <span class="sd">        &gt;&gt;&gt; print(met.get_progress(-1))</span>
 <span class="sd">        {&#39;losses&#39;: tensor(0.0132),</span>
 <span class="sd">        &#39;iteration&#39;: 5,</span>
 <span class="sd">        &#39;pixel_change_norm&#39;: None,</span>
 <span class="sd">        &#39;gradient_norm&#39;: None}</span>
 
-<span class="sd">        When synthesis is run with ``store_progress=True``, this function returns the</span>
-<span class="sd">        metamer from the corresponding iteration:</span>
+<span class="sd">        When synthesis is run with ``store_progress=True``, this function also</span>
+<span class="sd">        returns the metamer from the corresponding iteration:</span>
 
-<span class="sd">        &gt;&gt;&gt; import plenoptic as po</span>
-<span class="sd">        &gt;&gt;&gt; po.tools.set_seed(0)</span>
-<span class="sd">        &gt;&gt;&gt; img = po.data.einstein()</span>
-<span class="sd">        &gt;&gt;&gt; model = po.simul.Gaussian(30).eval()</span>
-<span class="sd">        &gt;&gt;&gt; po.tools.remove_grad(model)</span>
 <span class="sd">        &gt;&gt;&gt; met = po.synth.Metamer(img, model)</span>
 <span class="sd">        &gt;&gt;&gt; met.synthesize(5, store_progress=True)</span>
 <span class="sd">        &gt;&gt;&gt; print(met.get_progress(-1))</span>
-<span class="sd">        {&#39;losses&#39;: tensor(0.0132),</span>
+<span class="sd">        {&#39;losses&#39;: tensor(0.0124),</span>
 <span class="sd">        &#39;iteration&#39;: 5,</span>
 <span class="sd">        &#39;pixel_change_norm&#39;: None,</span>
 <span class="sd">        &#39;gradient_norm&#39;: None,</span>
-<span class="sd">        &#39;saved_metamer&#39;: tensor([[[[ 0.0098, ...]]]], grad_fn=&lt;SelectBackward0&gt;),</span>
+<span class="sd">        &#39;saved_metamer&#39;: tensor([[[[0.4554, ...]]]], grad_fn=&lt;SelectBackward0&gt;),</span>
 <span class="sd">        &#39;store_progress_iteration&#39;: 5}</span>
 <span class="sd">        &gt;&gt;&gt; torch.equal(met.saved_metamer[-1], met.get_progress(-1)[&quot;saved_metamer&quot;])</span>
 <span class="sd">        True</span>
@@ -732,28 +751,25 @@
 <span class="sd">        When synthesis is run with ``store_progress&gt;1``, this function returns the</span>
 <span class="sd">        metamer from the closest iteration:</span>
 
-<span class="sd">        &gt;&gt;&gt; import plenoptic as po</span>
-<span class="sd">        &gt;&gt;&gt; po.tools.set_seed(0)</span>
-<span class="sd">        &gt;&gt;&gt; img = po.data.einstein()</span>
-<span class="sd">        &gt;&gt;&gt; model = po.simul.Gaussian(30).eval()</span>
-<span class="sd">        &gt;&gt;&gt; po.tools.remove_grad(model)</span>
 <span class="sd">        &gt;&gt;&gt; met = po.synth.Metamer(img, model)</span>
 <span class="sd">        &gt;&gt;&gt; met.synthesize(5, store_progress=2)</span>
 <span class="sd">        &gt;&gt;&gt; print(met.get_progress(-3))</span>
-<span class="sd">        {&#39;losses&#39;: tensor(0.0160),</span>
+<span class="sd">        {&#39;losses&#39;: tensor(0.0152),</span>
 <span class="sd">        &#39;iteration&#39;: 3,</span>
-<span class="sd">        &#39;pixel_change_norm&#39;: tensor(2.3538),</span>
-<span class="sd">        &#39;gradient_norm&#39;: tensor(0.0271),</span>
-<span class="sd">        &#39;saved_metamer&#39;: tensor([[[[ 4.4252e-03, ...]]]], grad_fn=&lt;SelectBackward0&gt;),</span>
+<span class="sd">        &#39;pixel_change_norm&#39;: tensor(2.3592),</span>
+<span class="sd">        &#39;gradient_norm&#39;: tensor(0.0269),</span>
+<span class="sd">        &#39;saved_metamer&#39;: tensor([[[[0.8532, ...]]]], grad_fn=&lt;SelectBackward0&gt;),</span>
 <span class="sd">        &#39;store_progress_iteration&#39;: 4}</span>
-<span class="sd">        &gt;&gt;&gt; # when we cannot grab the saved metamer corresponding to the requested</span>
-<span class="sd">        &gt;&gt;&gt; # iteration, iteration_selection controls how we determine &quot;closest&quot;.</span>
+
+<span class="sd">        When we cannot grab the saved metamer corresponding to the requested</span>
+<span class="sd">        iteration, ``iteration_selection`` controls how we determine &quot;closest&quot;:</span>
+
 <span class="sd">        &gt;&gt;&gt; print(met.get_progress(-3, iteration_selection=&quot;floor&quot;))</span>
-<span class="sd">        {&#39;losses&#39;: tensor(0.0160),</span>
+<span class="sd">        {&#39;losses&#39;: tensor(0.0152),</span>
 <span class="sd">        &#39;iteration&#39;: 3,</span>
-<span class="sd">        &#39;pixel_change_norm&#39;: tensor(2.3538),</span>
-<span class="sd">        &#39;gradient_norm&#39;: tensor(0.0271),</span>
-<span class="sd">        &#39;saved_metamer&#39;: tensor([[[[-0.0084, ...]]]], grad_fn=&lt;SelectBackward0&gt;),</span>
+<span class="sd">        &#39;pixel_change_norm&#39;: tensor(2.3592),</span>
+<span class="sd">        &#39;gradient_norm&#39;: tensor(0.0269),</span>
+<span class="sd">        &#39;saved_metamer&#39;: tensor([[[[ 0.8730, ...]]]], grad_fn=&lt;SelectBackward0&gt;),</span>
 <span class="sd">        &#39;store_progress_iteration&#39;: 2}</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">get_progress</span><span class="p">(</span>
@@ -815,7 +831,7 @@
 <span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Check whether the loss has stabilized and, if so, return True.</span>
 
-<span class="sd">        Uses :func:`loss_convergence`.</span>
+<span class="sd">        Uses :func:`~plenoptic.tools.convergence._loss_convergence`.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -831,7 +847,7 @@
 <span class="sd">        loss_stabilized</span>
 <span class="sd">            Whether the loss has stabilized or not.</span>
 <span class="sd">        &quot;&quot;&quot;</span>  <span class="c1"># numpydoc ignore=EX01</span>
-        <span class="k">return</span> <span class="n">loss_convergence</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stop_criterion</span><span class="p">,</span> <span class="n">stop_iters_to_check</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">_loss_convergence</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stop_criterion</span><span class="p">,</span> <span class="n">stop_iters_to_check</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_store</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -858,7 +874,7 @@
         <span class="k">return</span> <span class="n">stored</span>
 
 <div class="viewcode-block" id="Metamer.save">
-<a class="viewcode-back" href="../../../api/plenoptic.synthesize.html#plenoptic.synthesize.metamer.Metamer.save">[docs]</a>
+<a class="viewcode-back" href="../../../generated/plenoptic.synthesize.metamer.Metamer.html#plenoptic.synthesize.metamer.Metamer.save">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
 <span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Save all relevant variables in .pt file.</span>
@@ -895,25 +911,31 @@
 
 
 <div class="viewcode-block" id="Metamer.to">
-<a class="viewcode-back" href="../../../api/plenoptic.synthesize.html#plenoptic.synthesize.metamer.Metamer.to">[docs]</a>
+<a class="viewcode-back" href="../../../generated/plenoptic.synthesize.metamer.Metamer.html#plenoptic.synthesize.metamer.Metamer.to">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">):</span>
 <span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Move and/or cast the parameters and buffers.</span>
 
 <span class="sd">        This can be called as</span>
 
-<span class="sd">        .. function:: to(device=None, dtype=None, non_blocking=False)</span>
+<span class="sd">        .. code:: python</span>
 
-<span class="sd">        .. function:: to(dtype, non_blocking=False)</span>
+<span class="sd">            to(device=None, dtype=None, non_blocking=False)</span>
 
-<span class="sd">        .. function:: to(tensor, non_blocking=False)</span>
+<span class="sd">        .. code:: python</span>
+
+<span class="sd">            to(dtype, non_blocking=False)</span>
+
+<span class="sd">        .. code:: python</span>
+
+<span class="sd">            to(tensor, non_blocking=False)</span>
 
 <span class="sd">        Its signature is similar to :meth:`torch.Tensor.to`, but only accepts</span>
-<span class="sd">        floating point desired :attr:`dtype` s. In addition, this method will</span>
-<span class="sd">        only cast the floating point parameters and buffers to :attr:`dtype`</span>
+<span class="sd">        floating point desired ``dtype``. In addition, this method will</span>
+<span class="sd">        only cast the floating point parameters and buffers to ``dtype``</span>
 <span class="sd">        (if given). The integral parameters and buffers will be moved</span>
-<span class="sd">        :attr:`device`, if that is given, but with dtypes unchanged. When</span>
-<span class="sd">        :attr:`non_blocking` is set, it tries to convert/move asynchronously</span>
+<span class="sd">        ``device``, if that is given, but with dtypes unchanged. When</span>
+<span class="sd">        `on_blocking`` is set, it tries to convert/move asynchronously</span>
 <span class="sd">        with respect to the host if possible, e.g., moving CPU Tensors with</span>
 <span class="sd">        pinned memory to CUDA devices.</span>
 
@@ -961,7 +983,7 @@
 
 
 <div class="viewcode-block" id="Metamer.load">
-<a class="viewcode-back" href="../../../api/plenoptic.synthesize.html#plenoptic.synthesize.metamer.Metamer.load">[docs]</a>
+<a class="viewcode-back" href="../../../generated/plenoptic.synthesize.metamer.Metamer.html#plenoptic.synthesize.metamer.Metamer.load">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">load</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
@@ -1043,37 +1065,56 @@
 
 <span class="sd">        Examples</span>
 <span class="sd">        --------</span>
+<span class="sd">        In order to load a saved ``Metamer`` object, we must first initialize</span>
+<span class="sd">        one using the same arguments. (We use float64 / &quot;double&quot; precision rather than</span>
+<span class="sd">        torch&#39;s default float32 because it increases reproducibility, see the</span>
+<span class="sd">        :ref:`Reproducibility &lt;reproduce&gt;` page of our documentations for more details.)</span>
+<span class="sd">        Here, we load in a cached example:</span>
+
 <span class="sd">        &gt;&gt;&gt; import plenoptic as po</span>
-<span class="sd">        &gt;&gt;&gt; po.tools.set_seed(0)</span>
-<span class="sd">        &gt;&gt;&gt; img = po.data.einstein()</span>
-<span class="sd">        &gt;&gt;&gt; model = po.simul.Gaussian(30).eval()</span>
+<span class="sd">        &gt;&gt;&gt; img = po.data.einstein().to(torch.float64)</span>
+<span class="sd">        &gt;&gt;&gt; model = po.simul.Gaussian(30).eval().to(torch.float64)</span>
 <span class="sd">        &gt;&gt;&gt; po.tools.remove_grad(model)</span>
 <span class="sd">        &gt;&gt;&gt; met = po.synth.Metamer(img, model)</span>
-<span class="sd">        &gt;&gt;&gt; met.synthesize(max_iter=5, store_progress=True)</span>
 <span class="sd">        &gt;&gt;&gt; print(met.metamer)</span>
-<span class="sd">        tensor([[[[ 0.0098, ...]]]], requires_grad=True)</span>
-<span class="sd">        &gt;&gt;&gt; met.save(&quot;metamers.pt&quot;)</span>
-<span class="sd">        &gt;&gt;&gt; met_copy = po.synth.Metamer(img, model)</span>
-<span class="sd">        &gt;&gt;&gt; print(met_copy.metamer)</span>
 <span class="sd">        tensor([])</span>
-<span class="sd">        &gt;&gt;&gt; met_copy.load(&quot;metamers.pt&quot;)</span>
-<span class="sd">        &gt;&gt;&gt; print(met_copy.metamer)</span>
-<span class="sd">        tensor([[[[ 0.0098, ...]]]], requires_grad=True)</span>
+<span class="sd">        &gt;&gt;&gt; met.load(po.data.fetch_data(&quot;example_metamer_gaussian.pt&quot;))</span>
+<span class="sd">        &gt;&gt;&gt; print(met.metamer)</span>
+<span class="sd">        tensor([[[[0.0692, ...]]]], dtype=torch.float64, requires_grad=True)</span>
 
-<span class="sd">        Loading ``Metamer`` object must be initialized with same values as the saved</span>
-<span class="sd">        object:</span>
+<span class="sd">        If the saved ``Metamer`` object lived on a CUDA device and you do not have</span>
+<span class="sd">        CUDA on the loading machine, use ``map_location`` to change device:</span>
 
-<span class="sd">        &gt;&gt;&gt; import plenoptic as po</span>
-<span class="sd">        &gt;&gt;&gt; img = po.data.einstein()</span>
-<span class="sd">        &gt;&gt;&gt; model = po.simul.Gaussian(30).eval()</span>
-<span class="sd">        &gt;&gt;&gt; po.tools.remove_grad(model)</span>
 <span class="sd">        &gt;&gt;&gt; met = po.synth.Metamer(img, model)</span>
-<span class="sd">        &gt;&gt;&gt; met.synthesize(max_iter=5)</span>
-<span class="sd">        &gt;&gt;&gt; met.save(&quot;metamers.pt&quot;)</span>
-<span class="sd">        &gt;&gt;&gt; met_copy = po.synth.Metamer(torch.rand_like(img), model)</span>
-<span class="sd">        &gt;&gt;&gt; met_copy.load(&quot;metamers.pt&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; met.image.device</span>
+<span class="sd">        device(type=&#39;cpu&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; met.load(po.data.fetch_data(&quot;example_metamer_gaussian-cuda.pt&quot;))</span>
+<span class="sd">        Traceback (most recent call last):</span>
+<span class="sd">        RuntimeError: Attempting to deserialize object on a CUDA device but</span>
+<span class="sd">        torch.cuda.is_available() is False...</span>
+<span class="sd">        &gt;&gt;&gt; met.load(</span>
+<span class="sd">        ...     po.data.fetch_data(&quot;example_metamer_gaussian-cuda.pt&quot;),</span>
+<span class="sd">        ...     map_location=&quot;cpu&quot;,</span>
+<span class="sd">        ... )</span>
+<span class="sd">        &gt;&gt;&gt; print(met.metamer)</span>
+<span class="sd">        tensor([[[[0.0692, ...]]]], dtype=torch.float64, requires_grad=True)</span>
+
+<span class="sd">        If the loading ``Metamer`` object was not initialized with same values</span>
+<span class="sd">        as the saved object, an error will be raised:</span>
+
+<span class="sd">        &gt;&gt;&gt; met = po.synth.Metamer(torch.rand_like(img), model)</span>
+<span class="sd">        &gt;&gt;&gt; met.load(po.data.fetch_data(&quot;example_metamer_gaussian.pt&quot;))</span>
 <span class="sd">        Traceback (most recent call last):</span>
 <span class="sd">        ValueError: Saved and initialized attribute image have different values...</span>
+
+<span class="sd">        If the loading ``Metamer`` object has a different data type than the saved</span>
+<span class="sd">        object, an error will be raised:</span>
+
+<span class="sd">        &gt;&gt;&gt; met = po.synth.Metamer(img, model)</span>
+<span class="sd">        &gt;&gt;&gt; met.to(torch.float32)</span>
+<span class="sd">        &gt;&gt;&gt; met.load(po.data.fetch_data(&quot;example_metamer_gaussian.pt&quot;))</span>
+<span class="sd">        Traceback (most recent call last):</span>
+<span class="sd">        ValueError: Saved and initialized attribute image have different dtype...</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_load</span><span class="p">(</span>
             <span class="n">file_path</span><span class="p">,</span>
@@ -1227,8 +1268,8 @@
 
 <span class="sd">        Examples</span>
 <span class="sd">        --------</span>
-<span class="sd">        If synthesize is called without store_progress, then this attribute just</span>
-<span class="sd">        contains the metamer, though the number of dimensions is different:</span>
+<span class="sd">        If synthesize is called without ``store_progress``, then this attribute</span>
+<span class="sd">        just contains the metamer, though the number of dimensions is different:</span>
 
 <span class="sd">        &gt;&gt;&gt; import plenoptic as po</span>
 <span class="sd">        &gt;&gt;&gt; po.tools.set_seed(0)</span>
@@ -1252,20 +1293,18 @@
 <span class="sd">        contains the metamer at each iteration, and ``losses[i]`` contains the error</span>
 <span class="sd">        for ``saved_metamer[i]``.</span>
 
-<span class="sd">        &gt;&gt;&gt; import plenoptic as po</span>
-<span class="sd">        &gt;&gt;&gt; po.tools.set_seed(0)</span>
-<span class="sd">        &gt;&gt;&gt; model = po.simul.Gaussian(30).eval()</span>
-<span class="sd">        &gt;&gt;&gt; po.tools.remove_grad(model)</span>
 <span class="sd">        &gt;&gt;&gt; met = po.synth.Metamer(img, model)</span>
 <span class="sd">        &gt;&gt;&gt; met.synthesize(5, store_progress=True)</span>
-<span class="sd">        &gt;&gt;&gt; # This has 6 elements because it includes the metamer at the start of each</span>
-<span class="sd">        &gt;&gt;&gt; # of the 5 synthesis iterations, plus the current one</span>
 <span class="sd">        &gt;&gt;&gt; met.saved_metamer.shape</span>
 <span class="sd">        torch.Size([6, 1, 1, 256, 256])</span>
 <span class="sd">        &gt;&gt;&gt; met.objective_function(met.saved_metamer[2])</span>
-<span class="sd">        tensor(0.0179, grad_fn=&lt;AddBackward0&gt;)</span>
+<span class="sd">        tensor(0.0169, grad_fn=&lt;AddBackward0&gt;)</span>
 <span class="sd">        &gt;&gt;&gt; met.losses[2]</span>
-<span class="sd">        tensor(0.0179)</span>
+<span class="sd">        tensor(0.0169)</span>
+
+<span class="sd">        (In the above example, ``saved_metamer`` has 6 elements because it includes the</span>
+<span class="sd">        metamer at the start of each of the 5 synthesis iterations, plus the current</span>
+<span class="sd">        one.)</span>
 <span class="sd">        &quot;&quot;&quot;</span>  <span class="c1"># numpydoc ignore=RT01,EX01</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_metamer</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
@@ -1276,7 +1315,7 @@
 
 
 <div class="viewcode-block" id="MetamerCTF">
-<a class="viewcode-back" href="../../../api/plenoptic.synthesize.html#plenoptic.synthesize.metamer.MetamerCTF">[docs]</a>
+<a class="viewcode-back" href="../../../generated/plenoptic.synthesize.metamer.MetamerCTF.html#plenoptic.synthesize.metamer.MetamerCTF">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">MetamerCTF</span><span class="p">(</span><span class="n">Metamer</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Synthesize model metamers with coarse-to-fine synthesis.</span>
@@ -1311,7 +1350,8 @@
 <span class="sd">        - ``&quot;separate&quot;``: compute the gradient with respect to each</span>
 <span class="sd">          scale separately (ignoring the others), then with respect</span>
 <span class="sd">          to all of them at the end.</span>
-<span class="sd">        (see :ref:`Metamer tutorial &lt;metamer-nb&gt;`_ for more details).</span>
+
+<span class="sd">        (see :ref:`Metamer tutorial &lt;metamer-nb&gt;` for more details).</span>
 
 <span class="sd">    References</span>
 <span class="sd">    ----------</span>
@@ -1453,7 +1493,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_initial_lr</span> <span class="o">=</span> <span class="p">[</span><span class="n">pg</span><span class="p">[</span><span class="s2">&quot;lr&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">pg</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span><span class="o">.</span><span class="n">param_groups</span><span class="p">]</span>
 
 <div class="viewcode-block" id="MetamerCTF.synthesize">
-<a class="viewcode-back" href="../../../api/plenoptic.synthesize.html#plenoptic.synthesize.metamer.MetamerCTF.synthesize">[docs]</a>
+<a class="viewcode-back" href="../../../generated/plenoptic.synthesize.metamer.MetamerCTF.html#plenoptic.synthesize.metamer.MetamerCTF.synthesize">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">synthesize</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">max_iter</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span>
@@ -1482,7 +1522,10 @@
 <span class="sd">            Whether we should store the metamer image in progress on every</span>
 <span class="sd">            iteration. If ``False``, we don&#39;t save anything. If True, we save every</span>
 <span class="sd">            iteration. If an int, we save every ``store_progress`` iterations</span>
-<span class="sd">            (note then that 0 is the same as False and 1 the same as True).</span>
+<span class="sd">            (note then that 0 is the same as False and 1 the same as True). This is</span>
+<span class="sd">            primarily useful for using</span>
+<span class="sd">            :func:`~plenoptic.synthesize.metamer.animate` to create a video of the</span>
+<span class="sd">            course of synthesis.</span>
 <span class="sd">        stop_criterion</span>
 <span class="sd">            If the loss over the past ``stop_iters_to_check`` has changed</span>
 <span class="sd">            less than ``stop_criterion``, we terminate synthesis.</span>
@@ -1508,6 +1551,14 @@
 <span class="sd">        ValueError</span>
 <span class="sd">            If we find a NaN during optimization.</span>
 
+<span class="sd">        See Also</span>
+<span class="sd">        --------</span>
+<span class="sd">        :func:`~plenoptic.synthesize.metamer.plot_synthesis_status`</span>
+<span class="sd">            Create a plot summarizing synthesis status at a given iteration.</span>
+<span class="sd">        :func:`~plenoptic.synthesize.metamer.animate`</span>
+<span class="sd">            Create a video of the metamer changing over the course of</span>
+<span class="sd">            synthesis.</span>
+
 <span class="sd">        Examples</span>
 <span class="sd">        --------</span>
 <span class="sd">        &gt;&gt;&gt; import plenoptic as po</span>
@@ -1515,13 +1566,14 @@
 <span class="sd">        &gt;&gt;&gt; img = po.data.reptile_skin()</span>
 <span class="sd">        &gt;&gt;&gt; model = po.simul.PortillaSimoncelli(img.shape[-2:])</span>
 <span class="sd">        &gt;&gt;&gt; met = po.synth.MetamerCTF(img, model)</span>
-<span class="sd">        &gt;&gt;&gt; # this isn&#39;t enough to run synthesis to completion, just to demonstrate</span>
-<span class="sd">        &gt;&gt;&gt; # use</span>
+<span class="sd">        &gt;&gt;&gt; # this isn&#39;t enough to run synthesis to completion, just an example</span>
 <span class="sd">        &gt;&gt;&gt; met.synthesize(5)</span>
 <span class="sd">        &gt;&gt;&gt; met.losses</span>
 <span class="sd">        tensor([0.0821, ..., 0.0805])</span>
-<span class="sd">        &gt;&gt;&gt; # examine scales_timing attribute to see when MetamerCTF started and stopped</span>
-<span class="sd">        &gt;&gt;&gt; # optimizing each scale</span>
+
+<span class="sd">        You can examine scales_timing attribute to see when MetamerCTF started and</span>
+<span class="sd">        stopped optimizing each scale:</span>
+
 <span class="sd">        &gt;&gt;&gt; met.scales_timing</span>
 <span class="sd">        {&#39;pixel_statistics&#39;: [0],</span>
 <span class="sd">         &#39;residual_lowpass&#39;: [],</span>
@@ -1532,15 +1584,12 @@
 <span class="sd">         &#39;all&#39;: []}</span>
 
 <span class="sd">        Synthesize a metamer, using ``store_progress`` so we can examine progress</span>
-<span class="sd">        later.</span>
+<span class="sd">        later. (This also enables us to create a video of the metamer changing over</span>
+<span class="sd">        the course of synthesis, see</span>
+<span class="sd">        :func:`~plenoptic.synthesize.metamer.animate`.)</span>
 
-<span class="sd">        &gt;&gt;&gt; import plenoptic as po</span>
-<span class="sd">        &gt;&gt;&gt; po.tools.set_seed(0)</span>
-<span class="sd">        &gt;&gt;&gt; img = po.data.reptile_skin()</span>
-<span class="sd">        &gt;&gt;&gt; model = po.simul.PortillaSimoncelli(img.shape[-2:])</span>
 <span class="sd">        &gt;&gt;&gt; met = po.synth.MetamerCTF(img, model)</span>
-<span class="sd">        &gt;&gt;&gt; # this isn&#39;t enough to run synthesis to completion, just to demonstrate</span>
-<span class="sd">        &gt;&gt;&gt; # use</span>
+<span class="sd">        &gt;&gt;&gt; # this isn&#39;t enough to run synthesis to completion, just an example</span>
 <span class="sd">        &gt;&gt;&gt; met.synthesize(5, store_progress=2)</span>
 <span class="sd">        &gt;&gt;&gt; met.saved_metamer.shape</span>
 <span class="sd">        torch.Size([4, 1, 1, 256, 256])</span>
@@ -1549,23 +1598,16 @@
 <span class="sd">        &gt;&gt;&gt; progress.keys()</span>
 <span class="sd">        dict_keys([&#39;losses&#39;, ..., &#39;saved_metamer&#39;, &#39;store_progress_iteration&#39;])</span>
 <span class="sd">        &gt;&gt;&gt; progress[&quot;losses&quot;]</span>
-<span class="sd">        tensor(0.0808)</span>
+<span class="sd">        tensor(0.0850)</span>
 
 <span class="sd">        Set ``change_scale_criterion`` and ``ctf_iters_to_check`` to change</span>
 <span class="sd">        scale-switching behavior.</span>
 
-<span class="sd">        &gt;&gt;&gt; import plenoptic as po</span>
-<span class="sd">        &gt;&gt;&gt; po.tools.set_seed(0)</span>
-<span class="sd">        &gt;&gt;&gt; img = po.data.reptile_skin()</span>
-<span class="sd">        &gt;&gt;&gt; model = po.simul.PortillaSimoncelli(img.shape[-2:])</span>
 <span class="sd">        &gt;&gt;&gt; met = po.synth.MetamerCTF(img, model)</span>
-<span class="sd">        &gt;&gt;&gt; # this isn&#39;t enough to run synthesis to completion, just to demonstrate</span>
-<span class="sd">        &gt;&gt;&gt; # use</span>
+<span class="sd">        &gt;&gt;&gt; # this isn&#39;t enough to run synthesis to completion, just an example</span>
 <span class="sd">        &gt;&gt;&gt; met.synthesize(5, change_scale_criterion=None, ctf_iters_to_check=2)</span>
 <span class="sd">        &gt;&gt;&gt; met.losses</span>
-<span class="sd">        tensor([0.0821, ..., 0.0535])</span>
-<span class="sd">        &gt;&gt;&gt; # examine scales_timing attribute to see when MetamerCTF started and stopped</span>
-<span class="sd">        &gt;&gt;&gt; # optimizing each scale</span>
+<span class="sd">        tensor([0.0863, ..., 0.0569])</span>
 <span class="sd">        &gt;&gt;&gt; met.scales_timing</span>
 <span class="sd">        {&#39;pixel_statistics&#39;: [0, 1],</span>
 <span class="sd">         &#39;residual_lowpass&#39;: [2, 3],</span>
@@ -1580,12 +1622,9 @@
 <span class="sd">        large. In practice, you&#39;re more likely to make ``stop_criterion`` smaller to let</span>
 <span class="sd">        synthesis run for longer.</span>
 
-<span class="sd">        &gt;&gt;&gt; import plenoptic as po</span>
-<span class="sd">        &gt;&gt;&gt; po.tools.set_seed(0)</span>
-<span class="sd">        &gt;&gt;&gt; img = po.data.reptile_skin()</span>
-<span class="sd">        &gt;&gt;&gt; model = po.simul.PortillaSimoncelli(img.shape[-2:])</span>
 <span class="sd">        &gt;&gt;&gt; met = po.synth.MetamerCTF(img, model)</span>
-<span class="sd">        &gt;&gt;&gt; met.synthesize(5, stop_criterion=0.001, stop_iters_to_check=2)</span>
+<span class="sd">        &gt;&gt;&gt; # this isn&#39;t enough to run synthesis to completion, just an example</span>
+<span class="sd">        &gt;&gt;&gt; met.synthesize(10, stop_criterion=0.001, stop_iters_to_check=2)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="p">(</span><span class="n">change_scale_criterion</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span>
             <span class="n">stop_criterion</span> <span class="o">&gt;=</span> <span class="n">change_scale_criterion</span>
@@ -1826,29 +1865,35 @@
 <span class="sd">            Whether the loss has stabilized and we&#39;ve synthesized all scales.</span>
 <span class="sd">        &quot;&quot;&quot;</span>  <span class="c1"># noqa: E501</span>
         <span class="c1"># numpydoc ignore=EX01</span>
-        <span class="n">loss_conv</span> <span class="o">=</span> <span class="n">loss_convergence</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stop_criterion</span><span class="p">,</span> <span class="n">stop_iters_to_check</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">loss_conv</span> <span class="ow">and</span> <span class="n">coarse_to_fine_enough</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">ctf_iters_to_check</span><span class="p">)</span>
+        <span class="n">loss_conv</span> <span class="o">=</span> <span class="n">_loss_convergence</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stop_criterion</span><span class="p">,</span> <span class="n">stop_iters_to_check</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">loss_conv</span> <span class="ow">and</span> <span class="n">_coarse_to_fine_enough</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">ctf_iters_to_check</span><span class="p">)</span>
 
 <div class="viewcode-block" id="MetamerCTF.to">
-<a class="viewcode-back" href="../../../api/plenoptic.synthesize.html#plenoptic.synthesize.metamer.MetamerCTF.to">[docs]</a>
+<a class="viewcode-back" href="../../../generated/plenoptic.synthesize.metamer.MetamerCTF.html#plenoptic.synthesize.metamer.MetamerCTF.to">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">):</span>
 <span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Move and/or cast the parameters and buffers.</span>
 
 <span class="sd">        This can be called as</span>
 
-<span class="sd">        .. function:: to(device=None, dtype=None, non_blocking=False)</span>
+<span class="sd">        .. code:: python</span>
 
-<span class="sd">        .. function:: to(dtype, non_blocking=False)</span>
+<span class="sd">            to(device=None, dtype=None, non_blocking=False)</span>
 
-<span class="sd">        .. function:: to(tensor, non_blocking=False)</span>
+<span class="sd">        .. code:: python</span>
+
+<span class="sd">            to(dtype, non_blocking=False)</span>
+
+<span class="sd">        .. code:: python</span>
+
+<span class="sd">            to(tensor, non_blocking=False)</span>
 
 <span class="sd">        Its signature is similar to :meth:`torch.Tensor.to`, but only accepts</span>
-<span class="sd">        floating point desired :attr:`dtype` s. In addition, this method will</span>
-<span class="sd">        only cast the floating point parameters and buffers to :attr:`dtype`</span>
+<span class="sd">        floating point desired ``dtype``. In addition, this method will</span>
+<span class="sd">        only cast the floating point parameters and buffers to ``dtype``</span>
 <span class="sd">        (if given). The integral parameters and buffers will be moved</span>
-<span class="sd">        :attr:`device`, if that is given, but with dtypes unchanged. When</span>
-<span class="sd">        :attr:`non_blocking` is set, it tries to convert/move asynchronously</span>
+<span class="sd">        ``device``, if that is given, but with dtypes unchanged. When</span>
+<span class="sd">        `on_blocking`` is set, it tries to convert/move asynchronously</span>
 <span class="sd">        with respect to the host if possible, e.g., moving CPU Tensors with</span>
 <span class="sd">        pinned memory to CUDA devices.</span>
 
@@ -1896,7 +1941,7 @@
 
 
 <div class="viewcode-block" id="MetamerCTF.load">
-<a class="viewcode-back" href="../../../api/plenoptic.synthesize.html#plenoptic.synthesize.metamer.MetamerCTF.load">[docs]</a>
+<a class="viewcode-back" href="../../../generated/plenoptic.synthesize.metamer.MetamerCTF.html#plenoptic.synthesize.metamer.MetamerCTF.load">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">load</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
@@ -1969,48 +2014,63 @@
 
 <span class="sd">        Examples</span>
 <span class="sd">        --------</span>
+<span class="sd">        In order to load a saved ``MetamerCTF`` object, we must first initialize one</span>
+<span class="sd">        using the same arguments. (We use float64 / &quot;double&quot; precision rather than</span>
+<span class="sd">        torch&#39;s default float32 because it increases reproducibility, see the</span>
+<span class="sd">        :ref:`Reproducibility &lt;reproduce&gt;` page of our documentations for more details.)</span>
+<span class="sd">        Here, we load in a cached example:</span>
+
 <span class="sd">        &gt;&gt;&gt; import plenoptic as po</span>
-<span class="sd">        &gt;&gt;&gt; po.tools.set_seed(0)</span>
-<span class="sd">        &gt;&gt;&gt; img = po.data.reptile_skin()</span>
+<span class="sd">        &gt;&gt;&gt; img = po.data.reptile_skin().to(torch.float64)</span>
 <span class="sd">        &gt;&gt;&gt; model = po.simul.PortillaSimoncelli(img.shape[-2:])</span>
-<span class="sd">        &gt;&gt;&gt; met = po.synth.MetamerCTF(img, model)</span>
-<span class="sd">        &gt;&gt;&gt; met.synthesize(max_iter=5, store_progress=True)</span>
+<span class="sd">        &gt;&gt;&gt; met = po.synth.MetamerCTF(img, model, po.tools.optim.l2_norm)</span>
 <span class="sd">        &gt;&gt;&gt; print(met.metamer)</span>
-<span class="sd">        tensor([[[[0.7668, ...]]]], requires_grad=True)</span>
-<span class="sd">        &gt;&gt;&gt; met.save(&quot;metamers_ctf.pt&quot;)</span>
-<span class="sd">        &gt;&gt;&gt; met_copy = po.synth.MetamerCTF(img, model)</span>
-<span class="sd">        &gt;&gt;&gt; met_copy.metamer</span>
 <span class="sd">        tensor([])</span>
-<span class="sd">        &gt;&gt;&gt; met_copy.load(&quot;metamers_ctf.pt&quot;)</span>
-<span class="sd">        &gt;&gt;&gt; print(met_copy.metamer)</span>
-<span class="sd">        tensor([[[[0.7668, ...]]]], requires_grad=True)</span>
+<span class="sd">        &gt;&gt;&gt; met.load(po.data.fetch_data(&quot;example_metamerCTF_ps.pt&quot;))</span>
+<span class="sd">        &gt;&gt;&gt; print(met.metamer)</span>
+<span class="sd">        tensor([[[[0.3016, ...]]]], dtype=torch.float64, requires_grad=True)</span>
+
+<span class="sd">        If the saved ``MetamerCTF`` object lived on a CUDA device and you do not have</span>
+<span class="sd">        CUDA on the loading machine, use ``map_location`` to change device:</span>
+
+<span class="sd">        &gt;&gt;&gt; met = po.synth.MetamerCTF(img, model, po.tools.optim.l2_norm)</span>
+<span class="sd">        &gt;&gt;&gt; met.image.device</span>
+<span class="sd">        device(type=&#39;cpu&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; met.load(po.data.fetch_data(&quot;example_metamerCTF_ps-cuda.pt&quot;))</span>
+<span class="sd">        Traceback (most recent call last):</span>
+<span class="sd">        RuntimeError: Attempting to deserialize object on a CUDA device but</span>
+<span class="sd">        torch.cuda.is_available() is False...</span>
+<span class="sd">        &gt;&gt;&gt; met.load(</span>
+<span class="sd">        ...     po.data.fetch_data(&quot;example_metamerCTF_ps-cuda.pt&quot;), map_location=&quot;cpu&quot;</span>
+<span class="sd">        ... )</span>
+<span class="sd">        &gt;&gt;&gt; print(met.metamer)</span>
+<span class="sd">        tensor([[[[0.3016, ...]]]], dtype=torch.float64, requires_grad=True)</span>
 
 <span class="sd">        Loading and saving must both be done with ``MetamerCTF``:</span>
 
-<span class="sd">        &gt;&gt;&gt; import plenoptic as po</span>
-<span class="sd">        &gt;&gt;&gt; img = po.data.reptile_skin()</span>
-<span class="sd">        &gt;&gt;&gt; model = po.simul.PortillaSimoncelli(img.shape[-2:])</span>
-<span class="sd">        &gt;&gt;&gt; met = po.synth.MetamerCTF(img, model)</span>
-<span class="sd">        &gt;&gt;&gt; met.synthesize(max_iter=5)</span>
-<span class="sd">        &gt;&gt;&gt; met.save(&quot;metamers_ctf.pt&quot;)</span>
-<span class="sd">        &gt;&gt;&gt; met_copy = po.synth.Metamer(img, model)</span>
-<span class="sd">        &gt;&gt;&gt; met_copy.load(&quot;metamers_ctf.pt&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; met = po.synth.Metamer(img, model)</span>
+<span class="sd">        &gt;&gt;&gt; met.load(po.data.fetch_data(&quot;example_metamerCTF_ps.pt&quot;))</span>
 <span class="sd">        Traceback (most recent call last):</span>
 <span class="sd">        ValueError: Saved object was a plenoptic.synthesize.metamer.MetamerCTF...</span>
 
-<span class="sd">        Loading ``MetamerCTF`` object must be initialized with same values as the saved</span>
-<span class="sd">        object:</span>
+<span class="sd">        If the loading ``MetamerCTF`` object was not initialized with same values</span>
+<span class="sd">        as the saved object, an error will be raised:</span>
 
-<span class="sd">        &gt;&gt;&gt; import plenoptic as po</span>
-<span class="sd">        &gt;&gt;&gt; img = po.data.reptile_skin()</span>
-<span class="sd">        &gt;&gt;&gt; model = po.simul.PortillaSimoncelli(img.shape[-2:])</span>
-<span class="sd">        &gt;&gt;&gt; met = po.synth.MetamerCTF(img, model)</span>
-<span class="sd">        &gt;&gt;&gt; met.synthesize(max_iter=5)</span>
-<span class="sd">        &gt;&gt;&gt; met.save(&quot;metamers_ctf.pt&quot;)</span>
-<span class="sd">        &gt;&gt;&gt; met_copy = po.synth.MetamerCTF(torch.rand_like(img), model)</span>
-<span class="sd">        &gt;&gt;&gt; met_copy.load(&quot;metamers_ctf.pt&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; met = po.synth.MetamerCTF(</span>
+<span class="sd">        ...     torch.rand_like(img), model, po.tools.optim.l2_norm</span>
+<span class="sd">        ... )</span>
+<span class="sd">        &gt;&gt;&gt; met.load(po.data.fetch_data(&quot;example_metamerCTF_ps.pt&quot;))</span>
 <span class="sd">        Traceback (most recent call last):</span>
 <span class="sd">        ValueError: Saved and initialized attribute image have different values...</span>
+
+<span class="sd">        If the loading ``MetamerCTF`` object has a different data type than the saved</span>
+<span class="sd">        object, an error will be raised:</span>
+
+<span class="sd">        &gt;&gt;&gt; met = po.synth.MetamerCTF(img, model, po.tools.optim.l2_norm)</span>
+<span class="sd">        &gt;&gt;&gt; met.to(torch.float32)</span>
+<span class="sd">        &gt;&gt;&gt; met.load(po.data.fetch_data(&quot;example_metamerCTF_ps.pt&quot;))</span>
+<span class="sd">        Traceback (most recent call last):</span>
+<span class="sd">        ValueError: Saved and initialized attribute image have different dtype...</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">_load</span><span class="p">(</span>
             <span class="n">file_path</span><span class="p">,</span>
@@ -2060,7 +2120,7 @@
 
 
 <div class="viewcode-block" id="plot_loss">
-<a class="viewcode-back" href="../../../api/plenoptic.synthesize.html#plenoptic.synthesize.metamer.plot_loss">[docs]</a>
+<a class="viewcode-back" href="../../../generated/plenoptic.synthesize.metamer.html#plenoptic.synthesize.metamer.plot_loss">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">plot_loss</span><span class="p">(</span>
     <span class="n">metamer</span><span class="p">:</span> <span class="n">Metamer</span><span class="p">,</span>
     <span class="n">iteration</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -2097,46 +2157,44 @@
 <span class="sd">    IndexError</span>
 <span class="sd">        If ``iteration`` takes an illegal value.</span>
 
+<span class="sd">    See Also</span>
+<span class="sd">    --------</span>
+<span class="sd">    plot_synthesis_status</span>
+<span class="sd">        Create a figure combining this with other axis-level plots to summarize</span>
+<span class="sd">        synthesis status at a given iteration.</span>
+<span class="sd">    animate</span>
+<span class="sd">        Create a video animating this and other axis-level plots changing over</span>
+<span class="sd">        the course of synthesis.</span>
+
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
 <span class="sd">    .. plot::</span>
 <span class="sd">      :context: reset</span>
 
 <span class="sd">      &gt;&gt;&gt; import plenoptic as po</span>
+<span class="sd">      &gt;&gt;&gt; import torch</span>
 <span class="sd">      &gt;&gt;&gt; img = po.data.einstein()</span>
 <span class="sd">      &gt;&gt;&gt; model = po.simul.Gaussian(30).eval()</span>
 <span class="sd">      &gt;&gt;&gt; po.tools.remove_grad(model)</span>
 <span class="sd">      &gt;&gt;&gt; met = po.synth.Metamer(img, model)</span>
-<span class="sd">      &gt;&gt;&gt; met.synthesize(5)</span>
+<span class="sd">      &gt;&gt;&gt; met.to(torch.float64)</span>
+<span class="sd">      &gt;&gt;&gt; met.load(po.data.fetch_data(&quot;example_metamer_gaussian.pt&quot;))</span>
 <span class="sd">      &gt;&gt;&gt; po.synth.metamer.plot_loss(met)</span>
 <span class="sd">      &lt;Axes: ... ylabel=&#39;Loss&#39;&gt;</span>
 
 <span class="sd">    Specify an iteration:</span>
 
 <span class="sd">    .. plot::</span>
-<span class="sd">      :context: reset</span>
+<span class="sd">      :context: close-figs</span>
 
-<span class="sd">      &gt;&gt;&gt; import plenoptic as po</span>
-<span class="sd">      &gt;&gt;&gt; img = po.data.einstein()</span>
-<span class="sd">      &gt;&gt;&gt; model = po.simul.Gaussian(30).eval()</span>
-<span class="sd">      &gt;&gt;&gt; po.tools.remove_grad(model)</span>
-<span class="sd">      &gt;&gt;&gt; met = po.synth.Metamer(img, model)</span>
-<span class="sd">      &gt;&gt;&gt; met.synthesize(5)</span>
-<span class="sd">      &gt;&gt;&gt; po.synth.metamer.plot_loss(met, iteration=5)</span>
+<span class="sd">      &gt;&gt;&gt; po.synth.metamer.plot_loss(met, iteration=10)</span>
 <span class="sd">      &lt;Axes: ... ylabel=&#39;Loss&#39;&gt;</span>
 
 <span class="sd">    Plot on an axis in an existing figure:</span>
 
 <span class="sd">    .. plot::</span>
-<span class="sd">      :context: reset</span>
+<span class="sd">      :context: close-figs</span>
 
-<span class="sd">      &gt;&gt;&gt; import plenoptic as po</span>
-<span class="sd">      &gt;&gt;&gt; import matplotlib.pyplot as plt</span>
-<span class="sd">      &gt;&gt;&gt; img = po.data.einstein()</span>
-<span class="sd">      &gt;&gt;&gt; model = po.simul.Gaussian(30).eval()</span>
-<span class="sd">      &gt;&gt;&gt; po.tools.remove_grad(model)</span>
-<span class="sd">      &gt;&gt;&gt; met = po.synth.Metamer(img, model)</span>
-<span class="sd">      &gt;&gt;&gt; met.synthesize(5)</span>
 <span class="sd">      &gt;&gt;&gt; fig, axes = plt.subplots(1, 2)</span>
 <span class="sd">      &gt;&gt;&gt; po.synth.metamer.plot_loss(met, ax=axes[1])</span>
 <span class="sd">      &lt;Axes: ... ylabel=&#39;Loss&#39;&gt;</span>
@@ -2156,7 +2214,7 @@
 
 
 <div class="viewcode-block" id="display_metamer">
-<a class="viewcode-back" href="../../../api/plenoptic.synthesize.html#plenoptic.synthesize.metamer.display_metamer">[docs]</a>
+<a class="viewcode-back" href="../../../generated/plenoptic.synthesize.metamer.html#plenoptic.synthesize.metamer.display_metamer">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">display_metamer</span><span class="p">(</span>
     <span class="n">metamer</span><span class="p">:</span> <span class="n">Metamer</span><span class="p">,</span>
     <span class="n">batch_idx</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
@@ -2221,6 +2279,15 @@
 <span class="sd">        ``iteration`` (because e.g., you set ``iteration=3`` but</span>
 <span class="sd">        ``metamer.store_progress=2``).</span>
 
+<span class="sd">    See Also</span>
+<span class="sd">    --------</span>
+<span class="sd">    plot_synthesis_status</span>
+<span class="sd">        Create a figure combining this with other axis-level plots to summarize</span>
+<span class="sd">        synthesis status at a given iteration.</span>
+<span class="sd">    animate</span>
+<span class="sd">        Create a video animating this and other axis-level plots changing over</span>
+<span class="sd">        the course of synthesis.</span>
+
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
 <span class="sd">    If a matplotlib figure exists, this function will use it (using</span>
@@ -2231,80 +2298,55 @@
 
 <span class="sd">      &gt;&gt;&gt; import plenoptic as po</span>
 <span class="sd">      &gt;&gt;&gt; import matplotlib.pyplot as plt</span>
+<span class="sd">      &gt;&gt;&gt; import torch</span>
 <span class="sd">      &gt;&gt;&gt; plt.figure()</span>
 <span class="sd">      &lt;Figure size ...&gt;</span>
 <span class="sd">      &gt;&gt;&gt; img = po.data.einstein()</span>
 <span class="sd">      &gt;&gt;&gt; model = po.simul.Gaussian(30).eval()</span>
 <span class="sd">      &gt;&gt;&gt; po.tools.remove_grad(model)</span>
 <span class="sd">      &gt;&gt;&gt; met = po.synth.Metamer(img, model)</span>
-<span class="sd">      &gt;&gt;&gt; met.synthesize(5)</span>
+<span class="sd">      &gt;&gt;&gt; met.to(torch.float64)</span>
+<span class="sd">      &gt;&gt;&gt; met.load(po.data.fetch_data(&quot;example_metamer_gaussian.pt&quot;))</span>
 <span class="sd">      &gt;&gt;&gt; po.synth.metamer.display_metamer(met)</span>
-<span class="sd">      &lt;Axes: title=...Metamer [iteration=5]...&gt;</span>
+<span class="sd">      &lt;Axes: title=...Metamer [iteration=107]...&gt;</span>
 
 <span class="sd">    If no matplotlib figure exists, this function will create a new one:</span>
 
 <span class="sd">    .. plot::</span>
-<span class="sd">      :context: reset</span>
+<span class="sd">      :context: close-figs</span>
 
-<span class="sd">      &gt;&gt;&gt; import plenoptic as po</span>
-<span class="sd">      &gt;&gt;&gt; import matplotlib.pyplot as plt</span>
 <span class="sd">      &gt;&gt;&gt; # close all open figures to ensure none exist</span>
 <span class="sd">      &gt;&gt;&gt; plt.close(&quot;all&quot;)</span>
-<span class="sd">      &gt;&gt;&gt; img = po.data.einstein()</span>
-<span class="sd">      &gt;&gt;&gt; model = po.simul.Gaussian(30).eval()</span>
-<span class="sd">      &gt;&gt;&gt; po.tools.remove_grad(model)</span>
-<span class="sd">      &gt;&gt;&gt; met = po.synth.Metamer(img, model)</span>
-<span class="sd">      &gt;&gt;&gt; met.synthesize(5)</span>
 <span class="sd">      &gt;&gt;&gt; po.synth.metamer.display_metamer(met)</span>
-<span class="sd">      &lt;Axes: title=...Metamer [iteration=5]...&gt;</span>
+<span class="sd">      &lt;Axes: title=...Metamer [iteration=107]...&gt;</span>
 
 <span class="sd">    Display metamer from a specified iteration (requires setting ``store_progress``</span>
 <span class="sd">    when :meth:`~plenoptic.synthesize.metamer.Metamer.synthesize` was called):</span>
 
 <span class="sd">    .. plot::</span>
-<span class="sd">      :context: reset</span>
+<span class="sd">      :context: close-figs</span>
 
-<span class="sd">      &gt;&gt;&gt; import plenoptic as po</span>
-<span class="sd">      &gt;&gt;&gt; img = po.data.einstein()</span>
-<span class="sd">      &gt;&gt;&gt; model = po.simul.Gaussian(30).eval()</span>
-<span class="sd">      &gt;&gt;&gt; po.tools.remove_grad(model)</span>
-<span class="sd">      &gt;&gt;&gt; met = po.synth.Metamer(img, model)</span>
-<span class="sd">      &gt;&gt;&gt; met.synthesize(5, store_progress=True)</span>
-<span class="sd">      &gt;&gt;&gt; po.synth.metamer.display_metamer(met, iteration=3)</span>
-<span class="sd">      &lt;Axes: title=...Metamer [iteration=3]...&gt;</span>
+<span class="sd">      &gt;&gt;&gt; po.synth.metamer.display_metamer(met, iteration=10)</span>
+<span class="sd">      &lt;Axes: title=...Metamer [iteration=10]...&gt;</span>
 
 <span class="sd">    Explicitly define the axis to use:</span>
 
 <span class="sd">    .. plot::</span>
-<span class="sd">      :context: reset</span>
+<span class="sd">      :context: close-figs</span>
 
-<span class="sd">      &gt;&gt;&gt; import plenoptic as po</span>
-<span class="sd">      &gt;&gt;&gt; import matplotlib.pyplot as plt</span>
-<span class="sd">      &gt;&gt;&gt; img = po.data.einstein()</span>
-<span class="sd">      &gt;&gt;&gt; model = po.simul.Gaussian(30).eval()</span>
-<span class="sd">      &gt;&gt;&gt; po.tools.remove_grad(model)</span>
-<span class="sd">      &gt;&gt;&gt; met = po.synth.Metamer(img, model)</span>
-<span class="sd">      &gt;&gt;&gt; met.synthesize(5)</span>
 <span class="sd">      &gt;&gt;&gt; fig, axes = plt.subplots(1, 2, figsize=(8, 4))</span>
 <span class="sd">      &gt;&gt;&gt; po.synth.metamer.display_metamer(met, ax=axes[1])</span>
-<span class="sd">      &lt;Axes: title=...Metamer [iteration=5]...&gt;</span>
+<span class="sd">      &lt;Axes: title=...Metamer [iteration=107]...&gt;</span>
 
 <span class="sd">    When plotting on an existing axis, if ``zoom=None``, this function will determine</span>
 <span class="sd">    the best zoom level for the axis size.</span>
 
 <span class="sd">    .. plot::</span>
-<span class="sd">      :context: reset</span>
+<span class="sd">      :context: close-figs</span>
 
-<span class="sd">      &gt;&gt;&gt; import plenoptic as po</span>
-<span class="sd">      &gt;&gt;&gt; import matplotlib.pyplot as plt</span>
-<span class="sd">      &gt;&gt;&gt; img = po.data.einstein()</span>
-<span class="sd">      &gt;&gt;&gt; model = po.simul.Gaussian(30).eval()</span>
-<span class="sd">      &gt;&gt;&gt; po.tools.remove_grad(model)</span>
-<span class="sd">      &gt;&gt;&gt; met = po.synth.Metamer(img, model)</span>
-<span class="sd">      &gt;&gt;&gt; met.synthesize(5)</span>
-<span class="sd">      &gt;&gt;&gt; fig, axes = plt.subplots(1, 1, figsize=(2, 2))</span>
+<span class="sd">      &gt;&gt;&gt; fig, axes = plt.subplots(1, 1, figsize=(8, 8))</span>
 <span class="sd">      &gt;&gt;&gt; po.synth.metamer.display_metamer(met, ax=axes)</span>
-<span class="sd">      &lt;Axes: title=...Metamer [iteration=5]...dims: [256, 256] * 0.5&#39;}&gt;</span>
+<span class="sd">      &lt;Axes: title=...Metamer [iteration=107]...dims: [256, 256] * 2.0&#39;}&gt;</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">progress</span> <span class="o">=</span> <span class="n">metamer</span><span class="o">.</span><span class="n">get_progress</span><span class="p">(</span><span class="n">iteration</span><span class="p">)</span>
     <span class="k">try</span><span class="p">:</span>
@@ -2412,7 +2454,7 @@
 
 
 <div class="viewcode-block" id="plot_representation_error">
-<a class="viewcode-back" href="../../../api/plenoptic.synthesize.html#plenoptic.synthesize.metamer.plot_representation_error">[docs]</a>
+<a class="viewcode-back" href="../../../generated/plenoptic.synthesize.metamer.html#plenoptic.synthesize.metamer.plot_representation_error">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">plot_representation_error</span><span class="p">(</span>
     <span class="n">metamer</span><span class="p">:</span> <span class="n">Metamer</span><span class="p">,</span>
     <span class="n">batch_idx</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
@@ -2472,44 +2514,49 @@
 <span class="sd">        the argument ``iteration`` (because e.g., you set ``iteration=3`` but</span>
 <span class="sd">        ``metamer.store_progress=2``).</span>
 
+<span class="sd">    See Also</span>
+<span class="sd">    --------</span>
+<span class="sd">    plot_synthesis_status</span>
+<span class="sd">        Create a figure combining this with other axis-level plots to summarize</span>
+<span class="sd">        synthesis status at a given iteration.</span>
+<span class="sd">    animate</span>
+<span class="sd">        Create a video animating this and other axis-level plots changing over</span>
+<span class="sd">        the course of synthesis.</span>
+
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
 <span class="sd">    .. plot::</span>
 <span class="sd">      :context: reset</span>
 
 <span class="sd">      &gt;&gt;&gt; import plenoptic as po</span>
+<span class="sd">      &gt;&gt;&gt; import torch</span>
 <span class="sd">      &gt;&gt;&gt; img = po.data.einstein()</span>
 <span class="sd">      &gt;&gt;&gt; model = po.simul.Gaussian(30).eval()</span>
 <span class="sd">      &gt;&gt;&gt; po.tools.remove_grad(model)</span>
 <span class="sd">      &gt;&gt;&gt; met = po.synth.Metamer(img, model)</span>
-<span class="sd">      &gt;&gt;&gt; met.synthesize(5)</span>
+<span class="sd">      &gt;&gt;&gt; met.to(torch.float64)</span>
+<span class="sd">      &gt;&gt;&gt; met.load(po.data.fetch_data(&quot;example_metamer_gaussian.pt&quot;))</span>
 <span class="sd">      &gt;&gt;&gt; po.synth.metamer.plot_representation_error(met)</span>
 <span class="sd">      [&lt;Axes: title=...Representation error...&gt;]</span>
 
 <span class="sd">    Plot on an existing axis:</span>
 
 <span class="sd">    .. plot::</span>
-<span class="sd">      :context: reset</span>
+<span class="sd">      :context: close-figs</span>
 
-<span class="sd">      &gt;&gt;&gt; import plenoptic as po</span>
-<span class="sd">      &gt;&gt;&gt; import matplotlib.pyplot as plt</span>
-<span class="sd">      &gt;&gt;&gt; img = po.data.einstein()</span>
-<span class="sd">      &gt;&gt;&gt; model = po.simul.Gaussian(30).eval()</span>
-<span class="sd">      &gt;&gt;&gt; po.tools.remove_grad(model)</span>
-<span class="sd">      &gt;&gt;&gt; met = po.synth.Metamer(img, model)</span>
-<span class="sd">      &gt;&gt;&gt; met.synthesize(5)</span>
+<span class="sd">      &gt;&gt;&gt; import matplotlib.pyplot</span>
 <span class="sd">      &gt;&gt;&gt; fig, axes = plt.subplots(1, 2, figsize=(8, 4))</span>
 <span class="sd">      &gt;&gt;&gt; po.synth.metamer.plot_representation_error(met, ax=axes[1])</span>
 <span class="sd">      [&lt;Axes: title=...Representation error...&gt;]</span>
 
-<span class="sd">    The function switches between imshow and stem plot based on the shape of the</span>
+<span class="sd">    The function uses :func:`~plenoptic.tools.display.plot_representation`,</span>
+<span class="sd">    which switches between :func:`~plenoptic.tools.display.imshow` and</span>
+<span class="sd">    :func:`~plenoptic.tools.display.clean_stem_plot` based on the shape of the</span>
 <span class="sd">    model&#39;s output:</span>
 
 <span class="sd">    .. plot::</span>
-<span class="sd">      :context: reset</span>
+<span class="sd">      :context: close-figs</span>
 
-<span class="sd">      &gt;&gt;&gt; import plenoptic as po</span>
-<span class="sd">      &gt;&gt;&gt; img = po.data.einstein()</span>
 <span class="sd">      &gt;&gt;&gt; # Flatten the last two dimensions of the output, so it looks like a vector.</span>
 <span class="sd">      &gt;&gt;&gt; class TestModel(po.simul.Gaussian):</span>
 <span class="sd">      ...     def __init__(self, *args, **kwargs):</span>
@@ -2520,21 +2567,24 @@
 <span class="sd">      &gt;&gt;&gt; model = TestModel(30).eval()</span>
 <span class="sd">      &gt;&gt;&gt; po.tools.remove_grad(model)</span>
 <span class="sd">      &gt;&gt;&gt; met = po.synth.Metamer(img, model)</span>
+<span class="sd">      &gt;&gt;&gt; met.to(torch.float64)</span>
 <span class="sd">      &gt;&gt;&gt; met.synthesize(5)</span>
 <span class="sd">      &gt;&gt;&gt; po.synth.metamer.plot_representation_error(met)</span>
 <span class="sd">      [&lt;Axes: title=...Representation error...&gt;]</span>
 
 <span class="sd">    If model has its own ``plot_representation`` method, this function will use it,</span>
-<span class="sd">    potentially creating multiple axes:</span>
+<span class="sd">    potentially creating multiple axes (see</span>
+<span class="sd">    :func:`~plenoptic.simulate.models.portilla_simoncelli.PortillaSimoncelli.plot_representation`</span>
+<span class="sd">    ):</span>
 
 <span class="sd">    .. plot::</span>
-<span class="sd">      :context: reset</span>
+<span class="sd">      :context: close-figs</span>
 
-<span class="sd">      &gt;&gt;&gt; import plenoptic as po</span>
 <span class="sd">      &gt;&gt;&gt; img = po.data.reptile_skin()</span>
 <span class="sd">      &gt;&gt;&gt; model = po.simul.PortillaSimoncelli(img.shape[-2:])</span>
-<span class="sd">      &gt;&gt;&gt; met = po.synth.Metamer(img, model)</span>
-<span class="sd">      &gt;&gt;&gt; met.synthesize(5)</span>
+<span class="sd">      &gt;&gt;&gt; met = po.synth.MetamerCTF(img, model, po.tools.optim.l2_norm)</span>
+<span class="sd">      &gt;&gt;&gt; met.to(torch.float64)</span>
+<span class="sd">      &gt;&gt;&gt; met.load(po.data.fetch_data(&quot;example_metamerCTF_ps.pt&quot;))</span>
 <span class="sd">      &gt;&gt;&gt; po.synth.metamer.plot_representation_error(met)</span>
 <span class="sd">      [&lt;Axes: ...&gt;, ..., &lt;Axes: ...&gt;]</span>
 
@@ -2542,17 +2592,11 @@
 <span class="sd">    needed:</span>
 
 <span class="sd">    .. plot::</span>
-<span class="sd">      :context: reset</span>
+<span class="sd">      :context: close-figs</span>
 
-<span class="sd">      &gt;&gt;&gt; import plenoptic as po</span>
-<span class="sd">      &gt;&gt;&gt; import matplotlib.pyplot as plt</span>
-<span class="sd">      &gt;&gt;&gt; img = po.data.reptile_skin()</span>
-<span class="sd">      &gt;&gt;&gt; model = po.simul.PortillaSimoncelli(img.shape[-2:])</span>
-<span class="sd">      &gt;&gt;&gt; met = po.synth.Metamer(img, model)</span>
-<span class="sd">      &gt;&gt;&gt; met.synthesize(5)</span>
 <span class="sd">      &gt;&gt;&gt; fig, axes = plt.subplots(1, 2, figsize=(8, 4))</span>
 <span class="sd">      &gt;&gt;&gt; po.synth.metamer.display_metamer(met, ax=axes[0])</span>
-<span class="sd">      &lt;Axes: title=...Metamer [iteration=5]...&gt;</span>
+<span class="sd">      &lt;Axes: title=...Metamer [iteration=150]...&gt;</span>
 <span class="sd">      &gt;&gt;&gt; po.synth.metamer.plot_representation_error(met, ax=axes[1])</span>
 <span class="sd">      [&lt;Axes: ...&gt;, ..., &lt;Axes: ...&gt;]</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -2574,7 +2618,7 @@
 
 
 <div class="viewcode-block" id="plot_pixel_values">
-<a class="viewcode-back" href="../../../api/plenoptic.synthesize.html#plenoptic.synthesize.metamer.plot_pixel_values">[docs]</a>
+<a class="viewcode-back" href="../../../generated/plenoptic.synthesize.metamer.html#plenoptic.synthesize.metamer.plot_pixel_values">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">plot_pixel_values</span><span class="p">(</span>
     <span class="n">metamer</span><span class="p">:</span> <span class="n">Metamer</span><span class="p">,</span>
     <span class="n">batch_idx</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
@@ -2630,17 +2674,28 @@
 <span class="sd">        ``iteration`` (because e.g., you set ``iteration=3`` but</span>
 <span class="sd">        ``metamer.store_progress=2``).</span>
 
+<span class="sd">    See Also</span>
+<span class="sd">    --------</span>
+<span class="sd">    plot_synthesis_status</span>
+<span class="sd">        Create a figure combining this with other axis-level plots to summarize</span>
+<span class="sd">        synthesis status at a given iteration.</span>
+<span class="sd">    animate</span>
+<span class="sd">        Create a video animating this and other axis-level plots changing over</span>
+<span class="sd">        the course of synthesis.</span>
+
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
 <span class="sd">    .. plot::</span>
 <span class="sd">      :context: reset</span>
 
 <span class="sd">      &gt;&gt;&gt; import plenoptic as po</span>
+<span class="sd">      &gt;&gt;&gt; import torch</span>
 <span class="sd">      &gt;&gt;&gt; img = po.data.einstein()</span>
 <span class="sd">      &gt;&gt;&gt; model = po.simul.Gaussian(30).eval()</span>
 <span class="sd">      &gt;&gt;&gt; po.tools.remove_grad(model)</span>
 <span class="sd">      &gt;&gt;&gt; met = po.synth.Metamer(img, model)</span>
-<span class="sd">      &gt;&gt;&gt; met.synthesize(5)</span>
+<span class="sd">      &gt;&gt;&gt; met.to(torch.float64)</span>
+<span class="sd">      &gt;&gt;&gt; met.load(po.data.fetch_data(&quot;example_metamer_gaussian.pt&quot;))</span>
 <span class="sd">      &gt;&gt;&gt; po.synth.metamer.plot_pixel_values(met)</span>
 <span class="sd">      &lt;Axes: ... &#39;Histogram of pixel values&#39;...&gt;</span>
 
@@ -2648,29 +2703,16 @@
 <span class="sd">    when :meth:`~plenoptic.synthesize.metamer.Metamer.synthesize` was called):</span>
 
 <span class="sd">    .. plot::</span>
-<span class="sd">      :context: reset</span>
+<span class="sd">      :context: close-figs</span>
 
-<span class="sd">      &gt;&gt;&gt; import plenoptic as po</span>
-<span class="sd">      &gt;&gt;&gt; img = po.data.einstein()</span>
-<span class="sd">      &gt;&gt;&gt; model = po.simul.Gaussian(30).eval()</span>
-<span class="sd">      &gt;&gt;&gt; po.tools.remove_grad(model)</span>
-<span class="sd">      &gt;&gt;&gt; met = po.synth.Metamer(img, model)</span>
-<span class="sd">      &gt;&gt;&gt; met.synthesize(5, store_progress=True)</span>
-<span class="sd">      &gt;&gt;&gt; po.synth.metamer.plot_pixel_values(met, iteration=3)</span>
+<span class="sd">      &gt;&gt;&gt; po.synth.metamer.plot_pixel_values(met, iteration=10)</span>
 <span class="sd">      &lt;Axes: ... &#39;Histogram of pixel values&#39;...&gt;</span>
 
 <span class="sd">    Plot on an existing axis:</span>
 
 <span class="sd">    .. plot::</span>
-<span class="sd">      :context: reset</span>
+<span class="sd">      :context: close-figs</span>
 
-<span class="sd">      &gt;&gt;&gt; import plenoptic as po</span>
-<span class="sd">      &gt;&gt;&gt; import matplotlib.pyplot as plt</span>
-<span class="sd">      &gt;&gt;&gt; img = po.data.einstein()</span>
-<span class="sd">      &gt;&gt;&gt; model = po.simul.Gaussian(30).eval()</span>
-<span class="sd">      &gt;&gt;&gt; po.tools.remove_grad(model)</span>
-<span class="sd">      &gt;&gt;&gt; met = po.synth.Metamer(img, model)</span>
-<span class="sd">      &gt;&gt;&gt; met.synthesize(5)</span>
 <span class="sd">      &gt;&gt;&gt; fig, axes = plt.subplots(1, 2, figsize=(8, 4))</span>
 <span class="sd">      &gt;&gt;&gt; po.synth.metamer.plot_pixel_values(met, ax=axes[1])</span>
 <span class="sd">      &lt;Axes: ... &#39;Histogram of pixel values&#39;...&gt;</span>
@@ -2910,7 +2952,7 @@
 
 
 <div class="viewcode-block" id="plot_synthesis_status">
-<a class="viewcode-back" href="../../../api/plenoptic.synthesize.html#plenoptic.synthesize.metamer.plot_synthesis_status">[docs]</a>
+<a class="viewcode-back" href="../../../generated/plenoptic.synthesize.metamer.html#plenoptic.synthesize.metamer.plot_synthesis_status">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">plot_synthesis_status</span><span class="p">(</span>
     <span class="n">metamer</span><span class="p">:</span> <span class="n">Metamer</span><span class="p">,</span>
     <span class="n">batch_idx</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
@@ -3017,45 +3059,60 @@
 <span class="sd">        ``iteration`` (because e.g., you set ``iteration=3`` but</span>
 <span class="sd">        ``metamer.store_progress=2``).</span>
 
+<span class="sd">    See Also</span>
+<span class="sd">    --------</span>
+<span class="sd">    display_metamer</span>
+<span class="sd">        One of this function&#39;s axis-level component functions: display metamer at</span>
+<span class="sd">        a given synthesis iteration.</span>
+<span class="sd">    plot_loss</span>
+<span class="sd">        One of this function&#39;s axis-level component functions: plot synthesis loss</span>
+<span class="sd">        over iterations.</span>
+<span class="sd">    plot_representation_error</span>
+<span class="sd">        One of this function&#39;s axis-level component functions: plot error in model</span>
+<span class="sd">        representation at a given synthesis iteration.</span>
+<span class="sd">    plot_pixel_values</span>
+<span class="sd">        One of this function&#39;s axis-level component functions: plot histogram of</span>
+<span class="sd">        pixel values in target image and metamer at a given synthesis iteration.</span>
+<span class="sd">    animate</span>
+<span class="sd">        Create a video that animates this figure over synthesis iteration.</span>
+
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
 <span class="sd">    .. plot::</span>
 <span class="sd">      :context: reset</span>
 
 <span class="sd">      &gt;&gt;&gt; import plenoptic as po</span>
+<span class="sd">      &gt;&gt;&gt; import torch</span>
 <span class="sd">      &gt;&gt;&gt; img = po.data.einstein()</span>
 <span class="sd">      &gt;&gt;&gt; model = po.simul.Gaussian(30).eval()</span>
 <span class="sd">      &gt;&gt;&gt; po.tools.remove_grad(model)</span>
 <span class="sd">      &gt;&gt;&gt; met = po.synth.Metamer(img, model)</span>
-<span class="sd">      &gt;&gt;&gt; met.synthesize(5)</span>
+<span class="sd">      &gt;&gt;&gt; met.to(torch.float64)</span>
+<span class="sd">      &gt;&gt;&gt; met.load(po.data.fetch_data(&quot;example_metamer_gaussian.pt&quot;))</span>
 <span class="sd">      &gt;&gt;&gt; po.synth.metamer.plot_synthesis_status(met)</span>
 <span class="sd">      (&lt;Figure size ...&gt;, {&#39;display_metamer&#39;: 0, ...})</span>
 
 <span class="sd">    If model has its own ``plot_representation`` method, this function will use it</span>
-<span class="sd">    for plotting the representation error:</span>
+<span class="sd">    for plotting the representation error (see</span>
+<span class="sd">    :func:`~plenoptic.simulate.models.portilla_simoncelli.PortillaSimoncelli.plot_representation`</span>
+<span class="sd">    ):</span>
 
 <span class="sd">    .. plot::</span>
-<span class="sd">      :context: reset</span>
+<span class="sd">      :context: close-figs</span>
 
-<span class="sd">      &gt;&gt;&gt; import plenoptic as po</span>
 <span class="sd">      &gt;&gt;&gt; img = po.data.reptile_skin()</span>
 <span class="sd">      &gt;&gt;&gt; model = po.simul.PortillaSimoncelli(img.shape[-2:])</span>
-<span class="sd">      &gt;&gt;&gt; met = po.synth.Metamer(img, model)</span>
-<span class="sd">      &gt;&gt;&gt; met.synthesize(5)</span>
+<span class="sd">      &gt;&gt;&gt; met = po.synth.MetamerCTF(img, model, po.tools.optim.l2_norm)</span>
+<span class="sd">      &gt;&gt;&gt; met.to(torch.float64)</span>
+<span class="sd">      &gt;&gt;&gt; met.load(po.data.fetch_data(&quot;example_metamerCTF_ps.pt&quot;))</span>
 <span class="sd">      &gt;&gt;&gt; po.synth.metamer.plot_synthesis_status(met)</span>
 <span class="sd">      (&lt;Figure size ...&gt;, {&#39;display_metamer&#39;: 0, ...})</span>
 
 <span class="sd">    Change the included plots:</span>
 
 <span class="sd">    .. plot::</span>
-<span class="sd">      :context: reset</span>
+<span class="sd">      :context: close-figs</span>
 
-<span class="sd">      &gt;&gt;&gt; import plenoptic as po</span>
-<span class="sd">      &gt;&gt;&gt; img = po.data.einstein()</span>
-<span class="sd">      &gt;&gt;&gt; model = po.simul.Gaussian(30).eval()</span>
-<span class="sd">      &gt;&gt;&gt; po.tools.remove_grad(model)</span>
-<span class="sd">      &gt;&gt;&gt; met = po.synth.Metamer(img, model)</span>
-<span class="sd">      &gt;&gt;&gt; met.synthesize(5)</span>
 <span class="sd">      &gt;&gt;&gt; included_plots = [&quot;plot_loss&quot;, &quot;plot_pixel_values&quot;]</span>
 <span class="sd">      &gt;&gt;&gt; po.synth.metamer.plot_synthesis_status(met, included_plots=included_plots)</span>
 <span class="sd">      (&lt;Figure size ...&gt;, {&#39;plot_loss&#39;: 0, ...})</span>
@@ -3063,13 +3120,8 @@
 <span class="sd">    Adjust width of included plots:</span>
 
 <span class="sd">    .. plot::</span>
-<span class="sd">      :context: reset</span>
+<span class="sd">      :context: close-figs</span>
 
-<span class="sd">      &gt;&gt;&gt; import plenoptic as po</span>
-<span class="sd">      &gt;&gt;&gt; img = po.data.reptile_skin()</span>
-<span class="sd">      &gt;&gt;&gt; model = po.simul.PortillaSimoncelli(img.shape[-2:])</span>
-<span class="sd">      &gt;&gt;&gt; met = po.synth.Metamer(img, model)</span>
-<span class="sd">      &gt;&gt;&gt; met.synthesize(5)</span>
 <span class="sd">      &gt;&gt;&gt; width_ratios = {&quot;plot_representation_error&quot;: 3}</span>
 <span class="sd">      &gt;&gt;&gt; po.synth.metamer.plot_synthesis_status(met, width_ratios=width_ratios)</span>
 <span class="sd">      (&lt;Figure size ...&gt;, {&#39;display_metamer&#39;: 0, ...})</span>
@@ -3077,15 +3129,8 @@
 <span class="sd">    Plot on existing figure, ignoring some axes and rearranging others:</span>
 
 <span class="sd">    .. plot::</span>
-<span class="sd">      :context: reset</span>
+<span class="sd">      :context: close-figs</span>
 
-<span class="sd">      &gt;&gt;&gt; import plenoptic as po</span>
-<span class="sd">      &gt;&gt;&gt; import matplotlib.pyplot as plt</span>
-<span class="sd">      &gt;&gt;&gt; img = po.data.einstein()</span>
-<span class="sd">      &gt;&gt;&gt; model = po.simul.Gaussian(30).eval()</span>
-<span class="sd">      &gt;&gt;&gt; po.tools.remove_grad(model)</span>
-<span class="sd">      &gt;&gt;&gt; met = po.synth.Metamer(img, model)</span>
-<span class="sd">      &gt;&gt;&gt; met.synthesize(5)</span>
 <span class="sd">      &gt;&gt;&gt; fig, axes = plt.subplots(1, 5, figsize=(16, 4))</span>
 <span class="sd">      &gt;&gt;&gt; axes_idx = {&quot;misc&quot;: [0, 3], &quot;plot_loss&quot;: 4}</span>
 <span class="sd">      &gt;&gt;&gt; po.synth.metamer.plot_synthesis_status(met, fig=fig, axes_idx=axes_idx)</span>
@@ -3180,7 +3225,7 @@
 
 
 <div class="viewcode-block" id="animate">
-<a class="viewcode-back" href="../../../api/plenoptic.synthesize.html#plenoptic.synthesize.metamer.animate">[docs]</a>
+<a class="viewcode-back" href="../../../generated/plenoptic.synthesize.metamer.html#plenoptic.synthesize.metamer.animate">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">animate</span><span class="p">(</span>
     <span class="n">metamer</span><span class="p">:</span> <span class="n">Metamer</span><span class="p">,</span>
     <span class="n">framerate</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
@@ -3299,6 +3344,24 @@
 <span class="sd">    ValueError</span>
 <span class="sd">        If we do not know how to interpret the value of ``ylim``.</span>
 
+<span class="sd">    See Also</span>
+<span class="sd">    --------</span>
+<span class="sd">    display_metamer</span>
+<span class="sd">        One of this function&#39;s axis-level component functions: display metamer at</span>
+<span class="sd">        a given synthesis iteration.</span>
+<span class="sd">    plot_loss</span>
+<span class="sd">        One of this function&#39;s axis-level component functions: plot synthesis loss</span>
+<span class="sd">        over iterations.</span>
+<span class="sd">    plot_representation_error</span>
+<span class="sd">        One of this function&#39;s axis-level component functions: plot error in model</span>
+<span class="sd">        representation at a given synthesis iteration.</span>
+<span class="sd">    plot_pixel_values</span>
+<span class="sd">        One of this function&#39;s axis-level component functions: plot histogram of</span>
+<span class="sd">        pixel values in target image and metamer at a given synthesis iteration.</span>
+<span class="sd">    plot_synthesis_status</span>
+<span class="sd">        Create a figure that shows a frame from this movie: the synthesis status at</span>
+<span class="sd">        a given iteration.</span>
+
 <span class="sd">    Notes</span>
 <span class="sd">    -----</span>
 <span class="sd">    Unless specified, we use the ffmpeg backend, which requires that you have</span>
@@ -3315,11 +3378,13 @@
 <span class="sd">      :context: reset</span>
 
 <span class="sd">      &gt;&gt;&gt; import plenoptic as po</span>
+<span class="sd">      &gt;&gt;&gt; import torch</span>
 <span class="sd">      &gt;&gt;&gt; img = po.data.einstein()</span>
 <span class="sd">      &gt;&gt;&gt; model = po.simul.Gaussian(30).eval()</span>
 <span class="sd">      &gt;&gt;&gt; po.tools.remove_grad(model)</span>
 <span class="sd">      &gt;&gt;&gt; met = po.synth.Metamer(img, model)</span>
-<span class="sd">      &gt;&gt;&gt; met.synthesize(5, store_progress=True)</span>
+<span class="sd">      &gt;&gt;&gt; met.to(torch.float64)</span>
+<span class="sd">      &gt;&gt;&gt; met.load(po.data.fetch_data(&quot;example_metamer_gaussian.pt&quot;))</span>
 <span class="sd">      &gt;&gt;&gt; ani = po.synth.metamer.animate(met)</span>
 <span class="sd">      &gt;&gt;&gt; # Save the video (here we&#39;re saving it as a .gif)</span>
 <span class="sd">      &gt;&gt;&gt; ani.save(&quot;animate-example-1.gif&quot;)</span>
@@ -3335,22 +3400,25 @@
 <span class="sd">    &gt;&gt;&gt; model = po.simul.Gaussian(30).eval()</span>
 <span class="sd">    &gt;&gt;&gt; po.tools.remove_grad(model)</span>
 <span class="sd">    &gt;&gt;&gt; met = po.synth.Metamer(img, model)</span>
+<span class="sd">    &gt;&gt;&gt; met.to(torch.float64)</span>
 <span class="sd">    &gt;&gt;&gt; met.synthesize(5)</span>
 <span class="sd">    &gt;&gt;&gt; ani = po.synth.metamer.animate(met)</span>
 <span class="sd">    Traceback (most recent call last):</span>
 <span class="sd">    ValueError: synthesize() was run with store_progress=False...</span>
 
 <span class="sd">    If model has its own ``plot_representation`` method, this function will use it</span>
-<span class="sd">    for plotting the representation error:</span>
+<span class="sd">    for plotting the representation error (see</span>
+<span class="sd">    :func:`~plenoptic.simulate.models.portilla_simoncelli.PortillaSimoncelli.plot_representation`</span>
+<span class="sd">    ):</span>
 
 <span class="sd">    .. plot::</span>
-<span class="sd">      :context: reset</span>
+<span class="sd">      :context: close-figs</span>
 
-<span class="sd">      &gt;&gt;&gt; import plenoptic as po</span>
 <span class="sd">      &gt;&gt;&gt; img = po.data.reptile_skin()</span>
 <span class="sd">      &gt;&gt;&gt; model = po.simul.PortillaSimoncelli(img.shape[-2:])</span>
-<span class="sd">      &gt;&gt;&gt; met = po.synth.Metamer(img, model)</span>
-<span class="sd">      &gt;&gt;&gt; met.synthesize(5, store_progress=True)</span>
+<span class="sd">      &gt;&gt;&gt; met = po.synth.MetamerCTF(img, model, po.tools.optim.l2_norm)</span>
+<span class="sd">      &gt;&gt;&gt; met.to(torch.float64)</span>
+<span class="sd">      &gt;&gt;&gt; met.load(po.data.fetch_data(&quot;example_metamerCTF_ps.pt&quot;))</span>
 <span class="sd">      &gt;&gt;&gt; ani = po.synth.metamer.animate(met)</span>
 <span class="sd">      &gt;&gt;&gt; # Save the video (here we&#39;re saving it as a .gif)</span>
 <span class="sd">      &gt;&gt;&gt; ani.save(&quot;animate-example-2.gif&quot;)</span>
@@ -3360,14 +3428,8 @@
 <span class="sd">    Change the included plots:</span>
 
 <span class="sd">    .. plot::</span>
-<span class="sd">      :context: reset</span>
+<span class="sd">      :context: close-figs</span>
 
-<span class="sd">      &gt;&gt;&gt; import plenoptic as po</span>
-<span class="sd">      &gt;&gt;&gt; img = po.data.einstein()</span>
-<span class="sd">      &gt;&gt;&gt; model = po.simul.Gaussian(30).eval()</span>
-<span class="sd">      &gt;&gt;&gt; po.tools.remove_grad(model)</span>
-<span class="sd">      &gt;&gt;&gt; met = po.synth.Metamer(img, model)</span>
-<span class="sd">      &gt;&gt;&gt; met.synthesize(5, store_progress=True)</span>
 <span class="sd">      &gt;&gt;&gt; included_plots = [&quot;plot_loss&quot;, &quot;plot_pixel_values&quot;]</span>
 <span class="sd">      &gt;&gt;&gt; ani = po.synth.metamer.animate(met, included_plots=included_plots)</span>
 <span class="sd">      &gt;&gt;&gt; # Save the video (here we&#39;re saving it as a .gif)</span>
@@ -3378,13 +3440,8 @@
 <span class="sd">    Adjust width of included plots:</span>
 
 <span class="sd">    .. plot::</span>
-<span class="sd">      :context: reset</span>
+<span class="sd">      :context: close-figs</span>
 
-<span class="sd">      &gt;&gt;&gt; import plenoptic as po</span>
-<span class="sd">      &gt;&gt;&gt; img = po.data.reptile_skin()</span>
-<span class="sd">      &gt;&gt;&gt; model = po.simul.PortillaSimoncelli(img.shape[-2:])</span>
-<span class="sd">      &gt;&gt;&gt; met = po.synth.Metamer(img, model)</span>
-<span class="sd">      &gt;&gt;&gt; met.synthesize(5, store_progress=True)</span>
 <span class="sd">      &gt;&gt;&gt; width_ratios = {&quot;plot_representation_error&quot;: 3}</span>
 <span class="sd">      &gt;&gt;&gt; ani = po.synth.metamer.animate(met, width_ratios=width_ratios)</span>
 <span class="sd">      &gt;&gt;&gt; # Save the video (here we&#39;re saving it as a .gif)</span>
@@ -3395,15 +3452,8 @@
 <span class="sd">    Use an existing figure, ignoring some axes and rearranging others:</span>
 
 <span class="sd">    .. plot::</span>
-<span class="sd">      :context: reset</span>
+<span class="sd">      :context: close-figs</span>
 
-<span class="sd">      &gt;&gt;&gt; import plenoptic as po</span>
-<span class="sd">      &gt;&gt;&gt; import matplotlib.pyplot as plt</span>
-<span class="sd">      &gt;&gt;&gt; img = po.data.einstein()</span>
-<span class="sd">      &gt;&gt;&gt; model = po.simul.Gaussian(30).eval()</span>
-<span class="sd">      &gt;&gt;&gt; po.tools.remove_grad(model)</span>
-<span class="sd">      &gt;&gt;&gt; met = po.synth.Metamer(img, model)</span>
-<span class="sd">      &gt;&gt;&gt; met.synthesize(5, store_progress=True)</span>
 <span class="sd">      &gt;&gt;&gt; fig, axes = plt.subplots(1, 5, figsize=(16, 4))</span>
 <span class="sd">      &gt;&gt;&gt; axes_idx = {&quot;misc&quot;: [0, 3], &quot;plot_loss&quot;: 4}</span>
 <span class="sd">      &gt;&gt;&gt; ani = po.synth.metamer.animate(met, fig=fig, axes_idx=axes_idx)</span>

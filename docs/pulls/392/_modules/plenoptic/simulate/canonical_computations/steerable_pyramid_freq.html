@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>plenoptic.simulate.canonical_computations.steerable_pyramid_freq &mdash; plenoptic 1.3.2.dev146 documentation</title>
+  <title>plenoptic.simulate.canonical_computations.steerable_pyramid_freq &mdash; plenoptic 1.3.2.dev206 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/plot_directive.css" />
@@ -18,11 +18,11 @@
   
       <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../../_static/documentation_options.js?v=5123e042"></script>
-      <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../../_static/documentation_options.js?v=8b1279f8"></script>
+      <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
-      <script src="../../../../_static/copybutton.js?v=35a8b989"></script>
+      <script src="../../../../_static/copybutton.js?v=6dbb43f8"></script>
       <script>let toggleHintShow = 'Click to show';</script>
       <script>let toggleHintHide = 'Click to hide';</script>
       <script>let toggleOpenOnPrint = 'true';</script>
@@ -82,12 +82,15 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Advanced usage</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../../synthesis.html">Synthesis object design</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../api.html">API Documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../tips.html">Tips and Tricks</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../reproducibility.html">Reproducibility and Compatibility</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../api/modules.html">API Documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../tutorials/advanced/Display.html">Display and animate functions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../tutorials/advanced/Synthesis_extensions.html">Extending existing synthesis objects</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">For Developers</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../synthesis.html">Synthesis object design</a></li>
 </ul>
 
         </div>
@@ -135,7 +138,7 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">scipy.special</span><span class="w"> </span><span class="kn">import</span> <span class="n">factorial</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">torch</span><span class="w"> </span><span class="kn">import</span> <span class="n">Tensor</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">...tools.signal</span><span class="w"> </span><span class="kn">import</span> <span class="n">interpolate1d</span><span class="p">,</span> <span class="n">raised_cosine</span><span class="p">,</span> <span class="n">steer</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">...tools.signal</span><span class="w"> </span><span class="kn">import</span> <span class="n">_interpolate1d</span><span class="p">,</span> <span class="n">_raised_cosine</span><span class="p">,</span> <span class="n">_steer</span>
 
 <span class="n">complex_types</span> <span class="o">=</span> <span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">cdouble</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">cfloat</span><span class="p">]</span>
 
@@ -143,7 +146,7 @@
 
 
 <div class="viewcode-block" id="SteerablePyramidFreq">
-<a class="viewcode-back" href="../../../../api/plenoptic.simulate.canonical_computations.html#plenoptic.simulate.canonical_computations.steerable_pyramid_freq.SteerablePyramidFreq">[docs]</a>
+<a class="viewcode-back" href="../../../../generated/plenoptic.simulate.canonical_computations.steerable_pyramid_freq.html#plenoptic.simulate.canonical_computations.steerable_pyramid_freq.SteerablePyramidFreq">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">SteerablePyramidFreq</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Steerable frequency pyramid in Torch.</span>
@@ -247,8 +250,9 @@
 
 <span class="sd">    Notes</span>
 <span class="sd">    -----</span>
-<span class="sd">    Transform described in [1]_, filter kernel design described in [2]_.</span>
-<span class="sd">    For further information see the project [3]_.</span>
+<span class="sd">    Transform described in Simoncelli and Freeman, 1995 [1]_, filter kernel design</span>
+<span class="sd">    described in Karasaridis and Smoncelli, 1996 [2]_. For further information see</span>
+<span class="sd">    online [3]_.</span>
 
 <span class="sd">    References</span>
 <span class="sd">    ----------</span>
@@ -356,14 +360,14 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">log_rad</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log2</span><span class="p">(</span><span class="n">log_rad</span><span class="p">)</span>
 
         <span class="c1"># radial transition function (a raised cosine in log-frequency):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">Xrcos</span><span class="p">,</span> <span class="n">Yrcos</span> <span class="o">=</span> <span class="n">raised_cosine</span><span class="p">(</span><span class="n">twidth</span><span class="p">,</span> <span class="p">(</span><span class="o">-</span><span class="n">twidth</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Xrcos</span><span class="p">,</span> <span class="n">Yrcos</span> <span class="o">=</span> <span class="n">_raised_cosine</span><span class="p">(</span><span class="n">twidth</span><span class="p">,</span> <span class="p">(</span><span class="o">-</span><span class="n">twidth</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">Yrcos</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">Yrcos</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">YIrcos</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">Yrcos</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
 
         <span class="c1"># create low and high masks</span>
-        <span class="n">lo0mask</span> <span class="o">=</span> <span class="n">interpolate1d</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">log_rad</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">YIrcos</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">Xrcos</span><span class="p">)</span>
-        <span class="n">hi0mask</span> <span class="o">=</span> <span class="n">interpolate1d</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">log_rad</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">Yrcos</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">Xrcos</span><span class="p">)</span>
+        <span class="n">lo0mask</span> <span class="o">=</span> <span class="n">_interpolate1d</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">log_rad</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">YIrcos</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">Xrcos</span><span class="p">)</span>
+        <span class="n">hi0mask</span> <span class="o">=</span> <span class="n">_interpolate1d</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">log_rad</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">Yrcos</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">Xrcos</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">register_buffer</span><span class="p">(</span>
             <span class="s2">&quot;lo0mask&quot;</span><span class="p">,</span> <span class="n">einops</span><span class="o">.</span><span class="n">rearrange</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">as_tensor</span><span class="p">(</span><span class="n">lo0mask</span><span class="p">),</span> <span class="s2">&quot;h w -&gt; 1 1 1 h w&quot;</span><span class="p">)</span>
         <span class="p">)</span>
@@ -413,7 +417,7 @@
                 <span class="n">Ycosn_forward</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">const</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Xcosn</span><span class="p">))</span> <span class="o">**</span> <span class="bp">self</span><span class="o">.</span><span class="n">order</span>
                 <span class="n">Ycosn_recon</span> <span class="o">=</span> <span class="n">Ycosn_forward</span>
 
-            <span class="n">himask</span> <span class="o">=</span> <span class="n">interpolate1d</span><span class="p">(</span><span class="n">log_rad</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">Yrcos</span><span class="p">,</span> <span class="n">Xrcos</span><span class="p">)</span>
+            <span class="n">himask</span> <span class="o">=</span> <span class="n">_interpolate1d</span><span class="p">(</span><span class="n">log_rad</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">Yrcos</span><span class="p">,</span> <span class="n">Xrcos</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">register_buffer</span><span class="p">(</span>
                 <span class="sa">f</span><span class="s2">&quot;_himasks_scale_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">as_tensor</span><span class="p">(</span><span class="n">himask</span><span class="p">)</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
             <span class="p">)</span>
@@ -421,12 +425,12 @@
             <span class="n">anglemasks</span> <span class="o">=</span> <span class="p">[]</span>
             <span class="n">anglemasks_recon</span> <span class="o">=</span> <span class="p">[]</span>
             <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_orientations</span><span class="p">):</span>
-                <span class="n">anglemask</span> <span class="o">=</span> <span class="n">interpolate1d</span><span class="p">(</span>
+                <span class="n">anglemask</span> <span class="o">=</span> <span class="n">_interpolate1d</span><span class="p">(</span>
                     <span class="n">angle</span><span class="p">,</span>
                     <span class="n">Ycosn_forward</span><span class="p">,</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">Xcosn</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">b</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_orientations</span><span class="p">,</span>
                 <span class="p">)</span>
-                <span class="n">anglemask_recon</span> <span class="o">=</span> <span class="n">interpolate1d</span><span class="p">(</span>
+                <span class="n">anglemask_recon</span> <span class="o">=</span> <span class="n">_interpolate1d</span><span class="p">(</span>
                     <span class="n">angle</span><span class="p">,</span>
                     <span class="n">Ycosn_recon</span><span class="p">,</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">Xcosn</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">b</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_orientations</span><span class="p">,</span>
@@ -442,7 +446,7 @@
                 <span class="sa">f</span><span class="s2">&quot;_anglemasks_recon_scale_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">(</span><span class="n">anglemasks_recon</span><span class="p">)</span>
             <span class="p">)</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">downsample</span><span class="p">:</span>
-                <span class="n">lomask</span> <span class="o">=</span> <span class="n">interpolate1d</span><span class="p">(</span><span class="n">log_rad</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">YIrcos</span><span class="p">,</span> <span class="n">Xrcos</span><span class="p">)</span>
+                <span class="n">lomask</span> <span class="o">=</span> <span class="n">_interpolate1d</span><span class="p">(</span><span class="n">log_rad</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">YIrcos</span><span class="p">,</span> <span class="n">Xrcos</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">register_buffer</span><span class="p">(</span>
                     <span class="sa">f</span><span class="s2">&quot;_lomasks_scale_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">as_tensor</span><span class="p">(</span><span class="n">lomask</span><span class="p">)</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
                 <span class="p">)</span>
@@ -463,7 +467,7 @@
                 <span class="n">log_rad</span> <span class="o">=</span> <span class="n">log_rad</span><span class="p">[</span><span class="n">lostart</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="p">:</span> <span class="n">loend</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">lostart</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="p">:</span> <span class="n">loend</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span>
                 <span class="n">angle</span> <span class="o">=</span> <span class="n">angle</span><span class="p">[</span><span class="n">lostart</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="p">:</span> <span class="n">loend</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">lostart</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="p">:</span> <span class="n">loend</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span>
 
-                <span class="n">lomask</span> <span class="o">=</span> <span class="n">interpolate1d</span><span class="p">(</span><span class="n">log_rad</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">YIrcos</span><span class="p">,</span> <span class="n">Xrcos</span><span class="p">)</span>
+                <span class="n">lomask</span> <span class="o">=</span> <span class="n">_interpolate1d</span><span class="p">(</span><span class="n">log_rad</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">YIrcos</span><span class="p">,</span> <span class="n">Xrcos</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">register_buffer</span><span class="p">(</span>
                     <span class="sa">f</span><span class="s2">&quot;_lomasks_scale_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">as_tensor</span><span class="p">(</span><span class="n">lomask</span><span class="p">)</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
                 <span class="p">)</span>
@@ -478,7 +482,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
 
 <div class="viewcode-block" id="SteerablePyramidFreq.forward">
-<a class="viewcode-back" href="../../../../api/plenoptic.simulate.canonical_computations.html#plenoptic.simulate.canonical_computations.steerable_pyramid_freq.SteerablePyramidFreq.forward">[docs]</a>
+<a class="viewcode-back" href="../../../../generated/plenoptic.simulate.canonical_computations.steerable_pyramid_freq.html#plenoptic.simulate.canonical_computations.steerable_pyramid_freq.SteerablePyramidFreq.forward">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">image</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span>
@@ -649,7 +653,7 @@
 
 
 <div class="viewcode-block" id="SteerablePyramidFreq.convert_pyr_to_tensor">
-<a class="viewcode-back" href="../../../../api/plenoptic.simulate.canonical_computations.html#plenoptic.simulate.canonical_computations.steerable_pyramid_freq.SteerablePyramidFreq.convert_pyr_to_tensor">[docs]</a>
+<a class="viewcode-back" href="../../../../generated/plenoptic.simulate.canonical_computations.steerable_pyramid_freq.html#plenoptic.simulate.canonical_computations.steerable_pyramid_freq.SteerablePyramidFreq.convert_pyr_to_tensor">[docs]</a>
     <span class="nd">@staticmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">convert_pyr_to_tensor</span><span class="p">(</span>
         <span class="n">pyr_coeffs</span><span class="p">:</span> <span class="n">OrderedDict</span><span class="p">,</span> <span class="n">split_complex</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
@@ -774,7 +778,7 @@
 
 
 <div class="viewcode-block" id="SteerablePyramidFreq.convert_tensor_to_pyr">
-<a class="viewcode-back" href="../../../../api/plenoptic.simulate.canonical_computations.html#plenoptic.simulate.canonical_computations.steerable_pyramid_freq.SteerablePyramidFreq.convert_tensor_to_pyr">[docs]</a>
+<a class="viewcode-back" href="../../../../generated/plenoptic.simulate.canonical_computations.steerable_pyramid_freq.html#plenoptic.simulate.canonical_computations.steerable_pyramid_freq.SteerablePyramidFreq.convert_tensor_to_pyr">[docs]</a>
     <span class="nd">@staticmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">convert_tensor_to_pyr</span><span class="p">(</span>
         <span class="n">pyr_tensor</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span>
@@ -995,7 +999,7 @@
         <span class="k">return</span> <span class="n">bands</span>
 
 <div class="viewcode-block" id="SteerablePyramidFreq.recon_pyr">
-<a class="viewcode-back" href="../../../../api/plenoptic.simulate.canonical_computations.html#plenoptic.simulate.canonical_computations.steerable_pyramid_freq.SteerablePyramidFreq.recon_pyr">[docs]</a>
+<a class="viewcode-back" href="../../../../generated/plenoptic.simulate.canonical_computations.steerable_pyramid_freq.html#plenoptic.simulate.canonical_computations.steerable_pyramid_freq.SteerablePyramidFreq.recon_pyr">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">recon_pyr</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">pyr_coeffs</span><span class="p">:</span> <span class="n">OrderedDict</span><span class="p">,</span>
@@ -1191,7 +1195,7 @@
         <span class="k">return</span> <span class="n">recondft</span>
 
 <div class="viewcode-block" id="SteerablePyramidFreq.steer_coeffs">
-<a class="viewcode-back" href="../../../../api/plenoptic.simulate.canonical_computations.html#plenoptic.simulate.canonical_computations.steerable_pyramid_freq.SteerablePyramidFreq.steer_coeffs">[docs]</a>
+<a class="viewcode-back" href="../../../../generated/plenoptic.simulate.canonical_computations.steerable_pyramid_freq.html#plenoptic.simulate.canonical_computations.steerable_pyramid_freq.SteerablePyramidFreq.steer_coeffs">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">steer_coeffs</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">pyr_coeffs</span><span class="p">:</span> <span class="n">OrderedDict</span><span class="p">,</span>
@@ -1265,7 +1269,7 @@
 
             <span class="n">res</span><span class="p">,</span> <span class="n">steervect</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[]</span>
             <span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="n">a</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">angles</span><span class="p">):</span>
-                <span class="n">r</span><span class="p">,</span> <span class="n">s</span> <span class="o">=</span> <span class="n">steer</span><span class="p">(</span><span class="n">basis</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">even_phase</span><span class="o">=</span><span class="n">even_phase</span><span class="p">)</span>
+                <span class="n">r</span><span class="p">,</span> <span class="n">s</span> <span class="o">=</span> <span class="n">_steer</span><span class="p">(</span><span class="n">basis</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">even_phase</span><span class="o">=</span><span class="n">even_phase</span><span class="p">)</span>
                 <span class="n">res</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
                 <span class="n">steervect</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
             <span class="c1"># when called like above, the output of steer always has a singleton</span>

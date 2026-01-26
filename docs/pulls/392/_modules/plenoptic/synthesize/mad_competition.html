@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>plenoptic.synthesize.mad_competition &mdash; plenoptic 1.3.2.dev146 documentation</title>
+  <title>plenoptic.synthesize.mad_competition &mdash; plenoptic 1.3.2.dev206 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../_static/plot_directive.css" />
@@ -18,11 +18,11 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=5123e042"></script>
-      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../_static/documentation_options.js?v=8b1279f8"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
-      <script src="../../../_static/copybutton.js?v=35a8b989"></script>
+      <script src="../../../_static/copybutton.js?v=6dbb43f8"></script>
       <script>let toggleHintShow = 'Click to show';</script>
       <script>let toggleHintHide = 'Click to hide';</script>
       <script>let toggleOpenOnPrint = 'true';</script>
@@ -82,12 +82,15 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Advanced usage</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../synthesis.html">Synthesis object design</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api.html">API Documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../tips.html">Tips and Tricks</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../reproducibility.html">Reproducibility and Compatibility</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../api/modules.html">API Documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../tutorials/advanced/Display.html">Display and animate functions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../tutorials/advanced/Synthesis_extensions.html">Extending existing synthesis objects</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">For Developers</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../synthesis.html">Synthesis object design</a></li>
 </ul>
 
         </div>
@@ -116,9 +119,14 @@
              
   <h1>Source code for plenoptic.synthesize.mad_competition</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Run MAD Competition.</span>
+<span class="sd">Maximum Differentiation Competition.</span>
 
-<span class="sd">Classes to perform the synthesis of Maximum Differentiation Competition.</span>
+<span class="sd">Maximum Differentiation Competition synthesizes images which maximally distinguish</span>
+<span class="sd">between a pair of metrics. Generally speaking, they are synthesized in pairs (two images</span>
+<span class="sd">that one metric considers identical and the other considers as different as possible) or</span>
+<span class="sd">groups of four (a pair of such pairs, one for each of the two metrics). They emphasize</span>
+<span class="sd">the features that distinguish metrics, highlighting the features that one metric</span>
+<span class="sd">considers important that the other is invariant to.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">contextlib</span>
@@ -136,13 +144,13 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">tqdm.auto</span><span class="w"> </span><span class="kn">import</span> <span class="n">tqdm</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">..tools</span><span class="w"> </span><span class="kn">import</span> <span class="n">data</span><span class="p">,</span> <span class="n">display</span><span class="p">,</span> <span class="n">optim</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">..tools.convergence</span><span class="w"> </span><span class="kn">import</span> <span class="n">loss_convergence</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..tools.convergence</span><span class="w"> </span><span class="kn">import</span> <span class="n">_loss_convergence</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">..tools.validate</span><span class="w"> </span><span class="kn">import</span> <span class="n">validate_input</span><span class="p">,</span> <span class="n">validate_metric</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.synthesis</span><span class="w"> </span><span class="kn">import</span> <span class="n">OptimizedSynthesis</span>
 
 
 <div class="viewcode-block" id="MADCompetition">
-<a class="viewcode-back" href="../../../api/plenoptic.synthesize.html#plenoptic.synthesize.mad_competition.MADCompetition">[docs]</a>
+<a class="viewcode-back" href="../../../generated/plenoptic.synthesize.mad_competition.MADCompetition.html#plenoptic.synthesize.mad_competition.MADCompetition">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">MADCompetition</span><span class="p">(</span><span class="n">OptimizedSynthesis</span><span class="p">):</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Synthesize a single maximally-differentiating image for two metrics.</span>
@@ -251,7 +259,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_saved_mad_image</span> <span class="o">=</span> <span class="p">[]</span>
 
 <div class="viewcode-block" id="MADCompetition.setup">
-<a class="viewcode-back" href="../../../api/plenoptic.synthesize.html#plenoptic.synthesize.mad_competition.MADCompetition.setup">[docs]</a>
+<a class="viewcode-back" href="../../../generated/plenoptic.synthesize.mad_competition.MADCompetition.html#plenoptic.synthesize.mad_competition.MADCompetition.setup">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">setup</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">initial_noise</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -381,7 +389,7 @@
 
 
 <div class="viewcode-block" id="MADCompetition.synthesize">
-<a class="viewcode-back" href="../../../api/plenoptic.synthesize.html#plenoptic.synthesize.mad_competition.MADCompetition.synthesize">[docs]</a>
+<a class="viewcode-back" href="../../../generated/plenoptic.synthesize.mad_competition.MADCompetition.html#plenoptic.synthesize.mad_competition.MADCompetition.synthesize">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">synthesize</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">max_iter</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span>
@@ -397,9 +405,9 @@
 <span class="sd">        ``optimized_metric(image, mad_image)`` while keeping the value of</span>
 <span class="sd">        ``reference_metric(image, mad_image)`` constant.</span>
 
-<span class="sd">        We run this until either we reach ``max_iter`` or the change over the</span>
-<span class="sd">        past ``stop_iters_to_check`` iterations is less than</span>
-<span class="sd">        ``stop_criterion``, whichever comes first.</span>
+<span class="sd">        We run this until either we reach ``max_iter`` or the loss changes less than</span>
+<span class="sd">        ``stop_criterion`` over the past ``stop_iters_to_check`` iterations,</span>
+<span class="sd">        whichever comes first.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -455,7 +463,7 @@
 
 
 <div class="viewcode-block" id="MADCompetition.objective_function">
-<a class="viewcode-back" href="../../../api/plenoptic.synthesize.html#plenoptic.synthesize.mad_competition.MADCompetition.objective_function">[docs]</a>
+<a class="viewcode-back" href="../../../generated/plenoptic.synthesize.mad_competition.MADCompetition.html#plenoptic.synthesize.mad_competition.MADCompetition.objective_function">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">objective_function</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">mad_image</span><span class="p">:</span> <span class="n">Tensor</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -513,7 +521,7 @@
 
 
 <div class="viewcode-block" id="MADCompetition.get_progress">
-<a class="viewcode-back" href="../../../api/plenoptic.synthesize.html#plenoptic.synthesize.mad_competition.MADCompetition.get_progress">[docs]</a>
+<a class="viewcode-back" href="../../../generated/plenoptic.synthesize.mad_competition.MADCompetition.html#plenoptic.synthesize.mad_competition.MADCompetition.get_progress">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_progress</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">iteration</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
@@ -653,7 +661,7 @@
 <span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Check whether the loss has stabilized and, if so, return True.</span>
 
-<span class="sd">        Uses :func:`loss_convergence`.</span>
+<span class="sd">        Uses :func:`~plenoptic.tools.convergence._loss_convergence`.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -669,7 +677,7 @@
 <span class="sd">        loss_stabilized</span>
 <span class="sd">            Whether the loss has stabilized or not.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">loss_convergence</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stop_criterion</span><span class="p">,</span> <span class="n">stop_iters_to_check</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">_loss_convergence</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stop_criterion</span><span class="p">,</span> <span class="n">stop_iters_to_check</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_store</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -696,7 +704,7 @@
         <span class="k">return</span> <span class="n">stored</span>
 
 <div class="viewcode-block" id="MADCompetition.save">
-<a class="viewcode-back" href="../../../api/plenoptic.synthesize.html#plenoptic.synthesize.mad_competition.MADCompetition.save">[docs]</a>
+<a class="viewcode-back" href="../../../generated/plenoptic.synthesize.mad_competition.MADCompetition.html#plenoptic.synthesize.mad_competition.MADCompetition.save">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
 <span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Save all relevant variables in .pt file.</span>
@@ -720,25 +728,31 @@
 
 
 <div class="viewcode-block" id="MADCompetition.to">
-<a class="viewcode-back" href="../../../api/plenoptic.synthesize.html#plenoptic.synthesize.mad_competition.MADCompetition.to">[docs]</a>
+<a class="viewcode-back" href="../../../generated/plenoptic.synthesize.mad_competition.MADCompetition.html#plenoptic.synthesize.mad_competition.MADCompetition.to">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">):</span>
 <span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Move and/or casts the parameters and buffers.</span>
 
 <span class="sd">        This can be called as</span>
 
-<span class="sd">        .. function:: to(device=None, dtype=None, non_blocking=False)</span>
+<span class="sd">        .. code:: python</span>
 
-<span class="sd">        .. function:: to(dtype, non_blocking=False)</span>
+<span class="sd">            to(device=None, dtype=None, non_blocking=False)</span>
 
-<span class="sd">        .. function:: to(tensor, non_blocking=False)</span>
+<span class="sd">        .. code:: python</span>
+
+<span class="sd">            to(dtype, non_blocking=False)</span>
+
+<span class="sd">        .. code:: python</span>
+
+<span class="sd">            to(tensor, non_blocking=False)</span>
 
 <span class="sd">        Its signature is similar to :meth:`torch.Tensor.to`, but only accepts</span>
-<span class="sd">        floating point desired :attr:`dtype` s. In addition, this method will</span>
-<span class="sd">        only cast the floating point parameters and buffers to :attr:`dtype`</span>
+<span class="sd">        floating point desired ``dtype``. In addition, this method will</span>
+<span class="sd">        only cast the floating point parameters and buffers to ``dtype``</span>
 <span class="sd">        (if given). The integral parameters and buffers will be moved</span>
-<span class="sd">        :attr:`device`, if that is given, but with dtypes unchanged. When</span>
-<span class="sd">        :attr:`non_blocking` is set, it tries to convert/move asynchronously</span>
+<span class="sd">        ``device``, if that is given, but with dtypes unchanged. When</span>
+<span class="sd">        `on_blocking`` is set, it tries to convert/move asynchronously</span>
 <span class="sd">        with respect to the host if possible, e.g., moving CPU Tensors with</span>
 <span class="sd">        pinned memory to CUDA devices.</span>
 
@@ -769,7 +783,7 @@
 
 
 <div class="viewcode-block" id="MADCompetition.load">
-<a class="viewcode-back" href="../../../api/plenoptic.synthesize.html#plenoptic.synthesize.mad_competition.MADCompetition.load">[docs]</a>
+<a class="viewcode-back" href="../../../generated/plenoptic.synthesize.mad_competition.MADCompetition.html#plenoptic.synthesize.mad_competition.MADCompetition.load">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">load</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
@@ -832,7 +846,7 @@
 <span class="sd">        ValueError</span>
 <span class="sd">            If the saved and loading ``MADCompetition`` objects have a different value</span>
 <span class="sd">            for any of :attr:`image`, :attr:`range_penalty_lambda`,</span>
-<span class="sd">            :attr:`allowed_range`, :attr:`metric_tradeoff_lambda`, or :attr:`minimax`.</span>
+<span class="sd">            :attr:`allowed_range`, :attr:`metric_tradeoff_lambda`, or :attr:`minmax`.</span>
 <span class="sd">        ValueError</span>
 <span class="sd">            If the behavior of :attr:`optimized_metric` or :attr:`reference_metric` is</span>
 <span class="sd">            different between the saved and loading objects.</span>
@@ -999,7 +1013,7 @@
 
 
 <div class="viewcode-block" id="plot_loss">
-<a class="viewcode-back" href="../../../api/plenoptic.synthesize.html#plenoptic.synthesize.mad_competition.plot_loss">[docs]</a>
+<a class="viewcode-back" href="../../../generated/plenoptic.synthesize.mad_competition.html#plenoptic.synthesize.mad_competition.plot_loss">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">plot_loss</span><span class="p">(</span>
     <span class="n">mad</span><span class="p">:</span> <span class="n">MADCompetition</span><span class="p">,</span>
     <span class="n">iteration</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -1069,7 +1083,7 @@
 
 
 <div class="viewcode-block" id="display_mad_image">
-<a class="viewcode-back" href="../../../api/plenoptic.synthesize.html#plenoptic.synthesize.mad_competition.display_mad_image">[docs]</a>
+<a class="viewcode-back" href="../../../generated/plenoptic.synthesize.mad_competition.html#plenoptic.synthesize.mad_competition.display_mad_image">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">display_mad_image</span><span class="p">(</span>
     <span class="n">mad</span><span class="p">:</span> <span class="n">MADCompetition</span><span class="p">,</span>
     <span class="n">batch_idx</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
@@ -1171,7 +1185,7 @@
 
 
 <div class="viewcode-block" id="plot_pixel_values">
-<a class="viewcode-back" href="../../../api/plenoptic.synthesize.html#plenoptic.synthesize.mad_competition.plot_pixel_values">[docs]</a>
+<a class="viewcode-back" href="../../../generated/plenoptic.synthesize.mad_competition.html#plenoptic.synthesize.mad_competition.plot_pixel_values">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">plot_pixel_values</span><span class="p">(</span>
     <span class="n">mad</span><span class="p">:</span> <span class="n">MADCompetition</span><span class="p">,</span>
     <span class="n">batch_idx</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
@@ -1447,7 +1461,7 @@
 
 
 <div class="viewcode-block" id="plot_synthesis_status">
-<a class="viewcode-back" href="../../../api/plenoptic.synthesize.html#plenoptic.synthesize.mad_competition.plot_synthesis_status">[docs]</a>
+<a class="viewcode-back" href="../../../generated/plenoptic.synthesize.mad_competition.html#plenoptic.synthesize.mad_competition.plot_synthesis_status">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">plot_synthesis_status</span><span class="p">(</span>
     <span class="n">mad</span><span class="p">:</span> <span class="n">MADCompetition</span><span class="p">,</span>
     <span class="n">batch_idx</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
@@ -1596,7 +1610,7 @@
 
 
 <div class="viewcode-block" id="animate">
-<a class="viewcode-back" href="../../../api/plenoptic.synthesize.html#plenoptic.synthesize.mad_competition.animate">[docs]</a>
+<a class="viewcode-back" href="../../../generated/plenoptic.synthesize.mad_competition.html#plenoptic.synthesize.mad_competition.animate">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">animate</span><span class="p">(</span>
     <span class="n">mad</span><span class="p">:</span> <span class="n">MADCompetition</span><span class="p">,</span>
     <span class="n">framerate</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
@@ -1794,7 +1808,7 @@
 
 
 <div class="viewcode-block" id="display_mad_image_all">
-<a class="viewcode-back" href="../../../api/plenoptic.synthesize.html#plenoptic.synthesize.mad_competition.display_mad_image_all">[docs]</a>
+<a class="viewcode-back" href="../../../generated/plenoptic.synthesize.mad_competition.html#plenoptic.synthesize.mad_competition.display_mad_image_all">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">display_mad_image_all</span><span class="p">(</span>
     <span class="n">mad_metric1_min</span><span class="p">:</span> <span class="n">MADCompetition</span><span class="p">,</span>
     <span class="n">mad_metric2_min</span><span class="p">:</span> <span class="n">MADCompetition</span><span class="p">,</span>
@@ -1897,7 +1911,7 @@
 
 
 <div class="viewcode-block" id="plot_loss_all">
-<a class="viewcode-back" href="../../../api/plenoptic.synthesize.html#plenoptic.synthesize.mad_competition.plot_loss_all">[docs]</a>
+<a class="viewcode-back" href="../../../generated/plenoptic.synthesize.mad_competition.html#plenoptic.synthesize.mad_competition.plot_loss_all">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">plot_loss_all</span><span class="p">(</span>
     <span class="n">mad_metric1_min</span><span class="p">:</span> <span class="n">MADCompetition</span><span class="p">,</span>
     <span class="n">mad_metric2_min</span><span class="p">:</span> <span class="n">MADCompetition</span><span class="p">,</span>
