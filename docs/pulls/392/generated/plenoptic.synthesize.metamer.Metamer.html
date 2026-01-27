@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>plenoptic.synthesize.metamer.Metamer &mdash; plenoptic 1.3.2.dev208 documentation</title>
+  <title>plenoptic.synthesize.metamer.Metamer &mdash; plenoptic 1.3.2.dev212 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css" />
@@ -19,7 +19,7 @@
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../_static/documentation_options.js?v=c7705e23"></script>
+      <script src="../_static/documentation_options.js?v=13acb31b"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -158,7 +158,7 @@ representation of the <a class="reference internal" href="#plenoptic.synthesize.
 <li><p><strong>image</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tensor</span></code></a></span>) – A tensor, this is the image whose representation we wish to
 match.</p></li>
 <li><p><strong>model</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.pytorch.org/docs/stable/generated/torch.nn.Module.html#torch.nn.Module" title="(in PyTorch v2.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code></a></span>) – A visual model.</p></li>
-<li><p><strong>loss_function</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Callable</span></code></a>[[<a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tensor</span></code></a>, <a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tensor</span></code></a>], <a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tensor</span></code></a>]</span> (default: <code class="docutils literal notranslate"><span class="pre">&lt;function</span> <span class="pre">mse</span> <span class="pre">at</span> <span class="pre">0x7fbcc1a06fc0&gt;</span></code>)) – The loss function to use to compare the representations of the models
+<li><p><strong>loss_function</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Callable</span></code></a>[[<a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tensor</span></code></a>, <a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tensor</span></code></a>], <a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tensor</span></code></a>]</span> (default: <code class="docutils literal notranslate"><span class="pre">&lt;function</span> <span class="pre">mse</span> <span class="pre">at</span> <span class="pre">0x7f8f13a6b4c0&gt;</span></code>)) – The loss function to use to compare the representations of the models
 in order to determine their loss.</p></li>
 <li><p><strong>range_penalty_lambda</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a></span> (default: <code class="docutils literal notranslate"><span class="pre">0.1</span></code>)) – Strength of the regularizer that enforces the allowed_range. Must be
 non-negative.</p></li>
@@ -701,22 +701,12 @@ don’t use one.</p></li>
 </pre></div>
 </div>
 <p>Set optimizer:</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">plenoptic</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">po</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">img</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">einstein</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">simul</span><span class="o">.</span><span class="n">Gaussian</span><span class="p">(</span><span class="mi">30</span><span class="p">)</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">po</span><span class="o">.</span><span class="n">tools</span><span class="o">.</span><span class="n">remove_grad</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">met</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">synth</span><span class="o">.</span><span class="n">Metamer</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">model</span><span class="p">)</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">met</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">synth</span><span class="o">.</span><span class="n">Metamer</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">model</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">met</span><span class="o">.</span><span class="n">setup</span><span class="p">(</span><span class="n">optimizer</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">SGD</span><span class="p">,</span> <span class="n">optimizer_kwargs</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;lr&quot;</span><span class="p">:</span> <span class="mf">0.01</span><span class="p">})</span>
 </pre></div>
 </div>
 <p>Set optimizer and scheduler:</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">plenoptic</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">po</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">img</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">einstein</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">simul</span><span class="o">.</span><span class="n">Gaussian</span><span class="p">(</span><span class="mi">30</span><span class="p">)</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">po</span><span class="o">.</span><span class="n">tools</span><span class="o">.</span><span class="n">remove_grad</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">met</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">synth</span><span class="o">.</span><span class="n">Metamer</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">model</span><span class="p">)</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">met</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">synth</span><span class="o">.</span><span class="n">Metamer</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">model</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">met</span><span class="o">.</span><span class="n">setup</span><span class="p">(</span>
 <span class="gp">... </span>    <span class="n">optimizer</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">SGD</span><span class="p">,</span>
 <span class="gp">... </span>    <span class="n">optimizer_kwargs</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;lr&quot;</span><span class="p">:</span> <span class="mf">0.01</span><span class="p">},</span>
@@ -724,14 +714,10 @@ don’t use one.</p></li>
 <span class="gp">... </span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Use with save/load. Only the optimizer/scheduler objects are necessary, their
-kwargs and the initial image are handled by load.</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">plenoptic</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">po</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">img</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">einstein</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">simul</span><span class="o">.</span><span class="n">Gaussian</span><span class="p">(</span><span class="mi">30</span><span class="p">)</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">po</span><span class="o">.</span><span class="n">tools</span><span class="o">.</span><span class="n">remove_grad</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">met</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">synth</span><span class="o">.</span><span class="n">Metamer</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">model</span><span class="p">)</span>
+<p>Use with save/load. We only pass the optimizer/scheduler objects when calling
+setup after load, their kwargs and the initial image are handled during the
+load.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">met</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">synth</span><span class="o">.</span><span class="n">Metamer</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">model</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">met</span><span class="o">.</span><span class="n">setup</span><span class="p">(</span>
 <span class="gp">... </span>    <span class="n">po</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">curie</span><span class="p">(),</span>
 <span class="gp">... </span>    <span class="n">optimizer</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">SGD</span><span class="p">,</span>
