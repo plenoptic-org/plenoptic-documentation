@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>plenoptic.data.fetch &mdash; plenoptic 1.3.2.dev175 documentation</title>
+  <title>plenoptic.data.fetch &mdash; plenoptic 1.3.2.dev213 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../_static/plot_directive.css" />
@@ -18,11 +18,11 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=cb8b1ae4"></script>
+      <script src="../../../_static/documentation_options.js?v=b7d43702"></script>
       <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
-      <script src="../../../_static/copybutton.js?v=35a8b989"></script>
+      <script src="../../../_static/copybutton.js?v=6dbb43f8"></script>
       <script>let toggleHintShow = 'Click to show';</script>
       <script>let toggleHintHide = 'Click to hide';</script>
       <script>let toggleOpenOnPrint = 'true';</script>
@@ -123,11 +123,12 @@
 <span class="sd">Fetch data using pooch.</span>
 
 <span class="sd">This is inspired by scipy&#39;s datasets module.</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">&quot;&quot;&quot;</span>  <span class="c1"># numpydoc ignore=EX01</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">pathlib</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
 
+<span class="kn">import</span><span class="w"> </span><span class="nn">pooch</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">tqdm.auto</span><span class="w"> </span><span class="kn">import</span> <span class="n">tqdm</span>
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;DOWNLOADABLE_FILES&quot;</span><span class="p">,</span> <span class="s2">&quot;fetch_data&quot;</span><span class="p">]</span>
@@ -166,6 +167,10 @@
     <span class="s2">&quot;berardino_onoff.pt&quot;</span><span class="p">:</span> <span class="s2">&quot;2174a40005489b9c94acc91213b2f6d57a75f262caf118cb1980658eadbfd047&quot;</span><span class="p">,</span>  <span class="c1"># noqa: E501</span>
     <span class="s2">&quot;berardino_vgg16.pt&quot;</span><span class="p">:</span> <span class="s2">&quot;5e0d10f4a367244879cd8a61c453992370ab801db1f66e10caa1ee2ecfab8ca4&quot;</span><span class="p">,</span>  <span class="c1"># noqa: E501</span>
     <span class="s2">&quot;ps_regression.tar.gz&quot;</span><span class="p">:</span> <span class="s2">&quot;7520ed2dbcb2647ac814a02e436e1f1e41fb06ca2534561c83f9e76193a12108&quot;</span><span class="p">,</span>  <span class="c1"># noqa: E501</span>
+    <span class="s2">&quot;example_metamer_gaussian.pt&quot;</span><span class="p">:</span> <span class="s2">&quot;de3859a6e622f1dd38e614fef1aa017466270a61e96cc074f4337ee00c73887a&quot;</span><span class="p">,</span>  <span class="c1"># noqa: E501</span>
+    <span class="s2">&quot;example_metamer_gaussian-cuda.pt&quot;</span><span class="p">:</span> <span class="s2">&quot;4affdaa1903f3973eaeac4b43ea7d0b1f16c6525efa80d2474199904aafa243e&quot;</span><span class="p">,</span>  <span class="c1"># noqa: E501</span>
+    <span class="s2">&quot;example_metamerCTF_ps.pt&quot;</span><span class="p">:</span> <span class="s2">&quot;9a0e0a2629d86c1fbea460b915d1ecae3f8ab60f3f144d312001a5312e6aace0&quot;</span><span class="p">,</span>  <span class="c1"># noqa: E501</span>
+    <span class="s2">&quot;example_metamerCTF_ps-cuda.pt&quot;</span><span class="p">:</span> <span class="s2">&quot;d6e3a013263e93004468596a9abcf0f42b6e507733f4771a2654b0c2a5265e92&quot;</span><span class="p">,</span>  <span class="c1"># noqa: E501</span>
 <span class="p">}</span>
 
 <span class="n">OSF_TEMPLATE</span> <span class="o">=</span> <span class="s2">&quot;https://osf.io/download/</span><span class="si">{}</span><span class="s2">&quot;</span>
@@ -200,6 +205,10 @@
     <span class="s2">&quot;berardino_onoff.pt&quot;</span><span class="p">:</span> <span class="n">OSF_TEMPLATE</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;uqfa8&quot;</span><span class="p">),</span>
     <span class="s2">&quot;berardino_vgg16.pt&quot;</span><span class="p">:</span> <span class="n">OSF_TEMPLATE</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;6r87b&quot;</span><span class="p">),</span>
     <span class="s2">&quot;ps_regression.tar.gz&quot;</span><span class="p">:</span> <span class="n">OSF_TEMPLATE</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;7t4fj/?revision=11&quot;</span><span class="p">),</span>
+    <span class="s2">&quot;example_metamer_gaussian.pt&quot;</span><span class="p">:</span> <span class="n">OSF_TEMPLATE</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;7e48u&quot;</span><span class="p">),</span>
+    <span class="s2">&quot;example_metamer_gaussian-cuda.pt&quot;</span><span class="p">:</span> <span class="n">OSF_TEMPLATE</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;jzhe7&quot;</span><span class="p">),</span>
+    <span class="s2">&quot;example_metamerCTF_ps.pt&quot;</span><span class="p">:</span> <span class="n">OSF_TEMPLATE</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;4zr37&quot;</span><span class="p">),</span>
+    <span class="s2">&quot;example_metamerCTF_ps-cuda.pt&quot;</span><span class="p">:</span> <span class="n">OSF_TEMPLATE</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;627sp&quot;</span><span class="p">),</span>
 <span class="p">}</span>
 
 <span class="c1">#: List of files that can be downloaded using :func:`~plenoptic.data.fetch.fetch_data`</span>
@@ -211,26 +220,22 @@
     <span class="s2">&quot;berardino_vgg16.pt&quot;</span><span class="p">,</span>
     <span class="s2">&quot;tid2013.tar.gz&quot;</span><span class="p">,</span>
     <span class="s2">&quot;ps_regression.tar.gz&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;example_metamer_gaussian.pt&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;example_metamerCTF_ps.pt&quot;</span><span class="p">,</span>
 <span class="p">]</span>
 
-<span class="k">try</span><span class="p">:</span>
-    <span class="kn">import</span><span class="w"> </span><span class="nn">pooch</span>
-<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
-    <span class="n">pooch</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="n">retriever</span> <span class="o">=</span> <span class="kc">None</span>
-<span class="k">else</span><span class="p">:</span>
-    <span class="n">retriever</span> <span class="o">=</span> <span class="n">pooch</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
-        <span class="c1"># Use the default cache folder for the operating system</span>
-        <span class="c1"># Pooch uses appdirs (https://github.com/ActiveState/appdirs) to</span>
-        <span class="c1"># select an appropriate directory for the cache on each platform.</span>
-        <span class="n">path</span><span class="o">=</span><span class="n">pooch</span><span class="o">.</span><span class="n">os_cache</span><span class="p">(</span><span class="s2">&quot;plenoptic&quot;</span><span class="p">),</span>
-        <span class="n">base_url</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
-        <span class="n">urls</span><span class="o">=</span><span class="n">REGISTRY_URLS</span><span class="p">,</span>
-        <span class="n">registry</span><span class="o">=</span><span class="n">REGISTRY</span><span class="p">,</span>
-        <span class="n">retry_if_failed</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
-        <span class="n">allow_updates</span><span class="o">=</span><span class="s2">&quot;POOCH_ALLOW_UPDATES&quot;</span><span class="p">,</span>
-        <span class="n">env</span><span class="o">=</span><span class="s2">&quot;PLENOPTIC_CACHE_DIR&quot;</span><span class="p">,</span>
-    <span class="p">)</span>
+<span class="n">retriever</span> <span class="o">=</span> <span class="n">pooch</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+    <span class="c1"># Use the default cache folder for the operating system</span>
+    <span class="c1"># Pooch uses appdirs (https://github.com/ActiveState/appdirs) to</span>
+    <span class="c1"># select an appropriate directory for the cache on each platform.</span>
+    <span class="n">path</span><span class="o">=</span><span class="n">pooch</span><span class="o">.</span><span class="n">os_cache</span><span class="p">(</span><span class="s2">&quot;plenoptic&quot;</span><span class="p">),</span>
+    <span class="n">base_url</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+    <span class="n">urls</span><span class="o">=</span><span class="n">REGISTRY_URLS</span><span class="p">,</span>
+    <span class="n">registry</span><span class="o">=</span><span class="n">REGISTRY</span><span class="p">,</span>
+    <span class="n">retry_if_failed</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+    <span class="n">allow_updates</span><span class="o">=</span><span class="s2">&quot;POOCH_ALLOW_UPDATES&quot;</span><span class="p">,</span>
+    <span class="n">env</span><span class="o">=</span><span class="s2">&quot;PLENOPTIC_CACHE_DIR&quot;</span><span class="p">,</span>
+<span class="p">)</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_find_shared_directory</span><span class="p">(</span><span class="n">paths</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">:</span>
@@ -248,7 +253,7 @@
 <span class="sd">    -------</span>
 <span class="sd">    shared_dir</span>
 <span class="sd">        Most recent common ancestor.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    &quot;&quot;&quot;</span>  <span class="c1"># numpydoc ignore=EX01</span>
     <span class="k">for</span> <span class="nb">dir</span> <span class="ow">in</span> <span class="n">paths</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">parents</span><span class="p">:</span>
         <span class="k">if</span> <span class="nb">all</span><span class="p">([</span><span class="nb">dir</span> <span class="ow">in</span> <span class="n">p</span><span class="o">.</span><span class="n">parents</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">paths</span><span class="p">]):</span>
             <span class="k">break</span>
@@ -279,11 +284,6 @@
 <span class="sd">    path</span>
 <span class="sd">        Path of the downloaded dataset.</span>
 
-<span class="sd">    Raises</span>
-<span class="sd">    ------</span>
-<span class="sd">    ImportError</span>
-<span class="sd">        If ``pooch`` isn&#39;t installed.</span>
-
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
 <span class="sd">    .. plot::</span>
@@ -296,12 +296,6 @@
 <span class="sd">      &gt;&gt;&gt; po.imshow(img)</span>
 <span class="sd">      &lt;PyrFigure size ...&gt;</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">retriever</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span>
-            <span class="s2">&quot;Missing optional dependency &#39;pooch&#39;.&quot;</span>
-            <span class="s2">&quot; Please use pip or &quot;</span>
-            <span class="s2">&quot;conda to install &#39;pooch&#39;.&quot;</span>
-        <span class="p">)</span>
     <span class="n">processor</span> <span class="o">=</span> <span class="n">pooch</span><span class="o">.</span><span class="n">Untar</span><span class="p">()</span> <span class="k">if</span> <span class="n">dataset_name</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;.tar.gz&quot;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
     <span class="n">use_ascii</span> <span class="o">=</span> <span class="nb">bool</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">platform</span> <span class="o">==</span> <span class="s2">&quot;win32&quot;</span><span class="p">)</span>
     <span class="n">fname</span> <span class="o">=</span> <span class="n">retriever</span><span class="o">.</span><span class="n">fetch</span><span class="p">(</span>

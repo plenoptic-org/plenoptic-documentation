@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>plenoptic.simulate.models.portilla_simoncelli &mdash; plenoptic 1.3.2.dev175 documentation</title>
+  <title>plenoptic.simulate.models.portilla_simoncelli &mdash; plenoptic 1.3.2.dev213 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/plot_directive.css" />
@@ -18,11 +18,11 @@
   
       <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../../_static/documentation_options.js?v=cb8b1ae4"></script>
+      <script src="../../../../_static/documentation_options.js?v=b7d43702"></script>
       <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
-      <script src="../../../../_static/copybutton.js?v=35a8b989"></script>
+      <script src="../../../../_static/copybutton.js?v=6dbb43f8"></script>
       <script>let toggleHintShow = 'Click to show';</script>
       <script>let toggleHintHide = 'Click to hide';</script>
       <script>let toggleOpenOnPrint = 'true';</script>
@@ -134,7 +134,7 @@
 <span class="sd">   Computer Vision. 40(1):49-71, October, 2000.</span>
 <span class="sd">   https://www.cns.nyu.edu/~eero/ABSTRACTS/portilla99-abstract.html</span>
 <span class="sd">   https://www.cns.nyu.edu/~lcv/texture/</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">&quot;&quot;&quot;</span>  <span class="c1"># numpydoc ignore=EX01</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">collections</span><span class="w"> </span><span class="kn">import</span> <span class="n">OrderedDict</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Literal</span>
@@ -217,6 +217,63 @@
 <span class="sd">    .. [3] E P Simoncelli and W T Freeman, &quot;The Steerable Pyramid: A Flexible</span>
 <span class="sd">       Architecture for Multi-Scale Derivative Computation,&quot; Second Int&#39;l Conf</span>
 <span class="sd">       on Image Processing, Washington, DC, Oct 1995.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    Compute texture statistics of an image:</span>
+
+<span class="sd">    .. plot::</span>
+<span class="sd">      :context: reset</span>
+
+<span class="sd">       &gt;&gt;&gt; import plenoptic as po</span>
+<span class="sd">       &gt;&gt;&gt; img = po.data.reptile_skin()</span>
+<span class="sd">       &gt;&gt;&gt; ps_model = po.simul.PortillaSimoncelli(img.shape[2:])</span>
+<span class="sd">       &gt;&gt;&gt; ps_model(img)</span>
+<span class="sd">       tensor([[[0.4172, 0.0547, ..., 0.0048]]])</span>
+
+<span class="sd">    Visualize texture statistics:</span>
+
+<span class="sd">    .. plot::</span>
+<span class="sd">      :context: close-figs</span>
+
+<span class="sd">      &gt;&gt;&gt; fig, axes = ps_model.plot_representation(ps_model(img))</span>
+
+<span class="sd">    Convert texture statistics into an easier-to-read format:</span>
+
+<span class="sd">    &gt;&gt;&gt; representation_dict = ps_model.convert_to_dict(ps_model(img))</span>
+<span class="sd">    &gt;&gt;&gt; representation_dict.keys()</span>
+<span class="sd">    odict_keys([&#39;pixel_statistics&#39;, ..., &#39;var_highpass_residual&#39;])</span>
+
+<span class="sd">    Synthesize a texture metamer:</span>
+
+<span class="sd">    .. plot::</span>
+<span class="sd">      :context: close-figs</span>
+
+<span class="sd">      &gt;&gt;&gt; import plenoptic as po</span>
+<span class="sd">      &gt;&gt;&gt; import matplotlib.pyplot as plt</span>
+<span class="sd">      &gt;&gt;&gt; import torch</span>
+<span class="sd">      &gt;&gt;&gt; img = po.data.reptile_skin()</span>
+<span class="sd">      &gt;&gt;&gt; ps_model = po.simul.PortillaSimoncelli(img.shape[2:])</span>
+<span class="sd">      &gt;&gt;&gt; loss = po.tools.optim.portilla_simoncelli_loss_factory(ps_model, img)</span>
+<span class="sd">      &gt;&gt;&gt; met = po.synth.Metamer(img, ps_model, loss_function=loss)</span>
+<span class="sd">      &gt;&gt;&gt; opt_kwargs = {</span>
+<span class="sd">      ...     &quot;max_iter&quot;: 10,</span>
+<span class="sd">      ...     &quot;max_eval&quot;: 10,</span>
+<span class="sd">      ...     &quot;history_size&quot;: 100,</span>
+<span class="sd">      ...     &quot;line_search_fn&quot;: &quot;strong_wolfe&quot;,</span>
+<span class="sd">      ...     &quot;lr&quot;: 1,</span>
+<span class="sd">      ... }</span>
+<span class="sd">      &gt;&gt;&gt; met.setup(optimizer=torch.optim.LBFGS, optimizer_kwargs=opt_kwargs)</span>
+<span class="sd">      &gt;&gt;&gt; # Note that this isn&#39;t enough to run synthesis to completion,</span>
+<span class="sd">      &gt;&gt;&gt; # just an example to demonstrate what synthesis looks like</span>
+<span class="sd">      &gt;&gt;&gt; met.synthesize(max_iter=20)</span>
+<span class="sd">      &gt;&gt;&gt; fig, axes = plt.subplots(1, 4, figsize=(25, 4), width_ratios=[1, 1, 1, 3])</span>
+<span class="sd">      &gt;&gt;&gt; po.imshow(img, ax=axes[0], title=&quot;Target image&quot;)</span>
+<span class="sd">      &lt;Figure size ... with 4 Axes&gt;</span>
+<span class="sd">      &gt;&gt;&gt; axes[0].xaxis.set_visible(False)</span>
+<span class="sd">      &gt;&gt;&gt; axes[0].yaxis.set_visible(False)</span>
+<span class="sd">      &gt;&gt;&gt; po.synth.metamer.plot_synthesis_status(met, fig=fig, axes_idx={&quot;misc&quot;: 0})[0]</span>
+<span class="sd">      &lt;Figure size ...&gt;</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
@@ -319,7 +376,7 @@
 <span class="sd">           values. These arrays have the same shape as the stat (excluding</span>
 <span class="sd">           batch and channel), with values defining which scale they correspond</span>
 <span class="sd">           to.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        &quot;&quot;&quot;</span>  <span class="c1"># numpydoc ignore=EX01</span>
         <span class="n">shape_dict</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
         <span class="c1"># There are 6 pixel statistics</span>
         <span class="n">shape_dict</span><span class="p">[</span><span class="s2">&quot;pixel_statistics&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="mi">6</span> <span class="o">*</span> <span class="p">[</span><span class="s2">&quot;pixel_statistics&quot;</span><span class="p">])</span>
@@ -431,7 +488,7 @@
 <span class="sd">            scales_shape_dict&#39;s corresponding values. True denotes the</span>
 <span class="sd">            statistics that will be included in the model&#39;s output, while False</span>
 <span class="sd">            denotes the redundant ones we will toss.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        &quot;&quot;&quot;</span>  <span class="c1"># numpydoc ignore=EX01</span>
         <span class="n">mask_dict</span> <span class="o">=</span> <span class="n">scales_shape_dict</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
         <span class="c1"># Pre-compute some necessary indices.</span>
         <span class="c1"># Lower triangular indices (including diagonal), for auto correlations</span>
@@ -511,7 +568,7 @@
 <span class="sd">        Examples</span>
 <span class="sd">        --------</span>
 <span class="sd">        &gt;&gt;&gt; import plenoptic as po</span>
-<span class="sd">        &gt;&gt;&gt; img = po.data.curie()</span>
+<span class="sd">        &gt;&gt;&gt; img = po.data.reptile_skin()</span>
 <span class="sd">        &gt;&gt;&gt; portilla_simoncelli_model = po.simul.PortillaSimoncelli(img.shape[2:])</span>
 <span class="sd">        &gt;&gt;&gt; representation_tensor = portilla_simoncelli_model(img)</span>
 <span class="sd">        &gt;&gt;&gt; representation_tensor.shape</span>
@@ -682,7 +739,7 @@
 <span class="sd">        Examples</span>
 <span class="sd">        --------</span>
 <span class="sd">        &gt;&gt;&gt; import plenoptic as po</span>
-<span class="sd">        &gt;&gt;&gt; img = po.data.curie()</span>
+<span class="sd">        &gt;&gt;&gt; img = po.data.reptile_skin()</span>
 <span class="sd">        &gt;&gt;&gt; portilla_simoncelli_model = po.simul.PortillaSimoncelli(img.shape[2:])</span>
 <span class="sd">        &gt;&gt;&gt; representation_tensor = portilla_simoncelli_model(img)</span>
 <span class="sd">        &gt;&gt;&gt; representation_tensor.shape</span>
@@ -734,7 +791,7 @@
 <span class="sd">        --------</span>
 <span class="sd">        &gt;&gt;&gt; import plenoptic as po</span>
 <span class="sd">        &gt;&gt;&gt; import torch</span>
-<span class="sd">        &gt;&gt;&gt; img = po.data.curie()</span>
+<span class="sd">        &gt;&gt;&gt; img = po.data.reptile_skin()</span>
 <span class="sd">        &gt;&gt;&gt; portilla_simoncelli_model = po.simul.PortillaSimoncelli(img.shape[2:])</span>
 <span class="sd">        &gt;&gt;&gt; representation_tensor = portilla_simoncelli_model(img)</span>
 <span class="sd">        &gt;&gt;&gt; representation_dict = portilla_simoncelli_model.convert_to_dict(</span>
@@ -790,7 +847,7 @@
 <span class="sd">        Examples</span>
 <span class="sd">        --------</span>
 <span class="sd">        &gt;&gt;&gt; import plenoptic as po</span>
-<span class="sd">        &gt;&gt;&gt; img = po.data.curie()</span>
+<span class="sd">        &gt;&gt;&gt; img = po.data.reptile_skin()</span>
 <span class="sd">        &gt;&gt;&gt; portilla_simoncelli_model = po.simul.PortillaSimoncelli(</span>
 <span class="sd">        ...     img.shape[2:], n_scales=3</span>
 <span class="sd">        ... )</span>
@@ -899,7 +956,7 @@
 <span class="sd">            The residual lowpass as a real-valued 4d tensor (batch, channel,</span>
 <span class="sd">            height, width). This tensor has been demeaned (independently for</span>
 <span class="sd">            each batch and channel).</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        &quot;&quot;&quot;</span>  <span class="c1"># numpydoc ignore=EX01</span>
         <span class="n">pyr_coeffs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pyr</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
         <span class="c1"># separate out the residuals and demean the residual lowpass</span>
         <span class="n">lowpass</span> <span class="o">=</span> <span class="n">pyr_coeffs</span><span class="p">[</span><span class="s2">&quot;residual_lowpass&quot;</span><span class="p">]</span>
@@ -930,7 +987,7 @@
 <span class="sd">            3d tensor of shape (batch, channel, 6) containing the mean,</span>
 <span class="sd">            variance, skew, kurtosis, minimum pixel value, and maximum pixel</span>
 <span class="sd">            value (in that order).</span>
-<span class="sd">        &quot;&quot;&quot;</span>  <span class="c1"># numpydoc ignore=ES01</span>
+<span class="sd">        &quot;&quot;&quot;</span>  <span class="c1"># numpydoc ignore=ES01,EX01</span>
         <span class="n">mean</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="n">keepdim</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="c1"># we use torch.var instead of plenoptic.tools.variance, because our</span>
         <span class="c1"># variance is the uncorrected (or sample) variance and we want the</span>
@@ -979,7 +1036,7 @@
 <span class="sd">           channel, n_orientations, height, width) (same as ``pyr_coeffs``),</span>
 <span class="sd">           containing the real components of the coefficients (i.e.</span>
 <span class="sd">           ``coeffs.real``).</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        &quot;&quot;&quot;</span>  <span class="c1"># numpydoc ignore=EX01</span>
         <span class="n">magnitude_pyr_coeffs</span> <span class="o">=</span> <span class="p">[</span><span class="n">coeff</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span> <span class="k">for</span> <span class="n">coeff</span> <span class="ow">in</span> <span class="n">pyr_coeffs</span><span class="p">]</span>
         <span class="n">magnitude_means</span> <span class="o">=</span> <span class="p">[</span>
             <span class="n">mag</span><span class="o">.</span><span class="n">mean</span><span class="p">((</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="n">keepdim</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="k">for</span> <span class="n">mag</span> <span class="ow">in</span> <span class="n">magnitude_pyr_coeffs</span>
@@ -1013,7 +1070,7 @@
 <span class="sd">            reconstructed just from the residual lowpass image. Each is a 4d</span>
 <span class="sd">            tensor, this is a list because they are all different heights and</span>
 <span class="sd">            widths.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        &quot;&quot;&quot;</span>  <span class="c1"># numpydoc ignore=EX01</span>
         <span class="n">reconstructed_images</span> <span class="o">=</span> <span class="p">[</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_pyr</span><span class="o">.</span><span class="n">recon_pyr</span><span class="p">(</span><span class="n">pyr_coeffs_dict</span><span class="p">,</span> <span class="n">levels</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;residual_lowpass&quot;</span><span class="p">])</span>
         <span class="p">]</span>
@@ -1062,7 +1119,7 @@
 <span class="sd">        ------</span>
 <span class="sd">        ValueError</span>
 <span class="sd">            If ``coeffs_list`` contains tensors that have other than 4 or 5 dimensions.</span>
-<span class="sd">        &quot;&quot;&quot;</span>  <span class="c1"># numpydoc ignore=ES01</span>
+<span class="sd">        &quot;&quot;&quot;</span>  <span class="c1"># numpydoc ignore=ES01,EX01</span>
         <span class="k">if</span> <span class="n">coeffs_list</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">5</span><span class="p">:</span>
             <span class="n">dims</span> <span class="o">=</span> <span class="s2">&quot;o&quot;</span>
         <span class="k">elif</span> <span class="n">coeffs_list</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
@@ -1113,7 +1170,7 @@
 <span class="sd">            Tensors of shape (batch, channel, n_scales+1) containing the skew</span>
 <span class="sd">            and kurtosis, respectively, of each tensor in</span>
 <span class="sd">            ``reconstructed_images``.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        &quot;&quot;&quot;</span>  <span class="c1"># numpydoc ignore=EX01</span>
         <span class="n">skew_recon</span> <span class="o">=</span> <span class="p">[</span>
             <span class="n">stats</span><span class="o">.</span><span class="n">skew</span><span class="p">(</span><span class="n">im</span><span class="p">,</span> <span class="n">mean</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">var</span><span class="o">=</span><span class="n">var_recon</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">i</span><span class="p">],</span> <span class="n">dim</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">])</span>
             <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">im</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">reconstructed_images</span><span class="p">)</span>
@@ -1162,7 +1219,7 @@
 <span class="sd">            Tensor of shape (batch, channel, n_orientations, n_orientations,</span>
 <span class="sd">            scales) containing the cross-correlations at each</span>
 <span class="sd">            scale.</span>
-<span class="sd">        &quot;&quot;&quot;</span>  <span class="c1"># numpydoc ignore=ES01</span>
+<span class="sd">        &quot;&quot;&quot;</span>  <span class="c1"># numpydoc ignore=ES01,EX01</span>
         <span class="n">covars</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">coeff</span><span class="p">,</span> <span class="n">coeff_other</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span>
             <span class="nb">zip</span><span class="p">(</span><span class="n">coeffs_tensor</span><span class="p">,</span> <span class="n">coeffs_tensor_other</span><span class="p">)</span>
@@ -1233,7 +1290,7 @@
 <span class="sd">            found at the same orientation index as the input, and the imaginary</span>
 <span class="sd">            at orientation+self.n_orientations. (The finest scale has been</span>
 <span class="sd">            removed).</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        &quot;&quot;&quot;</span>  <span class="c1"># numpydoc ignore=EX01</span>
         <span class="n">doubled_phase_mags</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">doubled_phase_sep</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="c1"># don&#39;t do this for the finest scale</span>
@@ -1321,7 +1378,7 @@
 <span class="sd">            None, we create a new figure.</span>
 <span class="sd">        figsize</span>
 <span class="sd">            The size of the figure to create. Must be ``None`` if ax is not ``None``. If</span>
-<span class="sd">            both figsize and ax are ``None``, then we set ``figsize=(15, 15)``.</span>
+<span class="sd">            both figsize and ax are ``None``, then we set ``figsize=(12, 15)``.</span>
 <span class="sd">        ylim</span>
 <span class="sd">            If not None, the y-limits to use for this plot. If None, we use the</span>
 <span class="sd">            default, slightly adjusted so that the minimum is 0. If False, do not</span>
@@ -1346,17 +1403,18 @@
 <span class="sd">        Examples</span>
 <span class="sd">        --------</span>
 <span class="sd">        .. plot::</span>
+<span class="sd">          :context: reset</span>
 
 <span class="sd">          &gt;&gt;&gt; import plenoptic as po</span>
-<span class="sd">          &gt;&gt;&gt; img = po.data.curie()</span>
+<span class="sd">          &gt;&gt;&gt; img = po.data.reptile_skin()</span>
 <span class="sd">          &gt;&gt;&gt; portilla_simoncelli_model = po.simul.PortillaSimoncelli(img.shape[2:])</span>
 <span class="sd">          &gt;&gt;&gt; representation_tensor = portilla_simoncelli_model(img)</span>
 <span class="sd">          &gt;&gt;&gt; fig, axes = portilla_simoncelli_model.plot_representation(</span>
-<span class="sd">          ...     representation_tensor, figsize=(13, 6)</span>
+<span class="sd">          ...     representation_tensor</span>
 <span class="sd">          ... )</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">ax</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">figsize</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">figsize</span> <span class="o">=</span> <span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">15</span><span class="p">)</span>
+            <span class="n">figsize</span> <span class="o">=</span> <span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
         <span class="k">elif</span> <span class="n">ax</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">figsize</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;figsize can&#39;t be set if ax is not None&quot;</span><span class="p">)</span>
         <span class="c1"># pick the batch_idx we want (but keep the data 3d), and average over</span>
@@ -1428,7 +1486,7 @@
 <span class="sd">            or channel. Should select or average over those dimensions.</span>
 <span class="sd">        ValueError</span>
 <span class="sd">            If ``rep`` contains unexpected keys.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        &quot;&quot;&quot;</span>  <span class="c1"># numpydoc ignore=EX01</span>
         <span class="k">if</span> <span class="n">rep</span><span class="p">[</span><span class="s2">&quot;skew_reconstructed&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">ndim</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
                 <span class="s2">&quot;Currently, only know how to plot single batch and channel at&quot;</span>
@@ -1524,7 +1582,7 @@
 <span class="sd">        typically use this directly.</span>
 
 <span class="sd">        &gt;&gt;&gt; import plenoptic as po</span>
-<span class="sd">        &gt;&gt;&gt; img = po.data.curie()</span>
+<span class="sd">        &gt;&gt;&gt; img = po.data.reptile_skin()</span>
 <span class="sd">        &gt;&gt;&gt; portilla_simoncelli_model = po.simul.PortillaSimoncelli(img.shape[2:])</span>
 <span class="sd">        &gt;&gt;&gt; representation_tensor = portilla_simoncelli_model.forward(img)</span>
 <span class="sd">        &gt;&gt;&gt; fig, axes = portilla_simoncelli_model.plot_representation(</span>

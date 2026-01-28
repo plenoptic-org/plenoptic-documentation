@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>plenoptic.simulate.canonical_computations.non_linearities &mdash; plenoptic 1.3.2.dev175 documentation</title>
+  <title>plenoptic.simulate.canonical_computations.non_linearities &mdash; plenoptic 1.3.2.dev213 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/plot_directive.css" />
@@ -18,11 +18,11 @@
   
       <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../../_static/documentation_options.js?v=cb8b1ae4"></script>
+      <script src="../../../../_static/documentation_options.js?v=b7d43702"></script>
       <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
-      <script src="../../../../_static/copybutton.js?v=35a8b989"></script>
+      <script src="../../../../_static/copybutton.js?v=6dbb43f8"></script>
       <script>let toggleHintShow = 'Click to show';</script>
       <script>let toggleHintHide = 'Click to hide';</script>
       <script>let toggleOpenOnPrint = 'true';</script>
@@ -122,7 +122,7 @@
 <span class="sd">Some useful non-linearities for visual models.</span>
 
 <span class="sd">The functions operate on dictionaries or tensors.</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">&quot;&quot;&quot;</span>  <span class="c1"># numpydoc ignore=EX01</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
 
@@ -341,7 +341,7 @@
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_local_gain_control</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute gain control in helper function we can vmap.&quot;&quot;&quot;</span>  <span class="c1"># noqa: DOC201</span>
-        <span class="c1"># numpydoc ignore=ES01,PR01,RT01</span>
+        <span class="c1"># numpydoc ignore=ES01,PR01,RT01,EX01</span>
         <span class="n">norm</span> <span class="o">=</span> <span class="n">blur_downsample</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">x</span><span class="o">**</span><span class="n">p</span><span class="p">))</span><span class="o">.</span><span class="n">pow</span><span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="n">p</span><span class="p">)</span>
         <span class="n">odd</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">as_tensor</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">)[</span><span class="o">-</span><span class="mi">2</span><span class="p">:]</span> <span class="o">%</span> <span class="mi">2</span>
         <span class="n">direction</span> <span class="o">=</span> <span class="n">x</span> <span class="o">/</span> <span class="p">(</span><span class="n">upsample_blur</span><span class="p">(</span><span class="n">norm</span><span class="p">,</span> <span class="n">odd</span><span class="p">)</span> <span class="o">+</span> <span class="n">epsilon</span><span class="p">)</span>
@@ -432,7 +432,7 @@
         <span class="n">direction</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">norm</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute gain release in helper function we can vmap.&quot;&quot;&quot;</span>  <span class="c1"># noqa: DOC201</span>
-        <span class="c1"># numpydoc ignore=ES01,PR01,RT01</span>
+        <span class="c1"># numpydoc ignore=ES01,PR01,RT01,EX01</span>
         <span class="n">odd</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">as_tensor</span><span class="p">(</span><span class="n">direction</span><span class="o">.</span><span class="n">shape</span><span class="p">)[</span><span class="o">-</span><span class="mi">2</span><span class="p">:]</span> <span class="o">%</span> <span class="mi">2</span>
         <span class="k">return</span> <span class="n">direction</span> <span class="o">*</span> <span class="p">(</span><span class="n">upsample_blur</span><span class="p">(</span><span class="n">norm</span><span class="p">,</span> <span class="n">odd</span><span class="p">)</span> <span class="o">+</span> <span class="n">epsilon</span><span class="p">)</span>
 
