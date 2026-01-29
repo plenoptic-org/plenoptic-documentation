@@ -50,10 +50,10 @@ def collection_md(site):
 
 def redirect_pages(site, md_file, write_files=True):
     redirect_url = None
-    if redirect_url is None and 'main' in md_file['branches']:
-        redirect_url = "branch/main/"
     if redirect_url is None and len(md_file['releases']) > 0:
         redirect_url = f"tags/{md_file['releases'][0]}"
+    if redirect_url is None and 'main' in md_file['branches']:
+        redirect_url = "branch/main/"
     if redirect_url is None and len(md_file['pulls']) > 0:
         redirect_url = f"pulls/{md_file['pulls'][0]}"
     if redirect_url is None and len(md_file['branches']) > 0:
