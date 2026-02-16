@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>plenoptic.tools.signal &mdash; plenoptic 1.3.2.dev214 documentation</title>
+  <title>plenoptic.tools.signal &mdash; plenoptic 1.3.2.dev246 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../_static/plot_directive.css" />
@@ -18,7 +18,7 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=7c5da7cf"></script>
+      <script src="../../../_static/documentation_options.js?v=c35c3ea9"></script>
       <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -144,6 +144,16 @@
 <span class="sd">    -------</span>
 <span class="sd">    rescaled_x</span>
 <span class="sd">        The rescaled tensor.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; import plenoptic as po</span>
+<span class="sd">    &gt;&gt;&gt; import torch</span>
+<span class="sd">    &gt;&gt;&gt; x = torch.tensor([2.0, 4.0, 6.0, 8.0])</span>
+<span class="sd">    &gt;&gt;&gt; po.tools.rescale(x)</span>
+<span class="sd">    tensor([0.0000, 0.3333, 0.6667, 1.0000])</span>
+<span class="sd">    &gt;&gt;&gt; po.tools.rescale(x, a=-1, b=1)</span>
+<span class="sd">    tensor([-1.0000, -0.3333, 0.3333, 1.0000])</span>
 <span class="sd">    &quot;&quot;&quot;</span>  <span class="c1"># numpydoc ignore=ES01</span>
     <span class="n">v</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">-</span> <span class="n">x</span><span class="o">.</span><span class="n">min</span><span class="p">()</span>
     <span class="n">g</span> <span class="o">=</span> <span class="n">x</span> <span class="o">-</span> <span class="n">x</span><span class="o">.</span><span class="n">min</span><span class="p">()</span>
@@ -257,6 +267,47 @@
 <span class="sd">        The inverse operation.</span>
 <span class="sd">    :func:`~plenoptic.simulate.canonical_computations.non_linearities.local_gain_control`</span>
 <span class="sd">        The analogous function for real-valued signals.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    .. plot::</span>
+<span class="sd">      :context: reset</span>
+
+<span class="sd">      &gt;&gt;&gt; import plenoptic as po</span>
+<span class="sd">      &gt;&gt;&gt; import torch</span>
+<span class="sd">      &gt;&gt;&gt; x = torch.tensor([1 + 1j, 1 - 1j])</span>
+<span class="sd">      &gt;&gt;&gt; amplitude, phase = po.tools.rectangular_to_polar(x)</span>
+<span class="sd">      &gt;&gt;&gt; amplitude</span>
+<span class="sd">      tensor([1.4142, 1.4142])</span>
+<span class="sd">      &gt;&gt;&gt; phase</span>
+<span class="sd">      tensor([ 0.7854, -0.7854])</span>
+
+<span class="sd">    In plenoptic, this function is typically used</span>
+<span class="sd">    for working with steerable pyramid coefficients:</span>
+
+<span class="sd">    .. plot::</span>
+<span class="sd">      :context: close-figs</span>
+
+<span class="sd">      &gt;&gt;&gt; # starting from an image</span>
+<span class="sd">      &gt;&gt;&gt; img = po.data.einstein()</span>
+<span class="sd">      &gt;&gt;&gt; img.shape</span>
+<span class="sd">      torch.Size([1, 1, 256, 256])</span>
+<span class="sd">      &gt;&gt;&gt; spyr = po.simul.SteerablePyramidFreq(img.shape[-2:], is_complex=True)</span>
+<span class="sd">      &gt;&gt;&gt; # let&#39;s only look at 1 scale and 1 orientation</span>
+<span class="sd">      &gt;&gt;&gt; coeff = spyr(img)[0][:, :, 0]</span>
+<span class="sd">      &gt;&gt;&gt; # the coefficients returned by spyr (forward) are in rectangular coordinates</span>
+<span class="sd">      &gt;&gt;&gt; # so we can now use this function to get the polar coordinates</span>
+<span class="sd">      &gt;&gt;&gt; amplitude, phase = po.tools.rectangular_to_polar(coeff)</span>
+<span class="sd">      &gt;&gt;&gt; amplitude.shape</span>
+<span class="sd">      torch.Size([1, 1, 256, 256])</span>
+<span class="sd">      &gt;&gt;&gt; phase.shape</span>
+<span class="sd">      torch.Size([1, 1, 256, 256])</span>
+<span class="sd">      &gt;&gt;&gt; # we can then invert the operation to verify that we get back the original</span>
+<span class="sd">      &gt;&gt;&gt; rectangular_coeff = po.tools.polar_to_rectangular(amplitude, phase)</span>
+<span class="sd">      &gt;&gt;&gt; torch.allclose(coeff, rectangular_coeff)</span>
+<span class="sd">      True</span>
+<span class="sd">      &gt;&gt;&gt; po.imshow([amplitude, phase], title=[&quot;amplitude&quot;, &quot;phase&quot;])</span>
+<span class="sd">      &lt;PyrFigure...&gt;</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">amplitude</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
     <span class="n">phase</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">angle</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
@@ -295,6 +346,42 @@
 <span class="sd">        The inverse operation.</span>
 <span class="sd">    :func:`~plenoptic.simulate.canonical_computations.non_linearities.local_gain_release`</span>
 <span class="sd">        The analogous function for real-valued signals.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; import plenoptic as po</span>
+<span class="sd">    &gt;&gt;&gt; import torch</span>
+<span class="sd">    &gt;&gt;&gt; amplitude = torch.tensor([1.4142, 1.4142])</span>
+<span class="sd">    &gt;&gt;&gt; phase = torch.tensor([0.7854, -0.7854])</span>
+<span class="sd">    &gt;&gt;&gt; po.tools.polar_to_rectangular(amplitude, phase)</span>
+<span class="sd">    tensor([1.+1.j, 1.-1.j])</span>
+
+<span class="sd">    In plenoptic, this function is typically used</span>
+<span class="sd">    for working with steerable pyramid coefficients:</span>
+
+<span class="sd">    &gt;&gt;&gt; import plenoptic as po</span>
+<span class="sd">    &gt;&gt;&gt; import torch</span>
+<span class="sd">    &gt;&gt;&gt; # starting from an image</span>
+<span class="sd">    &gt;&gt;&gt; img = po.data.einstein()</span>
+<span class="sd">    &gt;&gt;&gt; img.shape</span>
+<span class="sd">    torch.Size([1, 1, 256, 256])</span>
+<span class="sd">    &gt;&gt;&gt; spyr = po.simul.SteerablePyramidFreq(img.shape[-2:], is_complex=True)</span>
+<span class="sd">    &gt;&gt;&gt; # let&#39;s only look at 1 scale and 1 orientation</span>
+<span class="sd">    &gt;&gt;&gt; coeff = spyr(img)[0][:, :, 0]</span>
+<span class="sd">    &gt;&gt;&gt; # the coefficients returned by spyr (forward) are in rectangular coordinates</span>
+<span class="sd">    &gt;&gt;&gt; # so, we can manually compute polar coordinates</span>
+<span class="sd">    &gt;&gt;&gt; amplitude, phase = torch.abs(coeff), torch.angle(coeff)</span>
+<span class="sd">    &gt;&gt;&gt; amplitude.shape</span>
+<span class="sd">    torch.Size([1, 1, 256, 256])</span>
+<span class="sd">    &gt;&gt;&gt; phase.shape</span>
+<span class="sd">    torch.Size([1, 1, 256, 256])</span>
+<span class="sd">    &gt;&gt;&gt; # from those, we can use this function to recover the rectangular coordinates</span>
+<span class="sd">    &gt;&gt;&gt; rectangular_coeff = po.tools.polar_to_rectangular(amplitude, phase)</span>
+<span class="sd">    &gt;&gt;&gt; rectangular_coeff.shape</span>
+<span class="sd">    torch.Size([1, 1, 256, 256])</span>
+<span class="sd">    &gt;&gt;&gt; # we can verify that they match the original</span>
+<span class="sd">    &gt;&gt;&gt; torch.allclose(coeff, rectangular_coeff)</span>
+<span class="sd">    True</span>
 <span class="sd">    &quot;&quot;&quot;</span>  <span class="c1"># numpydoc ignore=ES01</span>
     <span class="k">if</span> <span class="p">(</span><span class="n">amplitude</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">any</span><span class="p">():</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Amplitudes must be non-negative.&quot;</span><span class="p">)</span>
@@ -432,7 +519,24 @@
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    mask</span>
-<span class="sd">        Tensor mask with ``torch.Size(img_size)``.</span>
+<span class="sd">        Tensor mask with shape ``torch.Size(img_size)``.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    .. plot::</span>
+<span class="sd">      :context: reset</span>
+
+<span class="sd">      &gt;&gt;&gt; import plenoptic as po</span>
+<span class="sd">      &gt;&gt;&gt; import torch</span>
+<span class="sd">      &gt;&gt;&gt; disk = po.tools.make_disk((256, 256), outer_radius=50, inner_radius=25)</span>
+<span class="sd">      &gt;&gt;&gt; # we can add batch and color dimensions</span>
+<span class="sd">      &gt;&gt;&gt; # (this is equivalent to using .unsqueeze(0) twice)</span>
+<span class="sd">      &gt;&gt;&gt; disk = disk[None, None]</span>
+<span class="sd">      &gt;&gt;&gt; # we can use the disk as a mask to apply to an image</span>
+<span class="sd">      &gt;&gt;&gt; img = po.data.einstein()</span>
+<span class="sd">      &gt;&gt;&gt; masked_img = img * disk</span>
+<span class="sd">      &gt;&gt;&gt; po.imshow([disk, img, masked_img], title=[&quot;disk&quot;, &quot;image&quot;, &quot;mask applied&quot;])</span>
+<span class="sd">      &lt;PyrFigure ...&gt;</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">img_size</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
         <span class="n">img_size</span> <span class="o">=</span> <span class="p">(</span><span class="n">img_size</span><span class="p">,</span> <span class="n">img_size</span><span class="p">)</span>
@@ -486,6 +590,35 @@
 <span class="sd">        The noisy image. If ``noise_mse`` contains only one element, this will be</span>
 <span class="sd">        the same size as ``img``. Else, each separate value from ``noise_mse`` will</span>
 <span class="sd">        be along the batch dimension.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    Basic usage:</span>
+
+<span class="sd">    .. plot::</span>
+<span class="sd">      :context: reset</span>
+
+<span class="sd">      &gt;&gt;&gt; import plenoptic as po</span>
+<span class="sd">      &gt;&gt;&gt; import torch</span>
+<span class="sd">      &gt;&gt;&gt; img = po.data.einstein()</span>
+<span class="sd">      &gt;&gt;&gt; img.shape</span>
+<span class="sd">      torch.Size([1, 1, 256, 256])</span>
+<span class="sd">      &gt;&gt;&gt; noisy = po.tools.add_noise(img, noise_mse=0.1)</span>
+<span class="sd">      &gt;&gt;&gt; noisy.shape</span>
+<span class="sd">      torch.Size([1, 1, 256, 256])</span>
+<span class="sd">      &gt;&gt;&gt; po.imshow([img, noisy])</span>
+<span class="sd">      &lt;PyrFigure ...&gt;</span>
+
+<span class="sd">    With multiple elements in ``noise_mse``:</span>
+
+<span class="sd">    .. plot::</span>
+<span class="sd">      :context: close-figs</span>
+
+<span class="sd">      &gt;&gt;&gt; noisy_multi = po.tools.add_noise(img, noise_mse=[0.01, 0.1, 1.0])</span>
+<span class="sd">      &gt;&gt;&gt; noisy_multi.shape</span>
+<span class="sd">      torch.Size([3, 1, 256, 256])</span>
+<span class="sd">      &gt;&gt;&gt; po.imshow([img, noisy_multi])</span>
+<span class="sd">      &lt;PyrFigure ...&gt;</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">noise_mse</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">as_tensor</span><span class="p">(</span>
         <span class="n">noise_mse</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">img</span><span class="o">.</span><span class="n">dtype</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">img</span><span class="o">.</span><span class="n">device</span>
@@ -530,6 +663,24 @@
 <span class="sd">    ------</span>
 <span class="sd">    TypeError</span>
 <span class="sd">        If ``x`` is not complex-valued.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+
+<span class="sd">    .. plot::</span>
+<span class="sd">      :context: reset</span>
+
+<span class="sd">      &gt;&gt;&gt; import plenoptic as po</span>
+<span class="sd">      &gt;&gt;&gt; import torch</span>
+<span class="sd">      &gt;&gt;&gt; img = po.data.einstein()</span>
+<span class="sd">      &gt;&gt;&gt; spyr = po.simul.SteerablePyramidFreq(img.shape[-2:], is_complex=True)</span>
+<span class="sd">      &gt;&gt;&gt; # let&#39;s only look at 1 scale and 1 orientation</span>
+<span class="sd">      &gt;&gt;&gt; coeff = spyr(img)[3][:, :, 0]</span>
+<span class="sd">      &gt;&gt;&gt; mod_coeff = po.tools.modulate_phase(coeff, 2)</span>
+<span class="sd">      &gt;&gt;&gt; po.imshow([coeff, mod_coeff], title=[&quot;original&quot;, &quot;modulated&quot;], zoom=8)</span>
+<span class="sd">      &lt;PyrFigure ...&gt;</span>
+
+<span class="sd">    Note how the white and black streaks have changed between original and modulated.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">angle</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">atan2</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">imag</span><span class="p">,</span> <span class="n">x</span><span class="o">.</span><span class="n">real</span><span class="p">)</span>
@@ -577,6 +728,43 @@
 <span class="sd">    - By Cauchy-Swartz, the autocorrelation attains it is maximum at the center</span>
 <span class="sd">      location (ie. no shift) - that maximum value is the signal&#39;s variance</span>
 <span class="sd">      (assuming that the input signal is mean centered).</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    .. plot::</span>
+<span class="sd">      :context: reset</span>
+
+<span class="sd">      &gt;&gt;&gt; import plenoptic as po</span>
+<span class="sd">      &gt;&gt;&gt; import torch</span>
+<span class="sd">      &gt;&gt;&gt; img = po.data.einstein()</span>
+<span class="sd">      &gt;&gt;&gt; ac = po.tools.autocorrelation(img)</span>
+<span class="sd">      &gt;&gt;&gt; po.imshow([img, ac], title=[&quot;image&quot;, &quot;autocorrelation&quot;])</span>
+<span class="sd">      &lt;PyrFigure...&gt;</span>
+
+<span class="sd">    If we start from random noise, we do not see the correlation</span>
+<span class="sd">    structure that is found in natural images:</span>
+
+<span class="sd">    .. plot::</span>
+<span class="sd">      :context: close-figs</span>
+
+<span class="sd">      &gt;&gt;&gt; random_img = torch.rand(size=(1, 1, 256, 256))</span>
+<span class="sd">      &gt;&gt;&gt; ac_noise = po.tools.autocorrelation(random_img)</span>
+<span class="sd">      &gt;&gt;&gt; po.imshow([random_img, ac_noise], title=[&quot;random noise&quot;, &quot;autocorrelation&quot;])</span>
+<span class="sd">      &lt;PyrFigure...&gt;</span>
+
+<span class="sd">    Plenoptic models typically do not use the full autocorrelation, but rather</span>
+<span class="sd">    the first couple shifts only. Using a combination of this function and</span>
+<span class="sd">    :func:`~plenoptic.tools.signal.center_crop`, that is easily achieved:</span>
+
+<span class="sd">    .. plot::</span>
+<span class="sd">      :context: close-figs</span>
+
+<span class="sd">      &gt;&gt;&gt; ac_cropped = po.tools.center_crop(ac, 16)</span>
+<span class="sd">      &gt;&gt;&gt; po.imshow(</span>
+<span class="sd">      ...     [img, ac, ac_cropped],</span>
+<span class="sd">      ...     title=[&quot;image&quot;, &quot;autocorrelation&quot;, &quot;cropped autocorrelation&quot;],</span>
+<span class="sd">      ... )</span>
+<span class="sd">      &lt;PyrFigure...&gt;</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># Calculate the auto-correlation</span>
     <span class="n">ac</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">rfft2</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
@@ -622,13 +810,18 @@
 
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
-<span class="sd">    &gt;&gt;&gt; import plenoptic as po</span>
-<span class="sd">    &gt;&gt;&gt; img = po.data.einstein()</span>
-<span class="sd">    &gt;&gt;&gt; img.shape</span>
-<span class="sd">    torch.Size([1, 1, 256, 256])</span>
-<span class="sd">    &gt;&gt;&gt; img = po.tools.center_crop(img, 128)</span>
-<span class="sd">    &gt;&gt;&gt; img.shape</span>
-<span class="sd">    torch.Size([1, 1, 128, 128])</span>
+<span class="sd">    .. plot::</span>
+<span class="sd">      :context: reset</span>
+
+<span class="sd">      &gt;&gt;&gt; import plenoptic as po</span>
+<span class="sd">      &gt;&gt;&gt; img = po.data.einstein()</span>
+<span class="sd">      &gt;&gt;&gt; img.shape</span>
+<span class="sd">      torch.Size([1, 1, 256, 256])</span>
+<span class="sd">      &gt;&gt;&gt; crop = po.tools.center_crop(img, 128)</span>
+<span class="sd">      &gt;&gt;&gt; crop.shape</span>
+<span class="sd">      torch.Size([1, 1, 128, 128])</span>
+<span class="sd">      &gt;&gt;&gt; po.imshow([img, crop], title=[&quot;input&quot;, &quot;cropped&quot;])</span>
+<span class="sd">      &lt;PyrFigure ...&gt;</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">h</span><span class="p">,</span> <span class="n">w</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">:]</span>
     <span class="n">output_size</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">as_tensor</span><span class="p">(</span><span class="n">output_size</span><span class="p">)</span>
@@ -683,6 +876,44 @@
 <span class="sd">        The inverse operation.</span>
 <span class="sd">    :func:`~plenoptic.tools.conv.upsample_blur`</span>
 <span class="sd">        An alternative upsampling operation.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    .. plot::</span>
+<span class="sd">      :context: reset</span>
+
+<span class="sd">      &gt;&gt;&gt; import plenoptic as po</span>
+<span class="sd">      &gt;&gt;&gt; import torch</span>
+<span class="sd">      &gt;&gt;&gt; img = po.data.einstein()</span>
+<span class="sd">      &gt;&gt;&gt; img.shape</span>
+<span class="sd">      torch.Size([1, 1, 256, 256])</span>
+<span class="sd">      &gt;&gt;&gt; expanded = po.tools.expand(img, factor=2)</span>
+<span class="sd">      &gt;&gt;&gt; expanded.shape</span>
+<span class="sd">      torch.Size([1, 1, 512, 512])</span>
+<span class="sd">      &gt;&gt;&gt; po.imshow(</span>
+<span class="sd">      ...     [img, expanded], title=[&quot;original&quot;, &quot;expanded&quot;], zoom=0.5, vrange=(0, 1)</span>
+<span class="sd">      ... )</span>
+<span class="sd">      &lt;PyrFigure...&gt;</span>
+
+<span class="sd">    Note that the range has changed:</span>
+
+<span class="sd">    &gt;&gt;&gt; img.min(), img.max()</span>
+<span class="sd">    (tensor(0.0039), tensor(1.))</span>
+<span class="sd">    &gt;&gt;&gt; expanded.min(), expanded.max()</span>
+<span class="sd">    (tensor(-0.1648), tensor(1.0239))</span>
+
+<span class="sd">    An alternative method for upsampling images is to use</span>
+<span class="sd">    :func:`~plenoptic.tools.conv.upsample_blur`:</span>
+
+<span class="sd">    .. plot::</span>
+<span class="sd">      :context: close-figs</span>
+
+<span class="sd">      &gt;&gt;&gt; po.imshow(</span>
+<span class="sd">      ...     [img, expanded, po.tools.upsample_blur(img, (0, 0))],</span>
+<span class="sd">      ...     title=[&quot;original&quot;, &quot;expanded&quot;, &quot;blurred&quot;],</span>
+<span class="sd">      ...     vrange=(0, 1),</span>
+<span class="sd">      ... )</span>
+<span class="sd">      &lt;PyrFigure...&gt;</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">factor</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;factor must be strictly greater than 1!&quot;</span><span class="p">)</span>
@@ -779,6 +1010,72 @@
 <span class="sd">        The inverse operation.</span>
 <span class="sd">    :func:`~plenoptic.tools.conv.blur_downsample`</span>
 <span class="sd">        An alternative downsampling operation.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    .. plot::</span>
+<span class="sd">      :context: reset</span>
+
+<span class="sd">      &gt;&gt;&gt; import plenoptic as po</span>
+<span class="sd">      &gt;&gt;&gt; import torch</span>
+<span class="sd">      &gt;&gt;&gt; img = po.data.einstein()</span>
+<span class="sd">      &gt;&gt;&gt; img.shape</span>
+<span class="sd">      torch.Size([1, 1, 256, 256])</span>
+<span class="sd">      &gt;&gt;&gt; shrunk = po.tools.shrink(img, factor=2)</span>
+<span class="sd">      &gt;&gt;&gt; shrunk.shape</span>
+<span class="sd">      torch.Size([1, 1, 128, 128])</span>
+<span class="sd">      &gt;&gt;&gt; po.imshow([img, shrunk], title=[&quot;original&quot;, &quot;shrunk&quot;])</span>
+<span class="sd">      &lt;PyrFigure...&gt;</span>
+
+<span class="sd">    Note the horizontal/vertical lines in the shrunk version of the image.</span>
+<span class="sd">    These are the result of aliasing.</span>
+<span class="sd">    To avoid these, use :func:`~plenoptic.tools.conv.blur_downsample`:</span>
+
+<span class="sd">    .. plot::</span>
+<span class="sd">      :context: close-figs</span>
+
+<span class="sd">      &gt;&gt;&gt; po.imshow(</span>
+<span class="sd">      ...     [img, shrunk, po.tools.blur_downsample(img)],</span>
+<span class="sd">      ...     title=[&quot;original&quot;, &quot;shrunk&quot;, &quot;blurred&quot;],</span>
+<span class="sd">      ... )</span>
+<span class="sd">      &lt;PyrFigure...&gt;</span>
+
+<span class="sd">    You can invert ``shrink`` using :func:`~plenoptic.tools.signal.expand`, but the</span>
+<span class="sd">    inversion is not perfect; shrinking discards information that can not be recovered:</span>
+
+<span class="sd">    .. plot::</span>
+<span class="sd">      :context: close-figs</span>
+
+<span class="sd">      &gt;&gt;&gt; expand_after_shrink = po.tools.expand(</span>
+<span class="sd">      ...     po.tools.shrink(img, factor=2), factor=2</span>
+<span class="sd">      ... )</span>
+<span class="sd">      &gt;&gt;&gt; torch.allclose(img, expand_after_shrink, atol=1e-2)</span>
+<span class="sd">      False</span>
+<span class="sd">      &gt;&gt;&gt; po.imshow(</span>
+<span class="sd">      ...     [img, expand_after_shrink],</span>
+<span class="sd">      ...     title=[&quot;original&quot;, &quot;expand after shrink&quot;],</span>
+<span class="sd">      ... )</span>
+<span class="sd">      &lt;PyrFigure...&gt;</span>
+
+<span class="sd">    Even in the opposite order, i.e., shrinking an expanded image, the inversion is</span>
+<span class="sd">    not perfect. In this example with pixel values between 0 and 1,</span>
+<span class="sd">    there are differences on the order of 1e-3:</span>
+
+<span class="sd">    .. plot::</span>
+<span class="sd">      :context: close-figs</span>
+
+<span class="sd">      &gt;&gt;&gt; shrink_after_expand = po.tools.shrink(</span>
+<span class="sd">      ...     po.tools.expand(img, factor=2), factor=2</span>
+<span class="sd">      ... )</span>
+<span class="sd">      &gt;&gt;&gt; torch.allclose(img, shrink_after_expand, atol=1e-2)</span>
+<span class="sd">      True</span>
+<span class="sd">      &gt;&gt;&gt; torch.allclose(img, shrink_after_expand, atol=1e-3)</span>
+<span class="sd">      False</span>
+<span class="sd">      &gt;&gt;&gt; po.imshow(</span>
+<span class="sd">      ...     [img, shrink_after_expand, img - shrink_after_expand],</span>
+<span class="sd">      ...     title=[&quot;original&quot;, &quot;shrink after expand&quot;, &quot;difference&quot;],</span>
+<span class="sd">      ... )</span>
+<span class="sd">      &lt;PyrFigure...&gt;</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">factor</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;factor must be strictly greater than 1!&quot;</span><span class="p">)</span>
