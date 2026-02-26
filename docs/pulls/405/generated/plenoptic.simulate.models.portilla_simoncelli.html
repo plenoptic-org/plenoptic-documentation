@@ -1,0 +1,652 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>plenoptic.simulate.models.portilla_simoncelli &mdash; plenoptic 1.3.2.dev217 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+      <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=a2d047e6" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=4ba52da5"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../_static/copybutton.js?v=6dbb43f8"></script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../_static/togglebutton.js?v=1ae7504c"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+      <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            plenoptic
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Basic concepts</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../jupyter.html">Using Jupyter to Run Example Notebooks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../conceptual_intro.html">Conceptual Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../models.html">Model requirements</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/quickstart.html">Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../citation.html">Citation Guide and Bibliography</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Synthesis method introductions</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/intro/Eigendistortions.html">Eigendistortions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/intro/MAD_Competition_1.html">MAD Competition Conceptual Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/intro/MAD_Competition_2.html">MAD Competition Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/intro/Metamer.html">Metamers</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Models and metrics</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/models/Perceptual_distance.html">Perceptual distance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/models/Steerable_Pyramid.html">Steerable Pyramid</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/models/portilla_simoncelli/ps_index.html">Portilla-Simoncelli Texture Model</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Synthesis method examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/applications/Demo_Eigendistortion.html">Reproducing Berardino et al., 2017 (Eigendistortions)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/applications/Original_MAD.html">Reproducing Wang and Simoncelli, 2008 (MAD Competition)</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Advanced usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../api.html">API Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tips.html">Tips and Tricks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reproducibility.html">Reproducibility and Compatibility</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/advanced/Display.html">Display and animate functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/advanced/Synthesis_extensions.html">Extending existing synthesis objects</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">For Developers</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../synthesis.html">Synthesis object design</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">plenoptic</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">plenoptic.simulate.models.portilla_simoncelli</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/generated/plenoptic.simulate.models.portilla_simoncelli.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-plenoptic.simulate.models.portilla_simoncelli">
+<span id="plenoptic-simulate-models-portilla-simoncelli"></span><h1>plenoptic.simulate.models.portilla_simoncelli<a class="headerlink" href="#module-plenoptic.simulate.models.portilla_simoncelli" title="Link to this heading"></a></h1>
+<p>Portilla-Simoncelli texture statistics.</p>
+<p>The Portilla-Simoncelli (PS) texture statistics are a set of image statistics, first
+described in Portilla and Simoncelli, 2000 <a class="footnote-reference brackets" href="#id2" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>, that are proposed as a sufficient set
+of measurements for describing visual textures. That is, if two texture images have the
+same values for all PS texture stats, humans should consider them as members of the same
+family of textures.</p>
+<p class="rubric">References</p>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="id2" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">1</a><span class="fn-bracket">]</span></span>
+<p>J Portilla and E P Simoncelli. A Parametric Texture Model based on
+Joint Statistics of Complex Wavelet Coefficients. Int’l Journal of
+Computer Vision. 40(1):49-71, October, 2000.
+<a class="reference external" href="https://www.cns.nyu.edu/~eero/ABSTRACTS/portilla99-abstract.html">https://www.cns.nyu.edu/~eero/ABSTRACTS/portilla99-abstract.html</a>
+<a class="reference external" href="https://www.cns.nyu.edu/~lcv/texture/">https://www.cns.nyu.edu/~lcv/texture/</a></p>
+</aside>
+</aside>
+<p class="rubric">Classes</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#plenoptic.simulate.models.portilla_simoncelli.PortillaSimoncelli" title="plenoptic.simulate.models.portilla_simoncelli.PortillaSimoncelli"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PortillaSimoncelli</span></code></a>(image_shape[, n_scales, ...])</p></td>
+<td><p>Portila-Simoncelli texture statistics.</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py class">
+<dt class="sig sig-object py" id="plenoptic.simulate.models.portilla_simoncelli.PortillaSimoncelli">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">PortillaSimoncelli</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">image_shape</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_scales</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">4</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_orientations</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">4</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spatial_corr_width</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">9</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/plenoptic/simulate/models/portilla_simoncelli.html#PortillaSimoncelli"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#plenoptic.simulate.models.portilla_simoncelli.PortillaSimoncelli" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.pytorch.org/docs/stable/generated/torch.nn.Module.html#torch.nn.Module" title="(in PyTorch v2.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code></a></p>
+<p>Portila-Simoncelli texture statistics.</p>
+<p>The Portilla-Simoncelli (PS) texture statistics are a set of image statistics, first
+described in Portilla and Simoncelli, 2000 <a class="footnote-reference brackets" href="#id5" id="id3" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a>, that are proposed as a sufficient
+set of measurements for describing visual textures. That is, if two texture images
+have the same values for all PS texture stats, humans should consider them as
+members of the same family of textures.</p>
+<p>The PS stats are computed based on the
+<a class="reference internal" href="plenoptic.simulate.canonical_computations.steerable_pyramid_freq.html#plenoptic.simulate.canonical_computations.steerable_pyramid_freq.SteerablePyramidFreq" title="plenoptic.simulate.canonical_computations.steerable_pyramid_freq.SteerablePyramidFreq"><code class="xref py py-class docutils literal notranslate"><span class="pre">SteerablePyramidFreq</span></code></a>
+(Simoncelli and Freeman, 1995, <a class="footnote-reference brackets" href="#id6" id="id4" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a>). They consist of the local auto-correlations,
+cross-scale (within-orientation) correlations, and cross-orientation (within-scale)
+correlations of both the pyramid coefficients and the local energy (as computed by
+those coefficients). Additionally, they include the first four global moments (mean,
+variance, skew, and kurtosis) of the image and down-sampled versions of that image.
+See the paper and notebook for more description.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>image_shape</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>]</span>) – Shape of input image.</p></li>
+<li><p><strong>n_scales</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></span> (default: <code class="docutils literal notranslate"><span class="pre">4</span></code>)) – The number of pyramid scales used to measure the statistics.</p></li>
+<li><p><strong>n_orientations</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></span> (default: <code class="docutils literal notranslate"><span class="pre">4</span></code>)) – The number of orientations used to measure the statistics.</p></li>
+<li><p><strong>spatial_corr_width</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></span> (default: <code class="docutils literal notranslate"><span class="pre">9</span></code>)) – The width of the spatial cross- and auto-correlation statistics.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="plenoptic.simulate.models.portilla_simoncelli.PortillaSimoncelli.scales">
+<span class="sig-name descname"><span class="pre">scales</span></span><a class="headerlink" href="#plenoptic.simulate.models.portilla_simoncelli.PortillaSimoncelli.scales" title="Link to this definition"></a></dt>
+<dd><p>The names of the unique scales of coefficients in the pyramid, used for
+coarse-to-fine metamer synthesis.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)">list</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="field-list simple">
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.14)"><strong>ValueError</strong></a> – If the height or width of <code class="docutils literal notranslate"><span class="pre">image</span></code> cannot be divided by 2 <code class="docutils literal notranslate"><span class="pre">n_scales</span></code>
+    times. This is necessary because of how the model handles multiscale
+    representations.</p>
+</dd>
+</dl>
+<p class="rubric">References</p>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="id5" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id3">2</a><span class="fn-bracket">]</span></span>
+<p>J Portilla and E P Simoncelli. A Parametric Texture Model based on
+Joint Statistics of Complex Wavelet Coefficients. Int’l Journal of
+Computer Vision. 40(1):49-71, October, 2000.
+<a class="reference external" href="https://www.cns.nyu.edu/~eero/ABSTRACTS/portilla99-abstract.html">https://www.cns.nyu.edu/~eero/ABSTRACTS/portilla99-abstract.html</a>
+<a class="reference external" href="https://www.cns.nyu.edu/~lcv/texture/">https://www.cns.nyu.edu/~lcv/texture/</a></p>
+</aside>
+<aside class="footnote brackets" id="id6" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id4">3</a><span class="fn-bracket">]</span></span>
+<p>E P Simoncelli and W T Freeman, “The Steerable Pyramid: A Flexible
+Architecture for Multi-Scale Derivative Computation,” Second Int’l Conf
+on Image Processing, Washington, DC, Oct 1995.</p>
+</aside>
+</aside>
+<p class="rubric">Examples</p>
+<p>Compute texture statistics of an image:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">plenoptic</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">po</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">img</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">reptile_skin</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ps_model</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">simul</span><span class="o">.</span><span class="n">PortillaSimoncelli</span><span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">:])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ps_model</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
+<span class="go">tensor([[[0.4172, 0.0547, ..., 0.0048]]])</span>
+</pre></div>
+</div>
+<p>Visualize texture statistics:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">ps_model</span><span class="o">.</span><span class="n">plot_representation</span><span class="p">(</span><span class="n">ps_model</span><span class="p">(</span><span class="n">img</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>(<a class="reference download internal" download="" href="../_downloads/8de7b71d4c8948f6e19817ac1cb77465/plenoptic-simulate-models-portilla_simoncelli-2.png"><code class="xref download docutils literal notranslate"><span class="pre">png</span></code></a>, <a class="reference download internal" download="" href="../_downloads/7d4dba175d25c4486acfd3f8ee1a5e36/plenoptic-simulate-models-portilla_simoncelli-2.hires.png"><code class="xref download docutils literal notranslate"><span class="pre">hires.png</span></code></a>, <a class="reference download internal" download="" href="../_downloads/9591de4f5d9324d66452d73c141039de/plenoptic-simulate-models-portilla_simoncelli-2.pdf"><code class="xref download docutils literal notranslate"><span class="pre">pdf</span></code></a>)</p>
+<figure class="align-default">
+<img alt="../_images/plenoptic-simulate-models-portilla_simoncelli-2.png" class="plot-directive" src="../_images/plenoptic-simulate-models-portilla_simoncelli-2.png" />
+</figure>
+<p>Convert texture statistics into an easier-to-read format:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">representation_dict</span> <span class="o">=</span> <span class="n">ps_model</span><span class="o">.</span><span class="n">convert_to_dict</span><span class="p">(</span><span class="n">ps_model</span><span class="p">(</span><span class="n">img</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">representation_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+<span class="go">odict_keys([&#39;pixel_statistics&#39;, ..., &#39;var_highpass_residual&#39;])</span>
+</pre></div>
+</div>
+<p>Synthesize a texture metamer:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">plenoptic</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">po</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">img</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">reptile_skin</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ps_model</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">simul</span><span class="o">.</span><span class="n">PortillaSimoncelli</span><span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">:])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">loss</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">tools</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">portilla_simoncelli_loss_factory</span><span class="p">(</span><span class="n">ps_model</span><span class="p">,</span> <span class="n">img</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">met</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">synth</span><span class="o">.</span><span class="n">Metamer</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">ps_model</span><span class="p">,</span> <span class="n">loss_function</span><span class="o">=</span><span class="n">loss</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">opt_kwargs</span> <span class="o">=</span> <span class="p">{</span>
+<span class="gp">... </span>    <span class="s2">&quot;max_iter&quot;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="s2">&quot;max_eval&quot;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="s2">&quot;history_size&quot;</span><span class="p">:</span> <span class="mi">100</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="s2">&quot;line_search_fn&quot;</span><span class="p">:</span> <span class="s2">&quot;strong_wolfe&quot;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="s2">&quot;lr&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+<span class="gp">... </span><span class="p">}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">met</span><span class="o">.</span><span class="n">setup</span><span class="p">(</span><span class="n">optimizer</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">LBFGS</span><span class="p">,</span> <span class="n">optimizer_kwargs</span><span class="o">=</span><span class="n">opt_kwargs</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Note that this isn&#39;t enough to run synthesis to completion,</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># just an example to demonstrate what synthesis looks like</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">met</span><span class="o">.</span><span class="n">synthesize</span><span class="p">(</span><span class="n">max_iter</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">25</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="n">width_ratios</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">po</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Target image&quot;</span><span class="p">)</span>
+<span class="go">&lt;Figure size ... with 4 Axes&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">yaxis</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">po</span><span class="o">.</span><span class="n">synth</span><span class="o">.</span><span class="n">metamer</span><span class="o">.</span><span class="n">plot_synthesis_status</span><span class="p">(</span><span class="n">met</span><span class="p">,</span> <span class="n">fig</span><span class="o">=</span><span class="n">fig</span><span class="p">,</span> <span class="n">axes_idx</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;misc&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">})[</span><span class="mi">0</span><span class="p">]</span>
+<span class="go">&lt;Figure size ...&gt;</span>
+</pre></div>
+</div>
+<p>(<a class="reference download internal" download="" href="../_downloads/6893d783911573ca36c3a673024a4e0a/plenoptic-simulate-models-portilla_simoncelli-3.png"><code class="xref download docutils literal notranslate"><span class="pre">png</span></code></a>, <a class="reference download internal" download="" href="../_downloads/acfd104003882384bd991d9295b7dc73/plenoptic-simulate-models-portilla_simoncelli-3.hires.png"><code class="xref download docutils literal notranslate"><span class="pre">hires.png</span></code></a>, <a class="reference download internal" download="" href="../_downloads/1119c50097c50285b3b7a83707729552/plenoptic-simulate-models-portilla_simoncelli-3.pdf"><code class="xref download docutils literal notranslate"><span class="pre">pdf</span></code></a>)</p>
+<figure class="align-default">
+<img alt="../_images/plenoptic-simulate-models-portilla_simoncelli-3.png" class="plot-directive" src="../_images/plenoptic-simulate-models-portilla_simoncelli-3.png" />
+</figure>
+<dl class="py method">
+<dt class="sig sig-object py" id="plenoptic.simulate.models.portilla_simoncelli.PortillaSimoncelli.convert_to_dict">
+<span class="sig-name descname"><span class="pre">convert_to_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">representation_tensor</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/plenoptic/simulate/models/portilla_simoncelli.html#PortillaSimoncelli.convert_to_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#plenoptic.simulate.models.portilla_simoncelli.PortillaSimoncelli.convert_to_dict" title="Link to this definition"></a></dt>
+<dd><p>Convert tensor of statistics to a dictionary.</p>
+<p>While the tensor representation is required by plenoptic’s synthesis
+objects, the dictionary representation is easier to manually inspect.</p>
+<p>This dictionary will contain NaNs in its values: these are placeholders
+for the redundant statistics.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>representation_tensor</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tensor</span></code></a></span>) – 3d tensor of statistics.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/collections.html#collections.OrderedDict" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">OrderedDict</span></code></a></span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>rep</em> – Dictionary of representation, with informative keys.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.14)"><strong>ValueError</strong></a> – If <code class="docutils literal notranslate"><span class="pre">representation_tensor</span></code> has an unexpected number of elements. This can
+    happen if some elements were manually removed from
+    <code class="docutils literal notranslate"><span class="pre">representation_tensor</span></code>, if a non-<code class="docutils literal notranslate"><span class="pre">None</span></code> value was passed to <code class="docutils literal notranslate"><span class="pre">forward</span></code>
+    when computing it, or if it was computed using a different instantiation of
+    the model.</p>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference internal" href="#plenoptic.simulate.models.portilla_simoncelli.PortillaSimoncelli.convert_to_tensor" title="plenoptic.simulate.models.portilla_simoncelli.PortillaSimoncelli.convert_to_tensor"><code class="xref py py-obj docutils literal notranslate"><span class="pre">convert_to_tensor</span></code></a></dt><dd><p>Convert dictionary representation to tensor.</p>
+</dd>
+</dl>
+</div>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">plenoptic</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">po</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">img</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">reptile_skin</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">portilla_simoncelli_model</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">simul</span><span class="o">.</span><span class="n">PortillaSimoncelli</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">img</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">:],</span> <span class="n">n_scales</span><span class="o">=</span><span class="mi">3</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">representation_tensor</span> <span class="o">=</span> <span class="n">portilla_simoncelli_model</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">representation_dict</span> <span class="o">=</span> <span class="n">portilla_simoncelli_model</span><span class="o">.</span><span class="n">convert_to_dict</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">representation_tensor</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># We will go through and examine each of these keys individually</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Shape is (batch, channel, 6): first four moments plus min and max</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># of input image</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">representation_dict</span><span class="p">[</span><span class="s2">&quot;pixel_statistics&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span>
+<span class="go">torch.Size([1, 1, 6])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Shape is (batch, channel, spatial_corr_width, spatial_corr_width,</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># n_orientations, n_scales)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">representation_dict</span><span class="p">[</span><span class="s2">&quot;auto_correlation_magnitude&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span>
+<span class="go">torch.Size([1, 1, 9, 9, 4, 3])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Shape is (batch, channel, n_scales+1)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">representation_dict</span><span class="p">[</span><span class="s2">&quot;skew_reconstructed&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span>
+<span class="go">torch.Size([1, 1, 4])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Shape is (batch, channel, n_scales+1)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">representation_dict</span><span class="p">[</span><span class="s2">&quot;kurtosis_reconstructed&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span>
+<span class="go">torch.Size([1, 1, 4])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Shape is (batch, channel, spatial_corr_width, spatial_corr_width,</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># n_scales+1)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">representation_dict</span><span class="p">[</span><span class="s2">&quot;auto_correlation_reconstructed&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span>
+<span class="go">torch.Size([1, 1, 9, 9, 4])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Shape is (batch, channel, n_scales+1)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">representation_dict</span><span class="p">[</span><span class="s2">&quot;std_reconstructed&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span>
+<span class="go">torch.Size([1, 1, 4])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Shape is (batch, channel, n_orientations, n_orientations, n_scales)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">representation_dict</span><span class="p">[</span><span class="s2">&quot;cross_orientation_correlation_magnitude&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span>
+<span class="go">torch.Size([1, 1, 4, 4, 3])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Shape is (batch, channel, n_orientations, n_scales)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">representation_dict</span><span class="p">[</span><span class="s2">&quot;magnitude_std&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span>
+<span class="go">torch.Size([1, 1, 4, 3])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Shape is (batch, channel, n_orientations, n_orientations, n_scales-1)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">representation_dict</span><span class="p">[</span><span class="s2">&quot;cross_scale_correlation_magnitude&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span>
+<span class="go">torch.Size([1, 1, 4, 4, 2])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Shape is (batch, channel, n_orientations, 2*n_orientations, n_scales-1)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">representation_dict</span><span class="p">[</span><span class="s2">&quot;cross_scale_correlation_real&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span>
+<span class="go">torch.Size([1, 1, 4, 8, 2])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Shape is (batch, channel, 1)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">representation_dict</span><span class="p">[</span><span class="s2">&quot;var_highpass_residual&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span>
+<span class="go">torch.Size([1, 1, 1])</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="plenoptic.simulate.models.portilla_simoncelli.PortillaSimoncelli.convert_to_tensor">
+<span class="sig-name descname"><span class="pre">convert_to_tensor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">representation_dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/plenoptic/simulate/models/portilla_simoncelli.html#PortillaSimoncelli.convert_to_tensor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#plenoptic.simulate.models.portilla_simoncelli.PortillaSimoncelli.convert_to_tensor" title="Link to this definition"></a></dt>
+<dd><p>Convert dictionary of statistics to a tensor.</p>
+<p>The output has shape (batch, channel, n_statistics), flattening and
+concatenating across all statistic classes. The dictionary representation
+may be easier to make sense of.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>representation_dict</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/collections.html#collections.OrderedDict" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">OrderedDict</span></code></a></span>) – Dictionary of representation.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tensor</span></code></a></span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>rep</em> – 3d tensor of statistics.</p>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference internal" href="#plenoptic.simulate.models.portilla_simoncelli.PortillaSimoncelli.convert_to_dict" title="plenoptic.simulate.models.portilla_simoncelli.PortillaSimoncelli.convert_to_dict"><code class="xref py py-obj docutils literal notranslate"><span class="pre">convert_to_dict</span></code></a></dt><dd><p>Convert tensor representation to dictionary.</p>
+</dd>
+</dl>
+</div>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">plenoptic</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">po</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">img</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">reptile_skin</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">portilla_simoncelli_model</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">simul</span><span class="o">.</span><span class="n">PortillaSimoncelli</span><span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">:])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">representation_tensor</span> <span class="o">=</span> <span class="n">portilla_simoncelli_model</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">representation_dict</span> <span class="o">=</span> <span class="n">portilla_simoncelli_model</span><span class="o">.</span><span class="n">convert_to_dict</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">representation_tensor</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">representation_tensor_new</span> <span class="o">=</span> <span class="n">portilla_simoncelli_model</span><span class="o">.</span><span class="n">convert_to_tensor</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">representation_dict</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">torch</span><span class="o">.</span><span class="n">equal</span><span class="p">(</span><span class="n">representation_tensor</span><span class="p">,</span> <span class="n">representation_tensor_new</span><span class="p">)</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="plenoptic.simulate.models.portilla_simoncelli.PortillaSimoncelli.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">image</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scales</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/plenoptic/simulate/models/portilla_simoncelli.html#PortillaSimoncelli.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#plenoptic.simulate.models.portilla_simoncelli.PortillaSimoncelli.forward" title="Link to this definition"></a></dt>
+<dd><p>Generate Texture Statistics representation of an image.</p>
+<p>Note that separate batches and channels are analyzed in parallel.</p>
+<p>For any representation that contains info across scales, the scales always run
+from fine to coarse, representing all orientations at a given scale before
+moving on.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>image</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tensor</span></code></a></span>) – A 4d tensor (batch, channel, height, width) containing the image(s) to
+analyze.</p></li>
+<li><p><strong>scales</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Literal" title="(in Python v3.14)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Literal</span></code></a>[<code class="docutils literal notranslate"><span class="pre">'pixel_statistics'</span></code>] | <a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a> | <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Literal" title="(in Python v3.14)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Literal</span></code></a>[<code class="docutils literal notranslate"><span class="pre">'residual_lowpass'</span></code>, <code class="docutils literal notranslate"><span class="pre">'residual_highpass'</span></code>]] | <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span> (default: <code class="docutils literal notranslate"><span class="pre">None</span></code>)) – Which scales to include in the returned representation. If None, we
+include all scales. Otherwise, can contain subset of values present
+in this model’s <code class="docutils literal notranslate"><span class="pre">scales</span></code> attribute, and the returned tensor will
+then contain the subset corresponding to those scales.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tensor</span></code></a></span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>representation_tensor</em> – 3d tensor of shape (batch, channel, stats) containing the measured
+texture statistics.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.14)"><strong>ValueError</strong></a> – If <code class="docutils literal notranslate"><span class="pre">image</span></code> is not 4d or has a dtype other than float or complex.</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">plenoptic</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">po</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">img</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">reptile_skin</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">portilla_simoncelli_model</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">simul</span><span class="o">.</span><span class="n">PortillaSimoncelli</span><span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">:])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">representation_tensor</span> <span class="o">=</span> <span class="n">portilla_simoncelli_model</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">representation_tensor</span><span class="o">.</span><span class="n">shape</span>
+<span class="go">torch.Size([1, 1, 1046])</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="plenoptic.simulate.models.portilla_simoncelli.PortillaSimoncelli.plot_representation">
+<span class="sig-name descname"><span class="pre">plot_representation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">figsize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ylim</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_idx</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/plenoptic/simulate/models/portilla_simoncelli.html#PortillaSimoncelli.plot_representation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#plenoptic.simulate.models.portilla_simoncelli.PortillaSimoncelli.plot_representation" title="Link to this definition"></a></dt>
+<dd><p>Plot the representation in a human viewable format.</p>
+<p>We plot the representation as stem plots with data separated out by
+statistic type.</p>
+<p>This plots the representation of a single batch and averages over all
+channels in the representation.</p>
+<p>We create the following axes:</p>
+<ul class="simple">
+<li><p>pixels+var_highpass: marginal pixel statistics (first four moments,
+min, max) and variance of the residual highpass.</p></li>
+<li><p>std+skew+kurtosis recon: the standard deviation, skew, and kurtosis
+of the reconstructed lowpass image at each scale</p></li>
+<li><p>magnitude_std: the standard deviation of the steerable pyramid
+coefficient magnitudes at each orientation and scale.</p></li>
+<li><p>auto_correlation_reconstructed: the auto-correlation of the
+reconstructed lowpass image at each scale (summarized using Euclidean
+norm).</p></li>
+<li><p>auto_correlation_magnitude: the auto-correlation of the pyramid
+coefficient magnitudes at each scale and orientation (summarized
+using Euclidean norm).</p></li>
+<li><p>cross_orientation_correlation_magnitude: the cross-correlations
+between each orientation at each scale (summarized using Euclidean
+norm)</p></li>
+</ul>
+<p>If <code class="docutils literal notranslate"><span class="pre">self.n_scales</span> <span class="pre">&gt;</span> <span class="pre">1</span></code>, we also have combination of the following, where
+all cross-correlations are summarized using Euclidean norm over the
+channel dimension:</p>
+<ul class="simple">
+<li><p>cross_scale_correlation_magnitude: the cross-correlations between the
+pyramid coefficient magnitude at one scale and the same orientation
+at the next-coarsest scale.</p></li>
+<li><p>cross_scale_correlation_real: the cross-correlations between the real
+component of the pyramid coefficients and the real and imaginary
+components (at the same orientation) at the next-coarsest scale.</p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tensor</span></code></a></span>) – The data to show on the plot. Else, should look like the output of
+<code class="docutils literal notranslate"><span class="pre">self.forward(img)</span></code>, with the exact same structure (e.g., as
+returned by <code class="docutils literal notranslate"><span class="pre">metamer.representation_error()</span></code> or another instance
+of this class).</p></li>
+<li><p><strong>ax</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.html#matplotlib.axes.Axes" title="(in Matplotlib v3.10.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Axes</span></code></a> | <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span> (default: <code class="docutils literal notranslate"><span class="pre">None</span></code>)) – Axes where we will plot the data. If a <code class="docutils literal notranslate"><span class="pre">plt.Axes</span></code> instance, will
+subdivide into 6 or 8 new axes (depending on self.n_scales). If
+None, we create a new figure.</p></li>
+<li><p><strong>figsize</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a>] | <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span> (default: <code class="docutils literal notranslate"><span class="pre">None</span></code>)) – The size of the figure to create. Must be <code class="docutils literal notranslate"><span class="pre">None</span></code> if ax is not <code class="docutils literal notranslate"><span class="pre">None</span></code>. If
+both figsize and ax are <code class="docutils literal notranslate"><span class="pre">None</span></code>, then we set <code class="docutils literal notranslate"><span class="pre">figsize=(12,</span> <span class="pre">15)</span></code>.</p></li>
+<li><p><strong>ylim</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a>] | <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Literal" title="(in Python v3.14)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Literal</span></code></a>[<code class="docutils literal notranslate"><span class="pre">False</span></code>] | <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span> (default: <code class="docutils literal notranslate"><span class="pre">None</span></code>)) – If not None, the y-limits to use for this plot. If None, we use the
+default, slightly adjusted so that the minimum is 0. If False, do not
+change y-limits.</p></li>
+<li><p><strong>batch_idx</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></span> (default: <code class="docutils literal notranslate"><span class="pre">0</span></code>)) – Which index to take from the batch dimension (the first one).</p></li>
+<li><p><strong>title</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a> | <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span> (default: <code class="docutils literal notranslate"><span class="pre">None</span></code>)) – Title for the plot.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code></a>[<a class="reference external" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.figure.Figure.html#matplotlib.figure.Figure" title="(in Matplotlib v3.10.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Figure</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></a>[<a class="reference external" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.html#matplotlib.axes.Axes" title="(in Matplotlib v3.10.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Axes</span></code></a>]]</span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><ul class="simple">
+<li><p><em>fig</em> – Figure containing the plot.</p></li>
+<li><p><em>axes</em> – List of 6 or 8 axes containing the plot (depending on <code class="docutils literal notranslate"><span class="pre">self.n_scales</span></code>).</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.14)"><strong>ValueError</strong></a> – If both <code class="docutils literal notranslate"><span class="pre">figsize</span></code> and <code class="docutils literal notranslate"><span class="pre">ax</span></code> are not <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">plenoptic</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">po</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">img</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">reptile_skin</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">portilla_simoncelli_model</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">simul</span><span class="o">.</span><span class="n">PortillaSimoncelli</span><span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">:])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">representation_tensor</span> <span class="o">=</span> <span class="n">portilla_simoncelli_model</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">portilla_simoncelli_model</span><span class="o">.</span><span class="n">plot_representation</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">representation_tensor</span>
+<span class="gp">... </span><span class="p">)</span>
+</pre></div>
+</div>
+<p>(<a class="reference download internal" download="" href="../_downloads/d89132da50fb604e7ca75b6fc3aa7f4d/plenoptic-simulate-models-portilla_simoncelli-4.png"><code class="xref download docutils literal notranslate"><span class="pre">png</span></code></a>, <a class="reference download internal" download="" href="../_downloads/f8197a304281b24c85cb5571782f95d4/plenoptic-simulate-models-portilla_simoncelli-4.hires.png"><code class="xref download docutils literal notranslate"><span class="pre">hires.png</span></code></a>, <a class="reference download internal" download="" href="../_downloads/20882f4c845d158d9d9a54d6eb8b02bc/plenoptic-simulate-models-portilla_simoncelli-4.pdf"><code class="xref download docutils literal notranslate"><span class="pre">pdf</span></code></a>)</p>
+<figure class="align-default">
+<img alt="../_images/plenoptic-simulate-models-portilla_simoncelli-4.png" class="plot-directive" src="../_images/plenoptic-simulate-models-portilla_simoncelli-4.png" />
+</figure>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="plenoptic.simulate.models.portilla_simoncelli.PortillaSimoncelli.remove_scales">
+<span class="sig-name descname"><span class="pre">remove_scales</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">representation_tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scales_to_keep</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/plenoptic/simulate/models/portilla_simoncelli.html#PortillaSimoncelli.remove_scales"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#plenoptic.simulate.models.portilla_simoncelli.PortillaSimoncelli.remove_scales" title="Link to this definition"></a></dt>
+<dd><p>Remove statistics not associated with scales.</p>
+<p>For a given representation_tensor and a list of scales_to_keep, this
+attribute removes all statistics <em>not</em> associated with those scales.</p>
+<p>Note that calling this method will always remove statistics.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>representation_tensor</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tensor</span></code></a></span>) – 3d tensor containing the measured representation statistics.</p></li>
+<li><p><strong>scales_to_keep</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Literal" title="(in Python v3.14)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Literal</span></code></a>[<code class="docutils literal notranslate"><span class="pre">'pixel_statistics'</span></code>] | <a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a> | <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Literal" title="(in Python v3.14)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Literal</span></code></a>[<code class="docutils literal notranslate"><span class="pre">'residual_lowpass'</span></code>, <code class="docutils literal notranslate"><span class="pre">'residual_highpass'</span></code>]]</span>) – Which scales to include in the returned representation. Can contain
+subset of values present in this model’s <code class="docutils literal notranslate"><span class="pre">scales</span></code> attribute, and
+the returned tensor will then contain the subset of the full
+representation corresponding to those scales.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tensor</span></code></a></span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>limited_representation_tensor</em> – Representation tensor with some statistics removed.</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">plenoptic</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">po</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">img</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">reptile_skin</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">portilla_simoncelli_model</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">simul</span><span class="o">.</span><span class="n">PortillaSimoncelli</span><span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">:])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">representation_tensor</span> <span class="o">=</span> <span class="n">portilla_simoncelli_model</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">representation_tensor</span><span class="o">.</span><span class="n">shape</span>
+<span class="go">torch.Size([1, 1, 1046])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">limited_representation_tensor</span> <span class="o">=</span> <span class="n">portilla_simoncelli_model</span><span class="o">.</span><span class="n">remove_scales</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">representation_tensor</span><span class="p">,</span> <span class="n">scales_to_keep</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">limited_representation_tensor</span><span class="o">.</span><span class="n">shape</span>
+<span class="go">torch.Size([1, 1, 261])</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="plenoptic.simulate.models.portilla_simoncelli.PortillaSimoncelli.update_plot">
+<span class="sig-name descname"><span class="pre">update_plot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">axes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_idx</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/plenoptic/simulate/models/portilla_simoncelli.html#PortillaSimoncelli.update_plot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#plenoptic.simulate.models.portilla_simoncelli.PortillaSimoncelli.update_plot" title="Link to this definition"></a></dt>
+<dd><p>Update the information in our representation plot.</p>
+<p>This is used for creating an animation of the representation
+over time. In order to create the animation, we need to know how
+to update the matplotlib Artists, and this provides a simple way
+of doing that. It relies on the fact that we’ve used
+<code class="docutils literal notranslate"><span class="pre">plot_representation</span></code> to create the plots we want to update
+and so know that they’re stem plots.</p>
+<p>We take the axes containing the representation information (note that
+this is probably a subset of the total number of axes in the figure, if
+we’re showing other information, as done by <code class="docutils literal notranslate"><span class="pre">Metamer.animate</span></code>), grab
+the representation from plotting and, since these are both lists,
+iterate through them, updating them to the values in <code class="docutils literal notranslate"><span class="pre">data</span></code> as we go.</p>
+<p>In order for this to be used by <code class="docutils literal notranslate"><span class="pre">FuncAnimation</span></code>, we need to
+return Artists, so we return a list of the relevant artists, the
+<code class="docutils literal notranslate"><span class="pre">markerline</span></code> and <code class="docutils literal notranslate"><span class="pre">stemlines</span></code> from the <code class="docutils literal notranslate"><span class="pre">StemContainer</span></code>.</p>
+<p>Currently, this averages over all channels in the representation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>axes</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></a>[<a class="reference external" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.html#matplotlib.axes.Axes" title="(in Matplotlib v3.10.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Axes</span></code></a>]</span>) – A list of axes to update. We assume that these are the axes
+created by <code class="docutils literal notranslate"><span class="pre">plot_representation</span></code> and so contain stem plots
+in the correct order.</p></li>
+<li><p><strong>data</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tensor</span></code></a></span>) – The data to show on the plot. Else, should look like the output of
+<code class="docutils literal notranslate"><span class="pre">self.forward(img)</span></code>, with the exact same structure (e.g., as
+returned by <code class="docutils literal notranslate"><span class="pre">metamer.representation_error()</span></code> or another instance
+of this class).</p></li>
+<li><p><strong>batch_idx</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></span> (default: <code class="docutils literal notranslate"><span class="pre">0</span></code>)) – Which index to take from the batch dimension (the first one).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></a>[<a class="reference external" href="https://matplotlib.org/stable/api/artist_api.html#matplotlib.artist.Artist" title="(in Matplotlib v3.10.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Artist</span></code></a>]</span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>stem_artists</em> – A list of the artists used to update the information on the
+stem plots.</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<p>This method is meant to be used by animation functions, so users won’t
+typically use this directly.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">plenoptic</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">po</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">img</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">reptile_skin</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">portilla_simoncelli_model</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">simul</span><span class="o">.</span><span class="n">PortillaSimoncelli</span><span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">:])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">representation_tensor</span> <span class="o">=</span> <span class="n">portilla_simoncelli_model</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">portilla_simoncelli_model</span><span class="o">.</span><span class="n">plot_representation</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">representation_tensor</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">new_img</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">einstein</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">new_representation_tensor</span> <span class="o">=</span> <span class="n">portilla_simoncelli_model</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="n">new_img</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">stem_artists</span> <span class="o">=</span> <span class="n">portilla_simoncelli_model</span><span class="o">.</span><span class="n">update_plot</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">axes</span><span class="p">,</span> <span class="n">new_representation_tensor</span>
+<span class="gp">... </span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2019-2025, Plenoptic authors.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,1116 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Notable differences between Matlab and Plenoptic Implementations &#8212; plenoptic 1.3.2.dev304 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../../../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/togglebutton.css?v=9c3e77be" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/custom.css?v=d54d67fd" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../../../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../../../../_static/documentation_options.js?v=69473dd2"></script>
+    <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../../../_static/copybutton.js?v=6dbb43f8"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../../../_static/togglebutton.js?v=1ae7504c"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../../../_static/design-tabs.js?v=f930bc37"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
+    <script type="application/vnd.jupyter.widget-state+json">{"state": {"c92b17cd6a4b4777a5018c4b2e4d91a1": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": "2", "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "36acf1208b774d058b3ca31e09a5185d": {"model_name": "ProgressStyleModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "ProgressStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "bar_color": null, "description_width": ""}}, "065b3abbe31a4e3fa8bae1cfb0caa43e": {"model_name": "FloatProgressModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "FloatProgressModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "ProgressView", "bar_style": "danger", "description": "", "description_allow_html": false, "layout": "IPY_MODEL_c92b17cd6a4b4777a5018c4b2e4d91a1", "max": 1.0, "min": 0.0, "orientation": "horizontal", "style": "IPY_MODEL_36acf1208b774d058b3ca31e09a5185d", "tabbable": null, "tooltip": null, "value": 0.0}}, "96aaed381877429baa6beb37e34e4a37": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "2f3b467bafab426fa52def6b437674a8": {"model_name": "HTMLStyleModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "background": null, "description_width": "", "font_size": null, "text_color": null}}, "84aee3f9277e4c58869e97af82f82bff": {"model_name": "HTMLModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "HTMLView", "description": "", "description_allow_html": false, "layout": "IPY_MODEL_96aaed381877429baa6beb37e34e4a37", "placeholder": "\u200b", "style": "IPY_MODEL_2f3b467bafab426fa52def6b437674a8", "tabbable": null, "tooltip": null, "value": "\u2007\u20070%"}}, "08a700b33ac148ab8ba25996ff47a1de": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "27a740f916414d3a8b20782037f838e8": {"model_name": "HTMLStyleModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "background": null, "description_width": "", "font_size": null, "text_color": null}}, "cb18c80a410c44469568abfc61104b1d": {"model_name": "HTMLModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "HTMLView", "description": "", "description_allow_html": false, "layout": "IPY_MODEL_08a700b33ac148ab8ba25996ff47a1de", "placeholder": "\u200b", "style": "IPY_MODEL_27a740f916414d3a8b20782037f838e8", "tabbable": null, "tooltip": null, "value": "\u20070.00/1.00\u2007[00:00&lt;?,\u2007?B/s]"}}, "be5853d852034e409d92b45d1eff24d6": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": "inline-flex", "flex": null, "flex_flow": "row wrap", "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": "79px"}}, "849bbe8061164250807d55962d61178b": {"model_name": "HBoxModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HBoxModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "HBoxView", "box_style": "", "children": ["IPY_MODEL_84aee3f9277e4c58869e97af82f82bff", "IPY_MODEL_065b3abbe31a4e3fa8bae1cfb0caa43e", "IPY_MODEL_cb18c80a410c44469568abfc61104b1d"], "layout": "IPY_MODEL_be5853d852034e409d92b45d1eff24d6", "tabbable": null, "tooltip": null}}, "349bebf52d21413f9e34da4d3c007495": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": "2", "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "1a6628a618cb4d989caaec462c210567": {"model_name": "ProgressStyleModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "ProgressStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "bar_color": null, "description_width": ""}}, "07849ddf18b441beaed694beda5163b4": {"model_name": "FloatProgressModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "FloatProgressModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "ProgressView", "bar_style": "danger", "description": "", "description_allow_html": false, "layout": "IPY_MODEL_349bebf52d21413f9e34da4d3c007495", "max": 1.0, "min": 0.0, "orientation": "horizontal", "style": "IPY_MODEL_1a6628a618cb4d989caaec462c210567", "tabbable": null, "tooltip": null, "value": 0.0}}, "e12e3f4eb1094dd5bdbbd7b50086ce3d": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "241fcacc648e470086567e33a6672817": {"model_name": "HTMLStyleModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "background": null, "description_width": "", "font_size": null, "text_color": null}}, "0b3aa4bee8de4c03bb44b183b8a963e6": {"model_name": "HTMLModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "HTMLView", "description": "", "description_allow_html": false, "layout": "IPY_MODEL_e12e3f4eb1094dd5bdbbd7b50086ce3d", "placeholder": "\u200b", "style": "IPY_MODEL_241fcacc648e470086567e33a6672817", "tabbable": null, "tooltip": null, "value": "\u2007\u20070%"}}, "5e756c31462240fb925325f4733bd68d": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "80d36586fd68420c87229940249eb4e6": {"model_name": "HTMLStyleModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "background": null, "description_width": "", "font_size": null, "text_color": null}}, "a34e53cef4a74ef4948db0dcae3fe370": {"model_name": "HTMLModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "HTMLView", "description": "", "description_allow_html": false, "layout": "IPY_MODEL_5e756c31462240fb925325f4733bd68d", "placeholder": "\u200b", "style": "IPY_MODEL_80d36586fd68420c87229940249eb4e6", "tabbable": null, "tooltip": null, "value": "\u20070.00/1.00\u2007[00:03&lt;?,\u2007?B/s]"}}, "19c241feab6543939d604aec34348cd3": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": "inline-flex", "flex": null, "flex_flow": "row wrap", "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": "79px"}}, "bacd385fafc540aa82e7729c02f9a89a": {"model_name": "HBoxModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HBoxModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "HBoxView", "box_style": "", "children": ["IPY_MODEL_0b3aa4bee8de4c03bb44b183b8a963e6", "IPY_MODEL_07849ddf18b441beaed694beda5163b4", "IPY_MODEL_a34e53cef4a74ef4948db0dcae3fe370"], "layout": "IPY_MODEL_19c241feab6543939d604aec34348cd3", "tabbable": null, "tooltip": null}}}, "version_major": 2, "version_minor": 0}</script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script crossorigin="anonymous" data-jupyter-widgets-cdn="https://cdn.jsdelivr.net/npm/" src="https://cdn.jsdelivr.net/npm/@jupyter-widgets/html-manager@1.0.6/dist/embed-amd.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'user_guide/models_and_metrics/portilla_simoncelli/technical_details/ps_matlab_differences';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_version = '0.16.1';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://docs.plenoptic.org/docs/branch/main/_static/version_switcher.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = '1.3.2';
+        DOCUMENTATION_OPTIONS.show_version_warning_banner =
+            true;
+        </script>
+    <script src="../../../../_static/custom-icon.js?v=0bae05a2"></script>
+    <link rel="icon" href="../../../../_static/plenoptic.ico"/>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+    <link rel="next" title="Advanced usage" href="../advanced_usage/index.html" />
+    <link rel="prev" title="Portilla-Simoncelli Model Limitations" href="ps_limitations.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="1.3.2" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class=" navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../../../_static/Plenoptic_Logo_CMYK_Full_Wide.svg" class="logo__image only-light" alt="plenoptic 1.3.2.dev304 documentation - Home"/>
+    <img src="../../../../_static/Plenoptic_Logo_CMYK_Full_DarkMode_Wide.svg" class="logo__image only-dark pst-js-only" alt="plenoptic 1.3.2.dev304 documentation - Home"/>
+  
+  
+</a></div>
+    
+      <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-2"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-2"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-2"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-2">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+    
+  </div>
+  
+  <div class=" navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../getting_started/index.html">
+    Getting started
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../../../index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../api.html">
+    API
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../reference/index.html">
+    Reference
+  </a>
+</li>
+
+            <li class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button"
+                data-bs-toggle="dropdown" aria-expanded="false"
+                aria-controls="pst-nav-more-links">
+                    More
+                </button>
+                <ul id="pst-nav-more-links" class="dropdown-menu">
+                    
+<li class=" ">
+  <a class="nav-link dropdown-item nav-external" href="https://github.com/plenoptic-org/plenoptic/releases">
+    Changelog
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../../developers/index.html">
+    For developers
+  </a>
+</li>
+
+                </ul>
+            </li>
+            
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://plenoptic.org" title="Home" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-solid fa-house fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Home</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/plenoptic-org/plenoptic" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fab fa-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://pypi.org/project/plenoptic" title="PyPI" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-custom fa-pypi fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">PyPI</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../getting_started/index.html">
+    Getting started
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../../../index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../api.html">
+    API
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../reference/index.html">
+    Reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://github.com/plenoptic-org/plenoptic/releases">
+    Changelog
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../developers/index.html">
+    For developers
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://plenoptic.org" title="Home" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-solid fa-house fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Home</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/plenoptic-org/plenoptic" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fab fa-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://pypi.org/project/plenoptic" title="PyPI" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-custom fa-pypi fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">PyPI</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><p aria-level="2" class="caption" role="heading"><span class="caption-text">Synthesis method introductions</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../synthesis/Eigendistortions.html">Eigendistortions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../synthesis/MAD_Competition_1.html">MAD Competition Conceptual Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../synthesis/MAD_Competition_2.html">MAD Competition Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../synthesis/Metamer.html">Metamers</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Models and metrics</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../Perceptual_distance.html">Perceptual distance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Steerable_Pyramid.html">Steerable Pyramid</a></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="../ps_index.html">Portilla-Simoncelli Texture Model</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2 has-children"><a class="reference internal" href="../getting_started/index.html">Getting started</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../getting_started/ps_intro.html">What is a visual texture?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../getting_started/ps_basic_synthesis.html">Using the Portilla-Simoncelli model in plenoptic</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../understanding/index.html">Understanding the Model</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../understanding/ps_examples.html">Example Portilla-Simoncelli metamers from different texture classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../understanding/ps_understand_stats.html">Understanding Portilla-Simoncelli model statistics</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 current active has-children"><a class="reference internal" href="index.html">Technical details</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="ps_optimization.html">Portilla-Simoncelli optimization details</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ps_limitations.html">Portilla-Simoncelli Model Limitations</a></li>
+<li class="toctree-l3 current active"><a class="current reference internal" href="#">Notable differences between Matlab and Plenoptic Implementations</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../advanced_usage/index.html">Advanced usage</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../advanced_usage/ps_extensions.html">More than just texture metamers</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Reproducing examples from the literature</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../reproduce/Demo_Eigendistortion.html">Reproducing Berardino et al., 2017 (Eigendistortions)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../reproduce/Original_MAD.html">Reproducing Wang and Simoncelli, 2008 (MAD Competition)</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Advanced Usage</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../advanced/Display.html">Display and animate functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../advanced/Synthesis_extensions.html">Extending existing synthesis objects</a></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../../../index.html" class="nav-link">User Guide</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="../ps_index.html" class="nav-link">Portilla-Simoncelli Texture Model</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="index.html" class="nav-link">Technical details</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Notable differences between Matlab and Plenoptic Implementations</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <div class="cell tag_hide-input docutils container">
+<details class="admonition hide above-input">
+<summary aria-label="Toggle hidden content">
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">pooch</span>
+
+<span class="c1"># don&#39;t need to show warning about setting up optimizer</span>
+<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span>
+    <span class="s2">&quot;ignore&quot;</span><span class="p">,</span>
+    <span class="n">message</span><span class="o">=</span><span class="s2">&quot;You will need to call setup&quot;</span><span class="p">,</span>
+    <span class="n">category</span><span class="o">=</span><span class="ne">UserWarning</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="c1"># don&#39;t have pooch output messages about downloading or untarring</span>
+<span class="n">logger</span> <span class="o">=</span> <span class="n">pooch</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span>
+<span class="n">logger</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="s2">&quot;WARNING&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</details>
+</div>
+<div class="important admonition">
+<p class="admonition-title">Download</p>
+<p>Download this notebook: <strong><a class="reference download internal" download="" href="../../../../_downloads/b6192f9e8480f437a949e42588014a76/ps_matlab_differences.ipynb"><code class="xref download myst-nb docutils literal notranslate"><span class="pre">ps_matlab_differences.ipynb</span></code></a></strong>!</p>
+</div>
+<section class="tex2jax_ignore mathjax_ignore" id="notable-differences-between-matlab-and-plenoptic-implementations">
+<span id="ps-mat-diffs"></span><h1>Notable differences between Matlab and Plenoptic Implementations<a class="headerlink" href="#notable-differences-between-matlab-and-plenoptic-implementations" title="Link to this heading">#</a></h1>
+<p>Plenoptic’s implementation of the Portilla-Simoncelli texture model is based off of the <a class="reference external" href="https://github.com/LabForComputationalVision/textureSynth">original matlab implementation</a>. However, several changes have been made for the sake of: efficiency, compatibility with pytorch’s gradient-based methods, and simplicity. They are described in this notebook.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">collections</span><span class="w"> </span><span class="kn">import</span> <span class="n">OrderedDict</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">einops</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">plenoptic</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">po</span>
+
+<span class="o">%</span><span class="k">load_ext</span> autoreload
+<span class="o">%</span><span class="k">autoreload</span> 2
+
+<span class="c1"># We need to download some additional images for this notebook.</span>
+<span class="n">IMG_PATH</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">fetch_data</span><span class="p">(</span><span class="s2">&quot;portilla_simoncelli_images.tar.gz&quot;</span><span class="p">)</span>
+<span class="n">CACHE_DIR</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">fetch_data</span><span class="p">(</span><span class="s2">&quot;ps_regression.tar.gz&quot;</span><span class="p">)</span>
+<span class="c1"># use GPU if available</span>
+<span class="n">DEVICE</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s2">&quot;cuda&quot;</span> <span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">()</span> <span class="k">else</span> <span class="s2">&quot;cpu&quot;</span><span class="p">)</span>
+
+<span class="c1"># so that relative sizes of axes created by po.imshow and others look right</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s2">&quot;figure.dpi&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">72</span>
+
+<span class="c1"># set seed for reproducibility</span>
+<span class="n">po</span><span class="o">.</span><span class="n">tools</span><span class="o">.</span><span class="n">set_seed</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="warning dropdown admonition">
+<p class="admonition-title">This notebook retrieves cached synthesis results</p>
+<p>As with the other Portilla-Simoncelli notebooks, we have cached the results of synthesis online and only download them for investigation in this notebook.</p>
+<p>Additionally, while you can normally call <a class="reference internal" href="../../../../generated/plenoptic.synthesize.metamer.Metamer.html#plenoptic.synthesize.metamer.Metamer.synthesize" title="plenoptic.synthesize.metamer.Metamer.synthesize"><code class="xref py py-func docutils literal notranslate"><span class="pre">synthesize</span></code></a> again to pick up where we left out, the cached version of the results discarded the optimizer’s state dict (to reduce the size on disk). Thus, calling <code class="docutils literal notranslate"><span class="pre">met.synthesize(100)</span></code> with one of our cached and loaded metamer objects <strong>will not</strong> give the same result as calling <code class="docutils literal notranslate"><span class="pre">met.synthesize(200)</span></code> with a new metamer object initialized as shown in this notebook.</p>
+</div>
+<ol class="arabic">
+<li><p><strong>Optimization</strong>. The matlab implementation of texture synthesis is designed specifically for the texture model.  Gradient descent is performed on subsets of the texture statistics in a particular sequence (coarse-to-fine, etc.). The plenoptic implementation relies on the auto-differentiation and optimization tools available in pytorch.  We only define the forward model and then allow pytorch to handle the optimization.</p>
+<p>Why does this matter? We have qualitatively reproduced the results but cannot guarantee exact reproducibility of synthesis from the matlab implementation. This means that, in general, metamers synthesized by the two versions will differ, though we believe that the metamers synthesized by plenoptic have a lower loss (see <a class="reference internal" href="ps_optimization.html#ps-optimization"><span class="std std-ref">Portilla-Simoncelli optimization details</span></a> for more discussion).</p>
+<p>In particular, in order for synthesis to find good results, we use a custom loss function that reweights the model’s output. This is described in more detail in the <a class="reference internal" href="ps_optimization.html#ps-optimization"><span class="std std-ref">Portilla-Simoncelli optimization details</span></a> notebook, but in short: we upweight the variance of the highpass residuals and remove the pixel minimum and maximum from the gradient computation (this constraint is instead captured through the range penalty that is built into the <a class="reference internal" href="../../../../generated/plenoptic.synthesize.metamer.Metamer.html#plenoptic.synthesize.metamer.Metamer" title="plenoptic.synthesize.metamer.Metamer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Metamer</span></code></a> class).</p>
+</li>
+<li><p><strong>Lack of redundant statistics</strong>. As described <a class="reference internal" href="#ps-redundant-stats"><span class="std std-ref">below</span></a>, we output a different number of statistics than the Matlab implementation. The number of statistics returned in <code class="docutils literal notranslate"><span class="pre">plenoptic</span></code> matches the number of statistics reported in the paper, unlike the Matlab implementation. That is because the Matlab implementation included many redundant statistics, which were either exactly redundant (e.g., symmetric values in an auto-correlation matrix), placeholders (e.g., some 0s to make the shapes of the output work out), or not mentioned in the paper. The implementation included in <code class="docutils literal notranslate"><span class="pre">plenoptic</span></code> returns only the necessary statistics.</p></li>
+</ol>
+<ol class="arabic" id="ps-true-correlations" start="4">
+<li><p><strong>True correlations</strong>. In the <a class="reference external" href="https://github.com/LabForComputationalVision/textureSynth">Matlab implementation of Portilla Simoncelli statistics</a>, the auto-correlation, cross-scale and cross-orientation statistics are based on co-variance matrices.  When using <code class="docutils literal notranslate"><span class="pre">torch</span></code> to perform optimization, this makes convergence more difficult. We thus normalize each of these matrices, dividing the auto-correlation matrices by their center values (the variance) and the cross-correlation matrices by the square root of the product of the appropriate variances (so that we match <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.corrcoef.html">numpy.corrcoef</a>). This means that the center of the auto-correlations and the diagonals of <code class="docutils literal notranslate"><span class="pre">cross_orientation_correlation_magnitude</span></code> are always 1 and are thus excluded from the representation, as discussed above. We have thus added two new statistics, <code class="docutils literal notranslate"><span class="pre">std_reconstructed</span></code> and <code class="docutils literal notranslate"><span class="pre">magnitude_std</span></code> (the standard deviation of the reconstructed lowpass images and the standard deviation of the magnitudes of each steerable pyramid band), to compensate. Note that the cross-scale correlations have no redundancies and do not have 1 along the diagonal. For the <code class="docutils literal notranslate"><span class="pre">cross_orientation_correlation_magnitude</span></code>, the value at <span class="math notranslate nohighlight">\(A_{i,j}\)</span> is the correlation between the magnitudes at orientation <span class="math notranslate nohighlight">\(i\)</span> and orientation <span class="math notranslate nohighlight">\(j\)</span> at the <em>same</em> scale, so that <span class="math notranslate nohighlight">\(A_{i,i}\)</span> is the correlation of a magnitude band with itself, i.e., <span class="math notranslate nohighlight">\(1\)</span>. However, for <code class="docutils literal notranslate"><span class="pre">cross_scale_correlation_magnitude</span></code>, the value at <span class="math notranslate nohighlight">\(A_{i,j}\)</span> is the correlation between the magnitudes at orientation <span class="math notranslate nohighlight">\(i\)</span> and orientation <span class="math notranslate nohighlight">\(j\)</span> at <em>two adjacent scales</em>, and thus <span class="math notranslate nohighlight">\(A_{i,i}\)</span> is <em>not</em> the correlation of a band with itself; it is thus informative.</p>
+<div class="dropdown hint admonition">
+<p class="admonition-title">Why standard deviation and not variance?</p>
+<p>We use standard deviations, instead of variances, because the value of the standard deviations lie within approximately the same range as the other values in the model’s representation, which makes optimization work better.</p>
+</div>
+</li>
+</ol>
+<section id="redundant-statistics">
+<span id="ps-redundant-stats"></span><h2>Redundant statistics<a class="headerlink" href="#redundant-statistics" title="Link to this heading">#</a></h2>
+<p>The original Portilla-Simoncelli paper presents formulas to obtain the number of statistics in each class from the model parameters <code class="docutils literal notranslate"><span class="pre">n_scales</span></code> <!-- skip-lint -->, <code class="docutils literal notranslate"><span class="pre">n_orientations</span></code> and <code class="docutils literal notranslate"><span class="pre">spatial_corr_width</span></code> (labeled in the original paper <span class="math notranslate nohighlight">\(N\)</span>, <span class="math notranslate nohighlight">\(K\)</span>, and <span class="math notranslate nohighlight">\(M\)</span> respectively). The formulas indicate the following statistics for each class:</p>
+<ul class="simple">
+<li><p><strong>Marginal statistics</strong>: <span class="math notranslate nohighlight">\(2(N+1)\)</span> skewness and kurtosis of lowpass images, <span class="math notranslate nohighlight">\(1\)</span> high-pass variance, <span class="math notranslate nohighlight">\(6\)</span> pixel statistics.</p></li>
+<li><p><strong>Raw coefficient correlation</strong>: <span class="math notranslate nohighlight">\((N+1)\frac{M^2+1}{2}\)</span> statistics (<span class="math notranslate nohighlight">\(\frac{M^2+1}{2}\)</span> auto-correlations for each scale including lowpass)</p></li>
+<li><p><strong>Coefficient magnitude statistics</strong>: <span class="math notranslate nohighlight">\(NK\frac{M^2+1}{2}\)</span> autocorrelation statistics, <span class="math notranslate nohighlight">\(N\frac{K(K-1)}{2}\)</span> cross-orientation correlations at same scale, <span class="math notranslate nohighlight">\(K^2(N-1)\)</span> cross-scale correlations.</p></li>
+<li><p><strong>Cross-scale phase statistics</strong>: <span class="math notranslate nohighlight">\(2K^2(N-1)\)</span> statistics</p></li>
+</ul>
+<p>In particular, the paper reads <em>“For our texture examples, we have made choices of N = 4, K = 4 and M = 7, resulting in a total of 710 parameters”</em>. However, the output of the Portilla-Simoncelli code in <a class="reference external" href="https://github.com/LabForComputationalVision/textureSynth">Matlab</a> contains 1784 elements for these values of <span class="math notranslate nohighlight">\(N\)</span>, <span class="math notranslate nohighlight">\(K\)</span> and <span class="math notranslate nohighlight">\(M\)</span>. The discrepancy is because the Matlab output includes redundant statistics, placeholder values, and statistics not used during synthesis. The <code class="docutils literal notranslate"><span class="pre">plenoptic</span></code> output on the other hand returns only the essential statistics, and its output is in agreement with the papers formulas.</p>
+<ol class="arabic">
+<li><p><strong>Auto-correlation reconstructed</strong>: An auto-covariance matrix <span class="math notranslate nohighlight">\(A\)</span> encodes the covariance of the elements in a signal and their neighbors. Indexing the central auto-covariance element as <span class="math notranslate nohighlight">\(A_{0,0}\)</span>, element <span class="math notranslate nohighlight">\(A_{i,j}\)</span> contains the covariance of the signal with it’s neighbor at a displacement <span class="math notranslate nohighlight">\(i,j\)</span>. Because auto-correlation matrices are <a class="reference external" href="https://en.wikipedia.org/wiki/Autocorrelation#Symmetry_property">even functions</a>, they have a symmetry where <span class="math notranslate nohighlight">\(A_{i,j}=A_{-i,-j}\)</span> which means that every element except the central one (<span class="math notranslate nohighlight">\(A_{0,0}\)</span>, the variance) is duplicated. Thus, in an autocorrelation matrix of size <span class="math notranslate nohighlight">\(M \times M\)</span>, there are <span class="math notranslate nohighlight">\(\frac{M^2+1}{2}\)</span> non-redundant elements (see this ratio appear in the  auto-correlation statistics formulas above). The Matlab code returns the full auto-covariance matrices, that is, <span class="math notranslate nohighlight">\(M^2\)</span> instead of <span class="math notranslate nohighlight">\(\frac{M^2+1}{2}\)</span> elements for each covariance matrix.</p>
+<div class="dropdown hint admonition">
+<p class="admonition-title">Intuition for redundancies</p>
+<p>This can be understood by thinking of <span class="math notranslate nohighlight">\(A_{i,0}\)</span>, the autocorrelation of every pixel and the pixel <span class="math notranslate nohighlight">\(i\)</span> to their right. Computing this auto-covariance involves adding together all the products <span class="math notranslate nohighlight">\(I_{x,y}*I_{x+i,y}\)</span> for every x and y in the image. But this is equivalent to computing <span class="math notranslate nohighlight">\(A_{-i,0}\)</span>, because every pair of two neighbors <span class="math notranslate nohighlight">\(i\)</span> to the right <span class="math notranslate nohighlight">\(I_{x,y}*I_{x+i,y}\)</span> is also a pair of neighbors <span class="math notranslate nohighlight">\(i\)</span> to the left, <span class="math notranslate nohighlight">\(I_{x+i,y}*I_{(x+i)-i,y}=I_{x+i,y}*I_{x,y}\)</span>. So, any opposite displacements around the central element in the auto-covariance matrix will have the same value.</p>
+</div>
+</li>
+<li><p><strong>Auto-correlation magnitude</strong>: Same symmetry and redundancies as 1).</p></li>
+<li><p><strong>Cross-orientation magnitude correlation</strong>: Covariance matrices <span class="math notranslate nohighlight">\(C\)</span> (size <span class="math notranslate nohighlight">\(K \times K\)</span>) have symmetry <span class="math notranslate nohighlight">\(C_{i,j} = C_{j,i}\)</span> (each off-diagonal element is duplicated, i.e., <a class="reference external" href="https://en.wikipedia.org/wiki/Covariance_matrix#Basic_properties">they’re symmetric</a>). Thus, a <span class="math notranslate nohighlight">\(K \times K\)</span> covariance matrix has <span class="math notranslate nohighlight">\(\frac{K(K+1)}{2}\)</span> non-redundant elements. However, the diagonal elements of the cross-orientation correlations are variances, which are already contained in the central elements of the auto-correlation magnitude matrices. Thus, these covariances only hold <span class="math notranslate nohighlight">\(\frac{K(K-1)}{2}\)</span> non-redundant elements (see this term in the formulas above). The Matlab code returns the full covariances (with <span class="math notranslate nohighlight">\(K^2\)</span> elements) instead of the non-redundant ones. Also, the Matlab code returns an extra covariance matrix full of 0’s not mentioned in the paper (<span class="math notranslate nohighlight">\((N+1)\)</span> matrices instead of <span class="math notranslate nohighlight">\((N)\)</span>).</p></li>
+<li><p><strong>Cross-scale real correlation (phase statistics)</strong>: Phase statistics contain the correlations between the <span class="math notranslate nohighlight">\(K\)</span> real orientations at a scale with the <span class="math notranslate nohighlight">\(2K\)</span> real and imaginary phase-doubled orientations at the following scale, making a total of <span class="math notranslate nohighlight">\(K \times 2K=2K^2\)</span> statistics (see this term in the formulas above). However, the Matlab output has matrices of size <span class="math notranslate nohighlight">\(2K \times 2K\)</span>, where half of the matrices are filled with 0’s. Also, the paper counts the <span class="math notranslate nohighlight">\((N-1)\)</span> pairs of adjacent scales, but the Matlab output includes <span class="math notranslate nohighlight">\(N\)</span> matrices. The <code class="docutils literal notranslate"><span class="pre">plenoptic</span></code> output removes the 0’s and the extra matrix.</p></li>
+<li><p><strong>Statistics not in paper</strong>: The Matlab code outputs the mean magnitude of each band and cross-orientation real correlations, but these are not enumerated in the paper. These statistics are removed in <code class="docutils literal notranslate"><span class="pre">plenoptic</span></code>. See <a class="reference internal" href="#ps-mag-means"><span class="std std-ref">below</span></a> for some more detail about the magnitude means.</p></li>
+</ol>
+<p>As shown below, the output of <code class="docutils literal notranslate"><span class="pre">plenoptic</span></code> matches the number of statistics indicated in the paper:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">img</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">tools</span><span class="o">.</span><span class="n">load_images</span><span class="p">(</span><span class="n">IMG_PATH</span> <span class="o">/</span> <span class="s2">&quot;fig4a.jpg&quot;</span><span class="p">)</span>
+<span class="n">img</span> <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">DEVICE</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+
+<span class="c1"># Initialize the minimal model. Use same params as paper</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">simul</span><span class="o">.</span><span class="n">PortillaSimoncelli</span><span class="p">(</span>
+    <span class="n">img</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">:],</span> <span class="n">n_scales</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">n_orientations</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">spatial_corr_width</span><span class="o">=</span><span class="mi">7</span>
+<span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">DEVICE</span><span class="p">)</span>
+
+<span class="n">stats</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Stats for N=4, K=4, M=7: </span><span class="si">{</span><span class="n">stats</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2"> statistics&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Stats for N=4, K=4, M=7: 710 statistics
+</pre></div>
+</div>
+</div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">plenoptic</span></code> allows users to convert the tensor of statistics into a dictionary containing matrices, similar to the Matlab output. In this dictionary, the redundant statistics are indicated with <code class="docutils literal notranslate"><span class="pre">NaN</span></code>s. We print one of the auto-correlation matrices showing the redundant elements it contains:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">stats_dict</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">convert_to_dict</span><span class="p">(</span><span class="n">stats</span><span class="p">)</span>
+<span class="n">scale</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">ori</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">stats_dict</span><span class="p">[</span><span class="s2">&quot;auto_correlation_magnitude&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:,</span> <span class="n">scale</span><span class="p">,</span> <span class="n">ori</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>tensor([[ 0.0077,     nan,     nan,     nan,     nan,     nan,     nan],
+        [ 0.0800,  0.1434,     nan,     nan,     nan,     nan,     nan],
+        [ 0.0442,  0.3150,  0.6220,     nan,     nan,     nan,     nan],
+        [-0.0039,  0.0177,  0.5022,     nan,     nan,     nan,     nan],
+        [ 0.0150,  0.0171, -0.0338,  0.2946,     nan,     nan,     nan],
+        [-0.0055,  0.0870,  0.2252,  0.0671,  0.0134,     nan,     nan],
+        [-0.0460, -0.0640,  0.1255,  0.3936,  0.1982, -0.0199,     nan]],
+       device=&#39;cuda:0&#39;, dtype=torch.float64)
+</pre></div>
+</div>
+</div>
+</div>
+<p>We see in the output above that both the upper triangular part of the matrix, and the diagonal elements from the center onwards are redundant, as indicated in the text above. Note that although the central element is not redundant in auto-covariance matrices, when the covariances are converted to correlations, the central element is 1, and so uninformative (see <a class="reference internal" href="#ps-true-correlations"><span class="std std-ref">above</span></a> for more information).</p>
+<p>We can count how many statistics are in this particular class:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">acm_not_redundant</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="o">~</span><span class="n">torch</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">stats_dict</span><span class="p">[</span><span class="s2">&quot;auto_correlation_magnitude&quot;</span><span class="p">]))</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Non-redundant elements in acm: </span><span class="si">{</span><span class="n">acm_not_redundant</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Non-redundant elements in acm: 384
+</pre></div>
+</div>
+</div>
+</div>
+<p>The number of non redundant elements is 16 elements short of the <span class="math notranslate nohighlight">\(NK\frac{M^2+1}{2} = 4\cdot 4 \cdot \frac{7^2+1}{2}=400\)</span> statistics indicated by the formula. This is because <code class="docutils literal notranslate"><span class="pre">plenoptic</span></code> removes the central elements of these matrices and holds them in <code class="docutils literal notranslate"><span class="pre">stats_dict['magnitude_std']</span></code>:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Number magnitude band variances: </span><span class="si">{</span><span class="n">stats_dict</span><span class="p">[</span><span class="s1">&#39;magnitude_std&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">numel</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Number magnitude band variances: 16
+</pre></div>
+</div>
+</div>
+</div>
+<p>Next, lets see whether the number of statistics in each class match what is in the original paper:</p>
+<ol class="arabic simple">
+<li><p><strong>Marginal statistics</strong>: Total of <code class="docutils literal notranslate"><span class="pre">17</span></code> statistics</p>
+<ul class="simple">
+<li><p>kurtosis + skewness: <code class="docutils literal notranslate"><span class="pre">2*(N+1)</span> <span class="pre">=</span> <span class="pre">2*(4+1)</span> <span class="pre">=</span> <span class="pre">10</span></code></p></li>
+<li><p>variance of high pass band: <code class="docutils literal notranslate"><span class="pre">1</span></code></p></li>
+<li><p>pixel statistics: <code class="docutils literal notranslate"><span class="pre">6</span></code></p></li>
+</ul>
+</li>
+<li><p><strong>Raw coefficient correlation</strong>: Total of <code class="docutils literal notranslate"><span class="pre">125</span></code> statistics</p>
+<ul class="simple">
+<li><p>Central samples of auto-correlation reconstructed: <code class="docutils literal notranslate"><span class="pre">(N+1)*(M^2+1)/2</span> <span class="pre">=</span> <span class="pre">(4+1)*(7^2+1)/2</span> <span class="pre">=</span> <span class="pre">125</span></code></p></li>
+</ul>
+</li>
+<li><p><strong>Coefficient magnitude statistics</strong>: Total of <code class="docutils literal notranslate"><span class="pre">472</span></code> statistics</p>
+<ul class="simple">
+<li><p>Central samples of auto-correlation of magnitude of each subband <code class="docutils literal notranslate"><span class="pre">N*K*(M^2+1)/2</span> <span class="pre">=</span> <span class="pre">4*4*(7^2+1)/2</span> <span class="pre">=</span> <span class="pre">400</span></code></p></li>
+<li><p>Cross-correlation of orientations in same scale: <code class="docutils literal notranslate"><span class="pre">N*K*(K-1)/2</span> <span class="pre">=</span> <span class="pre">4*4*(4-1)/2</span> <span class="pre">=</span> <span class="pre">24</span></code></p></li>
+<li><p>Cross-correlation of magnitudes across scale: <code class="docutils literal notranslate"><span class="pre">K^2*(N-1)</span> <span class="pre">=</span> <span class="pre">4^2*(4-1)</span> <span class="pre">=</span> <span class="pre">48</span></code></p></li>
+</ul>
+</li>
+<li><p><strong>Cross-scale phase statistics</strong>: Total <code class="docutils literal notranslate"><span class="pre">96</span></code> statistics</p>
+<ul class="simple">
+<li><p>Cross-correlation of real coeffs with both coeffs at broader scale: <code class="docutils literal notranslate"><span class="pre">2*K^2*(N-1)</span> <span class="pre">=</span> <span class="pre">2*4^2*(4-1)</span> <span class="pre">=</span> <span class="pre">96</span></code></p></li>
+</ul>
+</li>
+</ol>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Sum marginal statistics</span>
+<span class="n">marginal_stats_num</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">torch</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="o">~</span><span class="n">torch</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">stats_dict</span><span class="p">[</span><span class="s2">&quot;kurtosis_reconstructed&quot;</span><span class="p">]))</span>
+    <span class="o">+</span> <span class="n">torch</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="o">~</span><span class="n">torch</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">stats_dict</span><span class="p">[</span><span class="s2">&quot;skew_reconstructed&quot;</span><span class="p">]))</span>
+    <span class="o">+</span> <span class="n">torch</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="o">~</span><span class="n">torch</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">stats_dict</span><span class="p">[</span><span class="s2">&quot;var_highpass_residual&quot;</span><span class="p">]))</span>
+    <span class="o">+</span> <span class="n">torch</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="o">~</span><span class="n">torch</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">stats_dict</span><span class="p">[</span><span class="s2">&quot;pixel_statistics&quot;</span><span class="p">]))</span>
+<span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Marginal statistics: </span><span class="si">{</span><span class="n">marginal_stats_num</span><span class="si">}</span><span class="s2"> parameters, compared to 17 in paper&quot;</span><span class="p">)</span>
+
+<span class="c1"># Sum raw coefficient correlations</span>
+<span class="n">real_coefficient_corr_num</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span>
+    <span class="o">~</span><span class="n">torch</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">stats_dict</span><span class="p">[</span><span class="s2">&quot;auto_correlation_reconstructed&quot;</span><span class="p">])</span>
+<span class="p">)</span>
+<span class="n">real_variances</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="o">~</span><span class="n">torch</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">stats_dict</span><span class="p">[</span><span class="s2">&quot;std_reconstructed&quot;</span><span class="p">]))</span>
+
+
+<span class="nb">print</span><span class="p">(</span>
+    <span class="sa">f</span><span class="s2">&quot;Raw coefficient correlation: </span><span class="si">{</span><span class="n">real_coefficient_corr_num</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">real_variances</span><span class="si">}</span><span class="s2"> &quot;</span>
+    <span class="sa">f</span><span class="s2">&quot;parameters, compared to 125 in the paper&quot;</span>
+<span class="p">)</span>
+
+
+<span class="c1"># Sum coefficient magnitude statistics</span>
+<span class="n">coeff_magnitude_stats_num</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">torch</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="o">~</span><span class="n">torch</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">stats_dict</span><span class="p">[</span><span class="s2">&quot;auto_correlation_magnitude&quot;</span><span class="p">]))</span>
+    <span class="o">+</span> <span class="n">torch</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="o">~</span><span class="n">torch</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">stats_dict</span><span class="p">[</span><span class="s2">&quot;cross_scale_correlation_magnitude&quot;</span><span class="p">]))</span>
+    <span class="o">+</span> <span class="n">torch</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="o">~</span><span class="n">torch</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">stats_dict</span><span class="p">[</span><span class="s2">&quot;cross_orientation_correlation_magnitude&quot;</span><span class="p">]))</span>
+<span class="p">)</span>
+<span class="n">coeff_magnitude_variances</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="o">~</span><span class="n">torch</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">stats_dict</span><span class="p">[</span><span class="s2">&quot;magnitude_std&quot;</span><span class="p">]))</span>
+
+<span class="nb">print</span><span class="p">(</span>
+    <span class="s2">&quot;Coefficient magnitude statistics: &quot;</span>
+    <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">coeff_magnitude_stats_num</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">coeff_magnitude_variances</span><span class="si">}</span><span class="s2"> &quot;</span>
+    <span class="s2">&quot;parameters, compared to 472 in paper&quot;</span>
+<span class="p">)</span>
+
+<span class="c1"># Sum cross-scale phase statistics</span>
+<span class="n">phase_statistics_num</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span>
+    <span class="o">~</span><span class="n">torch</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">stats_dict</span><span class="p">[</span><span class="s2">&quot;cross_scale_correlation_real&quot;</span><span class="p">])</span>
+<span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Phase statistics: </span><span class="si">{</span><span class="n">phase_statistics_num</span><span class="si">}</span><span class="s2"> parameters, compared to 96 in paper&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Marginal statistics: 17 parameters, compared to 17 in paper
+Raw coefficient correlation: 125 parameters, compared to 125 in the paper
+Coefficient magnitude statistics: 472 parameters, compared to 472 in paper
+Phase statistics: 96 parameters, compared to 96 in paper
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="magnitude-means">
+<span id="ps-mag-means"></span><h2>Magnitude means<a class="headerlink" href="#magnitude-means" title="Link to this heading">#</a></h2>
+<p>The mean of each magnitude band are slightly different from the redundant statistics discussed in the previous section. Each of those statistics are exactly redundant, e.g., the center value of an autocorrelation matrix will always be 1. They thus cannot include any additional information. However, the magnitude means are not redundant in this manner and thus could improve the texture representation. The authors excluded these values because they did not seem to be necessary: the magnitude means are constrained by the other statistics (in particular, the standard deviations of the <a class="reference internal" href="../understanding/ps_understand_stats.html#ps-mag-corrs"><span class="std std-ref">magnitudes</span></a> and of the <a class="reference internal" href="../understanding/ps_understand_stats.html#ps-coeff-corrs"><span class="std std-ref">reconstructed lowpass images</span></a>), and thus including them does not improve the visual quality of the synthesized textures. We can thus think of them as “approximately” or “statistically” redundant.</p>
+<p>To demonstrate this, we will create a modified version of the <code class="docutils literal notranslate"><span class="pre">PortillaSimoncelli</span></code> <!-- skip-lint --> class which includes the magnitude means to demonstrate:</p>
+<ol class="arabic simple">
+<li><p>Even without explicitly including them in the texture representation, they are still approximately matched between the original and synthesized texture images.</p></li>
+<li><p>Including them in the representation does not significantly improve the perceptual quality of the synthesized texture.</p></li>
+</ol>
+<p>First, let’s create the modified model:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">PortillaSimoncelliMagMeans</span><span class="p">(</span><span class="n">po</span><span class="o">.</span><span class="n">simul</span><span class="o">.</span><span class="n">PortillaSimoncelli</span><span class="p">):</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Include the magnitude means in the PS texture representation.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    im_shape: int</span>
+<span class="sd">        the size of the images being processed by the model</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">im_shape</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">im_shape</span><span class="p">,</span> <span class="n">n_scales</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">n_orientations</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">spatial_corr_width</span><span class="o">=</span><span class="mi">7</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">image</span><span class="p">,</span> <span class="n">scales</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Average Texture Statistics representations of two image</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        image : torch.Tensor</span>
+<span class="sd">            A 4d tensor (batch, channel, height, width) containing the image(s) to</span>
+<span class="sd">            analyze.</span>
+<span class="sd">        scales : list, optional</span>
+<span class="sd">            Which scales to include in the returned representation. If an empty</span>
+<span class="sd">            list (the default), we include all scales. Otherwise, can contain</span>
+<span class="sd">            subset of values present in this model&#39;s scales attribute.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        representation_tensor: torch.Tensor</span>
+<span class="sd">            3d tensor of shape (batch, channel, stats) containing the measured</span>
+<span class="sd">            texture statistics.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">stats</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">scales</span><span class="o">=</span><span class="n">scales</span><span class="p">)</span>
+        <span class="c1"># this helper function returns a list of tensors containing the steerable</span>
+        <span class="c1"># pyramid coefficients at each scale</span>
+        <span class="n">pyr_coeffs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_pyr_coeffs</span><span class="p">(</span><span class="n">image</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="c1"># only compute the magnitudes for the desired scales</span>
+        <span class="n">magnitude_pyr_coeffs</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">coeff</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">coeff</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">pyr_coeffs</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">scales</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">scales</span>
+        <span class="p">]</span>
+        <span class="n">magnitude_means</span> <span class="o">=</span> <span class="p">[</span><span class="n">mag</span><span class="o">.</span><span class="n">mean</span><span class="p">((</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">))</span> <span class="k">for</span> <span class="n">mag</span> <span class="ow">in</span> <span class="n">magnitude_pyr_coeffs</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">einops</span><span class="o">.</span><span class="n">pack</span><span class="p">([</span><span class="n">stats</span><span class="p">,</span> <span class="o">*</span><span class="n">magnitude_means</span><span class="p">],</span> <span class="s2">&quot;b c *&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="c1"># overwriting these following two methods allows us to use the plot_representation</span>
+    <span class="c1"># method with the modified model, making examining it easier.</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">convert_to_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">representation_tensor</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">OrderedDict</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Convert tensor of stats to dictionary.&quot;&quot;&quot;</span>
+        <span class="n">n_mag_means</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_scales</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_orientations</span>
+        <span class="n">rep</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">convert_to_dict</span><span class="p">(</span><span class="n">representation_tensor</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="p">:</span><span class="o">-</span><span class="n">n_mag_means</span><span class="p">])</span>
+        <span class="n">mag_means</span> <span class="o">=</span> <span class="n">representation_tensor</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="o">-</span><span class="n">n_mag_means</span><span class="p">:]</span>
+        <span class="n">rep</span><span class="p">[</span><span class="s2">&quot;magnitude_means&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">einops</span><span class="o">.</span><span class="n">rearrange</span><span class="p">(</span>
+            <span class="n">mag_means</span><span class="p">,</span>
+            <span class="s2">&quot;b c (s o) -&gt; b c s o&quot;</span><span class="p">,</span>
+            <span class="n">s</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_scales</span><span class="p">,</span>
+            <span class="n">o</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_orientations</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">rep</span>
+
+    <span class="c1"># overwriting this method is necessary for the loss factory to work</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">convert_to_tensor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">representation_dict</span><span class="p">:</span> <span class="n">OrderedDict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Convert dictionary of statistics to a tensor.&quot;&quot;&quot;</span>
+        <span class="n">rep</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">convert_to_tensor</span><span class="p">(</span><span class="n">representation_dict</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">(</span>
+            <span class="p">[</span><span class="n">rep</span><span class="p">,</span> <span class="n">representation_dict</span><span class="p">[</span><span class="s2">&quot;magnitude_means&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">flatten</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)],</span> <span class="o">-</span><span class="mi">1</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_representation_for_plotting</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rep</span><span class="p">:</span> <span class="n">OrderedDict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">OrderedDict</span><span class="p">:</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Convert the data into a dictionary representation that is more convenient</span>
+<span class="sd">        for plotting.</span>
+
+<span class="sd">        Intended as a helper function for plot_representation.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">mag_means</span> <span class="o">=</span> <span class="n">rep</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;magnitude_means&quot;</span><span class="p">)</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">_representation_for_plotting</span><span class="p">(</span><span class="n">rep</span><span class="p">)</span>
+        <span class="n">data</span><span class="p">[</span><span class="s2">&quot;magnitude_means&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">mag_means</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">data</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Now, let’s initialize our models and images for synthesis:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">img</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">tools</span><span class="o">.</span><span class="n">load_images</span><span class="p">(</span><span class="n">IMG_PATH</span> <span class="o">/</span> <span class="s2">&quot;fig4a.jpg&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">DEVICE</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">simul</span><span class="o">.</span><span class="n">PortillaSimoncelli</span><span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">:],</span> <span class="n">spatial_corr_width</span><span class="o">=</span><span class="mi">7</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">DEVICE</span><span class="p">)</span>
+<span class="n">loss</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">tools</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">portilla_simoncelli_loss_factory</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">img</span><span class="p">)</span>
+<span class="n">model_mag_means</span> <span class="o">=</span> <span class="n">PortillaSimoncelliMagMeans</span><span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">:])</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">DEVICE</span><span class="p">)</span>
+<span class="n">loss_mag_means</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">tools</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">portilla_simoncelli_loss_factory</span><span class="p">(</span><span class="n">model_mag_means</span><span class="p">,</span> <span class="n">img</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>And run the synthesis with the regular model, which does not include the mean of the steerable pyramid magnitudes, and then the augmented model, which does.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Set the RNG seed to make the two synthesis procedures as similar as possible.</span>
+<span class="n">po</span><span class="o">.</span><span class="n">tools</span><span class="o">.</span><span class="n">set_seed</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
+<span class="n">met</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">synth</span><span class="o">.</span><span class="n">Metamer</span><span class="p">(</span>
+    <span class="n">img</span><span class="p">,</span>
+    <span class="n">model</span><span class="p">,</span>
+    <span class="n">loss_function</span><span class="o">=</span><span class="n">loss</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">met</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">CACHE_DIR</span> <span class="o">/</span> <span class="s2">&quot;ps_mag_means-False.pt&quot;</span><span class="p">,</span> <span class="n">map_location</span><span class="o">=</span><span class="n">DEVICE</span><span class="p">)</span>
+
+<span class="n">po</span><span class="o">.</span><span class="n">tools</span><span class="o">.</span><span class="n">set_seed</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
+<span class="n">met_mag_means</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">synth</span><span class="o">.</span><span class="n">Metamer</span><span class="p">(</span>
+    <span class="n">img</span><span class="p">,</span>
+    <span class="n">model_mag_means</span><span class="p">,</span>
+    <span class="n">loss_function</span><span class="o">=</span><span class="n">loss_mag_means</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">met_mag_means</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">CACHE_DIR</span> <span class="o">/</span> <span class="s2">&quot;ps_mag_means-True.pt&quot;</span><span class="p">,</span> <span class="n">map_location</span><span class="o">=</span><span class="n">DEVICE</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="dropdown note admonition">
+<p class="admonition-title">How to run this synthesis manually</p>
+<!-- TestPortillaSimoncelli.test_ps_mag_means -->
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">opt_kwargs</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;max_iter&quot;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
+    <span class="s2">&quot;max_eval&quot;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
+    <span class="s2">&quot;history_size&quot;</span><span class="p">:</span> <span class="mi">100</span><span class="p">,</span>
+    <span class="s2">&quot;line_search_fn&quot;</span><span class="p">:</span> <span class="s2">&quot;strong_wolfe&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;lr&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+<span class="p">}</span>
+<span class="n">met</span><span class="o">.</span><span class="n">setup</span><span class="p">(</span><span class="n">optimizer</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">LBFGS</span><span class="p">,</span> <span class="n">optimizer_kwargs</span><span class="o">=</span><span class="n">opt_kwargs</span><span class="p">)</span>
+<span class="n">met</span><span class="o">.</span><span class="n">synthesize</span><span class="p">(</span><span class="n">max_iter</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Call the <a class="reference internal" href="../../../../generated/plenoptic.synthesize.metamer.Metamer.html#plenoptic.synthesize.metamer.Metamer.setup" title="plenoptic.synthesize.metamer.Metamer.setup"><code class="xref py py-func docutils literal notranslate"><span class="pre">setup</span></code></a> and <a class="reference internal" href="../../../../generated/plenoptic.synthesize.metamer.Metamer.html#plenoptic.synthesize.metamer.Metamer.synthesize" title="plenoptic.synthesize.metamer.Metamer.synthesize"><code class="xref py py-func docutils literal notranslate"><span class="pre">synthesize</span></code></a> methods of <code class="docutils literal notranslate"><span class="pre">met_mag_means</span></code> with the same arguments.</p>
+</div>
+<p>Now let’s examine the outputs. In the following plot, we display the synthesized metamer and the representation error for the metamer synthesized with and without explicitly constraining the magnitude means.</p>
+<ul class="simple">
+<li><p>The two synthesized metamers appear almost identical, so including the magnitude means does not substantially change the resulting metamer at all, let alone improve its visual quality.</p></li>
+<li><p>The representation errors are (as we’d expect) also very similar. Let’s focus on the plot in the bottom right, labeled “magnitude_means”. Each stem shows the mean of one of the magnitude bands, with the scales increasing from left to right. Looking at the representation error for the first image, we can see that, even without explicitly including the means, the error in this statistic is on the same magnitude as the other statistics, showing that it is being implicitly constrained. By comparing to the error for the second image, we can see that the error in the magnitude means does decrease, most notably in the coarsest scales.</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">21</span><span class="p">,</span> <span class="mi">11</span><span class="p">),</span> <span class="n">gridspec_kw</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;width_ratios&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mf">3.1</span><span class="p">]})</span>
+<span class="k">for</span> <span class="n">ax</span><span class="p">,</span> <span class="n">im</span><span class="p">,</span> <span class="n">info</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span>
+    <span class="n">axes</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="n">met</span><span class="o">.</span><span class="n">metamer</span><span class="p">,</span> <span class="n">met_mag_means</span><span class="o">.</span><span class="n">metamer</span><span class="p">],</span> <span class="p">[</span><span class="s2">&quot;without&quot;</span><span class="p">,</span> <span class="s2">&quot;with&quot;</span><span class="p">]</span>
+<span class="p">):</span>
+    <span class="n">po</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">im</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Metamer </span><span class="si">{</span><span class="n">info</span><span class="si">}</span><span class="s2"> magnitude means&quot;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">yaxis</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+
+<span class="n">model_mag_means</span><span class="o">.</span><span class="n">plot_representation</span><span class="p">(</span>
+    <span class="n">model_mag_means</span><span class="p">(</span><span class="n">met</span><span class="o">.</span><span class="n">metamer</span><span class="p">)</span> <span class="o">-</span> <span class="n">model_mag_means</span><span class="p">(</span><span class="n">img</span><span class="p">),</span>
+    <span class="n">ylim</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mf">0.06</span><span class="p">,</span> <span class="mf">0.06</span><span class="p">),</span>
+    <span class="n">ax</span><span class="o">=</span><span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+<span class="p">)</span>
+<span class="n">model_mag_means</span><span class="o">.</span><span class="n">plot_representation</span><span class="p">(</span>
+    <span class="n">model_mag_means</span><span class="p">(</span><span class="n">met_mag_means</span><span class="o">.</span><span class="n">metamer</span><span class="p">)</span> <span class="o">-</span> <span class="n">model_mag_means</span><span class="p">(</span><span class="n">img</span><span class="p">),</span>
+    <span class="n">ylim</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mf">0.06</span><span class="p">,</span> <span class="mf">0.06</span><span class="p">),</span>
+    <span class="n">ax</span><span class="o">=</span><span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+<span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../../../_images/ec960869e530a16889460ee3629ee3b12747e67572ebd46dff3c76713c1208aa.png" src="../../../../_images/ec960869e530a16889460ee3629ee3b12747e67572ebd46dff3c76713c1208aa.png" />
+</div>
+</div>
+<p>Thus, we can feel fairly confident in excluding these magnitude means from the model. Note this follows the same logic as the <a class="reference internal" href="../understanding/ps_understand_stats.html#ps-model-stats"><span class="std std-ref">Understanding Portilla-Simoncelli model statistics</span></a> notebook, when we tried removing different statistics to see their effect; here, we tried <em>adding</em> a statistic to determine its effect. Feel free to try using other target images or adding other statistics!</p>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="ps_limitations.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Portilla-Simoncelli Model Limitations</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../advanced_usage/index.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Advanced usage</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#redundant-statistics">Redundant statistics</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#magnitude-means">Magnitude means</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2019-2025, Plenoptic authors.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.0.4.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

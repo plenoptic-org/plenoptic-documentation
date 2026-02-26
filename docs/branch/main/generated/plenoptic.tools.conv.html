@@ -1,0 +1,1275 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>plenoptic.tools.conv &#8212; plenoptic 1.3.2.dev304 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=9c3e77be" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=d54d67fd" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../_static/documentation_options.js?v=69473dd2"></script>
+    <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=6dbb43f8"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=1ae7504c"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'generated/plenoptic.tools.conv';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_version = '0.16.1';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://docs.plenoptic.org/docs/branch/main/_static/version_switcher.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = '1.3.2';
+        DOCUMENTATION_OPTIONS.show_version_warning_banner =
+            true;
+        </script>
+    <script src="../_static/custom-icon.js?v=0bae05a2"></script>
+    <link rel="icon" href="../_static/plenoptic.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="plenoptic.tools.signal" href="plenoptic.tools.signal.html" />
+    <link rel="prev" title="plenoptic.simulate.canonical_computations.non_linearities" href="plenoptic.simulate.canonical_computations.non_linearities.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="1.3.2" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class=" navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/Plenoptic_Logo_CMYK_Full_Wide.svg" class="logo__image only-light" alt="plenoptic 1.3.2.dev304 documentation - Home"/>
+    <img src="../_static/Plenoptic_Logo_CMYK_Full_DarkMode_Wide.svg" class="logo__image only-dark pst-js-only" alt="plenoptic 1.3.2.dev304 documentation - Home"/>
+  
+  
+</a></div>
+    
+      <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-2"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-2"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-2"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-2">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+    
+  </div>
+  
+  <div class=" navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../getting_started/index.html">
+    Getting started
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../user_guide/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../api.html">
+    API
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../reference/index.html">
+    Reference
+  </a>
+</li>
+
+            <li class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button"
+                data-bs-toggle="dropdown" aria-expanded="false"
+                aria-controls="pst-nav-more-links">
+                    More
+                </button>
+                <ul id="pst-nav-more-links" class="dropdown-menu">
+                    
+<li class=" ">
+  <a class="nav-link dropdown-item nav-external" href="https://github.com/plenoptic-org/plenoptic/releases">
+    Changelog
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../developers/index.html">
+    For developers
+  </a>
+</li>
+
+                </ul>
+            </li>
+            
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://plenoptic.org" title="Home" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-solid fa-house fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Home</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/plenoptic-org/plenoptic" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fab fa-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://pypi.org/project/plenoptic" title="PyPI" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-custom fa-pypi fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">PyPI</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar hide-on-wide">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../getting_started/index.html">
+    Getting started
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../user_guide/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../api.html">
+    API
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../reference/index.html">
+    Reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://github.com/plenoptic-org/plenoptic/releases">
+    Changelog
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../developers/index.html">
+    For developers
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://plenoptic.org" title="Home" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-solid fa-house fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Home</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/plenoptic-org/plenoptic" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fab fa-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://pypi.org/project/plenoptic" title="PyPI" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-custom fa-pypi fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">PyPI</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../api.html" class="nav-link">API</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">plenoptic.tools.conv</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="module-plenoptic.tools.conv">
+<span id="plenoptic-tools-conv"></span><h1>plenoptic.tools.conv<a class="headerlink" href="#module-plenoptic.tools.conv" title="Link to this heading">#</a></h1>
+<p>Convolution-related utility functions.</p>
+<p class="rubric">Functions</p>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#plenoptic.tools.conv.blur_downsample" title="plenoptic.tools.conv.blur_downsample"><code class="xref py py-obj docutils literal notranslate"><span class="pre">blur_downsample</span></code></a>(image[, n_scales, filtname, ...])</p></td>
+<td><p>Correlate with a named filter and downsample by 2.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#plenoptic.tools.conv.correlate_downsample" title="plenoptic.tools.conv.correlate_downsample"><code class="xref py py-obj docutils literal notranslate"><span class="pre">correlate_downsample</span></code></a>(image, filt[, padding_mode])</p></td>
+<td><p>Correlate with a filter and downsample by a factor of 2.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#plenoptic.tools.conv.same_padding" title="plenoptic.tools.conv.same_padding"><code class="xref py py-obj docutils literal notranslate"><span class="pre">same_padding</span></code></a>(image, kernel_size[, stride, ...])</p></td>
+<td><p>Pad a tensor so that 2D convolution will result in output with same dims.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#plenoptic.tools.conv.upsample_blur" title="plenoptic.tools.conv.upsample_blur"><code class="xref py py-obj docutils literal notranslate"><span class="pre">upsample_blur</span></code></a>(image, odd[, n_scales, ...])</p></td>
+<td><p>Upsample by 2 and convolve with named filter.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#plenoptic.tools.conv.upsample_convolve" title="plenoptic.tools.conv.upsample_convolve"><code class="xref py py-obj docutils literal notranslate"><span class="pre">upsample_convolve</span></code></a>(image, odd, filt[, ...])</p></td>
+<td><p>Upsample by 2 and convolve with a filter.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<dl class="py function">
+<dt class="sig sig-object py" id="plenoptic.tools.conv.blur_downsample">
+<span class="sig-name descname"><span class="pre">blur_downsample</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">image</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_scales</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filtname</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'binom5'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale_filter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/plenoptic/tools/conv.html#blur_downsample"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#plenoptic.tools.conv.blur_downsample" title="Link to this definition">#</a></dt>
+<dd><p>Correlate with a named filter and downsample by 2.</p>
+<p>This operation allows one to downsample in an alias-resistant manner, removing the
+high frequencies that would result in aliasing in a smaller image.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>image</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tensor</span></code></a></span>) – Image, or batch of images, of shape (batch, channel, height, width).
+Batches and channels are handled independently.</p></li>
+<li><p><strong>n_scales</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></span> (default: <code class="docutils literal notranslate"><span class="pre">1</span></code>)) – Apply the blur and downsample procedure recursively <code class="docutils literal notranslate"><span class="pre">n_scales</span></code> times.
+Must be positive.</p></li>
+<li><p><strong>filtname</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></span> (default: <code class="docutils literal notranslate"><span class="pre">'binom5'</span></code>)) – Name of the filter. See <a class="reference external" href="https://pyrtools.readthedocs.io/en/latest/api/pyrtools.pyramids.html#pyrtools.pyramids.filters.named_filter" title="(in pyrtools)"><code class="xref py py-func docutils literal notranslate"><span class="pre">named_filter</span></code></a> for
+options.</p></li>
+<li><p><strong>scale_filter</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a></span> (default: <code class="docutils literal notranslate"><span class="pre">True</span></code>)) – If <code class="docutils literal notranslate"><span class="pre">True</span></code>, the filter sums to 1 (i.e., it does not affect the DC component of
+the signal and the output’s mean will approximately match that of the input). If
+<code class="docutils literal notranslate"><span class="pre">False</span></code>, the filter sums to 2 (and the output’s mean will be roughly double
+that of the input).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tensor</span></code></a></span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>downsampled_image</em> – The downsampled image.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.14)"><strong>ValueError</strong></a> – If <code class="docutils literal notranslate"><span class="pre">n_scales</span></code> is not positive.</p>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference internal" href="#plenoptic.tools.conv.correlate_downsample" title="plenoptic.tools.conv.correlate_downsample"><code class="xref py py-obj docutils literal notranslate"><span class="pre">correlate_downsample</span></code></a></dt><dd><p>Perform this operation once using a user-specified filter.</p>
+</dd>
+<dt><a class="reference internal" href="#plenoptic.tools.conv.upsample_blur" title="plenoptic.tools.conv.upsample_blur"><code class="xref py py-obj docutils literal notranslate"><span class="pre">upsample_blur</span></code></a></dt><dd><p>Perform the inverse operation, upsampling and convolving a user-specified number of times using a named filter.</p>
+</dd>
+<dt><a class="reference internal" href="plenoptic.tools.signal.html#plenoptic.tools.signal.shrink" title="plenoptic.tools.signal.shrink"><code class="xref py py-func docutils literal notranslate"><span class="pre">shrink</span></code></a></dt><dd><p>An alternative downsampling operation.</p>
+</dd>
+</dl>
+</div>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">plenoptic</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">po</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">img</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">einstein</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">downsampled</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">tools</span><span class="o">.</span><span class="n">blur_downsample</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">downsampled</span><span class="o">.</span><span class="n">shape</span>
+<span class="go">torch.Size([1, 1, 128, 128])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">po</span><span class="o">.</span><span class="n">imshow</span><span class="p">([</span><span class="n">img</span><span class="p">,</span> <span class="n">downsampled</span><span class="p">],</span> <span class="n">title</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;image&quot;</span><span class="p">,</span> <span class="s2">&quot;downsampled&quot;</span><span class="p">])</span>
+<span class="go">&lt;PyrFigure...&gt;</span>
+</pre></div>
+</div>
+<p>(<a class="reference download internal" download="" href="../_downloads/5e986ec1547278fcfe0335e1ac193128/plenoptic-tools-conv-1.png"><code class="xref download docutils literal notranslate"><span class="pre">png</span></code></a>, <a class="reference download internal" download="" href="../_downloads/b52de787dd23d6b75f28ce4aafe1bf95/plenoptic-tools-conv-1.hires.png"><code class="xref download docutils literal notranslate"><span class="pre">hires.png</span></code></a>, <a class="reference download internal" download="" href="../_downloads/bd8c93c42d131236a1a6fbeb603a8f93/plenoptic-tools-conv-1.pdf"><code class="xref download docutils literal notranslate"><span class="pre">pdf</span></code></a>)</p>
+<figure class="align-default">
+<img alt="../_images/plenoptic-tools-conv-1.png" class="plot-directive" src="../_images/plenoptic-tools-conv-1.png" />
+</figure>
+<p>Note that the dimensions have changed.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">n_scales</span></code> argument allows for applying the blurring and downsampling
+recursively:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">downsampled_2</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">tools</span><span class="o">.</span><span class="n">blur_downsample</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">n_scales</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">downsampled_2</span><span class="o">.</span><span class="n">shape</span>
+<span class="go">torch.Size([1, 1, 64, 64])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">downsampled_4</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">tools</span><span class="o">.</span><span class="n">blur_downsample</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">n_scales</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">downsampled_4</span><span class="o">.</span><span class="n">shape</span>
+<span class="go">torch.Size([1, 1, 16, 16])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">po</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="p">[</span><span class="n">img</span><span class="p">,</span> <span class="n">downsampled_2</span><span class="p">,</span> <span class="n">downsampled_4</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="n">title</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;image&quot;</span><span class="p">,</span> <span class="s2">&quot;downsampled x2&quot;</span><span class="p">,</span> <span class="s2">&quot;downsampled x4&quot;</span><span class="p">],</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="go">&lt;PyrFigure...&gt;</span>
+</pre></div>
+</div>
+<p>(<a class="reference download internal" download="" href="../_downloads/aae031ac58f0b7464530e1b40ae191f2/plenoptic-tools-conv-2.png"><code class="xref download docutils literal notranslate"><span class="pre">png</span></code></a>, <a class="reference download internal" download="" href="../_downloads/692b0668a58ef45667f1bd5b223ec23e/plenoptic-tools-conv-2.hires.png"><code class="xref download docutils literal notranslate"><span class="pre">hires.png</span></code></a>, <a class="reference download internal" download="" href="../_downloads/798493810d00ba9f23cea9947e362218/plenoptic-tools-conv-2.pdf"><code class="xref download docutils literal notranslate"><span class="pre">pdf</span></code></a>)</p>
+<figure class="align-default">
+<img alt="../_images/plenoptic-tools-conv-2.png" class="plot-directive" src="../_images/plenoptic-tools-conv-2.png" />
+</figure>
+<p>In Plenoptic, we typically use a fifth order binomial filter,
+but many other filters are available,
+see <a class="reference external" href="https://pyrtools.readthedocs.io/en/latest/api/pyrtools.pyramids.html#pyrtools.pyramids.filters.named_filter" title="(in pyrtools)"><code class="xref py py-func docutils literal notranslate"><span class="pre">pyrtools.pyramids.filters.named_filter</span></code></a> for a list.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">named_filters</span> <span class="o">=</span> <span class="p">[</span>
+<span class="gp">... </span>    <span class="s2">&quot;binom2&quot;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="s2">&quot;binom3&quot;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="s2">&quot;binom4&quot;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="s2">&quot;haar&quot;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="s2">&quot;qmf8&quot;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="s2">&quot;daub2&quot;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="s2">&quot;qmf5&quot;</span><span class="p">,</span>
+<span class="gp">... </span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">downsampled_filter</span> <span class="o">=</span> <span class="p">[</span>
+<span class="gp">... </span>    <span class="n">po</span><span class="o">.</span><span class="n">tools</span><span class="o">.</span><span class="n">blur_downsample</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">n_scales</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">filtname</span><span class="o">=</span><span class="n">filt</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="k">for</span> <span class="n">filt</span> <span class="ow">in</span> <span class="n">named_filters</span>
+<span class="gp">... </span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">po</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="p">[</span><span class="n">img</span><span class="p">]</span> <span class="o">+</span> <span class="n">downsampled_filter</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">title</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;image&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="n">named_filters</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">col_wrap</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">vrange</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="go">&lt;PyrFigure...&gt;</span>
+</pre></div>
+</div>
+<p>(<a class="reference download internal" download="" href="../_downloads/96667921486a0ae55855cf9afefb8b11/plenoptic-tools-conv-3.png"><code class="xref download docutils literal notranslate"><span class="pre">png</span></code></a>, <a class="reference download internal" download="" href="../_downloads/4d5b5ce2d75e49853c741243b515f547/plenoptic-tools-conv-3.hires.png"><code class="xref download docutils literal notranslate"><span class="pre">hires.png</span></code></a>, <a class="reference download internal" download="" href="../_downloads/97f822562a6824d280f45e62cf0c75a5/plenoptic-tools-conv-3.pdf"><code class="xref download docutils literal notranslate"><span class="pre">pdf</span></code></a>)</p>
+<figure class="align-default">
+<img alt="../_images/plenoptic-tools-conv-3.png" class="plot-directive" src="../_images/plenoptic-tools-conv-3.png" />
+</figure>
+<p>Note that this operation can change the minimum and maximum,
+and different filters can do so differently:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">img</span><span class="o">.</span><span class="n">min</span><span class="p">()</span>
+<span class="go">tensor(0.0039)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">img</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
+<span class="go">tensor(1.)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">filter_name</span><span class="p">,</span> <span class="n">downsampled</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">named_filters</span><span class="p">,</span> <span class="n">downsampled_filter</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span>
+<span class="gp">... </span>        <span class="sa">f</span><span class="s2">&quot;filter: </span><span class="si">{</span><span class="n">filter_name</span><span class="si">}</span><span class="s2">, &quot;</span>
+<span class="gp">... </span>        <span class="sa">f</span><span class="s2">&quot;min=</span><span class="si">{</span><span class="n">downsampled</span><span class="o">.</span><span class="n">min</span><span class="p">()</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">, &quot;</span>
+<span class="gp">... </span>        <span class="sa">f</span><span class="s2">&quot;max=</span><span class="si">{</span><span class="n">downsampled</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="gp">... </span>    <span class="p">)</span>
+<span class="go">filter: binom2, min=0.11, max=0.92</span>
+<span class="go">filter: binom3, min=0.11, max=0.91</span>
+<span class="go">filter: binom4, min=0.15, max=0.90</span>
+<span class="go">filter: haar, min=0.11, max=0.92</span>
+<span class="go">filter: qmf8, min=0.12, max=0.97</span>
+<span class="go">filter: daub2, min=0.09, max=0.95</span>
+<span class="go">filter: qmf5, min=0.09, max=0.94</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">scale_filter</span></code> argument forces the filter to sum to 1, making the mean of the
+output approximately match that of the input. If set to <code class="docutils literal notranslate"><span class="pre">False</span></code>, the filter will
+sum to 2, and the output’s mean will be approximately double that of the input:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">downsampled_nonscaled</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">tools</span><span class="o">.</span><span class="n">blur_downsample</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">scale_filter</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">torch</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="n">downsampled</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="n">atol</span><span class="o">=</span><span class="mf">1e-2</span><span class="p">)</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">torch</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="n">downsampled_nonscaled</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="n">atol</span><span class="o">=</span><span class="mf">1e-2</span><span class="p">)</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">po</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="p">[</span><span class="n">img</span><span class="p">,</span> <span class="n">downsampled</span><span class="p">,</span> <span class="n">downsampled_nonscaled</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="n">title</span><span class="o">=</span><span class="p">[</span>
+<span class="gp">... </span>        <span class="sa">f</span><span class="s2">&quot;original, mean=</span><span class="si">{</span><span class="n">img</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">()</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+<span class="gp">... </span>        <span class="sa">f</span><span class="s2">&quot;scaled, mean=</span><span class="si">{</span><span class="n">downsampled</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">()</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+<span class="gp">... </span>        <span class="sa">f</span><span class="s2">&quot;unscaled, mean=</span><span class="si">{</span><span class="n">downsampled_nonscaled</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">()</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="p">],</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="go">&lt;PyrFigure...&gt;</span>
+</pre></div>
+</div>
+<p>(<a class="reference download internal" download="" href="../_downloads/1903e3854e42da027f9b7085f7510ca4/plenoptic-tools-conv-4.png"><code class="xref download docutils literal notranslate"><span class="pre">png</span></code></a>, <a class="reference download internal" download="" href="../_downloads/b9b6adac3510ed94b8d7115c8c368f4c/plenoptic-tools-conv-4.hires.png"><code class="xref download docutils literal notranslate"><span class="pre">hires.png</span></code></a>, <a class="reference download internal" download="" href="../_downloads/e2c7af6050ef01b26265e4c0c54cd4f3/plenoptic-tools-conv-4.pdf"><code class="xref download docutils literal notranslate"><span class="pre">pdf</span></code></a>)</p>
+<figure class="align-default">
+<img alt="../_images/plenoptic-tools-conv-4.png" class="plot-directive" src="../_images/plenoptic-tools-conv-4.png" />
+</figure>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="plenoptic.tools.conv.correlate_downsample">
+<span class="sig-name descname"><span class="pre">correlate_downsample</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">image</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">padding_mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'reflect'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/plenoptic/tools/conv.html#correlate_downsample"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#plenoptic.tools.conv.correlate_downsample" title="Link to this definition">#</a></dt>
+<dd><p>Correlate with a filter and downsample by a factor of 2.</p>
+<p>This operation allows one to downsample in an alias-resistant manner, removing the
+high frequencies that would result in aliasing in a smaller image.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>image</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tensor</span></code></a></span>) – Image, or batch of images, of shape (batch, channel, height, width).
+Batches and channels are handled independently.</p></li>
+<li><p><strong>filt</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tensor</span></code></a></span>) – 2D tensor defining the filter to correlate with the input <code class="docutils literal notranslate"><span class="pre">image</span></code>.</p></li>
+<li><p><strong>padding_mode</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Literal" title="(in Python v3.14)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Literal</span></code></a>[<code class="docutils literal notranslate"><span class="pre">'constant'</span></code>, <code class="docutils literal notranslate"><span class="pre">'reflect'</span></code>, <code class="docutils literal notranslate"><span class="pre">'replicate'</span></code>, <code class="docutils literal notranslate"><span class="pre">'circular'</span></code>]</span> (default: <code class="docutils literal notranslate"><span class="pre">'reflect'</span></code>)) – How to pad the image, so that we return an image of the appropriate size. The
+option <code class="docutils literal notranslate"><span class="pre">&quot;constant&quot;</span></code> means padding with zeros.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tensor</span></code></a></span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>downsampled_image</em> – The downsampled image.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.14)"><strong>ValueError</strong></a> – If <code class="docutils literal notranslate"><span class="pre">filt</span></code> or <code class="docutils literal notranslate"><span class="pre">image</span></code> has the wrong number of dimensions.</p>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference internal" href="#plenoptic.tools.conv.blur_downsample" title="plenoptic.tools.conv.blur_downsample"><code class="xref py py-obj docutils literal notranslate"><span class="pre">blur_downsample</span></code></a></dt><dd><p>Perform this operation a user-specified number of times using a named filter.</p>
+</dd>
+<dt><a class="reference internal" href="#plenoptic.tools.conv.upsample_convolve" title="plenoptic.tools.conv.upsample_convolve"><code class="xref py py-obj docutils literal notranslate"><span class="pre">upsample_convolve</span></code></a></dt><dd><p>Perform the inverse operation, upsampling and convolving with a filter.</p>
+</dd>
+</dl>
+</div>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">plenoptic</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">po</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">img</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">einstein</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># 2x2 averaging filter</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">filt</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="mf">4.0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">downsampled</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">tools</span><span class="o">.</span><span class="n">correlate_downsample</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">filt</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">downsampled</span><span class="o">.</span><span class="n">shape</span>
+<span class="go">torch.Size([1, 1, 128, 128])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">po</span><span class="o">.</span><span class="n">imshow</span><span class="p">([</span><span class="n">img</span><span class="p">,</span> <span class="n">downsampled</span><span class="p">],</span> <span class="n">title</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;image&quot;</span><span class="p">,</span> <span class="s2">&quot;downsampled&quot;</span><span class="p">])</span>
+<span class="go">&lt;PyrFigure...&gt;</span>
+</pre></div>
+</div>
+<p>(<a class="reference download internal" download="" href="../_downloads/4704290183de9b6f0c719a7cb5bbab93/plenoptic-tools-conv-5.png"><code class="xref download docutils literal notranslate"><span class="pre">png</span></code></a>, <a class="reference download internal" download="" href="../_downloads/f8888ffcded582a7f0e061d33ffb3716/plenoptic-tools-conv-5.hires.png"><code class="xref download docutils literal notranslate"><span class="pre">hires.png</span></code></a>, <a class="reference download internal" download="" href="../_downloads/572fd61339e566d0e4ca9756a6708851/plenoptic-tools-conv-5.pdf"><code class="xref download docutils literal notranslate"><span class="pre">pdf</span></code></a>)</p>
+<figure class="align-default">
+<img alt="../_images/plenoptic-tools-conv-5.png" class="plot-directive" src="../_images/plenoptic-tools-conv-5.png" />
+</figure>
+<p>Note that the dimensions have changed.</p>
+<p>This function always returns an image whose height and width are half that of the
+input (rounded up). When convolving an image with a filter, the filter must be
+centered on each output pixel. For pixels near the image boundary, the filter
+extends outside the image boundary and thus we need to pad the input with extra
+pixels. The <code class="docutils literal notranslate"><span class="pre">padding_mode</span></code> argument determines how to do so (using
+<a class="reference internal" href="#plenoptic.tools.conv.same_padding" title="plenoptic.tools.conv.same_padding"><code class="xref py py-func docutils literal notranslate"><span class="pre">same_padding</span></code></a>):</p>
+<ul class="simple">
+<li><p>reflect: mirror the image at boundaries</p></li>
+<li><p>constant: pad with zeroes</p></li>
+<li><p>replicate: repeat edge pixel values</p></li>
+<li><p>circular: wrap the image around</p></li>
+</ul>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Large 50x50 averaging filter to make padding effects visible</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">filt</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="mi">50</span><span class="p">,</span> <span class="mi">50</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">50</span> <span class="o">*</span> <span class="mi">50</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">constant</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">tools</span><span class="o">.</span><span class="n">correlate_downsample</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">filt</span><span class="p">,</span> <span class="n">padding_mode</span><span class="o">=</span><span class="s2">&quot;constant&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">reflect</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">tools</span><span class="o">.</span><span class="n">correlate_downsample</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">filt</span><span class="p">,</span> <span class="n">padding_mode</span><span class="o">=</span><span class="s2">&quot;reflect&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">replicate</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">tools</span><span class="o">.</span><span class="n">correlate_downsample</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">filt</span><span class="p">,</span> <span class="n">padding_mode</span><span class="o">=</span><span class="s2">&quot;replicate&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">circular</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">tools</span><span class="o">.</span><span class="n">correlate_downsample</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">filt</span><span class="p">,</span> <span class="n">padding_mode</span><span class="o">=</span><span class="s2">&quot;circular&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">po</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="p">[</span><span class="n">reflect</span><span class="p">,</span> <span class="n">constant</span><span class="p">,</span> <span class="n">replicate</span><span class="p">,</span> <span class="n">circular</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="n">title</span><span class="o">=</span><span class="p">[</span>
+<span class="gp">... </span>        <span class="s2">&quot;reflect padding&quot;</span><span class="p">,</span>
+<span class="gp">... </span>        <span class="s2">&quot;constant (zero) padding&quot;</span><span class="p">,</span>
+<span class="gp">... </span>        <span class="s2">&quot;replicate padding&quot;</span><span class="p">,</span>
+<span class="gp">... </span>        <span class="s2">&quot;circular padding&quot;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="p">],</span>
+<span class="gp">... </span>    <span class="n">zoom</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="go">&lt;PyrFigure...&gt;</span>
+</pre></div>
+</div>
+<p>(<a class="reference download internal" download="" href="../_downloads/b8cff46b78e0e3925ddd4110e243910e/plenoptic-tools-conv-6.png"><code class="xref download docutils literal notranslate"><span class="pre">png</span></code></a>, <a class="reference download internal" download="" href="../_downloads/7b61f56a3d60da729a7f6924041d6bb4/plenoptic-tools-conv-6.hires.png"><code class="xref download docutils literal notranslate"><span class="pre">hires.png</span></code></a>, <a class="reference download internal" download="" href="../_downloads/19ac2a998ef5013dc57befe8c0210f41/plenoptic-tools-conv-6.pdf"><code class="xref download docutils literal notranslate"><span class="pre">pdf</span></code></a>)</p>
+<figure class="align-default">
+<img alt="../_images/plenoptic-tools-conv-6.png" class="plot-directive" src="../_images/plenoptic-tools-conv-6.png" />
+</figure>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="plenoptic.tools.conv.same_padding">
+<span class="sig-name descname"><span class="pre">same_padding</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">image</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kernel_size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stride</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(1,</span> <span class="pre">1)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dilation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(1,</span> <span class="pre">1)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pad_mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'circular'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/plenoptic/tools/conv.html#same_padding"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#plenoptic.tools.conv.same_padding" title="Link to this definition">#</a></dt>
+<dd><p>Pad a tensor so that 2D convolution will result in output with same dims.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>image</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tensor</span></code></a></span>) – Image, or batch of images, with at least 2 dimensions (height and width).
+Any additional dimensions are handled independently.</p></li>
+<li><p><strong>kernel_size</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>]</span>) – Size of the kernel that <code class="docutils literal notranslate"><span class="pre">image</span></code> will be convolved with.</p></li>
+<li><p><strong>stride</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a> | <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>]</span> (default: <code class="docutils literal notranslate"><span class="pre">(1,</span> <span class="pre">1)</span></code>)) – Stride argument that will be passed to the convolution function.</p></li>
+<li><p><strong>dilation</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a> | <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>]</span> (default: <code class="docutils literal notranslate"><span class="pre">(1,</span> <span class="pre">1)</span></code>)) – Dilation argument that will be passed to the convolution function.</p></li>
+<li><p><strong>pad_mode</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></span> (default: <code class="docutils literal notranslate"><span class="pre">'circular'</span></code>)) – How to pad <code class="docutils literal notranslate"><span class="pre">image</span></code>. See <a class="reference external" href="https://docs.pytorch.org/docs/stable/generated/torch.nn.functional.pad.html#torch.nn.functional.pad" title="(in PyTorch v2.10)"><code class="xref py py-func docutils literal notranslate"><span class="pre">torch.nn.functional.pad</span></code></a> for possible
+values.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tensor</span></code></a></span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>padded_image</em> – The padded tensor.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.14)"><strong>ValueError</strong></a> – If <code class="docutils literal notranslate"><span class="pre">image</span></code> is not 4d.</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">plenoptic</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">po</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">img</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">einstein</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">img</span><span class="o">.</span><span class="n">shape</span>
+<span class="go">torch.Size([1, 1, 256, 256])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">padded</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">tools</span><span class="o">.</span><span class="n">same_padding</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">padded</span><span class="o">.</span><span class="n">shape</span>
+<span class="go">torch.Size([1, 1, 265, 265])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">po</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">padded</span><span class="p">)</span>
+<span class="go">&lt;PyrFigure...&gt;</span>
+</pre></div>
+</div>
+<p>(<a class="reference download internal" download="" href="../_downloads/6f1a58797b4928cd57172540919f41f8/plenoptic-tools-conv-7.png"><code class="xref download docutils literal notranslate"><span class="pre">png</span></code></a>, <a class="reference download internal" download="" href="../_downloads/a3fabf096fc8c46f6f0a000bf4c2e6b7/plenoptic-tools-conv-7.hires.png"><code class="xref download docutils literal notranslate"><span class="pre">hires.png</span></code></a>, <a class="reference download internal" download="" href="../_downloads/50f8dde3408bfd61144bf01cc58811bf/plenoptic-tools-conv-7.pdf"><code class="xref download docutils literal notranslate"><span class="pre">pdf</span></code></a>)</p>
+<figure class="align-default">
+<img alt="../_images/plenoptic-tools-conv-7.png" class="plot-directive" src="../_images/plenoptic-tools-conv-7.png" />
+</figure>
+<p>The output grows by <code class="docutils literal notranslate"><span class="pre">kernel_size</span> <span class="pre">-</span> <span class="pre">1</span></code> in each dimension, so that a
+subsequent convolution with that kernel returns an output matching the
+original spatial dimensions.</p>
+<p>The following convolution functions all use this padding function to return outputs
+with the same shape as the input:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#plenoptic.tools.conv.correlate_downsample" title="plenoptic.tools.conv.correlate_downsample"><code class="xref py py-func docutils literal notranslate"><span class="pre">correlate_downsample</span></code></a></p></li>
+<li><p><a class="reference internal" href="#plenoptic.tools.conv.blur_downsample" title="plenoptic.tools.conv.blur_downsample"><code class="xref py py-func docutils literal notranslate"><span class="pre">blur_downsample</span></code></a></p></li>
+</ul>
+<p>Here, let’s apply a convolution manually and verify the shapes:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">kernel</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span> <span class="o">/</span> <span class="mi">100</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">padded</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">tools</span><span class="o">.</span><span class="n">same_padding</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">convolved</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">functional</span><span class="o">.</span><span class="n">conv2d</span><span class="p">(</span><span class="n">padded</span><span class="p">,</span> <span class="n">kernel</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">convolved</span><span class="o">.</span><span class="n">shape</span>
+<span class="go">torch.Size([1, 1, 256, 256])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">po</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="p">[</span><span class="n">img</span><span class="p">,</span> <span class="n">convolved</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="n">title</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;original&quot;</span><span class="p">,</span> <span class="s2">&quot;after convolution&quot;</span><span class="p">],</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="go">&lt;PyrFigure...&gt;</span>
+</pre></div>
+</div>
+<p>(<a class="reference download internal" download="" href="../_downloads/dd5609e56d3fc4bc1528ff9e13437133/plenoptic-tools-conv-8.png"><code class="xref download docutils literal notranslate"><span class="pre">png</span></code></a>, <a class="reference download internal" download="" href="../_downloads/4e6e7f62530d8a19293f7c0f67feb10e/plenoptic-tools-conv-8.hires.png"><code class="xref download docutils literal notranslate"><span class="pre">hires.png</span></code></a>, <a class="reference download internal" download="" href="../_downloads/4ab9f520f57281f29fc690d59fdeb242/plenoptic-tools-conv-8.pdf"><code class="xref download docutils literal notranslate"><span class="pre">pdf</span></code></a>)</p>
+<figure class="align-default">
+<img alt="../_images/plenoptic-tools-conv-8.png" class="plot-directive" src="../_images/plenoptic-tools-conv-8.png" />
+</figure>
+<p>Non-square kernels are supported; padding is computed independently for
+height and width:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">padded_rect</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">tools</span><span class="o">.</span><span class="n">same_padding</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">padded_rect</span><span class="o">.</span><span class="n">shape</span>
+<span class="go">torch.Size([1, 1, 265, 275])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">po</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">padded_rect</span><span class="p">)</span>
+<span class="go">&lt;PyrFigure...&gt;</span>
+</pre></div>
+</div>
+<p>(<a class="reference download internal" download="" href="../_downloads/d887323b83cf5b14c97ee79ed5d8d2b5/plenoptic-tools-conv-9.png"><code class="xref download docutils literal notranslate"><span class="pre">png</span></code></a>, <a class="reference download internal" download="" href="../_downloads/a0f2363fe216ed35e7088df1c07e9f7f/plenoptic-tools-conv-9.hires.png"><code class="xref download docutils literal notranslate"><span class="pre">hires.png</span></code></a>, <a class="reference download internal" download="" href="../_downloads/07ba9e6808d41fe99f750d7bb20eac2a/plenoptic-tools-conv-9.pdf"><code class="xref download docutils literal notranslate"><span class="pre">pdf</span></code></a>)</p>
+<figure class="align-default">
+<img alt="../_images/plenoptic-tools-conv-9.png" class="plot-directive" src="../_images/plenoptic-tools-conv-9.png" />
+</figure>
+<p>The <code class="docutils literal notranslate"><span class="pre">pad_mode</span></code> argument controls how boundary values are filled.
+The border of each image shows the filled padding region:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">pad</span> <span class="o">=</span> <span class="mi">50</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pad_modes</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;circular&quot;</span><span class="p">,</span> <span class="s2">&quot;reflect&quot;</span><span class="p">,</span> <span class="s2">&quot;replicate&quot;</span><span class="p">,</span> <span class="s2">&quot;constant&quot;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">padded_imgs</span> <span class="o">=</span> <span class="p">[</span>
+<span class="gp">... </span>    <span class="n">po</span><span class="o">.</span><span class="n">tools</span><span class="o">.</span><span class="n">same_padding</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="p">(</span><span class="mi">50</span><span class="p">,</span> <span class="mi">50</span><span class="p">),</span> <span class="n">pad_mode</span><span class="o">=</span><span class="n">m</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">pad_modes</span>
+<span class="gp">... </span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">corners</span> <span class="o">=</span> <span class="p">[</span><span class="n">p</span><span class="p">[:,</span> <span class="p">:,</span> <span class="p">:</span> <span class="n">pad</span> <span class="o">*</span> <span class="mi">3</span><span class="p">,</span> <span class="p">:</span> <span class="n">pad</span> <span class="o">*</span> <span class="mi">3</span><span class="p">]</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">padded_imgs</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">po</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">corners</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="n">pad_modes</span><span class="p">)</span>
+<span class="go">&lt;PyrFigure...&gt;</span>
+</pre></div>
+</div>
+<p>(<a class="reference download internal" download="" href="../_downloads/288fbeb560e264d41c5c33f3f4aea284/plenoptic-tools-conv-10.png"><code class="xref download docutils literal notranslate"><span class="pre">png</span></code></a>, <a class="reference download internal" download="" href="../_downloads/014d83f585f5e4265781dbe741a34aa2/plenoptic-tools-conv-10.hires.png"><code class="xref download docutils literal notranslate"><span class="pre">hires.png</span></code></a>, <a class="reference download internal" download="" href="../_downloads/53d27e28fee7ca6dbd25c95e08322562/plenoptic-tools-conv-10.pdf"><code class="xref download docutils literal notranslate"><span class="pre">pdf</span></code></a>)</p>
+<figure class="align-default">
+<img alt="../_images/plenoptic-tools-conv-10.png" class="plot-directive" src="../_images/plenoptic-tools-conv-10.png" />
+</figure>
+<p>The <code class="docutils literal notranslate"><span class="pre">stride</span></code> and <code class="docutils literal notranslate"><span class="pre">dilation</span></code> arguments should match those passed to the
+subsequent convolution. A strided convolution produces a smaller output but still
+avoids losing edge information. A dilated convolution expands the effective
+receptive field of the kernel without increasing its parameter count.
+See <a class="reference external" href="https://docs.pytorch.org/docs/stable/generated/torch.nn.functional.conv2d.html#torch.nn.functional.conv2d" title="(in PyTorch v2.10)"><code class="xref py py-func docutils literal notranslate"><span class="pre">torch.nn.functional.conv2d</span></code></a> for more information.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">kernel</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span> <span class="o">/</span> <span class="mi">100</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">padded_stride</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">tools</span><span class="o">.</span><span class="n">same_padding</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">img</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span> <span class="n">stride</span><span class="o">=</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">convolved_stride</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">functional</span><span class="o">.</span><span class="n">conv2d</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">padded_stride</span><span class="p">,</span> <span class="n">kernel</span><span class="p">,</span> <span class="n">stride</span><span class="o">=</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">padded_dilate</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">tools</span><span class="o">.</span><span class="n">same_padding</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">img</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span> <span class="n">dilation</span><span class="o">=</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">convolved_dilate</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">functional</span><span class="o">.</span><span class="n">conv2d</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">padded_dilate</span><span class="p">,</span> <span class="n">kernel</span><span class="p">,</span> <span class="n">dilation</span><span class="o">=</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">po</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">convolved_stride</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">&quot;stride (3,3)&quot;</span><span class="p">,</span> <span class="n">zoom</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="go">&lt;PyrFigure...&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">po</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">convolved_dilate</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">&quot;dilation (3,3)&quot;</span><span class="p">)</span>
+<span class="go">&lt;PyrFigure...&gt;</span>
+</pre></div>
+</div>
+<p>Note the different dimensions.</p>
+<figure class="align-default" id="id1">
+<img alt="../_images/plenoptic-tools-conv-11_00.png" class="plot-directive" src="../_images/plenoptic-tools-conv-11_00.png" />
+<figcaption>
+<p><span class="caption-number">Fig. 13 </span><span class="caption-text">(<a class="reference download internal" download="" href="../_downloads/07d14d860fdf2e51056820eb9c9834a6/plenoptic-tools-conv-11_00.png"><code class="xref download docutils literal notranslate"><span class="pre">png</span></code></a>, <a class="reference download internal" download="" href="../_downloads/6e97680ac35c6563de23fefdc320648e/plenoptic-tools-conv-11_00.hires.png"><code class="xref download docutils literal notranslate"><span class="pre">hires.png</span></code></a>, <a class="reference download internal" download="" href="../_downloads/89692e40c3bb30d4f307b574186fd3d6/plenoptic-tools-conv-11_00.pdf"><code class="xref download docutils literal notranslate"><span class="pre">pdf</span></code></a>)</span><a class="headerlink" href="#id1" title="Link to this image">#</a></p>
+</figcaption>
+</figure>
+<figure class="align-default" id="id2">
+<img alt="../_images/plenoptic-tools-conv-11_01.png" class="plot-directive" src="../_images/plenoptic-tools-conv-11_01.png" />
+<figcaption>
+<p><span class="caption-number">Fig. 14 </span><span class="caption-text">(<a class="reference download internal" download="" href="../_downloads/6f519c312bb3735711b4250f70172d19/plenoptic-tools-conv-11_01.png"><code class="xref download docutils literal notranslate"><span class="pre">png</span></code></a>, <a class="reference download internal" download="" href="../_downloads/eb793279f31446bc7d03c926a0b90ce4/plenoptic-tools-conv-11_01.hires.png"><code class="xref download docutils literal notranslate"><span class="pre">hires.png</span></code></a>, <a class="reference download internal" download="" href="../_downloads/6cbd6bc6e2c0f254df09d9e7a14893b1/plenoptic-tools-conv-11_01.pdf"><code class="xref download docutils literal notranslate"><span class="pre">pdf</span></code></a>)</span><a class="headerlink" href="#id2" title="Link to this image">#</a></p>
+</figcaption>
+</figure>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="plenoptic.tools.conv.upsample_blur">
+<span class="sig-name descname"><span class="pre">upsample_blur</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">image</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">odd</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_scales</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filtname</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'binom5'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale_filter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/plenoptic/tools/conv.html#upsample_blur"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#plenoptic.tools.conv.upsample_blur" title="Link to this definition">#</a></dt>
+<dd><p>Upsample by 2 and convolve with named filter.</p>
+<p>When upsampling an image, we need some way to estimate the new pixels; convolving
+with a filter allows us to interpolate these pixels from their neighbors.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>image</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tensor</span></code></a></span>) – Image, or batch of images, of shape (batch, channel, height, width).
+Batches and channels are handled independently.</p></li>
+<li><p><strong>odd</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>]</span>) – This should contain two integers of value 0 or 1, which determines whether
+the output height and width should be even (0) or odd (1).</p></li>
+<li><p><strong>n_scales</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></span> (default: <code class="docutils literal notranslate"><span class="pre">1</span></code>)) – Apply the blur and downsample procedure recursively <code class="docutils literal notranslate"><span class="pre">n_scales</span></code> times.
+Must be positive.</p></li>
+<li><p><strong>filtname</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></span> (default: <code class="docutils literal notranslate"><span class="pre">'binom5'</span></code>)) – Name of the filter. See <a class="reference external" href="https://pyrtools.readthedocs.io/en/latest/api/pyrtools.pyramids.html#pyrtools.pyramids.filters.named_filter" title="(in pyrtools)"><code class="xref py py-func docutils literal notranslate"><span class="pre">named_filter</span></code></a> for
+options.</p></li>
+<li><p><strong>scale_filter</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a></span> (default: <code class="docutils literal notranslate"><span class="pre">True</span></code>)) – If <code class="docutils literal notranslate"><span class="pre">True</span></code>, the filter sums to 4 (i.e., it does not affect the DC component of
+the signal and the output’s mean will approximately match that of the input). If
+<code class="docutils literal notranslate"><span class="pre">False</span></code>, the filter sums to 2 (and the output’s mean will be roughly half
+that of the input).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tensor</span></code></a></span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>upsampled_image</em> – The upsampled image.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.14)"><strong>ValueError</strong></a> – If <code class="docutils literal notranslate"><span class="pre">n_scales</span></code> is not positive.</p>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference internal" href="#plenoptic.tools.conv.upsample_convolve" title="plenoptic.tools.conv.upsample_convolve"><code class="xref py py-obj docutils literal notranslate"><span class="pre">upsample_convolve</span></code></a></dt><dd><p>Perform this operation once using a user-specified filter.</p>
+</dd>
+<dt><a class="reference internal" href="#plenoptic.tools.conv.blur_downsample" title="plenoptic.tools.conv.blur_downsample"><code class="xref py py-obj docutils literal notranslate"><span class="pre">blur_downsample</span></code></a></dt><dd><p>Perform the inverse operation, correlating and downsampling a user-specified number of times using a named filter.</p>
+</dd>
+<dt><a class="reference internal" href="plenoptic.tools.signal.html#plenoptic.tools.signal.expand" title="plenoptic.tools.signal.expand"><code class="xref py py-func docutils literal notranslate"><span class="pre">expand</span></code></a></dt><dd><p>An alternative upsampling operation.</p>
+</dd>
+</dl>
+</div>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">plenoptic</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">po</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">img</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">einstein</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">upsampled</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">tools</span><span class="o">.</span><span class="n">upsample_blur</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">odd</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">upsampled</span><span class="o">.</span><span class="n">shape</span>
+<span class="go">torch.Size([1, 1, 512, 512])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">po</span><span class="o">.</span><span class="n">imshow</span><span class="p">([</span><span class="n">img</span><span class="p">,</span> <span class="n">upsampled</span><span class="p">],</span> <span class="n">title</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;image&quot;</span><span class="p">,</span> <span class="s2">&quot;upsampled&quot;</span><span class="p">])</span>
+<span class="go">&lt;PyrFigure...&gt;</span>
+</pre></div>
+</div>
+<p>(<a class="reference download internal" download="" href="../_downloads/86bb4d21c84965375e02d17d0f4f715e/plenoptic-tools-conv-12.png"><code class="xref download docutils literal notranslate"><span class="pre">png</span></code></a>, <a class="reference download internal" download="" href="../_downloads/fa65f7244b937a7aab28ee8954009e62/plenoptic-tools-conv-12.hires.png"><code class="xref download docutils literal notranslate"><span class="pre">hires.png</span></code></a>, <a class="reference download internal" download="" href="../_downloads/54d3f396f2c26f0769a9b98498ac8727/plenoptic-tools-conv-12.pdf"><code class="xref download docutils literal notranslate"><span class="pre">pdf</span></code></a>)</p>
+<figure class="align-default">
+<img alt="../_images/plenoptic-tools-conv-12.png" class="plot-directive" src="../_images/plenoptic-tools-conv-12.png" />
+</figure>
+<p>Note that the dimensions have changed.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">odd</span></code> argument allows for choosing whether the output width and/or height
+should be even or odd:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">upsampled_even</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">tools</span><span class="o">.</span><span class="n">upsample_blur</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">odd</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">upsampled_even</span><span class="o">.</span><span class="n">shape</span>
+<span class="go">torch.Size([1, 1, 512, 512])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">upsampled_odd</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">tools</span><span class="o">.</span><span class="n">upsample_blur</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">odd</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">upsampled_odd</span><span class="o">.</span><span class="n">shape</span>
+<span class="go">torch.Size([1, 1, 511, 511])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">upsampled_mixed_odd_even</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">tools</span><span class="o">.</span><span class="n">upsample_blur</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">odd</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">upsampled_mixed_odd_even</span><span class="o">.</span><span class="n">shape</span>
+<span class="go">torch.Size([1, 1, 511, 512])</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">n_scales</span></code> argument allows for applying the upsampling and blurring
+recursively:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">upsampled_2</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">tools</span><span class="o">.</span><span class="n">upsample_blur</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">odd</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">n_scales</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">upsampled_2</span><span class="o">.</span><span class="n">shape</span>
+<span class="go">torch.Size([1, 1, 1024, 1024])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">upsampled_4</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">tools</span><span class="o">.</span><span class="n">upsample_blur</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">odd</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">n_scales</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">upsampled_4</span><span class="o">.</span><span class="n">shape</span>
+<span class="go">torch.Size([1, 1, 4096, 4096])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">po</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="p">[</span><span class="n">img</span><span class="p">,</span> <span class="n">upsampled_2</span><span class="p">,</span> <span class="n">upsampled_4</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="n">title</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;image&quot;</span><span class="p">,</span> <span class="s2">&quot;upsampled x2&quot;</span><span class="p">,</span> <span class="s2">&quot;upsampled x4&quot;</span><span class="p">],</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="go">&lt;PyrFigure...&gt;</span>
+</pre></div>
+</div>
+<p>(<a class="reference download internal" download="" href="../_downloads/dce07f28001ea7aa0643ef4d17d242d0/plenoptic-tools-conv-14.png"><code class="xref download docutils literal notranslate"><span class="pre">png</span></code></a>, <a class="reference download internal" download="" href="../_downloads/9f6c90e80290406e5e1cfbb88a317278/plenoptic-tools-conv-14.hires.png"><code class="xref download docutils literal notranslate"><span class="pre">hires.png</span></code></a>, <a class="reference download internal" download="" href="../_downloads/868910f37e0d54e27ea3e0e397bdbb28/plenoptic-tools-conv-14.pdf"><code class="xref download docutils literal notranslate"><span class="pre">pdf</span></code></a>)</p>
+<figure class="align-default">
+<img alt="../_images/plenoptic-tools-conv-14.png" class="plot-directive" src="../_images/plenoptic-tools-conv-14.png" />
+</figure>
+<p>In Plenoptic, we typically use a fifth order binomial filter,
+but many other filters are available,
+see <a class="reference external" href="https://pyrtools.readthedocs.io/en/latest/api/pyrtools.pyramids.html#pyrtools.pyramids.filters.named_filter" title="(in pyrtools)"><code class="xref py py-func docutils literal notranslate"><span class="pre">pyrtools.pyramids.filters.named_filter</span></code></a> for a list.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">named_filters</span> <span class="o">=</span> <span class="p">[</span>
+<span class="gp">... </span>    <span class="s2">&quot;binom2&quot;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="s2">&quot;binom3&quot;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="s2">&quot;binom4&quot;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="s2">&quot;haar&quot;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="s2">&quot;qmf8&quot;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="s2">&quot;daub2&quot;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="s2">&quot;qmf5&quot;</span><span class="p">,</span>
+<span class="gp">... </span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">upsampled_filter</span> <span class="o">=</span> <span class="p">[</span>
+<span class="gp">... </span>    <span class="n">po</span><span class="o">.</span><span class="n">tools</span><span class="o">.</span><span class="n">upsample_blur</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">n_scales</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">odd</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">filtname</span><span class="o">=</span><span class="n">filt</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="k">for</span> <span class="n">filt</span> <span class="ow">in</span> <span class="n">named_filters</span>
+<span class="gp">... </span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">po</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="p">[</span><span class="n">img</span><span class="p">]</span> <span class="o">+</span> <span class="n">upsampled_filter</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">title</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;image&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="n">named_filters</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">col_wrap</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">vrange</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="go">&lt;PyrFigure...&gt;</span>
+</pre></div>
+</div>
+<p>(<a class="reference download internal" download="" href="../_downloads/29a1059e6c03c75240c10c4cc3f82d09/plenoptic-tools-conv-15.png"><code class="xref download docutils literal notranslate"><span class="pre">png</span></code></a>, <a class="reference download internal" download="" href="../_downloads/d1f2b1c91f5a7784bdad9ab37fa25b1e/plenoptic-tools-conv-15.hires.png"><code class="xref download docutils literal notranslate"><span class="pre">hires.png</span></code></a>, <a class="reference download internal" download="" href="../_downloads/5c0d69b804d832c18cbf9567436860e5/plenoptic-tools-conv-15.pdf"><code class="xref download docutils literal notranslate"><span class="pre">pdf</span></code></a>)</p>
+<figure class="align-default">
+<img alt="../_images/plenoptic-tools-conv-15.png" class="plot-directive" src="../_images/plenoptic-tools-conv-15.png" />
+</figure>
+<p>Note that this operation can change the minimum and maximum,
+and different filters can do so differently:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">img</span><span class="o">.</span><span class="n">min</span><span class="p">()</span>
+<span class="go">tensor(0.0039)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">img</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
+<span class="go">tensor(1.)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">filter_name</span><span class="p">,</span> <span class="n">upsampled</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">named_filters</span><span class="p">,</span> <span class="n">upsampled_filter</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span>
+<span class="gp">... </span>        <span class="sa">f</span><span class="s2">&quot;filter: </span><span class="si">{</span><span class="n">filter_name</span><span class="si">}</span><span class="s2">, &quot;</span>
+<span class="gp">... </span>        <span class="sa">f</span><span class="s2">&quot;min=</span><span class="si">{</span><span class="n">upsampled</span><span class="o">.</span><span class="n">min</span><span class="p">()</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">, &quot;</span>
+<span class="gp">... </span>        <span class="sa">f</span><span class="s2">&quot;max=</span><span class="si">{</span><span class="n">upsampled</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="gp">... </span>    <span class="p">)</span>
+<span class="go">filter: binom2, min=0.00, max=1.00</span>
+<span class="go">filter: binom3, min=0.00, max=1.00</span>
+<span class="go">filter: binom4, min=0.02, max=0.94</span>
+<span class="go">filter: haar, min=0.00, max=1.00</span>
+<span class="go">filter: qmf8, min=-0.07, max=1.07</span>
+<span class="go">filter: daub2, min=-0.24, max=1.24</span>
+<span class="go">filter: qmf5, min=-0.26, max=1.29</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="plenoptic.tools.conv.upsample_convolve">
+<span class="sig-name descname"><span class="pre">upsample_convolve</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">image</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">odd</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">padding_mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'reflect'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/plenoptic/tools/conv.html#upsample_convolve"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#plenoptic.tools.conv.upsample_convolve" title="Link to this definition">#</a></dt>
+<dd><p>Upsample by 2 and convolve with a filter.</p>
+<p>When upsampling an image, we need some way to estimate the new pixels; convolving
+with a filter allows us to interpolate these pixels from their neighbors.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>image</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tensor</span></code></a></span>) – Image, or batch of images, of shape (batch, channel, height, width).
+Batches and channels are handled independently.</p></li>
+<li><p><strong>odd</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>]</span>) – This should contain two integers of value 0 or 1, which determines whether
+the output height and width should be even (0) or odd (1).</p></li>
+<li><p><strong>filt</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tensor</span></code></a></span>) – 2D tensor defining the filter to convolve with the input <code class="docutils literal notranslate"><span class="pre">image</span></code>.</p></li>
+<li><p><strong>padding_mode</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Literal" title="(in Python v3.14)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Literal</span></code></a>[<code class="docutils literal notranslate"><span class="pre">'constant'</span></code>, <code class="docutils literal notranslate"><span class="pre">'reflect'</span></code>, <code class="docutils literal notranslate"><span class="pre">'replicate'</span></code>, <code class="docutils literal notranslate"><span class="pre">'circular'</span></code>]</span> (default: <code class="docutils literal notranslate"><span class="pre">'reflect'</span></code>)) – How to pad the image, so that we return an image of the appropriate size. The
+option <code class="docutils literal notranslate"><span class="pre">&quot;constant&quot;</span></code> means padding with zeros.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tensor</span></code></a></span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>upsampled_image</em> – The upsampled image.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.14)"><strong>ValueError</strong></a> – If <code class="docutils literal notranslate"><span class="pre">filt</span></code> or <code class="docutils literal notranslate"><span class="pre">image</span></code> has the wrong number of dimensions.</p>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference internal" href="#plenoptic.tools.conv.upsample_blur" title="plenoptic.tools.conv.upsample_blur"><code class="xref py py-obj docutils literal notranslate"><span class="pre">upsample_blur</span></code></a></dt><dd><p>Perform this operation a user-specified number of times using a named filter.</p>
+</dd>
+<dt><a class="reference internal" href="#plenoptic.tools.conv.correlate_downsample" title="plenoptic.tools.conv.correlate_downsample"><code class="xref py py-obj docutils literal notranslate"><span class="pre">correlate_downsample</span></code></a></dt><dd><p>Perform the inverse operation, correlating and downsampling an image.</p>
+</dd>
+</dl>
+</div>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">plenoptic</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">po</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">img</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">einstein</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># 2x2 interpolation filter</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">filt</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="mf">4.0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">upsampled</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">tools</span><span class="o">.</span><span class="n">upsample_convolve</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">odd</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">filt</span><span class="o">=</span><span class="n">filt</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">upsampled</span><span class="o">.</span><span class="n">shape</span>
+<span class="go">torch.Size([1, 1, 512, 512])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">po</span><span class="o">.</span><span class="n">imshow</span><span class="p">([</span><span class="n">img</span><span class="p">,</span> <span class="n">upsampled</span><span class="p">],</span> <span class="n">title</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;image&quot;</span><span class="p">,</span> <span class="s2">&quot;upsampled&quot;</span><span class="p">])</span>
+<span class="go">&lt;PyrFigure...&gt;</span>
+</pre></div>
+</div>
+<p>(<a class="reference download internal" download="" href="../_downloads/531e0583cd2a7357fcf359f4cbbf7ac6/plenoptic-tools-conv-16.png"><code class="xref download docutils literal notranslate"><span class="pre">png</span></code></a>, <a class="reference download internal" download="" href="../_downloads/a3dc4691681f62d0a33a17aaaaac5470/plenoptic-tools-conv-16.hires.png"><code class="xref download docutils literal notranslate"><span class="pre">hires.png</span></code></a>, <a class="reference download internal" download="" href="../_downloads/90d6009ebc5cf17b89f69125123013fe/plenoptic-tools-conv-16.pdf"><code class="xref download docutils literal notranslate"><span class="pre">pdf</span></code></a>)</p>
+<figure class="align-default">
+<img alt="../_images/plenoptic-tools-conv-16.png" class="plot-directive" src="../_images/plenoptic-tools-conv-16.png" />
+</figure>
+<p>Note that the dimensions have changed.</p>
+<p>The odd argument allows for choosing whether the output width and/or height should
+be even or odd:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">upsampled_even</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">tools</span><span class="o">.</span><span class="n">upsample_convolve</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">odd</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">filt</span><span class="o">=</span><span class="n">filt</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">upsampled_even</span><span class="o">.</span><span class="n">shape</span>
+<span class="go">torch.Size([1, 1, 512, 512])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">upsampled_odd</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">tools</span><span class="o">.</span><span class="n">upsample_convolve</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">odd</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">filt</span><span class="o">=</span><span class="n">filt</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">upsampled_odd</span><span class="o">.</span><span class="n">shape</span>
+<span class="go">torch.Size([1, 1, 511, 511])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">upsampled_mixed_odd_even</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">tools</span><span class="o">.</span><span class="n">upsample_convolve</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">img</span><span class="p">,</span> <span class="n">odd</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">filt</span><span class="o">=</span><span class="n">filt</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">upsampled_mixed_odd_even</span><span class="o">.</span><span class="n">shape</span>
+<span class="go">torch.Size([1, 1, 511, 512])</span>
+</pre></div>
+</div>
+<p>This function always returns an image whose height and width are half that of the
+input (rounded up). When convolving an image with a filter, the filter must be
+centered on each output pixel. For pixels near the image boundary, the filter
+extends outside the image boundary and thus we need to pad the input with extra
+pixels. The <code class="docutils literal notranslate"><span class="pre">padding_mode</span></code> argument determines how to do so (using
+<a class="reference internal" href="#plenoptic.tools.conv.same_padding" title="plenoptic.tools.conv.same_padding"><code class="xref py py-func docutils literal notranslate"><span class="pre">same_padding</span></code></a>):</p>
+<ul class="simple">
+<li><p>reflect: mirror the image at boundaries</p></li>
+<li><p>constant: pad with zeroes</p></li>
+<li><p>replicate: repeat edge pixel values</p></li>
+<li><p>circular: wrap the image around</p></li>
+</ul>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Large 50x50 interpolation filter to make padding effects visible</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">filt</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="mi">50</span><span class="p">,</span> <span class="mi">50</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">50</span> <span class="o">*</span> <span class="mi">50</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">constant</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">tools</span><span class="o">.</span><span class="n">upsample_convolve</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">img</span><span class="p">,</span> <span class="n">odd</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">filt</span><span class="o">=</span><span class="n">filt</span><span class="p">,</span> <span class="n">padding_mode</span><span class="o">=</span><span class="s2">&quot;constant&quot;</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">reflect</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">tools</span><span class="o">.</span><span class="n">upsample_convolve</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">img</span><span class="p">,</span> <span class="n">odd</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">filt</span><span class="o">=</span><span class="n">filt</span><span class="p">,</span> <span class="n">padding_mode</span><span class="o">=</span><span class="s2">&quot;reflect&quot;</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">replicate</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">tools</span><span class="o">.</span><span class="n">upsample_convolve</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">img</span><span class="p">,</span> <span class="n">odd</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">filt</span><span class="o">=</span><span class="n">filt</span><span class="p">,</span> <span class="n">padding_mode</span><span class="o">=</span><span class="s2">&quot;replicate&quot;</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">circular</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">tools</span><span class="o">.</span><span class="n">upsample_convolve</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">img</span><span class="p">,</span> <span class="n">odd</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">filt</span><span class="o">=</span><span class="n">filt</span><span class="p">,</span> <span class="n">padding_mode</span><span class="o">=</span><span class="s2">&quot;circular&quot;</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">po</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="p">[</span><span class="n">reflect</span><span class="p">,</span> <span class="n">constant</span><span class="p">,</span> <span class="n">replicate</span><span class="p">,</span> <span class="n">circular</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="n">title</span><span class="o">=</span><span class="p">[</span>
+<span class="gp">... </span>        <span class="s2">&quot;reflect padding&quot;</span><span class="p">,</span>
+<span class="gp">... </span>        <span class="s2">&quot;constant (zero) padding&quot;</span><span class="p">,</span>
+<span class="gp">... </span>        <span class="s2">&quot;replicate padding&quot;</span><span class="p">,</span>
+<span class="gp">... </span>        <span class="s2">&quot;circular padding&quot;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="p">],</span>
+<span class="gp">... </span>    <span class="n">zoom</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="go">&lt;PyrFigure...&gt;</span>
+</pre></div>
+</div>
+<p>(<a class="reference download internal" download="" href="../_downloads/03ab6e8c6bd34813af9e0cc059674d41/plenoptic-tools-conv-18.png"><code class="xref download docutils literal notranslate"><span class="pre">png</span></code></a>, <a class="reference download internal" download="" href="../_downloads/df61f78ab71d17ef445442770149c690/plenoptic-tools-conv-18.hires.png"><code class="xref download docutils literal notranslate"><span class="pre">hires.png</span></code></a>, <a class="reference download internal" download="" href="../_downloads/a85b9f273faff98cc8b0f9ea60e656a7/plenoptic-tools-conv-18.pdf"><code class="xref download docutils literal notranslate"><span class="pre">pdf</span></code></a>)</p>
+<figure class="align-default">
+<img alt="../_images/plenoptic-tools-conv-18.png" class="plot-directive" src="../_images/plenoptic-tools-conv-18.png" />
+</figure>
+</dd></dl>
+
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="plenoptic.simulate.canonical_computations.non_linearities.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">plenoptic.simulate.canonical_computations.non_linearities</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="plenoptic.tools.signal.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">plenoptic.tools.signal</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#plenoptic.tools.conv.blur_downsample"><code class="docutils literal notranslate"><span class="pre">blur_downsample</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#plenoptic.tools.conv.correlate_downsample"><code class="docutils literal notranslate"><span class="pre">correlate_downsample</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#plenoptic.tools.conv.same_padding"><code class="docutils literal notranslate"><span class="pre">same_padding</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#plenoptic.tools.conv.upsample_blur"><code class="docutils literal notranslate"><span class="pre">upsample_blur</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#plenoptic.tools.conv.upsample_convolve"><code class="docutils literal notranslate"><span class="pre">upsample_convolve</span></code></a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2019-2025, Plenoptic authors.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.0.4.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

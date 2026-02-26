@@ -1,0 +1,299 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>plenoptic.simulate.canonical_computations.laplacian_pyramid &mdash; plenoptic 1.3.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/plot_directive.css" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/sphinx-design.min.css?v=95c83b7e" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/custom.css?v=a2d047e6" />
+
+  
+      <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../_static/documentation_options.js?v=bb516dca"></script>
+      <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../../_static/copybutton.js?v=35a8b989"></script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../../../_static/togglebutton.js?v=1ae7504c"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+      <script src="../../../../_static/design-tabs.js?v=f930bc37"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../index.html" class="icon icon-home">
+            plenoptic
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Basic concepts</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../jupyter.html">Using Jupyter to Run Example Notebooks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../conceptual_intro.html">Conceptual Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../models.html">Model requirements</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../tutorials/quickstart.html">Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../citation.html">Citation Guide and Bibliography</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Synthesis method introductions</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../tutorials/intro/Eigendistortions.html">Eigendistortions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../tutorials/intro/MAD_Competition_1.html">MAD Competition Conceptual Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../tutorials/intro/MAD_Competition_2.html">MAD Competition Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../tutorials/intro/Metamer.html">Metamers</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Models and metrics</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../tutorials/models/Perceptual_distance.html">Perceptual distance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../tutorials/models/Portilla_Simoncelli.html">Portilla-Simoncelli Texture Metamer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../tutorials/models/Steerable_Pyramid.html">Steerable Pyramid</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Synthesis method examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../tutorials/applications/Demo_Eigendistortion.html">Reproducing Berardino et al., 2017 (Eigendistortions)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../tutorials/applications/Original_MAD.html">Reproducing Wang and Simoncelli, 2008 (MAD Competition)</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Advanced usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../synthesis.html">Synthesis object design</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../tips.html">Tips and Tricks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../reproducibility.html">Reproducibility and Compatibility</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../api/modules.html">API Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../tutorials/advanced/Display.html">Display and animate functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../tutorials/advanced/Synthesis_extensions.html">Extending existing synthesis objects</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">plenoptic</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">plenoptic.simulate.canonical_computations.laplacian_pyramid</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for plenoptic.simulate.canonical_computations.laplacian_pyramid</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Laplacian pyramid.</span>
+
+<span class="sd">Simple class for handling the Laplacian Pyramid.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">import</span> <span class="nn">torch.nn</span> <span class="k">as</span> <span class="nn">nn</span>
+
+<span class="kn">from</span> <span class="nn">...tools.conv</span> <span class="kn">import</span> <span class="n">blur_downsample</span><span class="p">,</span> <span class="n">upsample_blur</span>
+
+
+<div class="viewcode-block" id="LaplacianPyramid">
+<a class="viewcode-back" href="../../../../api/plenoptic.simulate.canonical_computations.html#plenoptic.simulate.canonical_computations.laplacian_pyramid.LaplacianPyramid">[docs]</a>
+<span class="k">class</span> <span class="nc">LaplacianPyramid</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Laplacian Pyramid in Torch.</span>
+
+<span class="sd">    The Laplacian pyramid [1]_ is a multiscale image representation. It</span>
+<span class="sd">    decomposes the image by computing the local mean using Gaussian blurring</span>
+<span class="sd">    filters and subtracting it from the image and repeating this operation on</span>
+<span class="sd">    the local mean itself after downsampling. This representation is</span>
+<span class="sd">    overcomplete and invertible.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    n_scales</span>
+<span class="sd">        Number of scales to compute.</span>
+<span class="sd">    scale_filter</span>
+<span class="sd">        If ``True``, the norm of the downsampling/upsampling filter is 1. If ``False``,</span>
+<span class="sd">        it is 2. If the norm is 1, the image is multiplied by 4 during the upsampling</span>
+<span class="sd">        operation; the net effect is that the :math:`n` -th scale of the pyramid is</span>
+<span class="sd">        divided by :math:`2^n`.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    n_scales : int</span>
+<span class="sd">        Number of computed scales.</span>
+<span class="sd">    scale_filter : bool</span>
+<span class="sd">        Whether the filter is scaled or not.</span>
+
+<span class="sd">    References</span>
+<span class="sd">    ----------</span>
+<span class="sd">    .. [1] Burt, P. and Adelson, E., 1983. The Laplacian pyramid as a compact</span>
+<span class="sd">       image code. IEEE Transactions on communications, 31(4), pp.532-540.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; import plenoptic as po</span>
+<span class="sd">    &gt;&gt;&gt; lpyr = po.simul.LaplacianPyramid(n_scales=4, scale_filter=True)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_scales</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span> <span class="n">scale_filter</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_scales</span> <span class="o">=</span> <span class="n">n_scales</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">scale_filter</span> <span class="o">=</span> <span class="n">scale_filter</span>
+        <span class="c1"># This model has no trainable parameters, so it&#39;s always in eval mode</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
+
+<div class="viewcode-block" id="LaplacianPyramid.forward">
+<a class="viewcode-back" href="../../../../api/plenoptic.simulate.canonical_computations.html#plenoptic.simulate.canonical_computations.laplacian_pyramid.LaplacianPyramid.forward">[docs]</a>
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Build the Laplacian pyramid of an image.</span>
+
+<span class="sd">        Builds a Laplacian pyramid of height ``self.n_scales``. Because the tensor at</span>
+<span class="sd">        each scale will have a different height and width, we return a list of tensors</span>
+<span class="sd">        instead of a single tensor.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        x</span>
+<span class="sd">            Image, or batch of images of shape (batch, channel, height, width). If there</span>
+<span class="sd">            are multiple batches or channels, the Laplacian is computed separately for</span>
+<span class="sd">            each of them.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        y</span>
+<span class="sd">            Laplacian pyramid representation, each element of the list corresponds to a</span>
+<span class="sd">            scale, from fine to coarse.</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        .. plot::</span>
+<span class="sd">          :context: reset</span>
+
+<span class="sd">          &gt;&gt;&gt; import plenoptic as po</span>
+<span class="sd">          &gt;&gt;&gt; img = po.data.einstein()</span>
+<span class="sd">          &gt;&gt;&gt; lpyr = po.simul.LaplacianPyramid()</span>
+<span class="sd">          &gt;&gt;&gt; po.imshow(lpyr(img))</span>
+<span class="sd">          &lt;PyrFigure ...&gt;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">scale</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_scales</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="n">odd</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">as_tensor</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">)[</span><span class="mi">2</span><span class="p">:</span><span class="mi">4</span><span class="p">]</span> <span class="o">%</span> <span class="mi">2</span>
+            <span class="n">x_down</span> <span class="o">=</span> <span class="n">blur_downsample</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">scale_filter</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">scale_filter</span><span class="p">)</span>
+            <span class="n">x_up</span> <span class="o">=</span> <span class="n">upsample_blur</span><span class="p">(</span><span class="n">x_down</span><span class="p">,</span> <span class="n">odd</span><span class="p">,</span> <span class="n">scale_filter</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">scale_filter</span><span class="p">)</span>
+            <span class="n">y</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="n">x_up</span><span class="p">)</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">x_down</span>
+        <span class="n">y</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">y</span></div>
+
+
+<div class="viewcode-block" id="LaplacianPyramid.recon_pyr">
+<a class="viewcode-back" href="../../../../api/plenoptic.simulate.canonical_computations.html#plenoptic.simulate.canonical_computations.laplacian_pyramid.LaplacianPyramid.recon_pyr">[docs]</a>
+    <span class="k">def</span> <span class="nf">recon_pyr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Reconstruct the image from its Laplacian pyramid coefficients.</span>
+
+<span class="sd">        The input to ``recon_pyr`` should be list of tensors similar to those returned</span>
+<span class="sd">        by ``self.forward``.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        y</span>
+<span class="sd">            Laplacian pyramid representation, each element of the list</span>
+<span class="sd">            corresponds to a scale, from fine to coarse. ``len(y)`` should be</span>
+<span class="sd">            ``self.n_scales``.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        x</span>
+<span class="sd">            Image, or batch of images.</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        .. plot::</span>
+<span class="sd">          :context: reset</span>
+
+<span class="sd">          &gt;&gt;&gt; import plenoptic as po</span>
+<span class="sd">          &gt;&gt;&gt; import torch</span>
+<span class="sd">          &gt;&gt;&gt; img = po.data.einstein()</span>
+<span class="sd">          &gt;&gt;&gt; lpyr = po.simul.LaplacianPyramid()</span>
+<span class="sd">          &gt;&gt;&gt; coeffs = lpyr(img)</span>
+<span class="sd">          &gt;&gt;&gt; recon = lpyr.recon_pyr(coeffs)</span>
+<span class="sd">          &gt;&gt;&gt; torch.allclose(img, recon)</span>
+<span class="sd">          True</span>
+<span class="sd">          &gt;&gt;&gt; titles = [&quot;Original&quot;, &quot;Reconstructed&quot;, &quot;Difference&quot;]</span>
+<span class="sd">          &gt;&gt;&gt; po.imshow([img, recon, img - recon], title=titles)</span>
+<span class="sd">          &lt;PyrFigure ...&gt;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">y</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">n_scales</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">scale</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_scales</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+            <span class="n">odd</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">as_tensor</span><span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="n">scale</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">)[</span><span class="mi">2</span><span class="p">:</span><span class="mi">4</span><span class="p">]</span> <span class="o">%</span> <span class="mi">2</span>
+            <span class="n">y_up</span> <span class="o">=</span> <span class="n">upsample_blur</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">odd</span><span class="p">,</span> <span class="n">scale_filter</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">scale_filter</span><span class="p">)</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">y</span><span class="p">[</span><span class="n">scale</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">y_up</span>
+
+        <span class="k">return</span> <span class="n">x</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2019-2025, Plenoptic authors.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

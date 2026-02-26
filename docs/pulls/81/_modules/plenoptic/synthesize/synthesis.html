@@ -1,0 +1,826 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>plenoptic.synthesize.synthesis &mdash; plenoptic 1.2.1.dev138 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/plot_directive.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-design.min.css?v=95c83b7e" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=f712bd2b"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../_static/copybutton.js?v=35a8b989"></script>
+      <script src="../../../_static/design-tabs.js?v=f930bc37"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            plenoptic
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Basic concepts</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../jupyter.html">Using Jupyter to Run Example Notebooks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../conceptual_intro.html">Conceptual Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../models.html">Model requirements</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/00_quickstart.html">Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../citation.html">Citation Guide and Bibliography</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Synthesis method introductions</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/intro/02_Eigendistortions.html">Eigendistortions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/intro/06_Metamer.html">Metamers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/intro/07_Simple_MAD.html">MAD Competition Conceptual Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/intro/08_MAD_Competition.html">MAD Competition Usage</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Models and metrics</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/models/03_Steerable_Pyramid.html">Steerable Pyramid</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/models/04_Perceptual_distance.html">Perceptual distance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/models/Metamer-Portilla-Simoncelli.html">Portilla-Simoncelli Texture Metamer</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Synthesis method examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/applications/09_Original_MAD.html">Reproducing Wang and Simoncelli, 2008 (MAD Competition)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/applications/Demo_Eigendistortion.html">Reproducing Berardino et al., 2017 (Eigendistortions)</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Advanced usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../synthesis.html">Synthesis object design</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tips.html">Tips and Tricks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../reproducibility.html">Reproducibility</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/modules.html">API Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/advanced/Display.html">Display and animate functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/advanced/Synthesis_extensions.html">Extending existing synthesis objects</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">plenoptic</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">plenoptic.synthesize.synthesis</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for plenoptic.synthesize.synthesis</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;abstract synthesis super-class.&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">abc</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">importlib</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">inspect</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">..tools</span><span class="w"> </span><span class="kn">import</span> <span class="n">examine_saved_synthesis</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..tools.data</span><span class="w"> </span><span class="kn">import</span> <span class="n">_check_tensor_equality</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_get_name</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the name of an object, for saving/loading purposes&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">x</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="c1"># if this passes, attr is a function</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">x</span><span class="o">.</span><span class="vm">__module__</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">x</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+        <span class="c1"># if we&#39;re here, then it&#39;s an object</span>
+        <span class="bp">cls</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="vm">__class__</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">cls</span><span class="o">.</span><span class="vm">__module__</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="bp">cls</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="k">return</span> <span class="n">name</span>
+
+
+<div class="viewcode-block" id="Synthesis">
+<a class="viewcode-back" href="../../../api/plenoptic.synthesize.html#plenoptic.synthesize.synthesis.Synthesis">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Synthesis</span><span class="p">(</span><span class="n">abc</span><span class="o">.</span><span class="n">ABC</span><span class="p">):</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Abstract super-class for synthesis objects.</span>
+
+<span class="sd">    All synthesis objects share a variety of similarities and thus need</span>
+<span class="sd">    to have similar methods. Some of these can be implemented here and</span>
+<span class="sd">    simply inherited, some of them will need to be different for each</span>
+<span class="sd">    sub-class and thus are marked as abstract methods here</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># flag to raise more informative error message if setup and load are both called</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_loaded</span> <span class="o">=</span> <span class="kc">False</span>
+
+<div class="viewcode-block" id="Synthesis.synthesize">
+<a class="viewcode-back" href="../../../api/plenoptic.synthesize.html#plenoptic.synthesize.synthesis.Synthesis.synthesize">[docs]</a>
+    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">synthesize</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Synthesize something.&quot;&quot;&quot;</span>
+        <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="Synthesis.save">
+<a class="viewcode-back" href="../../../api/plenoptic.synthesize.html#plenoptic.synthesize.synthesis.Synthesis.save">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">save</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">save_io_attrs</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[],</span>
+        <span class="n">save_state_dict_attrs</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[],</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Save all attributes in .pt file.</span>
+
+<span class="sd">        Note that there are two special categories of attributes, as described below.</span>
+<span class="sd">        All other attributes will be pickled directly and so should be either tensors or</span>
+<span class="sd">        primitives (e.g., not a function or callable torch object). We do not check this</span>
+<span class="sd">        explicitly, but load will fail if that&#39;s not the case.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        file_path :</span>
+<span class="sd">            The path to save the synthesis object to</span>
+<span class="sd">        save_io_attrs :</span>
+<span class="sd">            List with tuples of form (str, (str, ...)). The first element is the name of</span>
+<span class="sd">            the attribute to we save, and the second element is a tuple of attributes of</span>
+<span class="sd">            the Synthesis object, which we can pass as inputs to the attribute. We save</span>
+<span class="sd">            them as tuples of (name, input_names, outputs). On load, we check that the</span>
+<span class="sd">            initialized object&#39;s name hasn&#39;t changed, and that when called on the same</span>
+<span class="sd">            inputs, we get the same outputs. Intended for models, metrics, loss</span>
+<span class="sd">            functions. Used to avoid saving callables, which is brittle and unsafe.</span>
+<span class="sd">        save_state_dict_attrs :</span>
+<span class="sd">            Names of attributes that we save as tuples of (name, state_dict).</span>
+<span class="sd">            Corresponding attribute can be None, in which case we save an empty</span>
+<span class="sd">            dictionary as state_dict. On load, we check that the initialized object&#39;s</span>
+<span class="sd">            name hasn&#39;t changed, and load the state_dict. Intended for optimizers,</span>
+<span class="sd">            schedulers. Used to avoid saving callables, which is brittle and unsafe.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">save_dict</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">save_dict</span><span class="p">[</span><span class="s2">&quot;save_metadata&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;plenoptic_version&quot;</span><span class="p">:</span> <span class="n">importlib</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">version</span><span class="p">(</span><span class="s2">&quot;plenoptic&quot;</span><span class="p">),</span>
+            <span class="s2">&quot;torch_version&quot;</span><span class="p">:</span> <span class="n">importlib</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">version</span><span class="p">(</span><span class="s2">&quot;torch&quot;</span><span class="p">),</span>
+            <span class="s2">&quot;synthesis_object&quot;</span><span class="p">:</span> <span class="n">_get_name</span><span class="p">(</span><span class="bp">self</span><span class="p">),</span>
+        <span class="p">}</span>
+        <span class="n">save_io_attr_names</span> <span class="o">=</span> <span class="p">[</span><span class="n">k</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">save_io_attrs</span><span class="p">]</span>
+        <span class="n">save_attrs</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">k</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">vars</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="k">if</span> <span class="n">k</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">save_io_attr_names</span> <span class="o">+</span> <span class="n">save_state_dict_attrs</span>
+        <span class="p">]</span>
+        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">save_attrs</span><span class="p">:</span>
+            <span class="n">attr</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span>
+            <span class="c1"># detaching the tensors avoids some headaches like the</span>
+            <span class="c1"># tensors having extra hooks or the like</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">attr</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">):</span>
+                <span class="n">attr</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span>
+            <span class="n">save_dict</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">attr</span>
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">input_names</span> <span class="ow">in</span> <span class="n">save_io_attrs</span><span class="p">:</span>
+            <span class="n">attr</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="n">_get_name</span><span class="p">(</span><span class="n">attr</span><span class="p">)</span>
+            <span class="n">tensors</span> <span class="o">=</span> <span class="p">[</span><span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">input_names</span><span class="p">]</span>
+            <span class="n">save_dict</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">input_names</span><span class="p">,</span> <span class="n">attr</span><span class="p">(</span><span class="o">*</span><span class="n">tensors</span><span class="p">))</span>
+            <span class="k">if</span> <span class="nb">any</span><span class="p">([</span><span class="n">n</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">save_dict</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">input_names</span><span class="p">]):</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="s2">&quot;input_name must be included in save dictionary, &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;but got </span><span class="si">{</span><span class="n">input_names</span><span class="si">}</span><span class="s2">!&quot;</span>
+                <span class="p">)</span>
+        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">save_state_dict_attrs</span><span class="p">:</span>
+            <span class="n">attr</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="n">_get_name</span><span class="p">(</span><span class="n">attr</span><span class="p">)</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">state_dict</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">state_dict</span><span class="p">()</span>
+            <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+                <span class="c1"># then we assume that attr is None</span>
+                <span class="n">state_dict</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="n">save_dict</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">state_dict</span><span class="p">)</span>
+        <span class="n">torch</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">save_dict</span><span class="p">,</span> <span class="n">file_path</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Synthesis.load">
+<a class="viewcode-back" href="../../../api/plenoptic.synthesize.html#plenoptic.synthesize.synthesis.Synthesis.load">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">load</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">empty_on_init_attr</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">map_location</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">check_attributes</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[],</span>
+        <span class="n">check_io_attributes</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[],</span>
+        <span class="n">state_dict_attributes</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[],</span>
+        <span class="n">tensor_equality_atol</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e-8</span><span class="p">,</span>
+        <span class="n">tensor_equality_rtol</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e-5</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">pickle_load_args</span><span class="p">,</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Load all relevant attributes from a .pt file.</span>
+
+<span class="sd">        This should be called by ``Synthesis`` object that has just been initialized.</span>
+
+<span class="sd">        Note this operates in place and so doesn&#39;t return anything.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        file_path :</span>
+<span class="sd">            The path to load the synthesis object from</span>
+<span class="sd">        empty_on_init_attr :</span>
+<span class="sd">            The name of an attribute that will either be None or have length 0 if the</span>
+<span class="sd">            Synthesis object has just been initialized.</span>
+<span class="sd">        map_location :</span>
+<span class="sd">            map_location argument to pass to ``torch.load``. If you save</span>
+<span class="sd">            stuff that was being run on a GPU and are loading onto a</span>
+<span class="sd">            CPU, you&#39;ll need this to make sure everything lines up</span>
+<span class="sd">            properly. This should be structured like the str you would</span>
+<span class="sd">            pass to ``torch.device``</span>
+<span class="sd">        check_attributes :</span>
+<span class="sd">            List of strings we ensure are identical in the current ``Synthesis`` object</span>
+<span class="sd">            and the loaded one.</span>
+<span class="sd">        check_io_attributes :</span>
+<span class="sd">            Names of attributes whose input/output behavior we should check (i.e., if we</span>
+<span class="sd">            call them on identical inputs, do we get identical outputs). In the loaded</span>
+<span class="sd">            dictionary, these are a tuple of three values: the name of the callable, the</span>
+<span class="sd">            name of the attribute to use as input, and the output we expect.</span>
+<span class="sd">        state_dict_attributes :</span>
+<span class="sd">            Names of attributes that were callables, saved as a tuple with the name of</span>
+<span class="sd">            the callable and their state_dict. We will ensure the name of the attributes</span>
+<span class="sd">            are identical and then load the state_dict. If the attribute is None on the</span>
+<span class="sd">            initialized Synthesis object, then we set the tuple, and count on the</span>
+<span class="sd">            Synthesis object to properly handle it when needed.</span>
+<span class="sd">        tensor_equality_atol :</span>
+<span class="sd">            Absolute tolerance to use when checking for tensor equality during load,</span>
+<span class="sd">            passed to :func:`torch.allclose`. It may be necessary to increase if you are</span>
+<span class="sd">            saving and loading on two machines with torch built by different cuda</span>
+<span class="sd">            versions. Be careful when changing this! See</span>
+<span class="sd">            :class:`torch.finfo&lt;torch.torch.finfo&gt;` for more details about floating</span>
+<span class="sd">            point precision of different data types (especially, ``eps``); if you have</span>
+<span class="sd">            to increase this by more than 1 or 2 decades, then you are probably not</span>
+<span class="sd">            dealing with a numerical issue.</span>
+<span class="sd">        tensor_equality_rtol :</span>
+<span class="sd">            Relative tolerance to use when checking for tensor equality during load,</span>
+<span class="sd">            passed to :func:`torch.allclose`. It may be necessary to increase if you are</span>
+<span class="sd">            saving and loading on two machines with torch built by different cuda</span>
+<span class="sd">            versions. Be careful when changing this! See</span>
+<span class="sd">            :class:`torch.finfo&lt;torch.torch.finfo&gt;` for more details about floating</span>
+<span class="sd">            point precision of different data types (especially, ``eps``); if you have</span>
+<span class="sd">            to increase this by more than 1 or 2 decades, then you are probably not</span>
+<span class="sd">            dealing with a numerical issue.</span>
+<span class="sd">        pickle_load_args :</span>
+<span class="sd">            any additional kwargs will be added to ``pickle_module.load`` via</span>
+<span class="sd">            ``torch.load``, see that function&#39;s docstring for details.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">check_str</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">If this is confusing, try calling &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">_get_name</span><span class="p">(</span><span class="n">examine_saved_synthesis</span><span class="p">)</span><span class="si">}</span><span class="s2">(&#39;</span><span class="si">{</span><span class="n">file_path</span><span class="si">}</span><span class="s2">&#39;),&quot;</span>
+            <span class="s2">&quot; to examine saved object&quot;</span>
+        <span class="p">)</span>
+        <span class="n">empty_on_init_attr</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">empty_on_init_attr</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">empty_on_init_attr</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">empty_on_init_attr</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;load can only be called with a just-initialized&quot;</span>
+                <span class="sa">f</span><span class="s2">&quot; </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> object&quot;</span>
+            <span class="p">)</span>
+        <span class="n">tmp_dict</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">load</span><span class="p">(</span>
+            <span class="n">file_path</span><span class="p">,</span>
+            <span class="n">map_location</span><span class="o">=</span><span class="n">map_location</span><span class="p">,</span>
+            <span class="o">**</span><span class="n">pickle_load_args</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">metadata</span> <span class="o">=</span> <span class="n">tmp_dict</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;save_metadata&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">metadata</span><span class="p">[</span><span class="s2">&quot;synthesis_object&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="n">_get_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Saved object was a </span><span class="si">{</span><span class="n">metadata</span><span class="p">[</span><span class="s1">&#39;synthesis_object&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;, but initialized object is </span><span class="si">{</span><span class="n">_get_name</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="si">}</span><span class="s2">! &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">check_str</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+        <span class="c1"># all attributes set at initialization should be present in the saved dictionary</span>
+        <span class="n">init_not_save</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="nb">vars</span><span class="p">(</span><span class="bp">self</span><span class="p">))</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="n">tmp_dict</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">init_not_save</span><span class="p">):</span>
+            <span class="n">init_not_save_str</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2"> &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="w"> </span><span class="n">k</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">init_not_save</span><span class="p">]</span>
+            <span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Initialized object has </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">init_not_save</span><span class="p">)</span><span class="si">}</span><span class="s2"> attribute(s) &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;not present in the saved object!</span><span class="se">\n</span><span class="s2"> </span><span class="si">{</span><span class="n">init_not_save_str</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+        <span class="c1"># there shouldn&#39;t be any extra keys in the saved dictionary (we removed</span>
+        <span class="c1"># save_metadata above)</span>
+        <span class="n">save_not_init</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">tmp_dict</span><span class="p">)</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="nb">vars</span><span class="p">(</span><span class="bp">self</span><span class="p">))</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">save_not_init</span><span class="p">):</span>
+            <span class="n">save_not_init_str</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2"> &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">tmp_dict</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">save_not_init</span><span class="p">]</span>
+            <span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Saved object has </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">save_not_init</span><span class="p">)</span><span class="si">}</span><span class="s2"> attribute(s) &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;not present in the initialized object!</span><span class="se">\n</span><span class="s2"> </span><span class="si">{</span><span class="n">save_not_init_str</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">check_attributes</span><span class="p">:</span>
+            <span class="c1"># The only hidden attributes we&#39;d check are those like</span>
+            <span class="c1"># range_penalty_lambda, where this function is checking the</span>
+            <span class="c1"># hidden version (which starts with &#39;_&#39;), but during</span>
+            <span class="c1"># initialization, the user specifies the version without</span>
+            <span class="c1"># the initial underscore. This is because this function</span>
+            <span class="c1"># needs to be able to set the attribute, which can only be</span>
+            <span class="c1"># done with the hidden version.</span>
+            <span class="n">display_k</span> <span class="o">=</span> <span class="n">k</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="k">if</span> <span class="n">k</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">)</span> <span class="k">else</span> <span class="n">k</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="p">),</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">):</span>
+                <span class="n">_check_tensor_equality</span><span class="p">(</span>
+                    <span class="n">tmp_dict</span><span class="p">[</span><span class="n">k</span><span class="p">],</span>
+                    <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="p">),</span>
+                    <span class="s2">&quot;Saved&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;Initialized&quot;</span><span class="p">,</span>
+                    <span class="n">error_prepend_str</span><span class="o">=</span><span class="p">(</span>
+                        <span class="sa">f</span><span class="s2">&quot;Saved and initialized attribute </span><span class="si">{</span><span class="n">display_k</span><span class="si">}</span><span class="s2"> have &quot;</span>
+                        <span class="sa">f</span><span class="s2">&quot;different </span><span class="se">{{</span><span class="s2">error_type</span><span class="se">}}</span><span class="s2">!&quot;</span>
+                    <span class="p">),</span>
+                    <span class="n">error_append_str</span><span class="o">=</span><span class="n">check_str</span><span class="p">,</span>
+                    <span class="n">atol</span><span class="o">=</span><span class="n">tensor_equality_atol</span><span class="p">,</span>
+                    <span class="n">rtol</span><span class="o">=</span><span class="n">tensor_equality_rtol</span><span class="p">,</span>
+                <span class="p">)</span>
+            <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="p">),</span> <span class="nb">float</span><span class="p">):</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="p">),</span> <span class="n">tmp_dict</span><span class="p">[</span><span class="n">k</span><span class="p">]):</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                        <span class="sa">f</span><span class="s2">&quot;Saved and initialized </span><span class="si">{</span><span class="n">display_k</span><span class="si">}</span><span class="s2"> are different!&quot;</span>
+                        <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Saved: </span><span class="si">{</span><span class="n">tmp_dict</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
+                        <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Initialized: </span><span class="si">{</span><span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="w"> </span><span class="n">k</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+                        <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">check_str</span><span class="si">}</span><span class="s2">&quot;</span>
+                    <span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span> <span class="o">!=</span> <span class="n">tmp_dict</span><span class="p">[</span><span class="n">k</span><span class="p">]:</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                        <span class="sa">f</span><span class="s2">&quot;Saved and initialized </span><span class="si">{</span><span class="n">display_k</span><span class="si">}</span><span class="s2"> are different!&quot;</span>
+                        <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Saved: </span><span class="si">{</span><span class="n">tmp_dict</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
+                        <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Initialized: </span><span class="si">{</span><span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="w"> </span><span class="n">k</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+                        <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">check_str</span><span class="si">}</span><span class="s2">&quot;</span>
+                    <span class="p">)</span>
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">input_names</span> <span class="ow">in</span> <span class="n">check_io_attributes</span><span class="p">:</span>
+            <span class="c1"># same as above</span>
+            <span class="n">display_k</span> <span class="o">=</span> <span class="n">k</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="k">if</span> <span class="n">k</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">)</span> <span class="k">else</span> <span class="n">k</span>
+            <span class="n">tensors</span> <span class="o">=</span> <span class="p">[</span><span class="n">tmp_dict</span><span class="p">[</span><span class="n">t</span><span class="p">]</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">tmp_dict</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="mi">1</span><span class="p">]]</span>
+            <span class="n">init_name</span> <span class="o">=</span> <span class="n">_get_name</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="p">))</span>
+            <span class="n">saved_name</span> <span class="o">=</span> <span class="n">tmp_dict</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">init_loss</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="p">)(</span><span class="o">*</span><span class="n">tensors</span><span class="p">)</span>
+            <span class="n">saved_loss</span> <span class="o">=</span> <span class="n">tmp_dict</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">_check_tensor_equality</span><span class="p">(</span>
+                <span class="n">saved_loss</span><span class="p">,</span>
+                <span class="n">init_loss</span><span class="p">,</span>
+                <span class="sa">f</span><span class="s2">&quot;Saved (</span><span class="si">{</span><span class="n">saved_name</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">,</span>
+                <span class="sa">f</span><span class="s2">&quot;Initialized (</span><span class="si">{</span><span class="n">init_name</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">,</span>
+                <span class="n">error_prepend_str</span><span class="o">=</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;Saved and initialized </span><span class="si">{</span><span class="n">display_k</span><span class="si">}</span><span class="s2"> output have &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;different </span><span class="se">{{</span><span class="s2">error_type</span><span class="se">}}</span><span class="s2">!&quot;</span>
+                <span class="p">),</span>
+                <span class="n">error_append_str</span><span class="o">=</span><span class="n">check_str</span><span class="p">,</span>
+                <span class="n">atol</span><span class="o">=</span><span class="n">tensor_equality_atol</span><span class="p">,</span>
+                <span class="n">rtol</span><span class="o">=</span><span class="n">tensor_equality_rtol</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">tmp_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="c1"># check_io_attributes is a tuple</span>
+            <span class="k">if</span> <span class="n">k</span> <span class="ow">in</span> <span class="p">[</span><span class="n">a</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">check_io_attributes</span><span class="p">]</span> <span class="o">+</span> <span class="n">state_dict_attributes</span><span class="p">:</span>
+                <span class="n">display_k</span> <span class="o">=</span> <span class="n">k</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="k">if</span> <span class="n">k</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">)</span> <span class="k">else</span> <span class="n">k</span>
+                <span class="n">init_attr</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+                <span class="c1"># then check they have the same name and, since we&#39;ve already checked</span>
+                <span class="c1"># the behavior, keep going (don&#39;t update the object&#39;s attribute)</span>
+                <span class="k">if</span> <span class="n">init_attr</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">init_name</span> <span class="o">=</span> <span class="n">_get_name</span><span class="p">(</span><span class="n">init_attr</span><span class="p">)</span>
+                    <span class="n">saved_name</span> <span class="o">=</span> <span class="n">v</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                    <span class="k">if</span> <span class="n">init_name</span> <span class="o">!=</span> <span class="n">saved_name</span><span class="p">:</span>
+                        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                            <span class="sa">f</span><span class="s2">&quot;Saved and initialized </span><span class="si">{</span><span class="n">display_k</span><span class="si">}</span><span class="s2"> &quot;</span>
+                            <span class="s2">&quot;have different names!&quot;</span>
+                            <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Saved: </span><span class="si">{</span><span class="n">saved_name</span><span class="si">}</span><span class="s2">&quot;</span>
+                            <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Initialized: </span><span class="si">{</span><span class="n">init_name</span><span class="si">}</span><span class="s2">&quot;</span>
+                            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">check_str</span><span class="si">}</span><span class="s2">&quot;</span>
+                        <span class="p">)</span>
+                    <span class="k">continue</span>
+                <span class="c1"># if init_attr is None, then we haven&#39;t set it yet, so we set the saved</span>
+                <span class="c1"># tuple as the attribute, and handle this later</span>
+            <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
+        <span class="n">setup_attrs</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">optim</span> <span class="o">=</span> <span class="n">tmp_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;_optimizer&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">optim</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)</span> <span class="ow">and</span> <span class="n">optim</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="n">_get_name</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">Adam</span><span class="p">):</span>
+            <span class="n">setup_attrs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;optimizer&quot;</span><span class="p">)</span>
+        <span class="n">sched</span> <span class="o">=</span> <span class="n">tmp_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;_scheduler&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">sched</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)</span> <span class="ow">and</span> <span class="n">sched</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">setup_attrs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;scheduler&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">setup_attrs</span><span class="p">:</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;You will need to call setup() to instantiate </span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">setup_attrs</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+        <span class="c1"># Make sure we specify that we have loaded and setup has not been called</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_loaded</span> <span class="o">=</span> <span class="kc">True</span></div>
+
+
+<div class="viewcode-block" id="Synthesis.to">
+<a class="viewcode-back" href="../../../api/plenoptic.synthesize.html#plenoptic.synthesize.synthesis.Synthesis.to">[docs]</a>
+    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">attrs</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Moves and/or casts the parameters and buffers.</span>
+<span class="sd">        Similar to ``save``, this is an abstract method only because you</span>
+<span class="sd">        need to define the attributes to call to on.</span>
+
+<span class="sd">        This can be called as</span>
+<span class="sd">        .. function:: to(device=None, dtype=None, non_blocking=False)</span>
+<span class="sd">        .. function:: to(dtype, non_blocking=False)</span>
+<span class="sd">        .. function:: to(tensor, non_blocking=False)</span>
+<span class="sd">        Its signature is similar to :meth:`torch.Tensor.to`, but only accepts</span>
+<span class="sd">        floating point desired :attr:`dtype` s. In addition, this method will</span>
+<span class="sd">        only cast the floating point parameters and buffers to :attr:`dtype`</span>
+<span class="sd">        (if given). The integral parameters and buffers will be moved</span>
+<span class="sd">        :attr:`device`, if that is given, but with dtypes unchanged. When</span>
+<span class="sd">        :attr:`non_blocking` is set, it tries to convert/move asynchronously</span>
+<span class="sd">        with respect to the host if possible, e.g., moving CPU Tensors with</span>
+<span class="sd">        pinned memory to CUDA devices. When calling this method to move tensors</span>
+<span class="sd">        to a CUDA device, items in ``attrs`` that start with &quot;saved_&quot; will not</span>
+<span class="sd">        be moved.</span>
+<span class="sd">        .. note::</span>
+<span class="sd">            This method modifies the module in-place.</span>
+<span class="sd">        Args:</span>
+<span class="sd">            device (:class:`torch.device`): the desired device of the parameters</span>
+<span class="sd">                and buffers in this module</span>
+<span class="sd">            dtype (:class:`torch.dtype`): the desired floating point type of</span>
+<span class="sd">                the floating point parameters and buffers in this module</span>
+<span class="sd">            tensor (torch.Tensor): Tensor whose dtype and device are the desired</span>
+<span class="sd">                dtype and device for all parameters and buffers in this module</span>
+<span class="sd">            attrs (:class:`list`): list of strs containing the attributes of</span>
+<span class="sd">                this object to move to the specified device/dtype</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">device</span><span class="p">,</span> <span class="n">dtype</span><span class="p">,</span> <span class="n">non_blocking</span><span class="p">,</span> <span class="n">memory_format</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">_C</span><span class="o">.</span><span class="n">_nn</span><span class="o">.</span><span class="n">_parse_to</span><span class="p">(</span>
+            <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
+        <span class="p">)</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">move</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">k</span><span class="p">):</span>
+            <span class="n">move_device</span> <span class="o">=</span> <span class="kc">None</span> <span class="k">if</span> <span class="n">k</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;saved_&quot;</span><span class="p">)</span> <span class="k">else</span> <span class="n">device</span>
+            <span class="k">if</span> <span class="n">memory_format</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">a</span><span class="o">.</span><span class="n">dim</span><span class="p">()</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">a</span><span class="o">.</span><span class="n">to</span><span class="p">(</span>
+                    <span class="n">move_device</span><span class="p">,</span>
+                    <span class="n">dtype</span><span class="p">,</span>
+                    <span class="n">non_blocking</span><span class="p">,</span>
+                    <span class="n">memory_format</span><span class="o">=</span><span class="n">memory_format</span><span class="p">,</span>
+                <span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">a</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">move_device</span><span class="p">,</span> <span class="n">dtype</span><span class="p">,</span> <span class="n">non_blocking</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">attrs</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="p">):</span>
+                <span class="n">attr</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">attr</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">):</span>
+                    <span class="n">attr</span> <span class="o">=</span> <span class="n">move</span><span class="p">(</span><span class="n">attr</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="p">),</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Parameter</span><span class="p">):</span>
+                        <span class="n">attr</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Parameter</span><span class="p">(</span><span class="n">attr</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span><span class="o">.</span><span class="n">requires_grad</span><span class="p">:</span>
+                        <span class="n">attr</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">requires_grad_</span><span class="p">()</span>
+                    <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">attr</span><span class="p">)</span>
+                <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">attr</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+                    <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="p">[</span><span class="n">move</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">attr</span><span class="p">])</span>
+                <span class="k">elif</span> <span class="n">attr</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">move</span><span class="p">(</span><span class="n">attr</span><span class="p">,</span> <span class="n">k</span><span class="p">))</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="OptimizedSynthesis">
+<a class="viewcode-back" href="../../../api/plenoptic.synthesize.html#plenoptic.synthesize.synthesis.OptimizedSynthesis">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">OptimizedSynthesis</span><span class="p">(</span><span class="n">Synthesis</span><span class="p">):</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Abstract super-class for synthesis objects that use optimization.</span>
+
+<span class="sd">    The primary difference between this and the generic Synthesis class is that</span>
+<span class="sd">    these will use an optimizer object to iteratively update their output.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">range_penalty_lambda</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.1</span><span class="p">,</span>
+        <span class="n">allowed_range</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize the properties of OptimizedSynthesis.&quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_losses</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_gradient_norm</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_pixel_change_norm</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_store_progress</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_optimizer</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">range_penalty_lambda</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;range_penalty_lambda must be non-negative!&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_range_penalty_lambda</span> <span class="o">=</span> <span class="n">range_penalty_lambda</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_allowed_range</span> <span class="o">=</span> <span class="n">allowed_range</span>
+
+<div class="viewcode-block" id="OptimizedSynthesis.setup">
+<a class="viewcode-back" href="../../../api/plenoptic.synthesize.html#plenoptic.synthesize.synthesis.OptimizedSynthesis.setup">[docs]</a>
+    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;What to start synthesis with.&quot;&quot;&quot;</span>
+        <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="OptimizedSynthesis.objective_function">
+<a class="viewcode-back" href="../../../api/plenoptic.synthesize.html#plenoptic.synthesize.synthesis.OptimizedSynthesis.objective_function">[docs]</a>
+    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">objective_function</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;How good is the current synthesized object.</span>
+
+<span class="sd">        See ``plenoptic.tools.optim`` for some examples.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">pass</span></div>
+
+
+    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_check_convergence</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;How to determine if synthesis has finished.</span>
+
+<span class="sd">        See ``plenoptic.tools.convergence`` for some examples.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">pass</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_closure</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;An abstraction of the gradient calculation, before the optimization step.</span>
+
+<span class="sd">        This enables optimization algorithms that perform several evaluations</span>
+<span class="sd">        of the gradient before taking a step (ie. second order methods like</span>
+<span class="sd">        LBFGS).</span>
+
+<span class="sd">        Additionally, this is where ``loss`` is calculated and</span>
+<span class="sd">        ``loss.backward()`` is called.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        loss</span>
+<span class="sd">            Loss of the current objective function</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span><span class="o">.</span><span class="n">zero_grad</span><span class="p">()</span>
+        <span class="n">loss</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">objective_function</span><span class="p">()</span>
+        <span class="n">loss</span><span class="o">.</span><span class="n">backward</span><span class="p">(</span><span class="n">retain_graph</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">loss</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_initialize_optimizer</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">optimizer</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">Optimizer</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">synth_attr</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
+        <span class="n">optimizer_kwargs</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">learning_rate</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.01</span><span class="p">,</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize optimizer.</span>
+
+<span class="sd">        optimizer can be:</span>
+
+<span class="sd">        - None, in which case we create an Adam optimizer with amsgrad=True and</span>
+<span class="sd">          ``lr=learning_rate``</span>
+
+<span class="sd">        - uninitialized torch.optim.Optimizer, in which case it must already have the</span>
+<span class="sd">          synthesis attribute (e.g., metamer) as its only parameter.</span>
+
+<span class="sd">        In either case, we then initialize the optimizer with a single parameter, the</span>
+<span class="sd">        synthesis attribute, ``synth_attr``</span>
+
+<span class="sd">        If we have loaded from a save state, self.optimizer will be a tuple with the</span>
+<span class="sd">        name of the optimizer class (e.g., torch.optim.adam.Adam) and the</span>
+<span class="sd">        optimizer&#39;s state_dict. In that case:</span>
+
+<span class="sd">        - If optimizer is None, the saved optimizer must be Adam, and we load the</span>
+<span class="sd">          state_dict.</span>
+
+<span class="sd">        - else, the saved and user-specified optimizers must have the same class name</span>
+<span class="sd">          and we load the state_dict. in this case, ``optimizer_kwargs`` must be None</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
+            <span class="c1"># then we&#39;re calling this after load()</span>
+            <span class="k">if</span> <span class="n">optimizer_kwargs</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="s2">&quot;When initializing optimizer after load, optimizer_kwargs&quot;</span>
+                    <span class="s2">&quot; must be None!&quot;</span>
+                <span class="p">)</span>
+            <span class="k">if</span> <span class="n">optimizer</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">optimizer</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">Adam</span>
+                <span class="n">err_str</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="s2">&quot;Don&#39;t know how to initialize saved optimizer &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_optimizer</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">&#39;! Pass an un-initialized version of &quot;</span>
+                    <span class="s2">&quot;this optimizer to `setup`, and we will update its &quot;</span>
+                    <span class="s2">&quot;state_dict.&quot;</span>
+                <span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">err_str</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="s2">&quot;User-specified optimizer must have same type as saved &quot;</span>
+                    <span class="s2">&quot;optimizer, but got:&quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Saved: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">, &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">User-specified: </span><span class="si">{</span><span class="n">_get_name</span><span class="p">(</span><span class="n">optimizer</span><span class="p">)</span><span class="si">}</span><span class="s2">.&quot;</span>
+                <span class="p">)</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_optimizer</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="n">_get_name</span><span class="p">(</span><span class="n">optimizer</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">err_str</span><span class="p">)</span>
+            <span class="n">state_dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_optimizer</span> <span class="o">=</span> <span class="n">optimizer</span><span class="p">([</span><span class="n">synth_attr</span><span class="p">])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_optimizer</span><span class="o">.</span><span class="n">load_state_dict</span><span class="p">(</span><span class="n">state_dict</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">optimizer_kwargs</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">optimizer_kwargs</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;lr&quot;</span><span class="p">:</span> <span class="n">learning_rate</span><span class="p">}</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">optimizer_kwargs</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;lr&quot;</span><span class="p">,</span> <span class="n">learning_rate</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">optimizer</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">optimizer_kwargs</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;amsgrad&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_optimizer</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">Adam</span><span class="p">([</span><span class="n">synth_attr</span><span class="p">],</span> <span class="o">**</span><span class="n">optimizer_kwargs</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_optimizer</span> <span class="o">=</span> <span class="n">optimizer</span><span class="p">([</span><span class="n">synth_attr</span><span class="p">],</span> <span class="o">**</span><span class="n">optimizer_kwargs</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_initialize_scheduler</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">scheduler</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">lr_scheduler</span><span class="o">.</span><span class="n">LRScheduler</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">optimizer</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">Optimizer</span><span class="p">,</span>
+        <span class="n">scheduler_kwargs</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize scheduler.</span>
+
+<span class="sd">        scheduler can be:</span>
+
+<span class="sd">        - None, in which case we do nothing.</span>
+
+<span class="sd">        - uninitialized torch.optim.lr_scheduler.LRScheduler in which case we initialize</span>
+<span class="sd">          it using self.optimizer.</span>
+
+<span class="sd">        If we have loaded from a save state, self.scheduler will be a tuple with the</span>
+<span class="sd">        name of the scheduler class (e.g., torch.optim.lr_scheduler.ConstantLR) and the</span>
+<span class="sd">        scheduler&#39;s state_dict. In that case:</span>
+
+<span class="sd">        - If scheduler is None, we raise a ValueError.</span>
+
+<span class="sd">        - else, the saved and user-specified schedulers must have the same class name</span>
+<span class="sd">          and we load the state_dict. In this case, ``scheduler_kwargs`` must be None</span>
+
+<span class="sd">        We also check if scheduler.step takes any arguments beyond self and epoch. If</span>
+<span class="sd">        so, we set the `self._scheduler_step_arg` flag to True (it was set to False at</span>
+<span class="sd">        object initialization). Then, we will pass the loss to scheduler.step when we</span>
+<span class="sd">        call it.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">scheduler</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
+            <span class="c1"># then we&#39;re calling this after load()</span>
+            <span class="k">if</span> <span class="n">scheduler_kwargs</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="s2">&quot;When initializing scheduler after load, scheduler_kwargs&quot;</span>
+                    <span class="s2">&quot; must be None!&quot;</span>
+                <span class="p">)</span>
+            <span class="k">if</span> <span class="n">scheduler</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">scheduler</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="c1"># then this comes from loading, and we don&#39;t know how to initialize</span>
+                    <span class="c1"># the scheduler</span>
+                    <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+                        <span class="s2">&quot;Don&#39;t know how to initialize saved scheduler &quot;</span>
+                        <span class="sa">f</span><span class="s2">&quot;&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">scheduler</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">&#39;! Pass an initialized version of this &quot;</span>
+                        <span class="s2">&quot;scheduler to `synthesize`, and we will update its state_dict.&quot;</span>
+                    <span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_scheduler</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">scheduler</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="n">_get_name</span><span class="p">(</span><span class="n">scheduler</span><span class="p">):</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                        <span class="s2">&quot;User-specified scheduler must have same type as saved &quot;</span>
+                        <span class="sa">f</span><span class="s2">&quot;scheduler, but got:</span><span class="se">\n</span><span class="s2">Saved: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">scheduler</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">, &quot;</span>
+                        <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">User-specified: </span><span class="si">{</span><span class="n">_get_name</span><span class="p">(</span><span class="n">scheduler</span><span class="p">)</span><span class="si">}</span><span class="s2">.&quot;</span>
+                    <span class="p">)</span>
+                <span class="n">state_dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">scheduler</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_scheduler</span> <span class="o">=</span> <span class="n">scheduler</span><span class="p">(</span><span class="n">optimizer</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_scheduler</span><span class="o">.</span><span class="n">load_state_dict</span><span class="p">(</span><span class="n">state_dict</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">scheduler_kwargs</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">scheduler_kwargs</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="k">if</span> <span class="n">scheduler</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_scheduler</span> <span class="o">=</span> <span class="n">scheduler</span><span class="p">(</span><span class="n">optimizer</span><span class="p">,</span> <span class="o">**</span><span class="n">scheduler_kwargs</span><span class="p">)</span>
+                <span class="n">step_args</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">inspect</span><span class="o">.</span><span class="n">getfullargspec</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">scheduler</span><span class="o">.</span><span class="n">step</span><span class="p">)</span><span class="o">.</span><span class="n">args</span><span class="p">)</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">step_args</span> <span class="o">-</span> <span class="p">{</span><span class="s2">&quot;self&quot;</span><span class="p">,</span> <span class="s2">&quot;epoch&quot;</span><span class="p">}):</span>
+                    <span class="c1"># then we do want to pass the loss to scheduler.step</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_scheduler_step_arg</span> <span class="o">=</span> <span class="kc">True</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">range_penalty_lambda</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_range_penalty_lambda</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">allowed_range</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_allowed_range</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">losses</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Synthesis loss over iterations.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">as_tensor</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_losses</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">gradient_norm</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Synthesis gradient&#39;s L2 norm over iterations.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">as_tensor</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_gradient_norm</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">pixel_change_norm</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;L2 norm change in pixel values over iterations.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">as_tensor</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_pixel_change_norm</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">store_progress</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_store_progress</span>
+
+    <span class="nd">@store_progress</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">store_progress</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">store_progress</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="nb">int</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize store_progress.</span>
+
+<span class="sd">        Sets the ``self.store_progress`` attribute, as well as changing the</span>
+<span class="sd">        ``saved_metamer`` attibute to a list so we can append to them. finally,</span>
+<span class="sd">        adds first value to ``saved_metamer`` if it&#39;s empty.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        store_progress : bool or int, optional</span>
+<span class="sd">            Whether we should store the metamer image in progress on every</span>
+<span class="sd">            iteration. If False, we don&#39;t save anything. If True, we save every</span>
+<span class="sd">            iteration. If an int, we save every ``store_progress`` iterations</span>
+<span class="sd">            (note then that 0 is the same as False and 1 the same as True). If</span>
+<span class="sd">            True or int&gt;0, ``self.saved_metamer`` contains the stored images.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">store_progress</span> <span class="ow">and</span> <span class="n">store_progress</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="n">store_progress</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">store_progress</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">store_progress</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">store_progress</span><span class="p">:</span>
+            <span class="c1"># we require store_progress to be the same because otherwise the</span>
+            <span class="c1"># subsampling relationship between attrs that are stored every</span>
+            <span class="c1"># iteration (loss, gradient, etc) and those that are stored every</span>
+            <span class="c1"># store_progress iteration (e.g., saved_metamer) changes partway</span>
+            <span class="c1"># through and that&#39;s annoying</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span>
+                <span class="s2">&quot;If you&#39;ve already run synthesize() before, must &quot;</span>
+                <span class="s2">&quot;re-run it with same store_progress arg. You &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;passed </span><span class="si">{</span><span class="n">store_progress</span><span class="si">}</span><span class="s2"> instead of &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">store_progress</span><span class="si">}</span><span class="s2"> (True is equivalent to 1)&quot;</span>
+            <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_store_progress</span> <span class="o">=</span> <span class="n">store_progress</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">optimizer</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_optimizer</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">scheduler</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_scheduler</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2019, Plenoptic authors.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
