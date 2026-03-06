@@ -1,0 +1,384 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Reproducing Berardino et al., 2017 (Eigendistortions) &mdash; plenoptic 1.3.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css?v=7f9a90b1" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css?v=6644e6bb" />
+      <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=a2d047e6" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=bb516dca"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=35a8b989"></script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../_static/togglebutton.js?v=1ae7504c"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+      <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+      <script type="application/vnd.jupyter.widget-state+json">{"state": {"686cf844a3464596af5f1fd45dae294a": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": "2", "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "d4c545b85f6d4a3b845b8b734139e5f5": {"model_name": "ProgressStyleModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "ProgressStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "bar_color": null, "description_width": ""}}, "fd1fea313a9f460eb0b299f7dc282328": {"model_name": "FloatProgressModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "FloatProgressModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "ProgressView", "bar_style": "danger", "description": "", "description_allow_html": false, "layout": "IPY_MODEL_686cf844a3464596af5f1fd45dae294a", "max": 1.0, "min": 0.0, "orientation": "horizontal", "style": "IPY_MODEL_d4c545b85f6d4a3b845b8b734139e5f5", "tabbable": null, "tooltip": null, "value": 0.0}}, "56eb20b6d781433c988c2a9c48e89ef3": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "6971dfe568614879a2255bbdcedd7c34": {"model_name": "HTMLStyleModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "background": null, "description_width": "", "font_size": null, "text_color": null}}, "3eb2e9bb66cd4678b2e7adb75f30a5d6": {"model_name": "HTMLModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "HTMLView", "description": "", "description_allow_html": false, "layout": "IPY_MODEL_56eb20b6d781433c988c2a9c48e89ef3", "placeholder": "\u200b", "style": "IPY_MODEL_6971dfe568614879a2255bbdcedd7c34", "tabbable": null, "tooltip": null, "value": "\u2007\u20070%"}}, "f3c06be1673049e693e6a020ac61ae7f": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "17660f605ab7453c92f0db9f08da154b": {"model_name": "HTMLStyleModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "background": null, "description_width": "", "font_size": null, "text_color": null}}, "016d570d624640cb9cafcf24851408d3": {"model_name": "HTMLModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "HTMLView", "description": "", "description_allow_html": false, "layout": "IPY_MODEL_f3c06be1673049e693e6a020ac61ae7f", "placeholder": "\u200b", "style": "IPY_MODEL_17660f605ab7453c92f0db9f08da154b", "tabbable": null, "tooltip": null, "value": "\u20070.00/1.00\u2007[00:00&lt;?,\u2007?B/s]"}}, "927ea52a4b8f4885bd783c06b44fb876": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": "inline-flex", "flex": null, "flex_flow": "row wrap", "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": "79px"}}, "9415ce3c73044dfb84b5bfa5bc08bf5f": {"model_name": "HBoxModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HBoxModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "HBoxView", "box_style": "", "children": ["IPY_MODEL_3eb2e9bb66cd4678b2e7adb75f30a5d6", "IPY_MODEL_fd1fea313a9f460eb0b299f7dc282328", "IPY_MODEL_016d570d624640cb9cafcf24851408d3"], "layout": "IPY_MODEL_927ea52a4b8f4885bd783c06b44fb876", "tabbable": null, "tooltip": null}}, "bc9bb9337bf64480b46785b26f93d35f": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": "2", "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "cc5b86e0ef424bf0b4a3d10c794183e0": {"model_name": "ProgressStyleModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "ProgressStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "bar_color": null, "description_width": ""}}, "c9a312f703064d3c96abc487521a773a": {"model_name": "FloatProgressModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "FloatProgressModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "ProgressView", "bar_style": "danger", "description": "", "description_allow_html": false, "layout": "IPY_MODEL_bc9bb9337bf64480b46785b26f93d35f", "max": 1.0, "min": 0.0, "orientation": "horizontal", "style": "IPY_MODEL_cc5b86e0ef424bf0b4a3d10c794183e0", "tabbable": null, "tooltip": null, "value": 0.0}}, "26b684e9aa9e4345a5f28321c4bd5e05": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "4cc3fc7f7ae24a2e9c2f925c3632a9f7": {"model_name": "HTMLStyleModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "background": null, "description_width": "", "font_size": null, "text_color": null}}, "77eee705584d467da1e3be7c0e01aaac": {"model_name": "HTMLModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "HTMLView", "description": "", "description_allow_html": false, "layout": "IPY_MODEL_26b684e9aa9e4345a5f28321c4bd5e05", "placeholder": "\u200b", "style": "IPY_MODEL_4cc3fc7f7ae24a2e9c2f925c3632a9f7", "tabbable": null, "tooltip": null, "value": "\u2007\u20070%"}}, "0f72c8a956bf4ab1bfb1ff22caa4cc19": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "abe923551e0b43dabbdb8dd2e87437df": {"model_name": "HTMLStyleModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "background": null, "description_width": "", "font_size": null, "text_color": null}}, "495496a0111c448a895c84d4e016803d": {"model_name": "HTMLModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "HTMLView", "description": "", "description_allow_html": false, "layout": "IPY_MODEL_0f72c8a956bf4ab1bfb1ff22caa4cc19", "placeholder": "\u200b", "style": "IPY_MODEL_abe923551e0b43dabbdb8dd2e87437df", "tabbable": null, "tooltip": null, "value": "\u20070.00/1.00\u2007[00:00&lt;?,\u2007?B/s]"}}, "27bf9c16664647ea89e35b26b83df295": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": "inline-flex", "flex": null, "flex_flow": "row wrap", "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": "79px"}}, "3a9a5fa4f8da4818b1050d253c0a0398": {"model_name": "HBoxModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HBoxModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "HBoxView", "box_style": "", "children": ["IPY_MODEL_77eee705584d467da1e3be7c0e01aaac", "IPY_MODEL_c9a312f703064d3c96abc487521a773a", "IPY_MODEL_495496a0111c448a895c84d4e016803d"], "layout": "IPY_MODEL_27bf9c16664647ea89e35b26b83df295", "tabbable": null, "tooltip": null}}}, "version_major": 2, "version_minor": 0}</script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+      <script crossorigin="anonymous" data-jupyter-widgets-cdn="https://cdn.jsdelivr.net/npm/" src="https://cdn.jsdelivr.net/npm/@jupyter-widgets/html-manager@1.0.6/dist/embed-amd.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Reproducing Wang and Simoncelli, 2008 (MAD Competition)" href="Original_MAD.html" />
+    <link rel="prev" title="Steerable Pyramid" href="../models/Steerable_Pyramid.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            plenoptic
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Basic concepts</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../jupyter.html">Using Jupyter to Run Example Notebooks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../conceptual_intro.html">Conceptual Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../models.html">Model requirements</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../citation.html">Citation Guide and Bibliography</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Synthesis method introductions</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../intro/Eigendistortions.html">Eigendistortions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intro/MAD_Competition_1.html">MAD Competition Conceptual Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intro/MAD_Competition_2.html">MAD Competition Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intro/Metamer.html">Metamers</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Models and metrics</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../models/Perceptual_distance.html">Perceptual distance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../models/Portilla_Simoncelli.html">Portilla-Simoncelli Texture Metamer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../models/Steerable_Pyramid.html">Steerable Pyramid</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Synthesis method examples</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Reproducing Berardino et al., 2017 (Eigendistortions)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Original_MAD.html">Reproducing Wang and Simoncelli, 2008 (MAD Competition)</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Advanced usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../synthesis.html">Synthesis object design</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tips.html">Tips and Tricks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../reproducibility.html">Reproducibility and Compatibility</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/modules.html">API Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/Display.html">Display and animate functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/Synthesis_extensions.html">Extending existing synthesis objects</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">plenoptic</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Reproducing Berardino et al., 2017 (Eigendistortions)</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/tutorials/applications/Demo_Eigendistortion.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="important admonition">
+<p class="admonition-title">Download</p>
+<p>Download this notebook: <strong><a class="reference download internal" download="" href="../../_downloads/ac7d13b7b5acbcb2522ba88a5ff927fb/Demo_Eigendistortion.ipynb"><code class="xref download myst-nb docutils literal notranslate"><span class="pre">Demo_Eigendistortion.ipynb</span></code></a></strong>!</p>
+</div>
+<div class="admonition attention">
+<p class="admonition-title">Attention</p>
+<p>The eigendistortion synthesis investigated in this notebook takes a long time to run, especially if you don’t have a GPU available. Therefore, we have cached the result of these syntheses online and only download them for investigation in this notebook.</p>
+</div>
+<section class="tex2jax_ignore mathjax_ignore" id="reproducing-berardino-et-al-2017-eigendistortions">
+<h1>Reproducing Berardino et al., 2017 (Eigendistortions)<a class="headerlink" href="#reproducing-berardino-et-al-2017-eigendistortions" title="Link to this heading"></a></h1>
+<p>Author: Lyndon Duong, Jan 2021</p>
+<p>In this demo, we will be reproducing eigendistortions first presented in <a class="reference external" href="https://arxiv.org/abs/1710.02266">Berardino et al 2017</a>. We’ll be using a Front End model of the human visual system (called “On-Off” in the paper), as well as an early layer of VGG16. The <a class="reference internal" href="../../api/plenoptic.simulate.models.html#plenoptic.simulate.models.frontend.OnOff" title="plenoptic.simulate.models.frontend.OnOff"><span class="xref myst py py-class">Front End model</span></a> is a simple convolutional neural network with a normalization nonlinearity, loosely based on biological retinal/geniculate circuitry.</p>
+<p><img alt="Front-end model" src="../../_images/front_end_model.png" /></p>
+<p>This signal-flow diagram shows an input being decomposed into two channels, with each being luminance and contrast normalized, and ending with a ReLu.</p>
+<section id="what-do-eigendistortions-tell-us">
+<h2>What do eigendistortions tell us?<a class="headerlink" href="#what-do-eigendistortions-tell-us" title="Link to this heading"></a></h2>
+<p>Our perception is influenced by our internal representation (neural responses) of the external world. Eigendistortions are rank-ordered directions in image space, along which a model’s responses are more sensitive. <code class="docutils literal notranslate"><span class="pre">Plenoptic</span></code>’s <a class="reference internal" href="../../api/plenoptic.synthesize.html#plenoptic.synthesize.eigendistortion.Eigendistortion" title="plenoptic.synthesize.eigendistortion.Eigendistortion"><code class="xref py py-class docutils literal notranslate"><span class="pre">Eigendistortion</span></code></a> provides an easy way to synthesize eigendistortions for any PyTorch model.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">torch</span>
+
+<span class="kn">import</span> <span class="nn">plenoptic</span> <span class="k">as</span> <span class="nn">po</span>
+<span class="kn">from</span> <span class="nn">plenoptic.data.fetch</span> <span class="kn">import</span> <span class="n">fetch_data</span>
+<span class="kn">from</span> <span class="nn">plenoptic.simulate.models</span> <span class="kn">import</span> <span class="n">OnOff</span>
+<span class="kn">from</span> <span class="nn">plenoptic.synthesize</span> <span class="kn">import</span> <span class="n">Eigendistortion</span>
+
+<span class="c1"># this notebook uses torchvision, which is an optional dependency.</span>
+<span class="c1"># if this fails, install torchvision in your plenoptic environment</span>
+<span class="c1"># and restart the notebook kernel.</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">torchvision</span> <span class="kn">import</span> <span class="n">models</span>
+    <span class="kn">from</span> <span class="nn">torchvision.models</span> <span class="kn">import</span> <span class="n">feature_extraction</span>
+<span class="k">except</span> <span class="ne">ModuleNotFoundError</span><span class="p">:</span>
+    <span class="k">raise</span> <span class="ne">ModuleNotFoundError</span><span class="p">(</span>
+        <span class="s2">&quot;optional dependency torchvision not found!&quot;</span>
+        <span class="s2">&quot; please install it in your plenoptic environment &quot;</span>
+        <span class="s2">&quot;and restart the notebook kernel&quot;</span>
+    <span class="p">)</span>
+
+<span class="c1"># we do not actually run synthesis in this notebook, so the cpu is fine.</span>
+<span class="n">DEVICE</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s2">&quot;cpu&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="input-preprocessing">
+<h2>Input preprocessing<a class="headerlink" href="#input-preprocessing" title="Link to this heading"></a></h2>
+<p>Let’s load the parrot image used in the paper and display it:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># crop the image to be square:</span>
+<span class="n">image_tensor</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">parrot</span><span class="p">()</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">DEVICE</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+<span class="n">image_tensor</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">tools</span><span class="o">.</span><span class="n">center_crop</span><span class="p">(</span><span class="n">image_tensor</span><span class="p">,</span> <span class="nb">min</span><span class="p">(</span><span class="n">image_tensor</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">:]))</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Torch image shape:&quot;</span><span class="p">,</span> <span class="n">image_tensor</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+
+<span class="n">po</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">image_tensor</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Torch image shape: torch.Size([1, 1, 254, 254])
+</pre></div>
+</div>
+<img alt="../../_images/37774939c7effa3fed46665b7898346eb59db8e46c7890d4c35d99524397946f.png" src="../../_images/37774939c7effa3fed46665b7898346eb59db8e46c7890d4c35d99524397946f.png" />
+</div>
+</div>
+<p>Since the Front-end OnOff model only has two channel outputs, we can easily visualize the feature maps.
+We’ll apply a circular mask to this model’s inputs to avoid edge artifacts in the synthesis.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mdl_f</span> <span class="o">=</span> <span class="n">OnOff</span><span class="p">(</span><span class="n">kernel_size</span><span class="o">=</span><span class="p">(</span><span class="mi">31</span><span class="p">,</span> <span class="mi">31</span><span class="p">),</span> <span class="n">pretrained</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">apply_mask</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">cache_filt</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">po</span><span class="o">.</span><span class="n">tools</span><span class="o">.</span><span class="n">remove_grad</span><span class="p">(</span><span class="n">mdl_f</span><span class="p">)</span>
+<span class="n">mdl_f</span> <span class="o">=</span> <span class="n">mdl_f</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">DEVICE</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">image_tensor</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
+<span class="n">mdl_f</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
+
+<span class="n">response_f</span> <span class="o">=</span> <span class="n">mdl_f</span><span class="p">(</span><span class="n">image_tensor</span><span class="p">)</span>
+<span class="n">po</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span>
+    <span class="n">response_f</span><span class="p">,</span>
+    <span class="n">title</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;on channel response&quot;</span><span class="p">,</span> <span class="s2">&quot;off channel response&quot;</span><span class="p">],</span>
+<span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../_images/5538b1d5724c7e2445ea71685216979911947b8bd9077cf2f94a193b6126d48d.png" src="../../_images/5538b1d5724c7e2445ea71685216979911947b8bd9077cf2f94a193b6126d48d.png" />
+</div>
+</div>
+</section>
+<section id="synthesizing-eigendistortions">
+<h2>Synthesizing eigendistortions<a class="headerlink" href="#synthesizing-eigendistortions" title="Link to this heading"></a></h2>
+<section id="front-end-model-eigendistortion-synthesis">
+<h3>Front-end model: eigendistortion synthesis<a class="headerlink" href="#front-end-model-eigendistortion-synthesis" title="Link to this heading"></a></h3>
+<p>Now that we have our Front End model set up, we can synthesize eigendistortions! This is done easily just by calling <a class="reference internal" href="../../api/plenoptic.synthesize.html#plenoptic.synthesize.eigendistortion.Eigendistortion.synthesize" title="plenoptic.synthesize.eigendistortion.Eigendistortion.synthesize"><code class="xref py py-func docutils literal notranslate"><span class="pre">synthesis</span></code></a> after instantiating the <a class="reference internal" href="../../api/plenoptic.synthesize.html#plenoptic.synthesize.eigendistortion.Eigendistortion" title="plenoptic.synthesize.eigendistortion.Eigendistortion"><code class="xref py py-class docutils literal notranslate"><span class="pre">Eigendistortion</span></code></a> object. We’ll synthesize the top and bottom <code class="docutils literal notranslate"><span class="pre">k</span></code>, representing the most- and least-noticeable eigendistortions for this model.</p>
+<p>The paper synthesizes the top and bottom <code class="docutils literal notranslate"><span class="pre">k=1</span></code> eigendistortions, but we’ll set <code class="docutils literal notranslate"><span class="pre">k&gt;1</span></code> so the algorithm converges/stabilizes faster.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># synthesize the top and bottom k distortions</span>
+<span class="n">eigendist_f</span> <span class="o">=</span> <span class="n">Eigendistortion</span><span class="p">(</span><span class="n">image</span><span class="o">=</span><span class="n">image_tensor</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="n">mdl_f</span><span class="p">)</span>
+<span class="c1"># this synthesis takes a long time to run, so we load in a cached version.</span>
+<span class="c1"># see the following admonition for how to run this yourself</span>
+<span class="n">eigendist_f</span><span class="o">.</span><span class="n">load</span><span class="p">(</span>
+    <span class="n">fetch_data</span><span class="p">(</span><span class="s2">&quot;berardino_onoff.pt&quot;</span><span class="p">),</span> <span class="n">tensor_equality_atol</span><span class="o">=</span><span class="mf">1e-7</span><span class="p">,</span> <span class="n">map_location</span><span class="o">=</span><span class="n">DEVICE</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="dropdown note admonition">
+<p class="admonition-title">How to run this synthesis manually</p>
+<div class="highlight-python notranslate" id="test-berardino-onoff"><div class="highlight"><pre><span></span><span class="n">eigendist_f</span><span class="o">.</span><span class="n">synthesize</span><span class="p">(</span><span class="n">k</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;power&quot;</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="mi">2000</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="front-end-model-eigendistortion-display">
+<h3>Front-end model: eigendistortion display<a class="headerlink" href="#front-end-model-eigendistortion-display" title="Link to this heading"></a></h3>
+<p>Once synthesized, we can plot the distortion on the image using <a class="reference internal" href="../../api/plenoptic.synthesize.html#plenoptic.synthesize.eigendistortion.display_eigendistortion_all" title="plenoptic.synthesize.eigendistortion.display_eigendistortion_all"><code class="xref py py-func docutils literal notranslate"><span class="pre">display_eigendistortion_all</span></code></a>. Feel free to adjust the constant <code class="docutils literal notranslate"><span class="pre">alpha</span></code> that scales the amount of each distortion on the image.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">po</span><span class="o">.</span><span class="n">synth</span><span class="o">.</span><span class="n">eigendistortion</span><span class="o">.</span><span class="n">display_eigendistortion_all</span><span class="p">(</span>
+    <span class="n">eigendist_f</span><span class="p">,</span>
+    <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span>
+    <span class="n">alpha</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+    <span class="n">suptitle</span><span class="o">=</span><span class="s2">&quot;OnOff&quot;</span><span class="p">,</span>
+<span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../_images/b10d9bdaa7504525ef57a405daf5dd787db7b23f7e8f7444e9a9eec1441d4fe3.png" src="../../_images/b10d9bdaa7504525ef57a405daf5dd787db7b23f7e8f7444e9a9eec1441d4fe3.png" />
+</div>
+</div>
+</section>
+<section id="vgg16-eigendistortion-synthesis">
+<h3>VGG16: eigendistortion synthesis<a class="headerlink" href="#vgg16-eigendistortion-synthesis" title="Link to this heading"></a></h3>
+<p>Following the lead of Berardino et al. (2017), let’s compare the Front End model’s eigendistortion to those of an early layer of VGG16! VGG16 takes as input color images, so we’ll need to repeat the grayscale parrot along the RGB color dimension.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Create a class that takes the nth layer output of a given model</span>
+<span class="k">class</span> <span class="nc">TorchVision</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">return_node</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">extractor</span> <span class="o">=</span> <span class="n">feature_extraction</span><span class="o">.</span><span class="n">create_feature_extractor</span><span class="p">(</span>
+            <span class="n">model</span><span class="p">,</span> <span class="n">return_nodes</span><span class="o">=</span><span class="p">[</span><span class="n">return_node</span><span class="p">]</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">model</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">return_node</span> <span class="o">=</span> <span class="n">return_node</span>
+
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">extractor</span><span class="p">(</span><span class="n">x</span><span class="p">)[</span><span class="bp">self</span><span class="o">.</span><span class="n">return_node</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>VGG16 was trained on pre-processed ImageNet images with approximately zero mean and unit stdev, so we can preprocess our Parrot image the same way.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># VGG16</span>
+<span class="k">def</span> <span class="nf">normalize</span><span class="p">(</span><span class="n">img_tensor</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;standardize the image for vgg16&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">img_tensor</span> <span class="o">-</span> <span class="n">img_tensor</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span> <span class="o">/</span> <span class="n">img_tensor</span><span class="o">.</span><span class="n">std</span><span class="p">()</span>
+
+
+<span class="c1"># store these for later so we can un-normalize the image for display purposes</span>
+<span class="n">orig_mean</span> <span class="o">=</span> <span class="n">image_tensor</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span>
+<span class="n">orig_std</span> <span class="o">=</span> <span class="n">image_tensor</span><span class="o">.</span><span class="n">std</span><span class="p">()</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span>
+<span class="n">image_tensor</span> <span class="o">=</span> <span class="n">normalize</span><span class="p">(</span><span class="n">image_tensor</span><span class="p">)</span>
+
+<span class="n">image_tensor3</span> <span class="o">=</span> <span class="n">image_tensor</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+<span class="c1"># &quot;layer 3&quot; according to Berardino et al (2017)</span>
+<span class="n">vgg</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">vgg16</span><span class="p">(</span><span class="n">weights</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">VGG16_Weights</span><span class="o">.</span><span class="n">IMAGENET1K_V1</span><span class="p">,</span> <span class="n">progress</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">mdl_v</span> <span class="o">=</span> <span class="n">TorchVision</span><span class="p">(</span><span class="n">vgg</span><span class="p">,</span> <span class="s2">&quot;features.11&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">DEVICE</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">image_tensor</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
+<span class="n">po</span><span class="o">.</span><span class="n">tools</span><span class="o">.</span><span class="n">remove_grad</span><span class="p">(</span><span class="n">mdl_v</span><span class="p">)</span>
+<span class="n">mdl_v</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
+
+<span class="n">eigendist_v</span> <span class="o">=</span> <span class="n">Eigendistortion</span><span class="p">(</span><span class="n">image</span><span class="o">=</span><span class="n">image_tensor3</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="n">mdl_v</span><span class="p">)</span>
+<span class="c1"># this synthesis takes a long time to run, so we load in a cached version.</span>
+<span class="c1"># see the following admonition for how to run this yourself</span>
+<span class="n">eigendist_v</span><span class="o">.</span><span class="n">load</span><span class="p">(</span>
+    <span class="n">fetch_data</span><span class="p">(</span><span class="s2">&quot;berardino_vgg16.pt&quot;</span><span class="p">),</span> <span class="n">tensor_equality_atol</span><span class="o">=</span><span class="mf">1e-7</span><span class="p">,</span> <span class="n">map_location</span><span class="o">=</span><span class="n">DEVICE</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="dropdown note admonition">
+<p class="admonition-title">How to run this synthesis manually</p>
+<div class="highlight-python notranslate" id="test-berardino-vgg16"><div class="highlight"><pre><span></span><span class="n">eigendist_v</span><span class="o">.</span><span class="n">synthesize</span><span class="p">(</span><span class="n">k</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;power&quot;</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="mi">5000</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="vgg16-eigendistortion-display">
+<h3>VGG16: eigendistortion display<a class="headerlink" href="#vgg16-eigendistortion-display" title="Link to this heading"></a></h3>
+<p>We can now display the most- and least-noticeable eigendistortions as before, then compare their quality to those of the Front-end model.</p>
+<p>Since the distortions here were synthesized using a pre-processed (normalized) imagea, we can easily pass a function to unprocess the image.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># create an image processing function to unnormalize the image and avg the channels to</span>
+<span class="c1"># grayscale</span>
+<span class="k">def</span> <span class="nf">unnormalize</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">x</span> <span class="o">*</span> <span class="n">orig_std</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">device</span><span class="p">)</span> <span class="o">+</span> <span class="n">orig_mean</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+
+
+<span class="n">po</span><span class="o">.</span><span class="n">synth</span><span class="o">.</span><span class="n">eigendistortion</span><span class="o">.</span><span class="n">display_eigendistortion_all</span><span class="p">(</span>
+    <span class="n">eigendist_v</span><span class="p">,</span>
+    <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span>
+    <span class="n">alpha</span><span class="o">=</span><span class="p">[</span><span class="mi">15</span><span class="p">,</span> <span class="mi">100</span><span class="p">],</span>
+    <span class="n">suptitle</span><span class="o">=</span><span class="s2">&quot;VGG16&quot;</span><span class="p">,</span>
+    <span class="n">as_rgb</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">process_image</span><span class="o">=</span><span class="n">unnormalize</span><span class="p">,</span>
+<span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../_images/2f3596a0e662f6fcde46cac749edc270a0b728b50dda6fd8225174236f6733d0.png" src="../../_images/2f3596a0e662f6fcde46cac749edc270a0b728b50dda6fd8225174236f6733d0.png" />
+</div>
+</div>
+</section>
+</section>
+<section id="final-thoughts">
+<h2>Final thoughts<a class="headerlink" href="#final-thoughts" title="Link to this heading"></a></h2>
+<p>To rigorously test which of these model’s representations are more human-like, we’ll have to conduct a perceptual experiment. For now, we’ll just leave it to you to eyeball and decide which distortions are more or less noticeable!</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../models/Steerable_Pyramid.html" class="btn btn-neutral float-left" title="Steerable Pyramid" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="Original_MAD.html" class="btn btn-neutral float-right" title="Reproducing Wang and Simoncelli, 2008 (MAD Competition)" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2019-2025, Plenoptic authors.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,1707 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Portilla-Simoncelli Texture Metamer &mdash; plenoptic 1.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/nbsphinx-code-cells.css?v=2aa19091" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=8d563738"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+      <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Reproducing Wang and Simoncelli, 2008 (MAD Competition)" href="../applications/09_Original_MAD.html" />
+    <link rel="prev" title="Perceptual distance" href="04_Perceptual_distance.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+<div style="background-color: rgb(248, 215, 218); color: rgb(114, 28, 36); text-align: center;">
+  <div>
+    <div>This is documentation for <strong>an old version</strong>.
+      <a href="https://docs.plenoptic.org/" style="background-color: rgb(220, 53, 69); color: rgb(255, 255, 255); margin: 1rem; padding: 0.375rem 0.75rem; border-radius: 4px; display: inline-block; text-align: center;">Switch to stable version</a>
+    </div>
+  </div>
+</div>
+ 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            plenoptic
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Basic concepts</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../conceptual_intro.html">Conceptual Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../models.html">Model requirements</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../00_quickstart.html">Quickstart</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Synthesis method introductions</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../intro/02_Eigendistortions.html">Eigendistortions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intro/05_Geodesics.html">Representational Geodesic</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intro/06_Metamer.html">Metamers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intro/07_Simple_MAD.html">MAD Competition Conceptual Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intro/08_MAD_Competition.html">MAD Competition Usage</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Models and metrics</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="03_Steerable_Pyramid.html">Steerable Pyramid</a></li>
+<li class="toctree-l1"><a class="reference internal" href="04_Perceptual_distance.html">Perceptual distance</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Portilla-Simoncelli Texture Metamer</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Synthesis method examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../applications/09_Original_MAD.html">Reproducing Wang and Simoncelli, 2008 (MAD Competition)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../applications/Demo_Eigendistortion.html">Reproducing Berardino et al., 2017 (Eigendistortions)</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Advanced usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../synthesis.html">Synthesis object design</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tips.html">Tips and Tricks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../reproducibility.html">Reproducibility</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/modules.html">Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/Display.html">Display and animate functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/Synthesis_extensions.html">Extending existing synthesis objects</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">plenoptic</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Portilla-Simoncelli Texture Metamer</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/tutorials/models/Metamer-Portilla-Simoncelli.nblink.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">import</span> <span class="nn">plenoptic</span> <span class="k">as</span> <span class="nn">po</span>
+<span class="kn">import</span> <span class="nn">scipy.io</span> <span class="k">as</span> <span class="nn">sio</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">os.path</span> <span class="k">as</span> <span class="nn">op</span>
+<span class="kn">import</span> <span class="nn">glob</span>
+<span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">import</span> <span class="nn">pyrtools</span> <span class="k">as</span> <span class="nn">pt</span>
+<span class="kn">from</span> <span class="nn">tqdm</span> <span class="kn">import</span> <span class="n">tqdm</span>
+<span class="kn">from</span> <span class="nn">PIL</span> <span class="kn">import</span> <span class="n">Image</span>
+<span class="o">%</span><span class="k">load_ext</span> autoreload
+<span class="o">%</span><span class="k">autoreload</span>
+
+<span class="c1"># download some texture files if you don&#39;t already have them:</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;../tests/&#39;</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">test_metric</span> <span class="kn">import</span> <span class="n">osf_download</span>
+<span class="n">results_dir</span> <span class="o">=</span> <span class="n">osf_download</span><span class="p">(</span><span class="s1">&#39;portilla_simoncelli_images.tar.gz&#39;</span><span class="p">)</span>
+<span class="n">DATA_PATH</span> <span class="o">=</span> <span class="s1">&#39;../data/portilla_simoncelli_images/&#39;</span>
+<span class="n">DEVICE</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s2">&quot;cuda&quot;</span> <span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">()</span> <span class="k">else</span> <span class="s2">&quot;cpu&quot;</span><span class="p">)</span>
+
+<span class="c1"># so that relative sizes of axes created by po.imshow and others look right</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;figure.dpi&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">72</span>
+
+<span class="c1"># set seed for reproducibility</span>
+<span class="n">po</span><span class="o">.</span><span class="n">tools</span><span class="o">.</span><span class="n">set_seed</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># These variables control how long metamer synthesis runs for. The values present here will result in completed synthesis,</span>
+<span class="c1"># but you may want to decrease these numbers if you&#39;re on a machine with limited resources.</span>
+<span class="n">short_synth_max_iter</span> <span class="o">=</span> <span class="mi">1000</span>
+<span class="n">long_synth_max_iter</span> <span class="o">=</span> <span class="mi">3000</span>
+<span class="n">longest_synth_max_iter</span> <span class="o">=</span> <span class="mi">4000</span>
+</pre></div>
+</div>
+</div>
+<section id="Portilla-Simoncelli-Texture-Metamer">
+<h1>Portilla-Simoncelli Texture Metamer<a class="headerlink" href="#Portilla-Simoncelli-Texture-Metamer" title="Link to this heading"></a></h1>
+<p>In this tutorial we will aim to replicate <a class="reference external" href="https://www.cns.nyu.edu/pub/eero/portilla99-reprint.pdf">Portilla &amp; Simoncelli (1999)</a>. The tutorial is broken into the following parts:</p>
+<ol class="arabic simple">
+<li><p>Introduce the concept of a Visual Texture.</p></li>
+<li><p>How to synthesize metamers for the Portilla &amp; Simoncelli texture model.</p></li>
+<li><p>Demonstrate the importance of different classes of statistics.</p></li>
+<li><p>Example syntheses from different classes of textures (e.g., artificial, Julesz, pseudoperiodic, etc.)</p></li>
+<li><p>Extrapolation and Mixtures: Applying texture synthesis to more complex texture problems.</p></li>
+<li><p>Some model limitations.</p></li>
+<li><p>List of notable differences between the MATLAB and python implementations of the Portilla Simoncelli texture model and texture synthesis.</p></li>
+</ol>
+<p>Note that this notebook takes a long time to run (roughly an hour with a GPU, several hours without), because of all the metamers that are synthesized.</p>
+<section id="1-What-is-a-visual-texture?">
+<h2>1 What is a visual texture?<a class="headerlink" href="#1-What-is-a-visual-texture?" title="Link to this heading"></a></h2>
+<p>The simplest definition is a repeating visual pattern. Textures encompass a wide variety of images, including natural patterns such as bark or fur, man-made ones such as brick, and computer-generated ones such as the Julesz patterns (<a class="reference external" href="https://link.springer.com/article/10.1007/BF00336998">Julesz 1978</a>, <a class="reference external" href="https://opg.optica.org/josaa/abstract.cfm?uri=josaa-10-5-777">Yellot 1993</a>). Below we load some examples.</p>
+<p>The Portilla-Simoncelli model was developed to measure the statistical properties of visual textures. Metamer synthesis was used (and can be used) in conjunction with the Portilla-Simoncelli texture model to demonstrate the necessity of different properties of the visual texture. We will use some of these example textures to demonstrate aspects of the Portilla Simoncelli model.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Load and display a set of visual textures</span>
+
+<span class="k">def</span> <span class="nf">display_images</span><span class="p">(</span><span class="n">im_files</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="n">images</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">tools</span><span class="o">.</span><span class="n">load_images</span><span class="p">(</span><span class="n">im_files</span><span class="p">)</span>
+    <span class="n">fig</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">images</span><span class="p">,</span> <span class="n">col_wrap</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">title</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">fig</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="n">title</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mf">1.05</span><span class="p">)</span>
+
+<span class="n">directory</span> <span class="o">=</span> <span class="n">DATA_PATH</span>
+<span class="n">natural</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;3a&#39;</span><span class="p">,</span><span class="s1">&#39;6a&#39;</span><span class="p">,</span><span class="s1">&#39;8a&#39;</span><span class="p">,</span><span class="s1">&#39;14b&#39;</span><span class="p">,</span><span class="s1">&#39;15c&#39;</span><span class="p">,</span><span class="s1">&#39;15d&#39;</span><span class="p">,</span><span class="s1">&#39;15e&#39;</span><span class="p">,</span><span class="s1">&#39;15f&#39;</span><span class="p">,</span><span class="s1">&#39;16c&#39;</span><span class="p">,</span><span class="s1">&#39;16b&#39;</span><span class="p">,</span><span class="s1">&#39;16a&#39;</span><span class="p">]</span>
+<span class="n">manmade</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;4a&#39;</span><span class="p">,</span><span class="s1">&#39;4b&#39;</span><span class="p">,</span><span class="s1">&#39;14a&#39;</span><span class="p">,</span><span class="s1">&#39;16e&#39;</span><span class="p">,</span><span class="s1">&#39;14e&#39;</span><span class="p">,</span><span class="s1">&#39;14c&#39;</span><span class="p">,</span><span class="s1">&#39;5a&#39;</span><span class="p">]</span>
+<span class="n">artificial</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;5b&#39;</span><span class="p">,</span><span class="s1">&#39;13a&#39;</span><span class="p">,</span><span class="s1">&#39;13b&#39;</span><span class="p">,</span><span class="s1">&#39;13c&#39;</span><span class="p">,</span><span class="s1">&#39;13d&#39;</span><span class="p">]</span>
+
+<span class="n">im_files</span> <span class="o">=</span> <span class="p">[</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="s1">&#39;fig&#39;</span><span class="o">+</span><span class="n">num</span><span class="o">+</span><span class="s1">&#39;.jpg&#39;</span><span class="p">)</span> <span class="k">for</span> <span class="n">num</span> <span class="ow">in</span> <span class="n">natural</span><span class="p">]</span>
+<span class="n">display_images</span><span class="p">(</span><span class="n">im_files</span><span class="p">,</span> <span class="s2">&quot;Natural Images&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+/mnt/home/wbroderick/plenoptic/plenoptic/tools/data.py:133: UserWarning: Creating a tensor from a list of numpy.ndarrays is extremely slow. Please consider converting the list to a single numpy.ndarray with numpy.array() before converting to a tensor. (Triggered internally at /opt/conda/conda-bld/pytorch_1670525553989/work/torch/csrc/utils/tensor_new.cpp:230.)
+  images = torch.tensor(images, dtype=torch.float32)
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/tutorials_models_Metamer-Portilla-Simoncelli_4_1.png" src="../../_images/tutorials_models_Metamer-Portilla-Simoncelli_4_1.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">im_files</span> <span class="o">=</span> <span class="p">[</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="s1">&#39;fig&#39;</span><span class="o">+</span><span class="n">num</span><span class="o">+</span><span class="s1">&#39;.jpg&#39;</span><span class="p">)</span> <span class="k">for</span> <span class="n">num</span> <span class="ow">in</span> <span class="n">manmade</span><span class="p">]</span>
+<span class="n">display_images</span><span class="p">(</span><span class="n">im_files</span><span class="p">,</span> <span class="s1">&#39;Man-made Images&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/tutorials_models_Metamer-Portilla-Simoncelli_5_0.png" src="../../_images/tutorials_models_Metamer-Portilla-Simoncelli_5_0.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">im_files</span> <span class="o">=</span> <span class="p">[</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="s1">&#39;fig&#39;</span><span class="o">+</span><span class="n">num</span><span class="o">+</span><span class="s1">&#39;.jpg&#39;</span><span class="p">)</span> <span class="k">for</span> <span class="n">num</span> <span class="ow">in</span> <span class="n">artificial</span><span class="p">]</span>
+<span class="n">display_images</span><span class="p">(</span><span class="n">im_files</span><span class="p">,</span> <span class="s1">&#39;Artificial Images&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/tutorials_models_Metamer-Portilla-Simoncelli_6_0.png" src="../../_images/tutorials_models_Metamer-Portilla-Simoncelli_6_0.png" />
+</div>
+</div>
+</section>
+<section id="2.-How-to-generate-Portilla-Simoncelli-Metamers">
+<h2>2. How to generate Portilla-Simoncelli Metamers<a class="headerlink" href="#2.-How-to-generate-Portilla-Simoncelli-Metamers" title="Link to this heading"></a></h2>
+<section id="2.1-A-quick-reminder-of-what-metamers-are-and-why-we-are-calculating-them.">
+<h3>2.1 A quick reminder of what metamers are and why we are calculating them.<a class="headerlink" href="#2.1-A-quick-reminder-of-what-metamers-are-and-why-we-are-calculating-them." title="Link to this heading"></a></h3>
+<p>The primary reason that the original Portilla-Simoncelli paper developed the metamer procedure was to assess whether a model sees like human. Basically we generate samples of images that “look the same” to the model and then examine them or run experiments to see if they also “look the same” to a human.</p>
+</section>
+<section id="2.2-How-do-we-use-the-plenoptic-package-to-generate-Portilla-Simoncelli-Texture-Metamers?">
+<h3>2.2 How do we use the plenoptic package to generate Portilla-Simoncelli Texture Metamers?<a class="headerlink" href="#2.2-How-do-we-use-the-plenoptic-package-to-generate-Portilla-Simoncelli-Texture-Metamers?" title="Link to this heading"></a></h3>
+<p>For a model, two images are metamers if the model response to both images is equal (within some tolerance). Generating a metamer starts with a target image:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">img</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">tools</span><span class="o">.</span><span class="n">load_images</span><span class="p">(</span><span class="n">DATA_PATH</span> <span class="o">+</span> <span class="s1">&#39;fig4a.jpg&#39;</span><span class="p">)</span>
+<span class="n">po</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">img</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/tutorials_models_Metamer-Portilla-Simoncelli_8_0.png" src="../../_images/tutorials_models_Metamer-Portilla-Simoncelli_8_0.png" />
+</div>
+</div>
+<div class="line-block">
+<div class="line">Below we have an instance of the PortillaSimoncelli model with default parameters.</div>
+<div class="line">The default parameters of PortillaSimoncelli are:</div>
+</div>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">n_scales=4</span></code>, The number of scales in the steerable pyramid underlying the model.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">n_orientations=4</span></code>, The number of orientations in the steerable pyramid.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">spatial_corr_width=9</span></code>, The size of the window used to calculate the correlations across steerable pyramid bands.</p></li>
+</ul>
+<p>Running the model on an image will return a vector of numbers summarizing the “texturiness” of that image, which we refer to as the model’s representation. These statistics are measurements of different properties that the authors considered relevant to a texture’s appearance (where a texture is defined above), and capture some of the repeating properties of these types of images. Section 3 of this notebook explores those statistics and how they relate to texture properties.</p>
+<p>When the model representation of two images match, the model considers the two images identical and we say that those two images are model metamers. Synthesizing a novel image that matches the representation of some arbitrary input is the goal of the <code class="docutils literal notranslate"><span class="pre">Metamer</span></code> class.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">n</span><span class="o">=</span><span class="n">img</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">simul</span><span class="o">.</span><span class="n">PortillaSimoncelli</span><span class="p">([</span><span class="n">n</span><span class="p">,</span><span class="n">n</span><span class="p">])</span>
+<span class="n">stats</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">stats</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+tensor([[[0.4350, 0.0407, 0.1622,  ..., 0.0000, 0.0000, 0.0023]]])
+</pre></div></div>
+</div>
+<p>To use <code class="docutils literal notranslate"><span class="pre">Metamer</span></code>, simply initialize it with the target image and the model, then call <code class="docutils literal notranslate"><span class="pre">.synthesize()</span></code>. By setting <code class="docutils literal notranslate"><span class="pre">store_progress=True</span></code>, we update a variety of attributes (all of which start with <code class="docutils literal notranslate"><span class="pre">saved_</span></code>) on each iteration so we can later examine, for example, the synthesized image over time. Let’s quickly run it for just 10 iterations to see how it works.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">met</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">synth</span><span class="o">.</span><span class="n">Metamer</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">model</span><span class="p">)</span>
+<span class="n">met</span><span class="o">.</span><span class="n">synthesize</span><span class="p">(</span><span class="n">store_progress</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+/mnt/home/wbroderick/plenoptic/plenoptic/tools/validate.py:179: UserWarning: model is in training mode, you probably want to call eval() to switch to evaluation mode
+  &#34;model is in training mode, you probably want to call eval()&#34;
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "c727ea2bc9714be6a209f4f8fc82e23d", "version_major": 2, "version_minor": 0}</script></div>
+</div>
+<p>We can then call the <code class="docutils literal notranslate"><span class="pre">plot_synthesis_status</span></code> method to see how things are doing. The image on the left shows the metamer at this moment in synthesis, while the center plot shows the loss over time, with the red dot pointing out the current loss, and the rightmost plot shows the representation error. For the texture model, we plot the difference in representations split up across the different category of statistics (which we’ll describe in more detail later).</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># representation_error plot has three subplots, so we increase its relative width</span>
+<span class="n">po</span><span class="o">.</span><span class="n">synth</span><span class="o">.</span><span class="n">metamer</span><span class="o">.</span><span class="n">plot_synthesis_status</span><span class="p">(</span><span class="n">met</span><span class="p">,</span> <span class="n">width_ratios</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;plot_representation_error&#39;</span><span class="p">:</span> <span class="mf">3.1</span><span class="p">});</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+/mnt/home/wbroderick/plenoptic/plenoptic/tools/display.py:960: UserWarning: ax is not None, so we&#39;re ignoring figsize...
+  warnings.warn(&#34;ax is not None, so we&#39;re ignoring figsize...&#34;)
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/tutorials_models_Metamer-Portilla-Simoncelli_14_1.png" src="../../_images/tutorials_models_Metamer-Portilla-Simoncelli_14_1.png" />
+</div>
+</div>
+</section>
+<section id="2.3-Portilla-Simoncelli-Texture-Model-Metamers">
+<h3>2.3 Portilla-Simoncelli Texture Model Metamers<a class="headerlink" href="#2.3-Portilla-Simoncelli-Texture-Model-Metamers" title="Link to this heading"></a></h3>
+<p>This section will show a successful texture synthesis for this wicker basket texture:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">po</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">img</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/tutorials_models_Metamer-Portilla-Simoncelli_16_0.png" src="../../_images/tutorials_models_Metamer-Portilla-Simoncelli_16_0.png" />
+</div>
+</div>
+<p>In the next block we will actually generate a metamer using the PortillaSimoncelli model, setting the following parameters for synthesis: <code class="docutils literal notranslate"><span class="pre">max_iter</span></code>, <code class="docutils literal notranslate"><span class="pre">store_progress</span></code>,<code class="docutils literal notranslate"><span class="pre">coarse_to_fine</span></code>, and <code class="docutils literal notranslate"><span class="pre">coarse_to_fine_kwargs</span></code>.</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">max_iter=1000</span></code> puts an upper bound (of 1000) on the number of iterations that the optimization will run.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">store_progress=True</span></code> tells the metamer class to store the progress of the metamer synthesis process</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">coarse_to_fine='together'</span></code> activates the coarse_to_fine functionality. With this mode turned on the metamer synthesis optimizes the image for the statistics associated with the low spatial frequency bands first, adding subsequent bands after <code class="docutils literal notranslate"><span class="pre">ctf_iters_to_check</span></code> iterations.</p></li>
+</ul>
+<p>It takes about 50s to run 100 iterations on my laptop. And it takes hundreds of iterations to get convergence. So you’ll have to wait a few minutes to generate the texture metamer.</p>
+<p>Note: we initialize synthesis with <code class="docutils literal notranslate"><span class="pre">im_init</span></code>, an initial uniform noise image with range <code class="docutils literal notranslate"><span class="pre">mean(target_signal)+[-.05,.05]</span></code>. Initial images with uniform random noise covering the full pixel domain <code class="docutils literal notranslate"><span class="pre">[0,1]</span></code> (which is the default choice for Metamer) don’t result in the very best metamers. With the full range initial image, the optimization seems to get stuck.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># send image and PS model to GPU, if available. then im_init and Metamer will also use GPU</span>
+<span class="n">img</span> <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">DEVICE</span><span class="p">)</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">simul</span><span class="o">.</span><span class="n">PortillaSimoncelli</span><span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">:])</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">DEVICE</span><span class="p">)</span>
+<span class="n">im_init</span> <span class="o">=</span> <span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">rand_like</span><span class="p">(</span><span class="n">img</span><span class="p">)</span><span class="o">-</span><span class="mf">.5</span><span class="p">)</span> <span class="o">*</span> <span class="mf">.1</span> <span class="o">+</span> <span class="n">img</span><span class="o">.</span><span class="n">mean</span><span class="p">();</span>
+<span class="n">met</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">synth</span><span class="o">.</span><span class="n">MetamerCTF</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">loss_function</span><span class="o">=</span><span class="n">po</span><span class="o">.</span><span class="n">tools</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">l2_norm</span><span class="p">,</span> <span class="n">initial_image</span><span class="o">=</span><span class="n">im_init</span><span class="p">,</span>
+                          <span class="n">coarse_to_fine</span><span class="o">=</span><span class="s1">&#39;together&#39;</span><span class="p">)</span>
+
+<span class="n">o</span><span class="o">=</span><span class="n">met</span><span class="o">.</span><span class="n">synthesize</span><span class="p">(</span>
+    <span class="n">max_iter</span><span class="o">=</span><span class="n">short_synth_max_iter</span><span class="p">,</span>
+    <span class="n">store_progress</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="c1"># setting change_scale_criterion=None means that we change scales every ctf_iters_to_check,</span>
+    <span class="c1"># see the metamer notebook for details.</span>
+    <span class="n">change_scale_criterion</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">ctf_iters_to_check</span><span class="o">=</span><span class="mi">7</span>
+    <span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+/mnt/home/wbroderick/plenoptic/plenoptic/tools/validate.py:179: UserWarning: model is in training mode, you probably want to call eval() to switch to evaluation mode
+  &#34;model is in training mode, you probably want to call eval()&#34;
+/mnt/home/wbroderick/plenoptic/plenoptic/tools/validate.py:211: UserWarning: Validating whether model can work with coarse-to-fine synthesis -- this can take a while!
+  warnings.warn(&#34;Validating whether model can work with coarse-to-fine synthesis -- this can take a while!&#34;)
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "c8f4818fbbe4451cb52f570355823364", "version_major": 2, "version_minor": 0}</script></div>
+</div>
+<p>Now we can visualize the output of the synthesis optimization. First we compare the <em>Target image</em> and the <em>Synthesized image</em> side-by-side. We can see that they appear perceptually similar — that is, for this texture image, matching the Portilla-Simoncelli texture stats gives you an image that the human visual system <em>also</em> considers similar.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">po</span><span class="o">.</span><span class="n">imshow</span><span class="p">([</span><span class="n">met</span><span class="o">.</span><span class="n">image</span><span class="p">,</span> <span class="n">met</span><span class="o">.</span><span class="n">metamer</span><span class="p">],</span> <span class="n">title</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Target image&#39;</span><span class="p">,</span> <span class="s1">&#39;Synthesized metamer&#39;</span><span class="p">],</span> <span class="n">vrange</span><span class="o">=</span><span class="s1">&#39;auto1&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/tutorials_models_Metamer-Portilla-Simoncelli_20_0.png" src="../../_images/tutorials_models_Metamer-Portilla-Simoncelli_20_0.png" />
+</div>
+</div>
+<p>And to further visualize the result we can plot: the synthesized image, the synthesis loss over time, and the final model output error: <code class="docutils literal notranslate"><span class="pre">model(target</span> <span class="pre">image)</span> <span class="pre">-</span> <span class="pre">model(synthesized</span> <span class="pre">image)</span></code>.</p>
+<p>We can see the synthesized texture on the leftmost plot. The overall synthesis error decreases over the synthesis iterations (subplot 2). The remaining plots show us the error broken out by the different texture statistics that we will go over in the next section.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">po</span><span class="o">.</span><span class="n">synth</span><span class="o">.</span><span class="n">metamer</span><span class="o">.</span><span class="n">plot_synthesis_status</span><span class="p">(</span><span class="n">met</span><span class="p">,</span> <span class="n">width_ratios</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;plot_representation_error&#39;</span><span class="p">:</span> <span class="mf">3.1</span><span class="p">});</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+/mnt/home/wbroderick/plenoptic/plenoptic/tools/display.py:960: UserWarning: ax is not None, so we&#39;re ignoring figsize...
+  warnings.warn(&#34;ax is not None, so we&#39;re ignoring figsize...&#34;)
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/tutorials_models_Metamer-Portilla-Simoncelli_22_1.png" src="../../_images/tutorials_models_Metamer-Portilla-Simoncelli_22_1.png" />
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># For the remainder of the notebook we will use this helper function to</span>
+<span class="c1"># run synthesis so that the cells are a bit less busy.</span>
+
+<span class="c1"># Be sure to run this cell.</span>
+
+<span class="k">def</span> <span class="nf">run_synthesis</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">im_init</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot; Performs synthesis with the full Portilla-Simoncelli model.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        img : Tensor</span>
+<span class="sd">            A tensor containing an img.</span>
+<span class="sd">        model :</span>
+<span class="sd">            A model to constrain synthesis.</span>
+<span class="sd">        im_init: Tensor</span>
+<span class="sd">            A tensor to start image synthesis.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        met: Metamer</span>
+<span class="sd">            Metamer from the full Portilla-Simoncelli Model</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">im_init</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">im_init</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">rand_like</span><span class="p">(</span><span class="n">img</span><span class="p">)</span> <span class="o">*</span> <span class="mf">.01</span> <span class="o">+</span> <span class="n">img</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+    <span class="n">met</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">synth</span><span class="o">.</span><span class="n">MetamerCTF</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">loss_function</span><span class="o">=</span><span class="n">po</span><span class="o">.</span><span class="n">tools</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">l2_norm</span><span class="p">,</span> <span class="n">initial_image</span><span class="o">=</span><span class="n">im_init</span><span class="p">,</span>
+                              <span class="n">coarse_to_fine</span><span class="o">=</span><span class="s1">&#39;together&#39;</span><span class="p">)</span>
+    <span class="n">met</span><span class="o">.</span><span class="n">synthesize</span><span class="p">(</span>
+        <span class="n">max_iter</span><span class="o">=</span><span class="n">long_synth_max_iter</span><span class="p">,</span>
+        <span class="n">store_progress</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">change_scale_criterion</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">ctf_iters_to_check</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+        <span class="p">)</span>
+    <span class="k">return</span> <span class="n">met</span>
+</pre></div>
+</div>
+</div>
+</section>
+</section>
+<section id="3.-The-importance-of-different-classes-Texture-Statistics">
+<h2>3. The importance of different classes Texture Statistics<a class="headerlink" href="#3.-The-importance-of-different-classes-Texture-Statistics" title="Link to this heading"></a></h2>
+<p>The Portilla-Simoncelli consists of a few different classes of statistics:</p>
+<ul class="simple">
+<li><p>Marginal Statistics. These include pixel statistics (mean, variance, skew, kurtosis, and range of the pixel values), as well as the skewness and kurtosis of the lowpass images computed at each level of the recursive pyramid decomposition.</p></li>
+<li><p>Auto-Correlation Statistics. These include the auto-correlation of the real-valued pyramid bands, as well as the auto-correlation of the magnitude of the pyramid bands, and the mean of the magnitude of the pyramid bands.</p></li>
+<li><p>Cross-Correlation Statistics. These include correlations across scale and across orientation bands of the pyramid (both the for the real values of the pyramid and the magnitude of the pyramid bands).</p></li>
+</ul>
+<p>The original paper uses synthesis to demonstrate the role of these different types of statistics. They show that the statistics can be used to constrain a synthesis optimization to generate new examples of textures. They also show that the absence of subsets of statistics results in synthesis failures. Here we replicate those results.</p>
+<p>The first step is to create a version of the Portilla Simoncelli model where certain statistics can be turned off.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#  The following class extends the PortillaSimoncelli model so that you can specify which</span>
+<span class="c1">#  statistics you would like to remove.  We have created this model so that we can examine</span>
+<span class="c1">#  the consequences of the absence of specific statistics.</span>
+<span class="c1">#</span>
+<span class="c1">#  Be sure to run this cell.</span>
+
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">OrderedDict</span>
+<span class="k">class</span> <span class="nc">PortillaSimoncelliRemove</span><span class="p">(</span><span class="n">po</span><span class="o">.</span><span class="n">simul</span><span class="o">.</span><span class="n">PortillaSimoncelli</span><span class="p">):</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Model for measuring a subset of texture statistics reported by PortillaSimoncelli</span>
+
+<span class="sd">    Currently we do not support batch measurement of images.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    im_shape: int</span>
+<span class="sd">        the size of the images being processed by the model</span>
+<span class="sd">    remove_keys: list</span>
+<span class="sd">        The dictionary keys for the statistics we will &quot;remove&quot;.  In practice we set them to zero.</span>
+<span class="sd">        Possible keys: [&quot;pixel_statistics&quot;, &quot;magnitude_means&quot;, &quot;auto_correlation_magnitude&quot;,</span>
+<span class="sd">        &quot;skew_reconstructed&quot;, &quot;kurtosis_reconstructed&quot;, &quot;auto_correlation_reconstructed&quot;,</span>
+<span class="sd">        &quot;std_reconstructed&quot;, &quot;cross_orientation_correlation_magnitude&quot;, &quot;cross_scale_correlation_magnitude&quot;</span>
+<span class="sd">        &quot;cross_orientation_correlation_real&quot;, &quot;var_highpass_residual&quot;]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">im_shape</span><span class="p">,</span>
+        <span class="n">remove_keys</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">im_shape</span><span class="p">,</span> <span class="n">n_scales</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">n_orientations</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">spatial_corr_width</span><span class="o">=</span><span class="mi">9</span><span class="p">,</span> <span class="n">use_true_correlations</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">remove_keys</span> <span class="o">=</span> <span class="n">remove_keys</span>
+
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">image</span><span class="p">,</span> <span class="n">scales</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Generate Texture Statistics representation of an image with `remove_keys` removed.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        image : torch.Tensor</span>
+<span class="sd">            A tensor containing the image to analyze.</span>
+<span class="sd">        scales : list, optional</span>
+<span class="sd">            Which scales to include in the returned representation. If an empty</span>
+<span class="sd">            list (the default), we include all scales. Otherwise, can contain</span>
+<span class="sd">            subset of values present in this model&#39;s ``scales`` attribute.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        representation_vector: torch.Tensor</span>
+<span class="sd">            A flattened tensor (1d) containing the measured representation statistics.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># create the representation vector with (with all scales)</span>
+        <span class="n">stats_vec</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
+        <span class="c1"># convert to dict so it&#39;s easy to zero out the keys we don&#39;t care about</span>
+        <span class="n">stats_dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">convert_to_dict</span><span class="p">(</span><span class="n">stats_vec</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">kk</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">remove_keys</span><span class="p">:</span>
+            <span class="c1"># we zero out the stats (instead of removing them) because removing them</span>
+            <span class="c1"># makes it difficult to keep track of which stats belong to which scale</span>
+            <span class="c1"># (which is necessary for coarse-to-fine synthesis).</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">stats_dict</span><span class="p">[</span><span class="n">kk</span><span class="p">],</span><span class="n">OrderedDict</span><span class="p">):</span>
+                <span class="k">for</span> <span class="p">(</span><span class="n">key</span><span class="p">,</span><span class="n">val</span><span class="p">)</span> <span class="ow">in</span> <span class="n">stats_dict</span><span class="p">[</span><span class="n">kk</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                    <span class="n">stats_dict</span><span class="p">[</span><span class="n">kk</span><span class="p">][</span><span class="n">key</span><span class="p">]</span> <span class="o">*=</span> <span class="mi">0</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">stats_dict</span><span class="p">[</span><span class="n">kk</span><span class="p">]</span> <span class="o">*=</span> <span class="mi">0</span>
+        <span class="c1"># then convert back to vector and remove any scales we don&#39;t want (for coarse-to-fine)</span>
+        <span class="n">stats_vec</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">convert_to_vector</span><span class="p">(</span><span class="n">stats_dict</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">scales</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">stats_vec</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_remove_scales</span><span class="p">(</span><span class="n">stats_vec</span><span class="p">,</span> <span class="n">scales</span><span class="p">,</span> <span class="n">image</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">stats_vec</span>
+<br/></pre></div>
+</div>
+</div>
+<section id="Pixel-Statistics-+-Marginal-statistics">
+<h3>Pixel Statistics + Marginal statistics<a class="headerlink" href="#Pixel-Statistics-+-Marginal-statistics" title="Link to this heading"></a></h3>
+<p>Beginning with some of the pixel and marginal statistics, we’ll demonstrate synthesis both with and without combinations of statistics.</p>
+<p>The cell below replicates examples of synthesis failures with the following statistics removed:</p>
+<ul class="simple">
+<li><p>the pixel statistics: mean, variance, skew, kurtosis, minimum, maximum and</p></li>
+<li><p>marginal statistics on the lowpass images computed at each level of the recursive pyramid (skew, kurtosis)</p></li>
+</ul>
+<p>These statistics play an important role constraining the histogram of pixel intensities to match across the original and synthesized image.</p>
+<p>(see figure 3 of Portilla &amp; Simoncelli 2000)</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># which statistics to remove</span>
+<span class="n">remove_statistics</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;pixel_statistics&#39;</span><span class="p">,</span><span class="s1">&#39;skew_reconstructed&#39;</span><span class="p">,</span><span class="s1">&#39;kurtosis_reconstructed&#39;</span><span class="p">,</span><span class="s1">&#39;magnitude_means&#39;</span><span class="p">]</span>
+
+<span class="c1"># run on fig3a or fig3b to replicate paper</span>
+<span class="n">img</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">tools</span><span class="o">.</span><span class="n">load_images</span><span class="p">(</span><span class="n">DATA_PATH</span> <span class="o">+</span> <span class="s1">&#39;fig3b.jpg&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">DEVICE</span><span class="p">)</span>
+
+<span class="c1"># synthesis with full PortillaSimoncelli model</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">simul</span><span class="o">.</span><span class="n">PortillaSimoncelli</span><span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">:])</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">DEVICE</span><span class="p">)</span>
+<span class="n">metamer</span> <span class="o">=</span> <span class="n">run_synthesis</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">model</span><span class="p">)</span>
+
+<span class="c1"># synthesis with pixel and marginal statistics absent</span>
+<span class="n">model_remove</span> <span class="o">=</span> <span class="n">PortillaSimoncelliRemove</span><span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">:]</span> <span class="p">,</span><span class="n">remove_keys</span><span class="o">=</span><span class="n">remove_statistics</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">DEVICE</span><span class="p">)</span>
+<span class="n">metamer_remove</span> <span class="o">=</span> <span class="n">run_synthesis</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">model_remove</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+/mnt/home/wbroderick/plenoptic/plenoptic/tools/validate.py:179: UserWarning: model is in training mode, you probably want to call eval() to switch to evaluation mode
+  &#34;model is in training mode, you probably want to call eval()&#34;
+/mnt/home/wbroderick/plenoptic/plenoptic/tools/validate.py:211: UserWarning: Validating whether model can work with coarse-to-fine synthesis -- this can take a while!
+  warnings.warn(&#34;Validating whether model can work with coarse-to-fine synthesis -- this can take a while!&#34;)
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "de2c335b66614b159b6e25d963e3ee94", "version_major": 2, "version_minor": 0}</script></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+/mnt/home/wbroderick/plenoptic/plenoptic/synthesize/metamer.py:661: UserWarning: Loss has converged, stopping synthesis
+  warnings.warn(&#34;Loss has converged, stopping synthesis&#34;)
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "f3e12578e0434798834b6e87ba1cdb2c", "version_major": 2, "version_minor": 0}</script></div>
+</div>
+<p>In the following figure, we can see that not only does the metamer created with all statistics look more like the target image than the one creaated without the marginal statistics, but its pixel intensity histogram is much more similar to that of the target image.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># visualize results</span>
+<span class="n">fig</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">imshow</span><span class="p">([</span><span class="n">metamer</span><span class="o">.</span><span class="n">image</span><span class="p">,</span> <span class="n">metamer</span><span class="o">.</span><span class="n">metamer</span><span class="p">,</span> <span class="n">metamer_remove</span><span class="o">.</span><span class="n">metamer</span><span class="p">],</span>
+                <span class="n">title</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Target image&#39;</span><span class="p">,</span> <span class="s1">&#39;Full Statistics&#39;</span><span class="p">,</span> <span class="s1">&#39;Without Marginal Statistics&#39;</span><span class="p">],</span> <span class="n">vrange</span><span class="o">=</span><span class="s1">&#39;auto1&#39;</span><span class="p">);</span>
+<span class="c1"># add plots showing the different pixel intensity histograms</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">add_axes</span><span class="p">([</span><span class="mf">.33</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mf">.33</span><span class="p">,</span> <span class="mf">.9</span><span class="p">])</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">add_axes</span><span class="p">([</span><span class="mf">.67</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mf">.33</span><span class="p">,</span> <span class="mf">.9</span><span class="p">])</span>
+<span class="c1"># this helper function expects a metamer object. see the metamer notebook for details.</span>
+<span class="n">po</span><span class="o">.</span><span class="n">synth</span><span class="o">.</span><span class="n">metamer</span><span class="o">.</span><span class="n">plot_pixel_values</span><span class="p">(</span><span class="n">metamer</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">fig</span><span class="o">.</span><span class="n">axes</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">axes</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Full statistics&#39;</span><span class="p">)</span>
+<span class="n">po</span><span class="o">.</span><span class="n">synth</span><span class="o">.</span><span class="n">metamer</span><span class="o">.</span><span class="n">plot_pixel_values</span><span class="p">(</span><span class="n">metamer_remove</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">fig</span><span class="o">.</span><span class="n">axes</span><span class="p">[</span><span class="mi">4</span><span class="p">])</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">axes</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Without marginal statistics&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Text(0.5, 1.0, &#39;Without marginal statistics&#39;)
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/tutorials_models_Metamer-Portilla-Simoncelli_29_1.png" src="../../_images/tutorials_models_Metamer-Portilla-Simoncelli_29_1.png" />
+</div>
+</div>
+</section>
+<section id="Coefficient-Correlations">
+<h3>Coefficient Correlations<a class="headerlink" href="#Coefficient-Correlations" title="Link to this heading"></a></h3>
+<p>The cell below replicates examples of synthesis failures with the following statistics removed:</p>
+<ul class="simple">
+<li><p>local auto-correlations of the lowpass images computed at each level of the recursive pyramid</p></li>
+</ul>
+<p>These statistics play a role in representing periodic structures and long-range correlations. For example, in the image named fig4b.jpg (the tile pattern) the absence of these statistics causes results in more difficulty synthesizing the long, continuous lines that stretch from one end of the image to the other.</p>
+<p>(see figure 4 of Portilla &amp; Simoncelli 2000)</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># which statistics to remove</span>
+<span class="n">remove_statistics</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;auto_correlation_reconstructed&#39;</span><span class="p">]</span>
+
+<span class="c1"># run on fig4a or fig4b to replicate paper</span>
+<span class="n">img</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">tools</span><span class="o">.</span><span class="n">load_images</span><span class="p">(</span><span class="n">DATA_PATH</span> <span class="o">+</span> <span class="s1">&#39;fig4b.jpg&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">DEVICE</span><span class="p">)</span>
+
+<span class="c1"># synthesis with full PortillaSimoncelli model</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">simul</span><span class="o">.</span><span class="n">PortillaSimoncelli</span><span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">:])</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">DEVICE</span><span class="p">)</span>
+<span class="n">metamer</span> <span class="o">=</span> <span class="n">run_synthesis</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">model</span><span class="p">)</span>
+
+<span class="c1"># synthesis with coefficient correlations  absent</span>
+<span class="n">model_remove</span> <span class="o">=</span> <span class="n">PortillaSimoncelliRemove</span><span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">:],</span> <span class="n">remove_keys</span><span class="o">=</span><span class="n">remove_statistics</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">DEVICE</span><span class="p">)</span>
+<span class="n">metamer_remove</span> <span class="o">=</span> <span class="n">run_synthesis</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">model_remove</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "82918a6ffea549bb88fb5be7d9294ec6", "version_major": 2, "version_minor": 0}</script></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "2cedc38e4e4947eeb30b20b8334a0c26", "version_major": 2, "version_minor": 0}</script></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># visualize results</span>
+<span class="n">po</span><span class="o">.</span><span class="n">imshow</span><span class="p">([</span><span class="n">metamer</span><span class="o">.</span><span class="n">image</span><span class="p">,</span> <span class="n">metamer</span><span class="o">.</span><span class="n">metamer</span><span class="p">,</span> <span class="n">metamer_remove</span><span class="o">.</span><span class="n">metamer</span><span class="p">],</span>
+          <span class="n">title</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Target image&#39;</span><span class="p">,</span> <span class="s1">&#39;Full Statistics&#39;</span><span class="p">,</span> <span class="s1">&#39;Without Correlation Statistics&#39;</span><span class="p">],</span> <span class="n">vrange</span><span class="o">=</span><span class="s1">&#39;auto1&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/tutorials_models_Metamer-Portilla-Simoncelli_32_0.png" src="../../_images/tutorials_models_Metamer-Portilla-Simoncelli_32_0.png" />
+</div>
+</div>
+<p>And we can double check the error plots to see the difference in their representations. The first figure shows the error for the metamer created without the correlation statistics (at right above), while the second shows the error for the metamer created with all statistics (center), and we can see that larger error in the middle row in the first figure, especially the center plot, <code class="docutils literal notranslate"><span class="pre">auto_correlation_reconstructed</span></code>, since these statistics are unconstrained for the synthesis done by
+<code class="docutils literal notranslate"><span class="pre">metamer_remove</span></code>. (Note we have to use <code class="docutils literal notranslate"><span class="pre">model</span></code>, not <code class="docutils literal notranslate"><span class="pre">model_remove</span></code> to create these plots, since <code class="docutils literal notranslate"><span class="pre">model_remove</span></code> always zeroes out those statistics.)</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">plot_representation</span><span class="p">(</span><span class="n">model</span><span class="p">(</span><span class="n">metamer_remove</span><span class="o">.</span><span class="n">metamer</span><span class="p">)</span> <span class="o">-</span> <span class="n">model</span><span class="p">(</span><span class="n">metamer</span><span class="o">.</span><span class="n">image</span><span class="p">),</span>
+                                   <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span> <span class="n">ylim</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s1">&#39;Without Correlation Statistics&#39;</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">plot_representation</span><span class="p">(</span><span class="n">model</span><span class="p">(</span><span class="n">metamer</span><span class="o">.</span><span class="n">metamer</span><span class="p">)</span> <span class="o">-</span> <span class="n">model</span><span class="p">(</span><span class="n">metamer</span><span class="o">.</span><span class="n">image</span><span class="p">),</span>
+                                   <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span> <span class="n">ylim</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s1">&#39;Full statistics&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/tutorials_models_Metamer-Portilla-Simoncelli_34_0.png" src="../../_images/tutorials_models_Metamer-Portilla-Simoncelli_34_0.png" />
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/tutorials_models_Metamer-Portilla-Simoncelli_34_1.png" src="../../_images/tutorials_models_Metamer-Portilla-Simoncelli_34_1.png" />
+</div>
+</div>
+</section>
+<section id="Magnitude-Correlation">
+<h3>Magnitude Correlation<a class="headerlink" href="#Magnitude-Correlation" title="Link to this heading"></a></h3>
+<p>The cell below replicates examples of synthesis failures with the following statistics removed:</p>
+<ul class="simple">
+<li><p>correlation of the complex magnitude of pairs of coefficients at adjacent positions, orientations and scales.</p></li>
+</ul>
+<p>These statistics play a role constraining high contrast locations to be organized along lines and edges across all scales. For example, in the image named fig6a.jpg the absence of these statistics results in a completely different organization of the orientation content in the edges.</p>
+<p>(see figure 6 of Portilla &amp; Simoncelli 2000)</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># which statistics to remove</span>
+<span class="n">remove_statistics</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;cross_orientation_correlation_magnitude&#39;</span><span class="p">,</span><span class="s1">&#39;cross_scale_correlation_magnitude&#39;</span><span class="p">,</span><span class="s1">&#39;auto_correlation_magnitude&#39;</span><span class="p">]</span>
+
+<span class="c1"># run on fig6a or fig6b to replicate paper</span>
+<span class="n">img</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">tools</span><span class="o">.</span><span class="n">load_images</span><span class="p">(</span><span class="n">DATA_PATH</span> <span class="o">+</span> <span class="s1">&#39;fig6a.jpg&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">DEVICE</span><span class="p">)</span>
+
+<span class="c1"># synthesis with full PortillaSimoncelli model</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">simul</span><span class="o">.</span><span class="n">PortillaSimoncelli</span><span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">:])</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">DEVICE</span><span class="p">)</span>
+<span class="n">metamer</span> <span class="o">=</span> <span class="n">run_synthesis</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">model</span><span class="p">)</span>
+
+<span class="c1"># synthesis with pixel and marginal statistics absent</span>
+<span class="n">model_remove</span> <span class="o">=</span> <span class="n">PortillaSimoncelliRemove</span><span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">:],</span><span class="n">remove_keys</span><span class="o">=</span><span class="n">remove_statistics</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">DEVICE</span><span class="p">)</span>
+<span class="n">metamer_remove</span> <span class="o">=</span> <span class="n">run_synthesis</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">model_remove</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+/mnt/home/wbroderick/plenoptic/plenoptic/tools/validate.py:179: UserWarning: model is in training mode, you probably want to call eval() to switch to evaluation mode
+  &#34;model is in training mode, you probably want to call eval()&#34;
+/mnt/home/wbroderick/plenoptic/plenoptic/tools/validate.py:211: UserWarning: Validating whether model can work with coarse-to-fine synthesis -- this can take a while!
+  warnings.warn(&#34;Validating whether model can work with coarse-to-fine synthesis -- this can take a while!&#34;)
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "8d1cdc21ccdf4be28ffb3dc8214ed50a", "version_major": 2, "version_minor": 0}</script></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+/mnt/home/wbroderick/plenoptic/plenoptic/synthesize/metamer.py:661: UserWarning: Loss has converged, stopping synthesis
+  warnings.warn(&#34;Loss has converged, stopping synthesis&#34;)
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "6d4e5390df9e4ec58cce03a7ce16dd6e", "version_major": 2, "version_minor": 0}</script></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[22]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># visualize results</span>
+<span class="n">po</span><span class="o">.</span><span class="n">imshow</span><span class="p">([</span><span class="n">metamer</span><span class="o">.</span><span class="n">image</span><span class="p">,</span> <span class="n">metamer</span><span class="o">.</span><span class="n">metamer</span><span class="p">,</span> <span class="n">metamer_remove</span><span class="o">.</span><span class="n">metamer</span><span class="p">],</span>
+          <span class="n">title</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Target image&#39;</span><span class="p">,</span> <span class="s1">&#39;Full Statistics&#39;</span><span class="p">,</span><span class="s1">&#39;Without Magnitude Statistics&#39;</span><span class="p">],</span> <span class="n">vrange</span><span class="o">=</span><span class="s1">&#39;auto1&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/tutorials_models_Metamer-Portilla-Simoncelli_37_0.png" src="../../_images/tutorials_models_Metamer-Portilla-Simoncelli_37_0.png" />
+</div>
+</div>
+<p>And again, let’s look at the error plots. The first figure shows the error for the metamer created without the correlation statistics (at right above), while the second shows the error for the metamer created with all statistics (center), and we can see that larger error in the middle row in the first figure, especially the center plot, <code class="docutils literal notranslate"><span class="pre">auto_correlation_magnitude</span></code> and <code class="docutils literal notranslate"><span class="pre">cross_orientation_correlation_magnitude</span></code>, since these statistics are unconstrained for the synthesis done by
+<code class="docutils literal notranslate"><span class="pre">metamer_remove</span></code>. (Note we have to use <code class="docutils literal notranslate"><span class="pre">model</span></code>, not <code class="docutils literal notranslate"><span class="pre">model_remove</span></code> to create these plots, since <code class="docutils literal notranslate"><span class="pre">model_remove</span></code> always zeroes out those statistics.)</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[23]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">plot_representation</span><span class="p">(</span><span class="n">model</span><span class="p">(</span><span class="n">metamer_remove</span><span class="o">.</span><span class="n">metamer</span><span class="p">)</span> <span class="o">-</span> <span class="n">model</span><span class="p">(</span><span class="n">metamer</span><span class="o">.</span><span class="n">image</span><span class="p">),</span>
+                                   <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span> <span class="n">ylim</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s1">&#39;Without Correlation Statistics&#39;</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">plot_representation</span><span class="p">(</span><span class="n">model</span><span class="p">(</span><span class="n">metamer</span><span class="o">.</span><span class="n">metamer</span><span class="p">)</span> <span class="o">-</span> <span class="n">model</span><span class="p">(</span><span class="n">metamer</span><span class="o">.</span><span class="n">image</span><span class="p">),</span>
+                                   <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span> <span class="n">ylim</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s1">&#39;Full statistics&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/tutorials_models_Metamer-Portilla-Simoncelli_39_0.png" src="../../_images/tutorials_models_Metamer-Portilla-Simoncelli_39_0.png" />
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/tutorials_models_Metamer-Portilla-Simoncelli_39_1.png" src="../../_images/tutorials_models_Metamer-Portilla-Simoncelli_39_1.png" />
+</div>
+</div>
+</section>
+<section id="Cross-scale-Phase-Statistics">
+<h3>Cross-scale Phase Statistics<a class="headerlink" href="#Cross-scale-Phase-Statistics" title="Link to this heading"></a></h3>
+<p>The cell below replicates examples of synthesis failures with the following statistics removed:</p>
+<ul class="simple">
+<li><p>relative phase of coefficients of bands at adjacent scales</p></li>
+</ul>
+<p>These statistics play a role constraining high contrast locations to be organized along lines and edges across all scales. These phase statistics are important in representing textures with strong illumination effects. When they are removed, the synthesized images appear much less three dimensional and lose the detailed structure of shadows.</p>
+<p>(see figure 8 of Portilla &amp; Simoncelli 2000)</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[24]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># which statistics to remove</span>
+<span class="n">remove_statistics</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;cross_scale_correlation_real&#39;</span><span class="p">]</span>
+
+<span class="c1"># run on fig8a and fig8b to replicate paper</span>
+<span class="n">img</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">tools</span><span class="o">.</span><span class="n">load_images</span><span class="p">(</span><span class="n">DATA_PATH</span> <span class="o">+</span> <span class="s1">&#39;fig8b.jpg&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">DEVICE</span><span class="p">)</span>
+
+<span class="c1"># synthesis with full PortillaSimoncelli model</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">simul</span><span class="o">.</span><span class="n">PortillaSimoncelli</span><span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">:])</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">DEVICE</span><span class="p">)</span>
+<span class="n">metamer</span> <span class="o">=</span> <span class="n">run_synthesis</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">model</span><span class="p">)</span>
+
+<span class="c1"># synthesis with pixel and marginal statistics absent</span>
+<span class="n">model_remove</span> <span class="o">=</span> <span class="n">PortillaSimoncelliRemove</span><span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">:],</span> <span class="n">remove_keys</span><span class="o">=</span><span class="n">remove_statistics</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">DEVICE</span><span class="p">)</span>
+<span class="n">metamer_remove</span> <span class="o">=</span> <span class="n">run_synthesis</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">model_remove</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+/mnt/home/wbroderick/plenoptic/plenoptic/tools/validate.py:179: UserWarning: model is in training mode, you probably want to call eval() to switch to evaluation mode
+  &#34;model is in training mode, you probably want to call eval()&#34;
+/mnt/home/wbroderick/plenoptic/plenoptic/tools/validate.py:211: UserWarning: Validating whether model can work with coarse-to-fine synthesis -- this can take a while!
+  warnings.warn(&#34;Validating whether model can work with coarse-to-fine synthesis -- this can take a while!&#34;)
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "d98c4b8c02b04ac1acb065c0596865c1", "version_major": 2, "version_minor": 0}</script></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+/mnt/home/wbroderick/plenoptic/plenoptic/synthesize/metamer.py:661: UserWarning: Loss has converged, stopping synthesis
+  warnings.warn(&#34;Loss has converged, stopping synthesis&#34;)
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "410926fb54284c42848122524319af37", "version_major": 2, "version_minor": 0}</script></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[25]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># visualize results</span>
+<span class="n">po</span><span class="o">.</span><span class="n">imshow</span><span class="p">([</span><span class="n">metamer</span><span class="o">.</span><span class="n">image</span><span class="p">,</span> <span class="n">metamer</span><span class="o">.</span><span class="n">metamer</span><span class="p">,</span> <span class="n">metamer_remove</span><span class="o">.</span><span class="n">metamer</span><span class="p">],</span>
+          <span class="n">title</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Target image&#39;</span><span class="p">,</span> <span class="s1">&#39;Full Statistics&#39;</span><span class="p">,</span><span class="s1">&#39;Without Cross-Scale Phase Statistics&#39;</span><span class="p">],</span> <span class="n">vrange</span><span class="o">=</span><span class="s1">&#39;auto1&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/tutorials_models_Metamer-Portilla-Simoncelli_42_0.png" src="../../_images/tutorials_models_Metamer-Portilla-Simoncelli_42_0.png" />
+</div>
+</div>
+<p>And again, let’s look at the error plots. The first figure shows the error for the metamer created without the correlation statistics (at right above), while the second shows the error for the metamer created with all statistics (center), and we can see that larger error in the middle row in the first figure, especially the center plot, <code class="docutils literal notranslate"><span class="pre">cross_scale_correlation_real</span></code>, since these statistics are unconstrained for the synthesis done by <code class="docutils literal notranslate"><span class="pre">metamer_remove</span></code>. (Note we have to use <code class="docutils literal notranslate"><span class="pre">model</span></code>, not
+<code class="docutils literal notranslate"><span class="pre">model_remove</span></code> to create these plots, since <code class="docutils literal notranslate"><span class="pre">model_remove</span></code> always zeroes out those statistics.)</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[26]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">plot_representation</span><span class="p">(</span><span class="n">model</span><span class="p">(</span><span class="n">metamer_remove</span><span class="o">.</span><span class="n">metamer</span><span class="p">)</span> <span class="o">-</span> <span class="n">model</span><span class="p">(</span><span class="n">metamer</span><span class="o">.</span><span class="n">image</span><span class="p">),</span>
+                                   <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span> <span class="n">ylim</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mf">1.2</span><span class="p">,</span> <span class="mf">1.2</span><span class="p">))</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s1">&#39;Without Correlation Statistics&#39;</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">plot_representation</span><span class="p">(</span><span class="n">model</span><span class="p">(</span><span class="n">metamer</span><span class="o">.</span><span class="n">metamer</span><span class="p">)</span> <span class="o">-</span> <span class="n">model</span><span class="p">(</span><span class="n">metamer</span><span class="o">.</span><span class="n">image</span><span class="p">),</span>
+                                   <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span> <span class="n">ylim</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mf">1.2</span><span class="p">,</span> <span class="mf">1.2</span><span class="p">))</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s1">&#39;Full statistics&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/tutorials_models_Metamer-Portilla-Simoncelli_44_0.png" src="../../_images/tutorials_models_Metamer-Portilla-Simoncelli_44_0.png" />
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/tutorials_models_Metamer-Portilla-Simoncelli_44_1.png" src="../../_images/tutorials_models_Metamer-Portilla-Simoncelli_44_1.png" />
+</div>
+</div>
+</section>
+</section>
+<section id="4.-Examples-from-different-texture-classes">
+<h2>4. Examples from different texture classes<a class="headerlink" href="#4.-Examples-from-different-texture-classes" title="Link to this heading"></a></h2>
+<section id="Artificial-Textures">
+<h3>Artificial Textures<a class="headerlink" href="#Artificial-Textures" title="Link to this heading"></a></h3>
+<p>(see figure 12 of Portilla Simoncelli 2000)</p>
+<p>The following cell can be used to reproduce texture synthesis on the artificial texture examples in the original paper, showing that the model can handle these simpler images as well.</p>
+<p>Examples</p>
+<ul class="simple">
+<li><p>(12a) solid black squares</p></li>
+<li><p>(12b) tilted gray columns</p></li>
+<li><p>(12c) curvy lines</p></li>
+<li><p>(12d) dashes</p></li>
+<li><p>(12e) solid black circles</p></li>
+<li><p>(12f) pluses</p></li>
+</ul>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[27]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">img</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">tools</span><span class="o">.</span><span class="n">load_images</span><span class="p">(</span><span class="n">DATA_PATH</span> <span class="o">+</span> <span class="s1">&#39;fig12a.jpg&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">DEVICE</span><span class="p">)</span>
+
+<span class="c1"># synthesis with full PortillaSimoncelli model</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">simul</span><span class="o">.</span><span class="n">PortillaSimoncelli</span><span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">:])</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">DEVICE</span><span class="p">)</span>
+<span class="n">metamer</span> <span class="o">=</span> <span class="n">run_synthesis</span><span class="p">(</span><span class="n">img</span><span class="p">,</span><span class="n">model</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+/mnt/home/wbroderick/plenoptic/plenoptic/tools/validate.py:179: UserWarning: model is in training mode, you probably want to call eval() to switch to evaluation mode
+  &#34;model is in training mode, you probably want to call eval()&#34;
+/mnt/home/wbroderick/plenoptic/plenoptic/tools/validate.py:211: UserWarning: Validating whether model can work with coarse-to-fine synthesis -- this can take a while!
+  warnings.warn(&#34;Validating whether model can work with coarse-to-fine synthesis -- this can take a while!&#34;)
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "4604766a64e7498483355bd198e08546", "version_major": 2, "version_minor": 0}</script></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+/mnt/home/wbroderick/plenoptic/plenoptic/synthesize/metamer.py:661: UserWarning: Loss has converged, stopping synthesis
+  warnings.warn(&#34;Loss has converged, stopping synthesis&#34;)
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[28]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">po</span><span class="o">.</span><span class="n">imshow</span><span class="p">([</span><span class="n">metamer</span><span class="o">.</span><span class="n">image</span><span class="p">,</span> <span class="n">metamer</span><span class="o">.</span><span class="n">metamer</span><span class="p">],</span>
+          <span class="n">title</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Target image&#39;</span><span class="p">,</span> <span class="s1">&#39;Synthesized Metamer&#39;</span><span class="p">],</span> <span class="n">vrange</span><span class="o">=</span><span class="s1">&#39;auto1&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/tutorials_models_Metamer-Portilla-Simoncelli_47_0.png" src="../../_images/tutorials_models_Metamer-Portilla-Simoncelli_47_0.png" />
+</div>
+</div>
+</section>
+<section id="Counterexample-to-the-Julesz-Conjecture">
+<h3>Counterexample to the Julesz Conjecture<a class="headerlink" href="#Counterexample-to-the-Julesz-Conjecture" title="Link to this heading"></a></h3>
+<p>The Julesz conjecture, originally from <a class="reference external" href="https://ieeexplore.ieee.org/abstract/document/1057698">Julesz 1962</a>, states that “humans cannot distinguish between textures with identical second-order statistics” (second-order statistics include cross- and auto-correlations, see paper for details). Following up on this initial paper, <a class="reference external" href="https://link.springer.com/article/10.1007/BF00336998">Julesz et al, 1978</a> and then <a class="reference external" href="https://opg.optica.org/josaa/abstract.cfm?uri=josaa-10-5-777">Yellot, 1993</a>
+created images that served as counter-examples for this conjecture: pairs of images that had identical second-order statistics (they differed in their third- and higher-order statistics) but were readily distinguishable by humans. In figure 13 of Portilla &amp; Simoncelli, 2000, the authors show that the model is able to synthesize novel images based on these counterexamples that are <em>also</em> distinguishbale by humans, so the model does not confuse them either.</p>
+<p>(see figure 13 of Portilla &amp; Simoncelli 2000)</p>
+<p>Excerpt from paper: <em>“Figure 13 shows two pairs of counterexamples that have been used to refute the Julesz conjecture. [13a and 13b were ] originally created by Julesz et al. (1978): they have identical third-order pixel statistics, but are easily discriminated by human observers. Our model succeeds, in that it can reproduce the visual appearance of either of these textures. In particular, we have seen that the strongest statistical difference arises in the magnitude correlation statistcs. The
+rightmost pair were constructed by Yellott (1993), to have identical sample autocorrelation. Again, our model does not confuse these, and can reproduce the visual appearance of either one.”</em></p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[29]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Run on fig13a, fig13b, fig13c, fig13d to replicate examples in paper</span>
+<span class="n">img</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">tools</span><span class="o">.</span><span class="n">load_images</span><span class="p">(</span><span class="n">DATA_PATH</span> <span class="o">+</span> <span class="s1">&#39;fig13a.jpg&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">DEVICE</span><span class="p">)</span>
+
+<span class="c1"># synthesis with full PortillaSimoncelli model</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">simul</span><span class="o">.</span><span class="n">PortillaSimoncelli</span><span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">:])</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">DEVICE</span><span class="p">)</span>
+<span class="n">metamer_left</span> <span class="o">=</span> <span class="n">run_synthesis</span><span class="p">(</span><span class="n">img</span><span class="p">,</span><span class="n">model</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "55e67493b0d6404a9402ea7e2beaa5af", "version_major": 2, "version_minor": 0}</script></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[30]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Run on fig13a, fig13b, fig13c, fig13d to replicate examples in paper</span>
+<span class="n">img</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">tools</span><span class="o">.</span><span class="n">load_images</span><span class="p">(</span><span class="n">DATA_PATH</span> <span class="o">+</span> <span class="s1">&#39;fig13b.jpg&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">DEVICE</span><span class="p">)</span>
+
+<span class="c1"># synthesis with full PortillaSimoncelli model</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">simul</span><span class="o">.</span><span class="n">PortillaSimoncelli</span><span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">:])</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">DEVICE</span><span class="p">)</span>
+<span class="n">metamer_right</span> <span class="o">=</span> <span class="n">run_synthesis</span><span class="p">(</span><span class="n">img</span><span class="p">,</span><span class="n">model</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "ff01b8e63331498ab4268276a2ec21cd", "version_major": 2, "version_minor": 0}</script></div>
+</div>
+<p>And note that the two synthesized images (right column) or as distinguishable from each other as the two hand-crafted counterexamples (left column):</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[31]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">po</span><span class="o">.</span><span class="n">imshow</span><span class="p">([</span><span class="n">metamer_left</span><span class="o">.</span><span class="n">image</span><span class="p">,</span> <span class="n">metamer_left</span><span class="o">.</span><span class="n">metamer</span><span class="p">,</span>
+           <span class="n">metamer_right</span><span class="o">.</span><span class="n">image</span><span class="p">,</span> <span class="n">metamer_right</span><span class="o">.</span><span class="n">metamer</span><span class="p">],</span>
+          <span class="n">title</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Target image 1&#39;</span><span class="p">,</span> <span class="s1">&#39;Synthesized Metamer 1&#39;</span><span class="p">,</span> <span class="s1">&#39;Target Image 2&#39;</span><span class="p">,</span> <span class="s1">&#39;Synthesized Metamer 2&#39;</span><span class="p">],</span>
+          <span class="n">vrange</span><span class="o">=</span><span class="s1">&#39;auto1&#39;</span><span class="p">,</span> <span class="n">col_wrap</span><span class="o">=</span><span class="mi">2</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/tutorials_models_Metamer-Portilla-Simoncelli_52_0.png" src="../../_images/tutorials_models_Metamer-Portilla-Simoncelli_52_0.png" />
+</div>
+</div>
+</section>
+<section id="Pseudo-periodic-Textures">
+<h3>Pseudo-periodic Textures<a class="headerlink" href="#Pseudo-periodic-Textures" title="Link to this heading"></a></h3>
+<p>(see figure 14 of Portilla &amp; Simoncelli 2000)</p>
+<p>Excerpt from paper: <em>“Figure 14 shows synthesis results photographic textures that are pseudo-periodic, such as a brick wall and various types of woven fabric”</em></p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[32]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Run on fig14a, fig14b, fig14c, fig14d, fig14e, fig14f to replicate examples in paper</span>
+<span class="n">img</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">tools</span><span class="o">.</span><span class="n">load_images</span><span class="p">(</span><span class="n">DATA_PATH</span> <span class="o">+</span> <span class="s1">&#39;fig14a.jpg&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">DEVICE</span><span class="p">)</span>
+
+<span class="c1"># synthesis with full PortillaSimoncelli model</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">simul</span><span class="o">.</span><span class="n">PortillaSimoncelli</span><span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">:])</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">DEVICE</span><span class="p">)</span>
+<span class="n">metamer</span> <span class="o">=</span> <span class="n">run_synthesis</span><span class="p">(</span><span class="n">img</span><span class="p">,</span><span class="n">model</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "2410418fd503448999baadc8f372dda5", "version_major": 2, "version_minor": 0}</script></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[33]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">po</span><span class="o">.</span><span class="n">imshow</span><span class="p">([</span><span class="n">metamer</span><span class="o">.</span><span class="n">image</span><span class="p">,</span> <span class="n">metamer</span><span class="o">.</span><span class="n">metamer</span><span class="p">],</span>
+          <span class="n">title</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Target image&#39;</span><span class="p">,</span> <span class="s1">&#39;Synthesized Metamer&#39;</span><span class="p">],</span> <span class="n">vrange</span><span class="o">=</span><span class="s1">&#39;auto1&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/tutorials_models_Metamer-Portilla-Simoncelli_55_0.png" src="../../_images/tutorials_models_Metamer-Portilla-Simoncelli_55_0.png" />
+</div>
+</div>
+</section>
+<section id="Aperiodic-Textures">
+<h3>Aperiodic Textures<a class="headerlink" href="#Aperiodic-Textures" title="Link to this heading"></a></h3>
+<p>(see figure 15 of Portilla &amp; Simoncelli 2000)</p>
+<p>Excerpt from paper: <em>“Figure 15 shows synthesis results for a set of photographic textures that are aperiodic, such as the animal fur or wood grain”</em></p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[34]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Run on fig15a, fig15b, fig15c, fig15d to replicate examples in paper</span>
+<span class="n">img</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">tools</span><span class="o">.</span><span class="n">load_images</span><span class="p">(</span><span class="n">DATA_PATH</span> <span class="o">+</span> <span class="s1">&#39;fig15a.jpg&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">DEVICE</span><span class="p">)</span>
+
+<span class="c1"># synthesis with full PortillaSimoncelli model</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">simul</span><span class="o">.</span><span class="n">PortillaSimoncelli</span><span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">:])</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">DEVICE</span><span class="p">)</span>
+<span class="n">metamer</span> <span class="o">=</span> <span class="n">run_synthesis</span><span class="p">(</span><span class="n">img</span><span class="p">,</span><span class="n">model</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "c669c12b86bd45a3ba8d9c56a60450e9", "version_major": 2, "version_minor": 0}</script></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[35]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">po</span><span class="o">.</span><span class="n">imshow</span><span class="p">([</span><span class="n">metamer</span><span class="o">.</span><span class="n">image</span><span class="p">,</span> <span class="n">metamer</span><span class="o">.</span><span class="n">metamer</span><span class="p">],</span>
+          <span class="n">title</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Target image&#39;</span><span class="p">,</span> <span class="s1">&#39;Synthesized Metamer&#39;</span><span class="p">],</span> <span class="n">vrange</span><span class="o">=</span><span class="s1">&#39;auto1&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/tutorials_models_Metamer-Portilla-Simoncelli_58_0.png" src="../../_images/tutorials_models_Metamer-Portilla-Simoncelli_58_0.png" />
+</div>
+</div>
+</section>
+<section id="Complex-Structured-Photographic-Textures">
+<h3>Complex Structured Photographic Textures<a class="headerlink" href="#Complex-Structured-Photographic-Textures" title="Link to this heading"></a></h3>
+<p>(see figure 16 of Portilla &amp; Simoncelli 2000)</p>
+<p>Excerpt from paper: <em>“Figure 16 shows several examples of textures with complex structures. Although the synthesis quality is not as good as in previous examples, we find the ability of our model to capture salient visual features of these textures quite remarkable. Especially notable are those examples in all three figures for which shading produces a strong impression of three-dimensionality.”</em></p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[36]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Run on fig16a, fig16b, fig16c, fig16d to replicate examples in paper</span>
+<span class="n">img</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">tools</span><span class="o">.</span><span class="n">load_images</span><span class="p">(</span><span class="n">DATA_PATH</span> <span class="o">+</span> <span class="s1">&#39;fig16e.jpg&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">DEVICE</span><span class="p">)</span>
+
+<span class="c1"># synthesis with full PortillaSimoncelli model</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">simul</span><span class="o">.</span><span class="n">PortillaSimoncelli</span><span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">:])</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">DEVICE</span><span class="p">)</span>
+<span class="n">metamer</span> <span class="o">=</span> <span class="n">run_synthesis</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">model</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "b5f3581a81c1403c8fefc627977ad3d6", "version_major": 2, "version_minor": 0}</script></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[37]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">po</span><span class="o">.</span><span class="n">imshow</span><span class="p">([</span><span class="n">metamer</span><span class="o">.</span><span class="n">image</span><span class="p">,</span> <span class="n">metamer</span><span class="o">.</span><span class="n">metamer</span><span class="p">],</span>
+          <span class="n">title</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Target image&#39;</span><span class="p">,</span> <span class="s1">&#39;Synthesized metamer&#39;</span><span class="p">],</span> <span class="n">vrange</span><span class="o">=</span><span class="s1">&#39;auto1&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/tutorials_models_Metamer-Portilla-Simoncelli_61_0.png" src="../../_images/tutorials_models_Metamer-Portilla-Simoncelli_61_0.png" />
+</div>
+</div>
+</section>
+</section>
+<section id="5.-Extrapolation">
+<h2>5. Extrapolation<a class="headerlink" href="#5.-Extrapolation" title="Link to this heading"></a></h2>
+<p>(see figure 19 of Portilla &amp; Simoncelli 2000)</p>
+<p>Here we explore using the texture synthesis model for extrapolating beyond its spatial boundaries.</p>
+<p>Excerpt from paper: <em>“…[C]onsider the problem of extending a texture image beyond its spatial boundaries (spatial extrapolation). We want to synthesize an image in which the central pixels contain a copy of the original image, and the surrounding pixels are synthesized based on the statistical measurements of the original image. The set of all images with the same central subset of pixels is convex, and the projection onto such a convex set is easily inserted into the iterative loop of the
+synthesis algorithm. Specifically, we need only re-set the central pixels to the desired values on each iteration of the synthesis loop. In practice, this substitution is done by multiplying the desired pixels by a smooth mask (a raised cosine) and adding this to the current synthesized image multiplied by the complement of this mask. The smooth mask prevents artifacts at the boundary between original and synthesized pixels, whereas convergence to the desired pixels within the mask support
+region is achieved almost perfectly. This technique is applicable to the restoration of pictures which have been destroyed in some subregion (“filling holes”) (e.g., Hirani and Totsuka, 1996), although the estimation of parameters from the defective image is not straightforward. Figure 19 shows a set of examples that have been spatially extrapolated using this method. Observe that the border between real and synthetic data is barely noticeable. An additional potential benefit is that the
+synthetic images are seamlessly periodic (due to circular boundary-handling within our algorithm), and thus may be used to tile a larger image.”</em></p>
+<p>In the following, we mask out the boundaries of an image and use the texture model to extend it.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[38]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># The following class inherits from the PortillaSimoncelli model for</span>
+<span class="c1"># the purpose of extrapolating (filling in) a chunk of an imaged defined</span>
+<span class="c1"># by a mask.</span>
+
+<span class="k">class</span> <span class="nc">PortillaSimoncelliMask</span><span class="p">(</span><span class="n">po</span><span class="o">.</span><span class="n">simul</span><span class="o">.</span><span class="n">PortillaSimoncelli</span><span class="p">):</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Extend the PortillaSimoncelli model to operate on masked images.</span>
+
+<span class="sd">    Additional Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    mask: Tensor</span>
+<span class="sd">        boolean mask with True in the part of the image that will be filled in during synthesis</span>
+<span class="sd">    target: Tensor</span>
+<span class="sd">        image target for synthesis</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">im_shape</span><span class="p">,</span>
+        <span class="n">n_scales</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+        <span class="n">n_orientations</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+        <span class="n">spatial_corr_width</span><span class="o">=</span><span class="mi">9</span><span class="p">,</span>
+        <span class="n">use_true_correlations</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">mask</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">target</span><span class="o">=</span><span class="kc">None</span>
+    <span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">im_shape</span><span class="p">,</span> <span class="n">n_scales</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">n_orientations</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">spatial_corr_width</span><span class="o">=</span><span class="mi">9</span><span class="p">,</span> <span class="n">use_true_correlations</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mask</span> <span class="o">=</span> <span class="n">mask</span><span class="p">;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">target</span> <span class="o">=</span> <span class="n">target</span><span class="p">;</span>
+
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">image</span><span class="p">,</span> <span class="n">scales</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Generate Texture Statistics representation of an image using the target for the masked portion</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        images : torch.Tensor</span>
+<span class="sd">            A 4d tensor containing two images to analyze, with shape (2,</span>
+<span class="sd">            channel, height, width).</span>
+<span class="sd">        scales : list, optional</span>
+<span class="sd">            Which scales to include in the returned representation. If an empty</span>
+<span class="sd">            list (the default), we include all scales. Otherwise, can contain</span>
+<span class="sd">            subset of values present in this model&#39;s ``scales`` attribute.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        representation_vector: torch.Tensor</span>
+<span class="sd">            A flattened tensor (1d) containing the measured representation statistics.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">mask</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">target</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">image</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">texture_masked_image</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="n">image</span><span class="p">,</span><span class="n">scales</span><span class="o">=</span><span class="n">scales</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">texture_masked_image</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">image</span><span class="p">):</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot; Fill in part of the image (designated by the mask) with the saved target image</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ------------</span>
+<span class="sd">        image : torch.Tensor</span>
+<span class="sd">            A tensor containing a single image</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        texture_masked_image: torch.Tensor</span>
+<span class="sd">            An image that is a combination of the input image and the saved target.</span>
+<span class="sd">            Combination is specified by self.mask</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">target</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">mask</span> <span class="o">+</span> <span class="n">image</span><span class="o">*</span><span class="p">(</span><span class="o">~</span><span class="bp">self</span><span class="o">.</span><span class="n">mask</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[39]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">img_file</span> <span class="o">=</span> <span class="n">DATA_PATH</span> <span class="o">+</span> <span class="s1">&#39;fig14b.jpg&#39;</span>
+<span class="n">img</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">tools</span><span class="o">.</span><span class="n">load_images</span><span class="p">(</span><span class="n">img_file</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">DEVICE</span><span class="p">)</span>
+<span class="n">im_init</span> <span class="o">=</span> <span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">rand_like</span><span class="p">(</span><span class="n">img</span><span class="p">)</span><span class="o">-</span><span class="mf">.5</span><span class="p">)</span> <span class="o">*</span> <span class="mf">.1</span> <span class="o">+</span> <span class="n">img</span><span class="o">.</span><span class="n">mean</span><span class="p">();</span>
+
+<span class="n">mask</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">256</span><span class="p">,</span><span class="mi">256</span><span class="p">)</span><span class="o">.</span><span class="n">bool</span><span class="p">()</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">DEVICE</span><span class="p">)</span>
+<span class="n">mask</span><span class="p">[:,:,</span><span class="mi">64</span><span class="p">:</span><span class="mi">192</span><span class="p">,</span><span class="mi">64</span><span class="p">:</span><span class="mi">192</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">PortillaSimoncelliMask</span><span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">:],</span> <span class="n">target</span><span class="o">=</span><span class="n">img</span><span class="p">,</span> <span class="n">mask</span><span class="o">=</span><span class="n">mask</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">DEVICE</span><span class="p">)</span>
+<span class="n">met</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">synth</span><span class="o">.</span><span class="n">MetamerCTF</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">loss_function</span><span class="o">=</span><span class="n">po</span><span class="o">.</span><span class="n">tools</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">l2_norm</span><span class="p">,</span> <span class="n">initial_image</span><span class="o">=</span><span class="n">im_init</span><span class="p">,</span>
+                          <span class="n">coarse_to_fine</span><span class="o">=</span><span class="s1">&#39;together&#39;</span><span class="p">)</span>
+
+<span class="n">optimizer</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">Adam</span><span class="p">([</span><span class="n">met</span><span class="o">.</span><span class="n">metamer</span><span class="p">],</span><span class="n">lr</span><span class="o">=</span><span class="mf">.02</span><span class="p">,</span> <span class="n">amsgrad</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="n">met</span><span class="o">.</span><span class="n">synthesize</span><span class="p">(</span>
+    <span class="n">optimizer</span><span class="o">=</span><span class="n">optimizer</span><span class="p">,</span>
+    <span class="n">max_iter</span><span class="o">=</span><span class="n">short_synth_max_iter</span><span class="p">,</span>
+    <span class="n">store_progress</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">change_scale_criterion</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">ctf_iters_to_check</span><span class="o">=</span><span class="mi">3</span>
+    <span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "8a0f5ef24f0b479b91162fcdabf670ce", "version_major": 2, "version_minor": 0}</script></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[40]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">po</span><span class="o">.</span><span class="n">imshow</span><span class="p">([</span><span class="n">met</span><span class="o">.</span><span class="n">image</span><span class="p">,</span> <span class="n">mask</span><span class="o">*</span><span class="n">met</span><span class="o">.</span><span class="n">image</span><span class="p">,</span> <span class="n">model</span><span class="o">.</span><span class="n">texture_masked_image</span><span class="p">(</span><span class="n">met</span><span class="o">.</span><span class="n">metamer</span><span class="p">)],</span> <span class="n">vrange</span><span class="o">=</span><span class="s1">&#39;auto1&#39;</span><span class="p">,</span>
+          <span class="n">title</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Full target image&#39;</span><span class="p">,</span> <span class="s1">&#39;Masked target&#39;</span> <span class="p">,</span><span class="s1">&#39;synthesized image&#39;</span><span class="p">]);</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/tutorials_models_Metamer-Portilla-Simoncelli_65_0.png" src="../../_images/tutorials_models_Metamer-Portilla-Simoncelli_65_0.png" />
+</div>
+</div>
+<section id="4.2-Mixtures">
+<h3>4.2 Mixtures<a class="headerlink" href="#4.2-Mixtures" title="Link to this heading"></a></h3>
+<p>Here we explore creating a texture that is “in between” two textures by averaging their texture statistics and synthesizing an image that matches those average statistics. [Note: This implementation seems to perform differently and perhaps worse than the original matlab implementation.]</p>
+<p>Excerpt from paper: <em>“… [C]onsider the problem of creating a texture that lies visually “in between” two other textures. The parameter space consisting of spatial averages of local functions has a type of convexity property in the limit as the image lattice grows in size.3 Figure 20 shows three images synthesized from parameters that are an average of the parameters for two example textures. In all three cases, the algorithm converges to an interesting-looking image that appears to be a
+patchwise mixtures of the two initial textures, rather than a new homogeneous texture that lies perceptually between them. Thus, in our model, the subset of parameters corresponding to textures (homogeneous RFs) is not convex!”</em></p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[41]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># The following classes are designed to extend the PortillaSimoncelli model</span>
+<span class="c1"># and the Metamer synthesis method for the purpose of mixing two target textures.</span>
+
+<span class="k">class</span> <span class="nc">PortillaSimoncelliMixture</span><span class="p">(</span><span class="n">po</span><span class="o">.</span><span class="n">simul</span><span class="o">.</span><span class="n">PortillaSimoncelli</span><span class="p">):</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Extend the PortillaSimoncelli model to mix two different images</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        im_shape: int</span>
+<span class="sd">            the size of the images being processed by the model</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">im_shape</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">im_shape</span><span class="p">,</span> <span class="n">n_scales</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">n_orientations</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">spatial_corr_width</span><span class="o">=</span><span class="mi">9</span><span class="p">,</span>
+                         <span class="n">use_true_correlations</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">images</span><span class="p">,</span> <span class="n">scales</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Average Texture Statistics representations of two image</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        images : torch.Tensor</span>
+<span class="sd">            A 4d tensor containing one or two images to analyze, with shape (i,</span>
+<span class="sd">            channel, height, width), i in {1,2}.</span>
+<span class="sd">        scales : list, optional</span>
+<span class="sd">            Which scales to include in the returned representation. If an empty</span>
+<span class="sd">            list (the default), we include all scales. Otherwise, can contain</span>
+<span class="sd">            subset of values present in this model&#39;s ``scales`` attribute.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        representation_vector: torch.Tensor</span>
+<span class="sd">            A flattened tensor (1d) containing the measured representation statistics.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">images</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="c1"># need the images to be 4d, so we use the &quot;1 element slice&quot;</span>
+            <span class="n">stats0</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="n">images</span><span class="p">[:</span><span class="mi">1</span><span class="p">],</span> <span class="n">scales</span><span class="o">=</span><span class="n">scales</span><span class="p">)</span>
+            <span class="n">stats1</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="n">images</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="mi">2</span><span class="p">],</span> <span class="n">scales</span><span class="o">=</span><span class="n">scales</span><span class="p">)</span>
+            <span class="k">return</span> <span class="p">(</span><span class="n">stats0</span><span class="o">+</span><span class="n">stats1</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="n">images</span><span class="p">,</span> <span class="n">scales</span><span class="o">=</span><span class="n">scales</span><span class="p">)</span>
+
+<span class="k">class</span> <span class="nc">MetamerMixture</span><span class="p">(</span><span class="n">po</span><span class="o">.</span><span class="n">synth</span><span class="o">.</span><span class="n">MetamerCTF</span><span class="p">):</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot; Extending metamer synthesis based on image-computable</span>
+<span class="sd">    differentiable models, for mixing two images.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">_initialize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">initial_image</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize the metamer.</span>
+
+<span class="sd">        Set the ``self.metamer`` attribute to be a parameter with</span>
+<span class="sd">        the user-supplied data, making sure it&#39;s the right shape.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        initial_image :</span>
+<span class="sd">            The tensor we use to initialize the metamer. If None (the</span>
+<span class="sd">            default), we initialize with uniformly-distributed random</span>
+<span class="sd">            noise lying between 0 and 1.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">initial_image</span><span class="o">.</span><span class="n">ndimension</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mi">4</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;initial_image must be torch.Size([n_batch&quot;</span>
+                            <span class="s2">&quot;, n_channels, im_height, im_width]) but got &quot;</span>
+                            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">initial_image</span><span class="o">.</span><span class="n">size</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="c1"># the difference between this and the regular version of Metamer is that</span>
+        <span class="c1"># the regular version requires synthesized_signal and target_signal to have</span>
+        <span class="c1"># the same shape, and here target_signal is (2, 1, 256, 256), not (1, 1, 256, 256)</span>
+        <span class="n">metamer</span> <span class="o">=</span> <span class="n">initial_image</span><span class="o">.</span><span class="n">clone</span><span class="p">()</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span>
+        <span class="n">metamer</span> <span class="o">=</span> <span class="n">metamer</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">dtype</span><span class="p">,</span>
+                             <span class="n">device</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+        <span class="n">metamer</span><span class="o">.</span><span class="n">requires_grad_</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_metamer</span> <span class="o">=</span> <span class="n">metamer</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[42]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Figure 20. Examples of “mixture” textures.</span>
+<span class="c1"># To replicate paper use the following combinations:</span>
+<span class="c1"># (Fig. 15a, Fig. 15b); (Fig. 14b, Fig. 4a); (Fig. 15e, Fig. 14e).</span>
+
+<span class="n">img_files</span> <span class="o">=</span> <span class="p">[</span><span class="n">DATA_PATH</span> <span class="o">+</span> <span class="s1">&#39;fig15e.jpg&#39;</span><span class="p">,</span> <span class="n">DATA_PATH</span> <span class="o">+</span> <span class="s1">&#39;fig14e.jpg&#39;</span><span class="p">]</span>
+<span class="n">imgs</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">tools</span><span class="o">.</span><span class="n">load_images</span><span class="p">(</span><span class="n">img_files</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">DEVICE</span><span class="p">)</span>
+<span class="n">im_init</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">rand_like</span><span class="p">(</span><span class="n">imgs</span><span class="p">[</span><span class="mi">0</span><span class="p">,:,:,:]</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span> <span class="o">*</span> <span class="mf">.01</span> <span class="o">+</span> <span class="n">imgs</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+<span class="n">n</span><span class="o">=</span><span class="n">imgs</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">PortillaSimoncelliMixture</span><span class="p">([</span><span class="n">n</span><span class="p">,</span><span class="n">n</span><span class="p">])</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">DEVICE</span><span class="p">)</span>
+<span class="n">met</span> <span class="o">=</span> <span class="n">MetamerMixture</span><span class="p">(</span><span class="n">imgs</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">loss_function</span><span class="o">=</span><span class="n">po</span><span class="o">.</span><span class="n">tools</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">l2_norm</span><span class="p">,</span> <span class="n">initial_image</span><span class="o">=</span><span class="n">im_init</span><span class="p">,</span>
+                     <span class="n">coarse_to_fine</span><span class="o">=</span><span class="s1">&#39;together&#39;</span><span class="p">)</span>
+
+<span class="n">optimizer</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">Adam</span><span class="p">([</span><span class="n">met</span><span class="o">.</span><span class="n">metamer</span><span class="p">],</span><span class="n">lr</span><span class="o">=</span><span class="mf">.02</span><span class="p">,</span> <span class="n">amsgrad</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="n">met</span><span class="o">.</span><span class="n">synthesize</span><span class="p">(</span>
+    <span class="n">optimizer</span><span class="o">=</span><span class="n">optimizer</span><span class="p">,</span>
+    <span class="n">max_iter</span><span class="o">=</span><span class="n">longest_synth_max_iter</span><span class="p">,</span>
+    <span class="n">store_progress</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">change_scale_criterion</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">ctf_iters_to_check</span><span class="o">=</span><span class="mi">3</span>
+    <span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "5963330fb6a44e27baab7a6869eaaf6b", "version_major": 2, "version_minor": 0}</script></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[43]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">po</span><span class="o">.</span><span class="n">imshow</span><span class="p">([</span><span class="n">met</span><span class="o">.</span><span class="n">image</span><span class="p">,</span> <span class="n">met</span><span class="o">.</span><span class="n">metamer</span><span class="p">],</span> <span class="n">vrange</span><span class="o">=</span><span class="s1">&#39;auto1&#39;</span><span class="p">,</span><span class="n">title</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Target image 1&#39;</span><span class="p">,</span> <span class="s1">&#39;Target image 2&#39;</span><span class="p">,</span> <span class="s1">&#39;Synthesized Mixture Metamer&#39;</span><span class="p">]);</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/tutorials_models_Metamer-Portilla-Simoncelli_69_0.png" src="../../_images/tutorials_models_Metamer-Portilla-Simoncelli_69_0.png" />
+</div>
+</div>
+</section>
+</section>
+<section id="6.-Model-Limitations">
+<h2>6. Model Limitations<a class="headerlink" href="#6.-Model-Limitations" title="Link to this heading"></a></h2>
+<p>Not all texture model metamers look perceptually similar to humans. The paper’s figures 17 and 18 present two classes of failures: “inhomogeneous texture images not usually considered to be ‘texture’” (such as human faces, fig. 17) and some simple artificial textures (fig. 18), many of which are simple geometric line drawings.</p>
+<p>Note that for these examples, we were unable to locate the original images, so we present examples that serve the same purpose.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[44]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">img</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">tools</span><span class="o">.</span><span class="n">load_images</span><span class="p">(</span><span class="s1">&#39;../data/256/einstein.pgm&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">DEVICE</span><span class="p">)</span>
+
+<span class="c1"># synthesis with full PortillaSimoncelli model</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">simul</span><span class="o">.</span><span class="n">PortillaSimoncelli</span><span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">:])</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">DEVICE</span><span class="p">)</span>
+<span class="n">metamer</span> <span class="o">=</span> <span class="n">run_synthesis</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">model</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "7bfafc4c56ee478fb00f9fee56828d63", "version_major": 2, "version_minor": 0}</script></div>
+</div>
+<p>Here we can see that the texture model fails to capture anything that makes this image look “portrait-like”: there is no recognizable face or clothes in the synthesized metamer. As a portrait is generally not considered a texture, this is not a model <em>failure</em> per se, but does demonstrate the limits of this model.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[45]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">po</span><span class="o">.</span><span class="n">imshow</span><span class="p">([</span><span class="n">metamer</span><span class="o">.</span><span class="n">image</span><span class="p">,</span> <span class="n">metamer</span><span class="o">.</span><span class="n">metamer</span><span class="p">],</span>
+          <span class="n">title</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Target image&#39;</span><span class="p">,</span> <span class="s1">&#39;Synthesized Metamer&#39;</span><span class="p">],</span> <span class="n">vrange</span><span class="o">=</span><span class="s1">&#39;auto1&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/tutorials_models_Metamer-Portilla-Simoncelli_73_0.png" src="../../_images/tutorials_models_Metamer-Portilla-Simoncelli_73_0.png" />
+</div>
+</div>
+<p>In this example, we see the model metamer fails to reproduce the randomly distributed oriented black lines on a white background: in particular, several lines are curved and several appear discontinuous. From the paper: “Althought a texture of single-orientation bars is reproduced fairly well (see Fig. 12), the mixture of bar orientations in this example leads ot the synthesis of curved line segments. In general, the model is unable to distinguish straight from curved contours, except when the
+contours are all of the same orientation.”</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[46]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">img</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">tools</span><span class="o">.</span><span class="n">load_images</span><span class="p">(</span><span class="n">DATA_PATH</span> <span class="o">+</span> <span class="s1">&#39;fig18a.png&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">DEVICE</span><span class="p">)</span>
+
+<span class="c1"># synthesis with full PortillaSimoncelli model</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">simul</span><span class="o">.</span><span class="n">PortillaSimoncelli</span><span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">:])</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">DEVICE</span><span class="p">)</span>
+<span class="n">metamer</span> <span class="o">=</span> <span class="n">run_synthesis</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">model</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+/mnt/home/wbroderick/plenoptic/plenoptic/tools/data.py:121: FutureWarning: Non RGB image conversion is now deprecated. For RGBA images, please use rgb2gray(rgba2rgb(rgb)) instead. In version 0.19, a ValueError will be raised if input image last dimension length is not 3.
+  im = color.rgb2gray(im)
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "e9aab03b74834147a1fd5fc45b5fd1bb", "version_major": 2, "version_minor": 0}</script></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[47]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">po</span><span class="o">.</span><span class="n">imshow</span><span class="p">([</span><span class="n">metamer</span><span class="o">.</span><span class="n">image</span><span class="p">,</span> <span class="n">metamer</span><span class="o">.</span><span class="n">metamer</span><span class="p">],</span>
+          <span class="n">title</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Target image&#39;</span><span class="p">,</span> <span class="s1">&#39;Synthesized Metamer&#39;</span><span class="p">],</span> <span class="n">vrange</span><span class="o">=</span><span class="s1">&#39;auto1&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/tutorials_models_Metamer-Portilla-Simoncelli_76_0.png" src="../../_images/tutorials_models_Metamer-Portilla-Simoncelli_76_0.png" />
+</div>
+</div>
+</section>
+<section id="7.-Notable-differences-between-Matlab-and-Python-Implementations:">
+<h2>7. Notable differences between Matlab and Python Implementations:<a class="headerlink" href="#7.-Notable-differences-between-Matlab-and-Python-Implementations:" title="Link to this heading"></a></h2>
+<ol class="arabic">
+<li><p>Optimization. The matlab implementation of texture synthesis is designed specifically for the texture model. Gradient descent is performed on subsets of the texture statistics in a particular sequence (coarse-to-fine, etc.). The python implementation relies on the auto-differentiation and optimization tools available in pytorch. We only define the forward model and then allow pytorch to handle the optimization.</p>
+<p>Why does this matter? We have qualitatively reproduced the results but cannot guarantee exact reproducibility. This is also true in general for the plenoptic package: <a class="reference external" href="https://plenoptic.readthedocs.io/en/latest/reproducibility.html">https://plenoptic.readthedocs.io/en/latest/reproducibility.html</a> This means that, in general, metamers synthesized by the two versions will differ.</p>
+</li>
+<li><p>In the <a class="reference external" href="https://github.com/LabForComputationalVision/textureSynth">Matlab implementation of Portilla Simoncelli statistics</a> and when the python is set with <code class="docutils literal notranslate"><span class="pre">use_true_correlations=False</span></code>, the auto-correlation, cross-scale and cross-orientation statistics are based on co-variance matrices. For the python optimization, this makes it more difficult for the optimization to converge. We have adjusted the default behavior of the python implementation to use cross-correlation matrices instead of
+covariance matrices for these auto-correlation, cross-scale, and cross-orientation statistics.</p>
+<p>In the case where <code class="docutils literal notranslate"><span class="pre">use_true_correlation=False</span></code>, the matlab and python statistics calculations are identical up to floating point error. We test for this directly in <code class="docutils literal notranslate"><span class="pre">tests/test_models.py</span></code> in the function <code class="docutils literal notranslate"><span class="pre">test_ps_torch_v_matlab</span></code></p>
+<p>Thus, if you are trying to synthesize anything with this model, it is recommended to use the (default) <code class="docutils literal notranslate"><span class="pre">use_true_correlations=True</span></code>. It is only recommended to set it to <code class="docutils literal notranslate"><span class="pre">False</span></code> if you are trying to exactly match the original implementation’s output (e.g., for reproducing something).</p>
+<p>The following cells demonstrate the effect of this <code class="docutils literal notranslate"><span class="pre">use_true_correlations</span></code> argument.</p>
+</li>
+</ol>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[48]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">img</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">tools</span><span class="o">.</span><span class="n">load_images</span><span class="p">(</span><span class="n">DATA_PATH</span> <span class="o">+</span> <span class="s1">&#39;fig6a.jpg&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">DEVICE</span><span class="p">)</span>
+
+<span class="c1"># Example of synthesis where use_true_correlations=True</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">simul</span><span class="o">.</span><span class="n">PortillaSimoncelli</span><span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">:],</span><span class="n">use_true_correlations</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">DEVICE</span><span class="p">)</span>
+<span class="n">metamer_true</span> <span class="o">=</span> <span class="n">run_synthesis</span><span class="p">(</span><span class="n">img</span><span class="p">,</span><span class="n">model</span><span class="p">)</span>
+
+<span class="c1"># Example of synthesis where use_true_correlations=False</span>
+<span class="n">img</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">tools</span><span class="o">.</span><span class="n">load_images</span><span class="p">(</span><span class="n">DATA_PATH</span> <span class="o">+</span> <span class="s1">&#39;fig6a.jpg&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">DEVICE</span><span class="p">)</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">simul</span><span class="o">.</span><span class="n">PortillaSimoncelli</span><span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">:],</span><span class="n">use_true_correlations</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">DEVICE</span><span class="p">)</span>
+<span class="n">metamer_false</span> <span class="o">=</span> <span class="n">run_synthesis</span><span class="p">(</span><span class="n">img</span><span class="p">,</span><span class="n">model</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "f7a84f655cb340239149dde79010a250", "version_major": 2, "version_minor": 0}</script></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "2c4a0331c42841099842bcb22eca110f", "version_major": 2, "version_minor": 0}</script></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[49]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">po</span><span class="o">.</span><span class="n">imshow</span><span class="p">([</span><span class="n">metamer_true</span><span class="o">.</span><span class="n">image</span><span class="p">,</span> <span class="n">metamer_true</span><span class="o">.</span><span class="n">metamer</span><span class="p">,</span> <span class="n">metamer_false</span><span class="o">.</span><span class="n">metamer</span><span class="p">],</span>
+          <span class="n">title</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Target image&#39;</span><span class="p">,</span> <span class="s1">&#39;Metamer with</span><span class="se">\n</span><span class="s1">use_true_correlations=True&#39;</span><span class="p">,</span> <span class="s1">&#39;Metamer with</span><span class="se">\n</span><span class="s1">use_true_correlations=False&#39;</span><span class="p">],</span> <span class="n">vrange</span><span class="o">=</span><span class="s1">&#39;auto1&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/tutorials_models_Metamer-Portilla-Simoncelli_79_0.png" src="../../_images/tutorials_models_Metamer-Portilla-Simoncelli_79_0.png" />
+</div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="04_Perceptual_distance.html" class="btn btn-neutral float-left" title="Perceptual distance" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../applications/09_Original_MAD.html" class="btn btn-neutral float-right" title="Reproducing Wang and Simoncelli, 2008 (MAD Competition)" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2019, Lab for Computational Vision.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
