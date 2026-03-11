@@ -1,0 +1,1182 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Eigendistortions &#8212; plenoptic 1.3.2.dev499 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=9c3e77be" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=d54d67fd" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../../_static/documentation_options.js?v=68d53f4b"></script>
+    <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=6dbb43f8"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../_static/togglebutton.js?v=1ae7504c"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
+    <script type="application/vnd.jupyter.widget-state+json">{"state": {"8c5d35b78d30430599f6a14d6c6e3589": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "e3be149f80f046d8b9a6793b3b235f77": {"model_name": "ProgressStyleModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "ProgressStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "bar_color": null, "description_width": ""}}, "e2ffc94788d144788e5216e73255d914": {"model_name": "FloatProgressModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "FloatProgressModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "ProgressView", "bar_style": "danger", "description": "", "description_allow_html": false, "layout": "IPY_MODEL_8c5d35b78d30430599f6a14d6c6e3589", "max": 1000.0, "min": 0.0, "orientation": "horizontal", "style": "IPY_MODEL_e3be149f80f046d8b9a6793b3b235f77", "tabbable": null, "tooltip": null, "value": 19.0}}, "54b11ab3c0b84640ab6c190cef85c7e7": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "776765a2d19c474aa44cc43a751acd1d": {"model_name": "HTMLStyleModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "background": null, "description_width": "", "font_size": null, "text_color": null}}, "f68ebe37f603442f82dfbded3697ccce": {"model_name": "HTMLModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "HTMLView", "description": "", "description_allow_html": false, "layout": "IPY_MODEL_54b11ab3c0b84640ab6c190cef85c7e7", "placeholder": "\u200b", "style": "IPY_MODEL_776765a2d19c474aa44cc43a751acd1d", "tabbable": null, "tooltip": null, "value": "Top\u2007k=1\u2007eigendists:\u2007\u2007\u20072%"}}, "587184fec8714bfeb98625ea810003be": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "2c1d74a7652c42bdad450279875125d4": {"model_name": "HTMLStyleModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "background": null, "description_width": "", "font_size": null, "text_color": null}}, "c5e124caeb1f4e82ab8292ddfe5e18a1": {"model_name": "HTMLModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "HTMLView", "description": "", "description_allow_html": false, "layout": "IPY_MODEL_587184fec8714bfeb98625ea810003be", "placeholder": "\u200b", "style": "IPY_MODEL_2c1d74a7652c42bdad450279875125d4", "tabbable": null, "tooltip": null, "value": "\u200719/1000\u2007[00:00&lt;00:03,\u2007286.89it/s,\u2007delta_eigenval=5.96E-08]"}}, "85e23a50d0264f55b86decd6beb354bb": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "e5253de3966c423082be63fdadd6ce0c": {"model_name": "HBoxModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HBoxModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "HBoxView", "box_style": "", "children": ["IPY_MODEL_f68ebe37f603442f82dfbded3697ccce", "IPY_MODEL_e2ffc94788d144788e5216e73255d914", "IPY_MODEL_c5e124caeb1f4e82ab8292ddfe5e18a1"], "layout": "IPY_MODEL_85e23a50d0264f55b86decd6beb354bb", "tabbable": null, "tooltip": null}}, "d5e48c3a3a1c4ad5ad36892447892bd1": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "21a334ed9b7741a3a3bd93e982608927": {"model_name": "ProgressStyleModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "ProgressStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "bar_color": null, "description_width": ""}}, "272fa147e4ad4db89d19a38f197c55cf": {"model_name": "FloatProgressModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "FloatProgressModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "ProgressView", "bar_style": "danger", "description": "", "description_allow_html": false, "layout": "IPY_MODEL_d5e48c3a3a1c4ad5ad36892447892bd1", "max": 1000.0, "min": 0.0, "orientation": "horizontal", "style": "IPY_MODEL_21a334ed9b7741a3a3bd93e982608927", "tabbable": null, "tooltip": null, "value": 137.0}}, "f6af2923ede54ce7a5f1155b9fb2e8d6": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "a947c0017e224252bbe8104c3bf1aabc": {"model_name": "HTMLStyleModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "background": null, "description_width": "", "font_size": null, "text_color": null}}, "96d2ae7247ca4d79911fc60de8c17c53": {"model_name": "HTMLModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "HTMLView", "description": "", "description_allow_html": false, "layout": "IPY_MODEL_f6af2923ede54ce7a5f1155b9fb2e8d6", "placeholder": "\u200b", "style": "IPY_MODEL_a947c0017e224252bbe8104c3bf1aabc", "tabbable": null, "tooltip": null, "value": "Bottom\u2007k=1\u2007eigendists:\u2007\u200714%"}}, "7d38a494f8ec48de90621b89d6f26936": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "3dab19a226c24361b691c499de00e472": {"model_name": "HTMLStyleModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "background": null, "description_width": "", "font_size": null, "text_color": null}}, "35b3a1876801496d94c73a58405c1b02": {"model_name": "HTMLModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "HTMLView", "description": "", "description_allow_html": false, "layout": "IPY_MODEL_7d38a494f8ec48de90621b89d6f26936", "placeholder": "\u200b", "style": "IPY_MODEL_3dab19a226c24361b691c499de00e472", "tabbable": null, "tooltip": null, "value": "\u2007137/1000\u2007[00:00&lt;00:02,\u2007300.78it/s,\u2007delta_eigenval=8.83E-08]"}}, "f3aa729f45144438b5a44fb7f87dd251": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "9d68b463bda34b02925c66a0d6ce35c8": {"model_name": "HBoxModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HBoxModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "HBoxView", "box_style": "", "children": ["IPY_MODEL_96d2ae7247ca4d79911fc60de8c17c53", "IPY_MODEL_272fa147e4ad4db89d19a38f197c55cf", "IPY_MODEL_35b3a1876801496d94c73a58405c1b02"], "layout": "IPY_MODEL_f3aa729f45144438b5a44fb7f87dd251", "tabbable": null, "tooltip": null}}, "bfe1a26e504141139c5e0aa94ff793cf": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "8b5d00d414194322b0e6edc71276713c": {"model_name": "ProgressStyleModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "ProgressStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "bar_color": null, "description_width": ""}}, "54b8d89da56d4f1abe79aea4c528af23": {"model_name": "FloatProgressModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "FloatProgressModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "ProgressView", "bar_style": "danger", "description": "", "description_allow_html": false, "layout": "IPY_MODEL_bfe1a26e504141139c5e0aa94ff793cf", "max": 400.0, "min": 0.0, "orientation": "horizontal", "style": "IPY_MODEL_8b5d00d414194322b0e6edc71276713c", "tabbable": null, "tooltip": null, "value": 113.0}}, "05cd633243fd41c082dd485e716eb883": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "a0c5fc1798814715af1ecebf31e22ac3": {"model_name": "HTMLStyleModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "background": null, "description_width": "", "font_size": null, "text_color": null}}, "34a6dd3a5727430d9b8d26272959ba2d": {"model_name": "HTMLModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "HTMLView", "description": "", "description_allow_html": false, "layout": "IPY_MODEL_05cd633243fd41c082dd485e716eb883", "placeholder": "\u200b", "style": "IPY_MODEL_a0c5fc1798814715af1ecebf31e22ac3", "tabbable": null, "tooltip": null, "value": "Top\u2007k=1\u2007eigendists:\u2007\u200728%"}}, "a58179745d3042269b2d35c5eef021d4": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "ec70f2ab725f4873baec1f4a5157d737": {"model_name": "HTMLStyleModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "background": null, "description_width": "", "font_size": null, "text_color": null}}, "79289260b32b4788830b70fd5f6f58d0": {"model_name": "HTMLModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "HTMLView", "description": "", "description_allow_html": false, "layout": "IPY_MODEL_a58179745d3042269b2d35c5eef021d4", "placeholder": "\u200b", "style": "IPY_MODEL_ec70f2ab725f4873baec1f4a5157d737", "tabbable": null, "tooltip": null, "value": "\u2007113/400\u2007[00:05&lt;00:13,\u200721.91it/s,\u2007delta_eigenval=0.00E+00]"}}, "2e21f9d3d3054837bf8dba0930260da3": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "353514ac0f204507b5e9f6a2c79ea117": {"model_name": "HBoxModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HBoxModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "HBoxView", "box_style": "", "children": ["IPY_MODEL_34a6dd3a5727430d9b8d26272959ba2d", "IPY_MODEL_54b8d89da56d4f1abe79aea4c528af23", "IPY_MODEL_79289260b32b4788830b70fd5f6f58d0"], "layout": "IPY_MODEL_2e21f9d3d3054837bf8dba0930260da3", "tabbable": null, "tooltip": null}}, "dc2318f3e9cb41618a257412382c4406": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "39cbfa66a18d4a918988ea09d34d0b75": {"model_name": "ProgressStyleModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "ProgressStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "bar_color": null, "description_width": ""}}, "00a435bf29384e75ab1f298141854c79": {"model_name": "FloatProgressModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "FloatProgressModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "ProgressView", "bar_style": "success", "description": "", "description_allow_html": false, "layout": "IPY_MODEL_dc2318f3e9cb41618a257412382c4406", "max": 400.0, "min": 0.0, "orientation": "horizontal", "style": "IPY_MODEL_39cbfa66a18d4a918988ea09d34d0b75", "tabbable": null, "tooltip": null, "value": 400.0}}, "73618d3a5bb5477ca85a7a39755cfad3": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "e74d00d8a228475483050021cb4ebef5": {"model_name": "HTMLStyleModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "background": null, "description_width": "", "font_size": null, "text_color": null}}, "1afdfb10f2c84a398a369f202f1614b1": {"model_name": "HTMLModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "HTMLView", "description": "", "description_allow_html": false, "layout": "IPY_MODEL_73618d3a5bb5477ca85a7a39755cfad3", "placeholder": "\u200b", "style": "IPY_MODEL_e74d00d8a228475483050021cb4ebef5", "tabbable": null, "tooltip": null, "value": "Bottom\u2007k=1\u2007eigendists:\u2007100%"}}, "2447ddde0e004c63a823b05e4188bb87": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "16f8bfc1fce34662900467e909dddd48": {"model_name": "HTMLStyleModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "background": null, "description_width": "", "font_size": null, "text_color": null}}, "8021a82ba76a40e3b2b5bcafe8bef214": {"model_name": "HTMLModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "HTMLView", "description": "", "description_allow_html": false, "layout": "IPY_MODEL_2447ddde0e004c63a823b05e4188bb87", "placeholder": "\u200b", "style": "IPY_MODEL_16f8bfc1fce34662900467e909dddd48", "tabbable": null, "tooltip": null, "value": "\u2007400/400\u2007[00:14&lt;00:00,\u200728.68it/s,\u2007delta_eigenval=3.40E-05]"}}, "533fb433b7134632b0c31e172df9ad23": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "7db5e602b62b49e0a600cc42bd40d192": {"model_name": "HBoxModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HBoxModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "HBoxView", "box_style": "", "children": ["IPY_MODEL_1afdfb10f2c84a398a369f202f1614b1", "IPY_MODEL_00a435bf29384e75ab1f298141854c79", "IPY_MODEL_8021a82ba76a40e3b2b5bcafe8bef214"], "layout": "IPY_MODEL_533fb433b7134632b0c31e172df9ad23", "tabbable": null, "tooltip": null}}, "51b61b49a35846aab546b340f38e64e4": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "f5ca4f79cc9c4bae988293d4d711502a": {"model_name": "ProgressStyleModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "ProgressStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "bar_color": null, "description_width": ""}}, "7c8b4cd93c554ccfadc7578b33d76af5": {"model_name": "FloatProgressModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "FloatProgressModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "ProgressView", "bar_style": "danger", "description": "", "description_allow_html": false, "layout": "IPY_MODEL_51b61b49a35846aab546b340f38e64e4", "max": 400.0, "min": 0.0, "orientation": "horizontal", "style": "IPY_MODEL_f5ca4f79cc9c4bae988293d4d711502a", "tabbable": null, "tooltip": null, "value": 83.0}}, "663f214fb30245c18590cbf0bc76cd47": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "b139871e136f45119acbb5f142cbe10d": {"model_name": "HTMLStyleModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "background": null, "description_width": "", "font_size": null, "text_color": null}}, "33b87d1323514475a47481bc9888bf95": {"model_name": "HTMLModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "HTMLView", "description": "", "description_allow_html": false, "layout": "IPY_MODEL_663f214fb30245c18590cbf0bc76cd47", "placeholder": "\u200b", "style": "IPY_MODEL_b139871e136f45119acbb5f142cbe10d", "tabbable": null, "tooltip": null, "value": "Top\u2007k=1\u2007eigendists:\u2007\u200721%"}}, "283badea0e0149b585586534983de7ee": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "024cb952d0eb497ebb838b77d61ceda4": {"model_name": "HTMLStyleModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "background": null, "description_width": "", "font_size": null, "text_color": null}}, "aaa38d9b2c694da68a140aac03040bab": {"model_name": "HTMLModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "HTMLView", "description": "", "description_allow_html": false, "layout": "IPY_MODEL_283badea0e0149b585586534983de7ee", "placeholder": "\u200b", "style": "IPY_MODEL_024cb952d0eb497ebb838b77d61ceda4", "tabbable": null, "tooltip": null, "value": "\u200783/400\u2007[00:08&lt;00:36,\u2007\u20078.75it/s,\u2007delta_eigenval=0.00E+00]"}}, "83deb49c9bb545e08f805bc76eda445e": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "2a0707a89d5f437c80cfbd0e4182ed08": {"model_name": "HBoxModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HBoxModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "HBoxView", "box_style": "", "children": ["IPY_MODEL_33b87d1323514475a47481bc9888bf95", "IPY_MODEL_7c8b4cd93c554ccfadc7578b33d76af5", "IPY_MODEL_aaa38d9b2c694da68a140aac03040bab"], "layout": "IPY_MODEL_83deb49c9bb545e08f805bc76eda445e", "tabbable": null, "tooltip": null}}, "beec244af3934f03b470de7526a2b046": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "10eefd3f92b346d2b0253481be76706a": {"model_name": "ProgressStyleModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "ProgressStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "bar_color": null, "description_width": ""}}, "df7762e2ee354d1cbc8248ec9e4e4f4e": {"model_name": "FloatProgressModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "FloatProgressModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "ProgressView", "bar_style": "success", "description": "", "description_allow_html": false, "layout": "IPY_MODEL_beec244af3934f03b470de7526a2b046", "max": 400.0, "min": 0.0, "orientation": "horizontal", "style": "IPY_MODEL_10eefd3f92b346d2b0253481be76706a", "tabbable": null, "tooltip": null, "value": 400.0}}, "d16dfc2f8f524829a9c5628e9d991ce6": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "91872b024cab42d780038d57eafebb59": {"model_name": "HTMLStyleModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "background": null, "description_width": "", "font_size": null, "text_color": null}}, "c7ee284ef46f4dbd8563774bf70dac50": {"model_name": "HTMLModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "HTMLView", "description": "", "description_allow_html": false, "layout": "IPY_MODEL_d16dfc2f8f524829a9c5628e9d991ce6", "placeholder": "\u200b", "style": "IPY_MODEL_91872b024cab42d780038d57eafebb59", "tabbable": null, "tooltip": null, "value": "Bottom\u2007k=1\u2007eigendists:\u2007100%"}}, "9e0493058d0c4899b76228002663ce7e": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "b804e375327e4c18b2f52a4004b56a05": {"model_name": "HTMLStyleModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "background": null, "description_width": "", "font_size": null, "text_color": null}}, "94da97b573ca424d9b0ba832841cafe3": {"model_name": "HTMLModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "HTMLView", "description": "", "description_allow_html": false, "layout": "IPY_MODEL_9e0493058d0c4899b76228002663ce7e", "placeholder": "\u200b", "style": "IPY_MODEL_b804e375327e4c18b2f52a4004b56a05", "tabbable": null, "tooltip": null, "value": "\u2007400/400\u2007[00:43&lt;00:00,\u2007\u20077.98it/s,\u2007delta_eigenval=9.18E-03]"}}, "c5b0d0e292db4516b247232676a61ebe": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "0bb9a9523d3a405f8194c2c832e1bc24": {"model_name": "HBoxModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HBoxModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "HBoxView", "box_style": "", "children": ["IPY_MODEL_c7ee284ef46f4dbd8563774bf70dac50", "IPY_MODEL_df7762e2ee354d1cbc8248ec9e4e4f4e", "IPY_MODEL_94da97b573ca424d9b0ba832841cafe3"], "layout": "IPY_MODEL_c5b0d0e292db4516b247232676a61ebe", "tabbable": null, "tooltip": null}}, "95b1313864604e5f85d2397b2c0a9dd8": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "a4fde091e39f4187841c98d6d6cf0a22": {"model_name": "ProgressStyleModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "ProgressStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "bar_color": null, "description_width": ""}}, "f6747898329f4c89857ce00a61fe55f8": {"model_name": "FloatProgressModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "FloatProgressModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "ProgressView", "bar_style": "danger", "description": "", "description_allow_html": false, "layout": "IPY_MODEL_95b1313864604e5f85d2397b2c0a9dd8", "max": 400.0, "min": 0.0, "orientation": "horizontal", "style": "IPY_MODEL_a4fde091e39f4187841c98d6d6cf0a22", "tabbable": null, "tooltip": null, "value": 55.0}}, "97323414ca2d43c5aa66ead571fb70e0": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "8a4c57f0c4e04daabf31a4f2b47b83c2": {"model_name": "HTMLStyleModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "background": null, "description_width": "", "font_size": null, "text_color": null}}, "e8e39b89250a41f391386c4a93b3aa92": {"model_name": "HTMLModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "HTMLView", "description": "", "description_allow_html": false, "layout": "IPY_MODEL_97323414ca2d43c5aa66ead571fb70e0", "placeholder": "\u200b", "style": "IPY_MODEL_8a4c57f0c4e04daabf31a4f2b47b83c2", "tabbable": null, "tooltip": null, "value": "Top\u2007k=1\u2007eigendists:\u2007\u200714%"}}, "3270061775144770bf169bd32e1bd587": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "61c46165d1a84faaadcd408cc3b8393f": {"model_name": "HTMLStyleModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "background": null, "description_width": "", "font_size": null, "text_color": null}}, "e323877af63e4ced9518677ccf50ddfc": {"model_name": "HTMLModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "HTMLView", "description": "", "description_allow_html": false, "layout": "IPY_MODEL_3270061775144770bf169bd32e1bd587", "placeholder": "\u200b", "style": "IPY_MODEL_61c46165d1a84faaadcd408cc3b8393f", "tabbable": null, "tooltip": null, "value": "\u200755/400\u2007[00:01&lt;00:09,\u200737.52it/s,\u2007delta_eigenval=0.00E+00]"}}, "7a4c103b23d44e00809334fc7d360bb0": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "b4438d62641042cd8f31d4c8574b159d": {"model_name": "HBoxModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HBoxModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "HBoxView", "box_style": "", "children": ["IPY_MODEL_e8e39b89250a41f391386c4a93b3aa92", "IPY_MODEL_f6747898329f4c89857ce00a61fe55f8", "IPY_MODEL_e323877af63e4ced9518677ccf50ddfc"], "layout": "IPY_MODEL_7a4c103b23d44e00809334fc7d360bb0", "tabbable": null, "tooltip": null}}, "c1806b5b637a46a3ac13c9b51b6f0731": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "6dc4ee1edc9e466196b036384a289106": {"model_name": "ProgressStyleModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "ProgressStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "bar_color": null, "description_width": ""}}, "e408cd4b764b4f75829e48bf64148af3": {"model_name": "FloatProgressModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "FloatProgressModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "ProgressView", "bar_style": "success", "description": "", "description_allow_html": false, "layout": "IPY_MODEL_c1806b5b637a46a3ac13c9b51b6f0731", "max": 400.0, "min": 0.0, "orientation": "horizontal", "style": "IPY_MODEL_6dc4ee1edc9e466196b036384a289106", "tabbable": null, "tooltip": null, "value": 400.0}}, "1071190f7b6a4443a6e82a38aab14fa7": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "5dd650f0fb1e4455a556c1b99ed9d882": {"model_name": "HTMLStyleModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "background": null, "description_width": "", "font_size": null, "text_color": null}}, "6648e3ba11a744c1a3d92450d3728064": {"model_name": "HTMLModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "HTMLView", "description": "", "description_allow_html": false, "layout": "IPY_MODEL_1071190f7b6a4443a6e82a38aab14fa7", "placeholder": "\u200b", "style": "IPY_MODEL_5dd650f0fb1e4455a556c1b99ed9d882", "tabbable": null, "tooltip": null, "value": "Bottom\u2007k=1\u2007eigendists:\u2007100%"}}, "07faaf8c80bd4e31855005c41ccd0168": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "4f2d72e76a5d41b789b01a99b5cac0a4": {"model_name": "HTMLStyleModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "background": null, "description_width": "", "font_size": null, "text_color": null}}, "ec22b5a09fc4429aae80cdc738bd03db": {"model_name": "HTMLModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "HTMLView", "description": "", "description_allow_html": false, "layout": "IPY_MODEL_07faaf8c80bd4e31855005c41ccd0168", "placeholder": "\u200b", "style": "IPY_MODEL_4f2d72e76a5d41b789b01a99b5cac0a4", "tabbable": null, "tooltip": null, "value": "\u2007400/400\u2007[00:11&lt;00:00,\u200735.28it/s,\u2007delta_eigenval=3.88E-05]"}}, "c48d0417dfba49ccab3245b615726e94": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "629d0071707c42b5bdc64fc0502a6599": {"model_name": "HBoxModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HBoxModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "HBoxView", "box_style": "", "children": ["IPY_MODEL_6648e3ba11a744c1a3d92450d3728064", "IPY_MODEL_e408cd4b764b4f75829e48bf64148af3", "IPY_MODEL_ec22b5a09fc4429aae80cdc738bd03db"], "layout": "IPY_MODEL_c48d0417dfba49ccab3245b615726e94", "tabbable": null, "tooltip": null}}, "43060693ed2b493ca51624fd67fc02b2": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "08413469ed4f4641bd87534492d86e1c": {"model_name": "ProgressStyleModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "ProgressStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "bar_color": null, "description_width": ""}}, "5ea9d82013864e669ed8ef9f166a18bc": {"model_name": "FloatProgressModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "FloatProgressModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "ProgressView", "bar_style": "danger", "description": "", "description_allow_html": false, "layout": "IPY_MODEL_43060693ed2b493ca51624fd67fc02b2", "max": 400.0, "min": 0.0, "orientation": "horizontal", "style": "IPY_MODEL_08413469ed4f4641bd87534492d86e1c", "tabbable": null, "tooltip": null, "value": 29.0}}, "098fe23ae91145108a3449a0bf5473e5": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "6c3e310197164b0a9dcde78bf242ecc7": {"model_name": "HTMLStyleModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "background": null, "description_width": "", "font_size": null, "text_color": null}}, "76f612a1dfef4ad5867851032c69a936": {"model_name": "HTMLModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "HTMLView", "description": "", "description_allow_html": false, "layout": "IPY_MODEL_098fe23ae91145108a3449a0bf5473e5", "placeholder": "\u200b", "style": "IPY_MODEL_6c3e310197164b0a9dcde78bf242ecc7", "tabbable": null, "tooltip": null, "value": "Top\u2007k=1\u2007eigendists:\u2007\u2007\u20077%"}}, "738b270a79f14b0e8132b8405a998ae4": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "ed30d0c31c564c45b2706db5168a81e8": {"model_name": "HTMLStyleModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "background": null, "description_width": "", "font_size": null, "text_color": null}}, "7d127542955f4e28ad901169bd62eb5b": {"model_name": "HTMLModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "HTMLView", "description": "", "description_allow_html": false, "layout": "IPY_MODEL_738b270a79f14b0e8132b8405a998ae4", "placeholder": "\u200b", "style": "IPY_MODEL_ed30d0c31c564c45b2706db5168a81e8", "tabbable": null, "tooltip": null, "value": "\u200729/400\u2007[00:02&lt;00:38,\u2007\u20079.71it/s,\u2007delta_eigenval=0.00E+00]"}}, "17268a5a83a84f33ad8c42ae4fa99e8a": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "80ebb017a015464e9e7adb09b9545aa4": {"model_name": "HBoxModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HBoxModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "HBoxView", "box_style": "", "children": ["IPY_MODEL_76f612a1dfef4ad5867851032c69a936", "IPY_MODEL_5ea9d82013864e669ed8ef9f166a18bc", "IPY_MODEL_7d127542955f4e28ad901169bd62eb5b"], "layout": "IPY_MODEL_17268a5a83a84f33ad8c42ae4fa99e8a", "tabbable": null, "tooltip": null}}, "7ce96e248f00404480c30ba7057020d4": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "781c87db08124d988d1a708d02c86ac8": {"model_name": "ProgressStyleModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "ProgressStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "bar_color": null, "description_width": ""}}, "c0eeb6893f704522b65748e34d1e97ea": {"model_name": "FloatProgressModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "FloatProgressModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "ProgressView", "bar_style": "success", "description": "", "description_allow_html": false, "layout": "IPY_MODEL_7ce96e248f00404480c30ba7057020d4", "max": 400.0, "min": 0.0, "orientation": "horizontal", "style": "IPY_MODEL_781c87db08124d988d1a708d02c86ac8", "tabbable": null, "tooltip": null, "value": 400.0}}, "338825eb3e7146b4b5dd980f80a14345": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "59d58330ccbf437397a9f01a007e4023": {"model_name": "HTMLStyleModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "background": null, "description_width": "", "font_size": null, "text_color": null}}, "52cd695f60324c5089fb2403f59b9495": {"model_name": "HTMLModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "HTMLView", "description": "", "description_allow_html": false, "layout": "IPY_MODEL_338825eb3e7146b4b5dd980f80a14345", "placeholder": "\u200b", "style": "IPY_MODEL_59d58330ccbf437397a9f01a007e4023", "tabbable": null, "tooltip": null, "value": "Bottom\u2007k=1\u2007eigendists:\u2007100%"}}, "c2121f21a59d4bb08e8bd0e747cb2e7b": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "ea102b8a3fa340b2a487ec7ff8f20e8c": {"model_name": "HTMLStyleModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "background": null, "description_width": "", "font_size": null, "text_color": null}}, "b3f8196442b54a68a23ec34612cbeca4": {"model_name": "HTMLModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "HTMLView", "description": "", "description_allow_html": false, "layout": "IPY_MODEL_c2121f21a59d4bb08e8bd0e747cb2e7b", "placeholder": "\u200b", "style": "IPY_MODEL_ea102b8a3fa340b2a487ec7ff8f20e8c", "tabbable": null, "tooltip": null, "value": "\u2007400/400\u2007[00:40&lt;00:00,\u200710.05it/s,\u2007delta_eigenval=9.06E-03]"}}, "c3e70b7aedf24f57a0449652e552be88": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "ae81112c507a409ea1a419124a78499b": {"model_name": "HBoxModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HBoxModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "HBoxView", "box_style": "", "children": ["IPY_MODEL_52cd695f60324c5089fb2403f59b9495", "IPY_MODEL_c0eeb6893f704522b65748e34d1e97ea", "IPY_MODEL_b3f8196442b54a68a23ec34612cbeca4"], "layout": "IPY_MODEL_c3e70b7aedf24f57a0449652e552be88", "tabbable": null, "tooltip": null}}}, "version_major": 2, "version_minor": 0}</script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script crossorigin="anonymous" data-jupyter-widgets-cdn="https://cdn.jsdelivr.net/npm/" src="https://cdn.jsdelivr.net/npm/@jupyter-widgets/html-manager@1.0.6/dist/embed-amd.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'user_guide/synthesis/Eigendistortions';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_version = '0.16.1';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://docs.plenoptic.org/docs/branch/main/_static/version_switcher.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = '1.3.2';
+        DOCUMENTATION_OPTIONS.show_version_warning_banner =
+            true;
+        </script>
+    <script src="../../_static/custom-icon.js?v=0bae05a2"></script>
+    <link rel="icon" href="../../_static/plenoptic.ico"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="MAD Competition Conceptual Introduction" href="MAD_Competition_1.html" />
+    <link rel="prev" title="User Guide" href="../index.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="1.3.2" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class=" navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/Plenoptic_Logo_CMYK_Full_Wide.svg" class="logo__image only-light" alt="plenoptic 1.3.2.dev499 documentation - Home"/>
+    <img src="../../_static/Plenoptic_Logo_CMYK_Full_DarkMode_Wide.svg" class="logo__image only-dark pst-js-only" alt="plenoptic 1.3.2.dev499 documentation - Home"/>
+  
+  
+</a></div>
+    
+      <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-2"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-2"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-2"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-2">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+    
+  </div>
+  
+  <div class=" navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../getting_started/index.html">
+    Getting started
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../api/index.html">
+    API
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../reference/index.html">
+    Reference
+  </a>
+</li>
+
+            <li class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button"
+                data-bs-toggle="dropdown" aria-expanded="false"
+                aria-controls="pst-nav-more-links">
+                    More
+                </button>
+                <ul id="pst-nav-more-links" class="dropdown-menu">
+                    
+<li class=" ">
+  <a class="nav-link dropdown-item nav-external" href="https://github.com/plenoptic-org/plenoptic/releases">
+    Changelog
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../developers/index.html">
+    For developers
+  </a>
+</li>
+
+                </ul>
+            </li>
+            
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://plenoptic.org" title="Home" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-solid fa-house fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Home</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/plenoptic-org/plenoptic" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fab fa-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://pypi.org/project/plenoptic" title="PyPI" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-custom fa-pypi fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">PyPI</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../getting_started/index.html">
+    Getting started
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../api/index.html">
+    API
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../reference/index.html">
+    Reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://github.com/plenoptic-org/plenoptic/releases">
+    Changelog
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../developers/index.html">
+    For developers
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://plenoptic.org" title="Home" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-solid fa-house fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Home</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/plenoptic-org/plenoptic" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fab fa-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://pypi.org/project/plenoptic" title="PyPI" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-custom fa-pypi fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">PyPI</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><p aria-level="2" class="caption" role="heading"><span class="caption-text">Synthesis method introductions</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Eigendistortions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="MAD_Competition_1.html">MAD Competition Conceptual Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="MAD_Competition_2.html">MAD Competition Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Metamer.html">Metamers</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Models and metrics</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../models_and_metrics/Perceptual_distance.html">Perceptual distance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../models_and_metrics/Steerable_Pyramid.html">Steerable Pyramid</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../models_and_metrics/portilla_simoncelli/ps_index.html">Portilla-Simoncelli Texture Model</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../models_and_metrics/portilla_simoncelli/getting_started/index.html">Getting started</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../models_and_metrics/portilla_simoncelli/getting_started/ps_intro.html">What is a visual texture?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../models_and_metrics/portilla_simoncelli/getting_started/ps_basic_synthesis.html">Using the Portilla-Simoncelli model in plenoptic</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../models_and_metrics/portilla_simoncelli/understanding/index.html">Understanding the Model</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../models_and_metrics/portilla_simoncelli/understanding/ps_examples.html">Example Portilla-Simoncelli metamers from different texture classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../models_and_metrics/portilla_simoncelli/understanding/ps_understand_stats.html">Understanding Portilla-Simoncelli model statistics</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../models_and_metrics/portilla_simoncelli/technical_details/index.html">Technical details</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../models_and_metrics/portilla_simoncelli/technical_details/ps_optimization.html">Portilla-Simoncelli optimization details</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../models_and_metrics/portilla_simoncelli/technical_details/ps_limitations.html">Portilla-Simoncelli Model Limitations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../models_and_metrics/portilla_simoncelli/technical_details/ps_matlab_differences.html">Notable differences between Matlab and Plenoptic Implementations</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../models_and_metrics/portilla_simoncelli/advanced_usage/index.html">Advanced usage</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../models_and_metrics/portilla_simoncelli/advanced_usage/ps_extensions.html">More than just texture metamers</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Reproducing examples from the literature</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../reproduce/Demo_Eigendistortion.html">Reproducing Berardino et al., 2017 (Eigendistortions)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reproduce/Original_MAD.html">Reproducing Wang and Simoncelli, 2008 (MAD Competition)</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Advanced Usage</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../advanced/Display.html">Display and animate functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/Synthesis_extensions.html">Extending existing synthesis objects</a></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../index.html" class="nav-link">User Guide</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Eigendistortions</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <div class="cell tag_hide-input docutils container">
+<details class="admonition hide above-input">
+<summary aria-label="Toggle hidden content">
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+
+<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span>
+    <span class="s2">&quot;ignore&quot;</span><span class="p">,</span>
+    <span class="n">message</span><span class="o">=</span><span class="s2">&quot;Adding 0.5 to distortion to plot as RGB image&quot;</span><span class="p">,</span>
+    <span class="n">category</span><span class="o">=</span><span class="ne">UserWarning</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span>
+    <span class="s2">&quot;ignore&quot;</span><span class="p">,</span>
+    <span class="n">message</span><span class="o">=</span><span class="s2">&quot;plenoptic&#39;s methods have mostly been tested on&quot;</span><span class="p">,</span>
+    <span class="n">category</span><span class="o">=</span><span class="ne">UserWarning</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span>
+    <span class="s2">&quot;ignore&quot;</span><span class="p">,</span>
+    <span class="n">message</span><span class="o">=</span><span class="s2">&quot;Clipping input data to the valid range&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</details>
+</div>
+<div class="important admonition">
+<p class="admonition-title">Download</p>
+<p>Download this notebook: <strong><a class="reference download internal" download="" href="../../_downloads/37bac0430e3edb12302cc26a001ccd00/Eigendistortions.ipynb"><code class="xref download myst-nb docutils literal notranslate"><span class="pre">Eigendistortions.ipynb</span></code></a></strong>!</p>
+</div>
+<section class="tex2jax_ignore mathjax_ignore" id="eigendistortions">
+<span id="eigendistortion-nb"></span><h1>Eigendistortions<a class="headerlink" href="#eigendistortions" title="Link to this heading">#</a></h1>
+<p><strong>In this tutorial we will cover:</strong></p>
+<ul class="simple">
+<li><p>Theory behind eigendistortions.</p></li>
+<li><p>How to use the <a class="reference internal" href="../../api/generated/plenoptic.synthesize.eigendistortion.Eigendistortion.html#plenoptic.synthesize.eigendistortion.Eigendistortion" title="plenoptic.synthesize.eigendistortion.Eigendistortion"><code class="xref py py-class docutils literal notranslate"><span class="pre">Eigendistortion</span></code></a> object.</p></li>
+<li><p>Computing eigendistortions using a simple input and linear model.</p></li>
+<li><p>Computing extremal eigendistortions for different layers of ResNet18.</p></li>
+</ul>
+<section id="introduction">
+<h2>Introduction<a class="headerlink" href="#introduction" title="Link to this heading">#</a></h2>
+<p>How can we assess whether a model sees like we do? One way is to test whether they “notice” image distortions the same way as us. For a model, a noticeable distortion would be an image perturbation that elicits a change in its response. If our goal is to create models with human-like vision, then an image distortion that is (not) noticeable to a human should also (not) be noticeable to our models. Eigendistortions provide a framework with which to compare models to human visual perception of distortions.</p>
+<p>This method was first discussed in <a class="reference external" href="https://www.cns.nyu.edu/pub/lcv/berardino17c-final.pdf">Berardino, A., Laparra, V., Ballé, J. and Simoncelli, E., 2017. Eigen-distortions of hierarchical representations. In Advances in neural information processing systems (pp. 3530-3539)</a>, and additional details can also be found on the <a class="reference external" href="https://www.cns.nyu.edu/~lcv/eigendistortions/">Lab for Computational Vision website</a>.</p>
+<p>See the <a class="reference internal" href="#eigendistortion-math-details"><span class="std std-ref">last section of this notebook</span></a> for more mathematical detail.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">torch</span><span class="w"> </span><span class="kn">import</span> <span class="n">nn</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">plenoptic</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">po</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">plenoptic.synthesize.eigendistortion</span><span class="w"> </span><span class="kn">import</span> <span class="n">Eigendistortion</span>
+
+<span class="c1"># this notebook runs just about as fast with GPU and CPU</span>
+<span class="n">DEVICE</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s2">&quot;cpu&quot;</span><span class="p">)</span>
+
+<span class="c1"># so that relative sizes of axes created by po.imshow and others look right</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s2">&quot;figure.dpi&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">72</span>
+
+<span class="c1"># this notebook uses torchvision, which is an optional dependency.</span>
+<span class="c1"># if this fails, install torchvision in your plenoptic environment</span>
+<span class="c1"># and restart the notebook kernel.</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">torchvision</span><span class="w"> </span><span class="kn">import</span> <span class="n">models</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">torchvision.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">feature_extraction</span>
+<span class="k">except</span> <span class="ne">ModuleNotFoundError</span><span class="p">:</span>
+    <span class="k">raise</span> <span class="ne">ModuleNotFoundError</span><span class="p">(</span>
+        <span class="s2">&quot;optional dependency torchvision not found!&quot;</span>
+        <span class="s2">&quot; please install it in your plenoptic environment &quot;</span>
+        <span class="s2">&quot;and restart the notebook kernel&quot;</span>
+    <span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="example-1-linear-model-small-1d-input-image">
+<h2>Example 1: Linear model, small 1D input “image”<a class="headerlink" href="#example-1-linear-model-small-1d-input-image" title="Link to this heading">#</a></h2>
+<section id="creating-the-model">
+<h3>1.1) Creating the model<a class="headerlink" href="#creating-the-model" title="Link to this heading">#</a></h3>
+<p>The fundamental goal of computing eigendistortions is to understand how small changes (distortions) in inputs affect model outputs. Any model can be thought of as a black box mapping an input to an output, <span class="math notranslate nohighlight">\(f(x): x \in \mathbb{R}^n \mapsto y \in \mathbb{R}^m\)</span>, i.e. a function takes as input an n-dimensional vector <span class="math notranslate nohighlight">\(x\)</span> and outputs an m-dimensional vector <span class="math notranslate nohighlight">\(y\)</span>.</p>
+<p>The simplest model that achieves this is linear, <span class="math notranslate nohighlight">\(y = f(x) = Mx\)</span>, where <span class="math notranslate nohighlight">\(M\in \mathbb{R}^{m\times n}\)</span>.</p>
+<p>In this linear case, the Jacobian is fixed <span class="math notranslate nohighlight">\(J= \frac{\partial f}{\partial x}=M\)</span> for all possible inputs <span class="math notranslate nohighlight">\(x\)</span>. Can we <em>synthesize</em> a distortion <span class="math notranslate nohighlight">\(\epsilon\)</span> such that <span class="math notranslate nohighlight">\(f(x+\epsilon)\)</span> is maximally/minimally perturbed from the original <span class="math notranslate nohighlight">\(f(x)\)</span>? Yes! This would amount to finding the first and last eigenvectors of the Fisher information matrix, i.e. <span class="math notranslate nohighlight">\(J^TJ v = \lambda v\)</span>.</p>
+<p>We’ll be working with the <a class="reference internal" href="../../api/generated/plenoptic.synthesize.eigendistortion.Eigendistortion.html#plenoptic.synthesize.eigendistortion.Eigendistortion" title="plenoptic.synthesize.eigendistortion.Eigendistortion"><code class="xref py py-class docutils literal notranslate"><span class="pre">Eigendistortion</span></code></a> object and its method, <a class="reference internal" href="../../api/generated/plenoptic.synthesize.eigendistortion.Eigendistortion.html#plenoptic.synthesize.eigendistortion.Eigendistortion.synthesize" title="plenoptic.synthesize.eigendistortion.Eigendistortion.synthesize"><code class="xref py py-func docutils literal notranslate"><span class="pre">synthesize</span></code></a>.</p>
+<p>Let’s make a linear model and compute eigendistortions for a given input.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">LinearModel</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The simplest model we can make.</span>
+<span class="sd">    Its Jacobian should be the weight matrix of M, and the eigenvectors of the</span>
+<span class="sd">    Fisher matrix are therefore the eigenvectors of M.T @ M&quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">m</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="n">torch</span><span class="o">.</span><span class="n">manual_seed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">M</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">M</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>  <span class="c1"># this computes y = x @ M.T</span>
+        <span class="k">return</span> <span class="n">y</span>
+
+
+<span class="c1"># input vector dim (can you predict what the eigenvec/vals would be when n&lt;m or n=m?</span>
+<span class="c1"># Feel free to try!)</span>
+<span class="n">n</span> <span class="o">=</span> <span class="mi">25</span>
+<span class="n">m</span> <span class="o">=</span> <span class="mi">10</span>  <span class="c1"># output vector dim</span>
+
+<span class="n">mdl_linear</span> <span class="o">=</span> <span class="n">LinearModel</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">m</span><span class="p">)</span>
+<span class="n">mdl_linear</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
+<span class="n">po</span><span class="o">.</span><span class="n">tools</span><span class="o">.</span><span class="n">remove_grad</span><span class="p">(</span><span class="n">mdl_linear</span><span class="p">)</span>
+
+<span class="n">x0</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+<span class="n">y0</span> <span class="o">=</span> <span class="n">mdl_linear</span><span class="p">(</span><span class="n">x0</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">sharex</span><span class="o">=</span><span class="s2">&quot;all&quot;</span><span class="p">,</span> <span class="n">sharey</span><span class="o">=</span><span class="s2">&quot;all&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">stem</span><span class="p">(</span><span class="n">x0</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">n</span><span class="si">:</span><span class="s2">d</span><span class="si">}</span><span class="s2">D Input&quot;</span><span class="p">)</span>
+
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">stem</span><span class="p">(</span><span class="n">y0</span><span class="o">.</span><span class="n">detach</span><span class="p">(),</span> <span class="n">markerfmt</span><span class="o">=</span><span class="s2">&quot;C1o&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">m</span><span class="si">:</span><span class="s2">d</span><span class="si">}</span><span class="s2">D Output&quot;</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../_images/87efae0e96e754ab62cd513194f2fbb1d335da46314fbcb759e38977fe483ba0.png" src="../../_images/87efae0e96e754ab62cd513194f2fbb1d335da46314fbcb759e38977fe483ba0.png" />
+</div>
+</div>
+</section>
+<section id="synthesizing-eigendistortions-of-linear-model">
+<h3>1.2 - Synthesizing eigendistortions of linear model<a class="headerlink" href="#synthesizing-eigendistortions-of-linear-model" title="Link to this heading">#</a></h3>
+<p>To compute the eigendistortions of this model, we can instantiate an <a class="reference internal" href="../../api/generated/plenoptic.synthesize.eigendistortion.Eigendistortion.html#plenoptic.synthesize.eigendistortion.Eigendistortion" title="plenoptic.synthesize.eigendistortion.Eigendistortion"><code class="xref py py-class docutils literal notranslate"><span class="pre">Eigendistortion</span></code></a> object with an input tensor and a valid PyTorch model with a <code class="docutils literal notranslate"><span class="pre">forward</span></code> <!-- skip-lint --> method. After that, we simply call the method <a class="reference internal" href="../../api/generated/plenoptic.synthesize.eigendistortion.Eigendistortion.html#plenoptic.synthesize.eigendistortion.Eigendistortion.synthesize" title="plenoptic.synthesize.eigendistortion.Eigendistortion.synthesize"><code class="xref py py-func docutils literal notranslate"><span class="pre">synthesize</span></code></a>, choosing the appropriate synthesis method. Normally our input has thousands of entries, but our input in this case is small (only n=25 entries), so we can compute the full <span class="math notranslate nohighlight">\(m \times n\)</span> Jacobian, and all the eigenvectors of the <span class="math notranslate nohighlight">\(n \times n\)</span> Fisher matrix, <span class="math notranslate nohighlight">\(F=J^TJ\)</span>. The <a class="reference internal" href="../../api/generated/plenoptic.synthesize.eigendistortion.Eigendistortion.html#plenoptic.synthesize.eigendistortion.Eigendistortion.synthesize" title="plenoptic.synthesize.eigendistortion.Eigendistortion.synthesize"><code class="xref py py-func docutils literal notranslate"><span class="pre">synthesize</span></code></a> method does this for us and stores the outputs (<code class="docutils literal notranslate"><span class="pre">eigendistortions,</span> <span class="pre">eigenvalues,</span> <span class="pre">eigenindex</span></code>) of the synthesis.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># instantiate Eigendistortion object using an input and model</span>
+<span class="n">eig_jac</span> <span class="o">=</span> <span class="n">Eigendistortion</span><span class="p">(</span><span class="n">x0</span><span class="p">,</span> <span class="n">mdl_linear</span><span class="p">)</span>
+<span class="c1"># compute the entire Jacobian exactly</span>
+<span class="n">eig_jac</span><span class="o">.</span><span class="n">synthesize</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="s2">&quot;exact&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="comparing-our-synthesis-to-ground-truth">
+<h3>1.3 - Comparing our synthesis to ground-truth<a class="headerlink" href="#comparing-our-synthesis-to-ground-truth" title="Link to this heading">#</a></h3>
+<p>The Jacobian is in general a rectangular (not necessarily square) matrix <span class="math notranslate nohighlight">\(J\in \mathbb{R}^{m\times n}\)</span>. Since this is a linear model, let’s check if the computed Jacobian (stored as the <a class="reference internal" href="../../api/generated/plenoptic.synthesize.eigendistortion.Eigendistortion.html#plenoptic.synthesize.eigendistortion.Eigendistortion.jacobian" title="plenoptic.synthesize.eigendistortion.Eigendistortion.jacobian"><code class="xref py py-attr docutils literal notranslate"><span class="pre">jacobian</span></code></a> attribute in the <a class="reference internal" href="../../api/generated/plenoptic.synthesize.eigendistortion.Eigendistortion.html#plenoptic.synthesize.eigendistortion.Eigendistortion" title="plenoptic.synthesize.eigendistortion.Eigendistortion"><code class="xref py py-class docutils literal notranslate"><span class="pre">Eigendistortion</span></code></a> object) matches the weight matrix <span class="math notranslate nohighlight">\(M\)</span>.</p>
+<p>Since the eigendistortions are each 1D (vectors) in this example, we can display them all as an image where each column is an eigendistortion, each pixel is an entry of the eigendistortion, and the intensity is proportional to its value.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">sharex</span><span class="o">=</span><span class="s2">&quot;all&quot;</span><span class="p">,</span> <span class="n">sharey</span><span class="o">=</span><span class="s2">&quot;all&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">eig_jac</span><span class="o">.</span><span class="n">jacobian</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span>
+    <span class="n">mdl_linear</span><span class="o">.</span><span class="n">M</span><span class="o">.</span><span class="n">weight</span><span class="o">.</span><span class="n">data</span><span class="p">,</span>
+    <span class="n">vmin</span><span class="o">=</span><span class="n">eig_jac</span><span class="o">.</span><span class="n">jacobian</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span>
+    <span class="n">vmax</span><span class="o">=</span><span class="n">eig_jac</span><span class="o">.</span><span class="n">jacobian</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span>
+<span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">xticks</span><span class="o">=</span><span class="p">[],</span> <span class="n">yticks</span><span class="o">=</span><span class="p">[],</span> <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Solved Jacobian&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">&quot;Linear model weight matrix&quot;</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+
+<span class="nb">print</span><span class="p">(</span>
+    <span class="s2">&quot;Jacobian == weight matrix M?:&quot;</span><span class="p">,</span>
+    <span class="n">eig_jac</span><span class="o">.</span><span class="n">jacobian</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">mdl_linear</span><span class="o">.</span><span class="n">M</span><span class="o">.</span><span class="n">weight</span><span class="o">.</span><span class="n">data</span><span class="p">),</span>
+<span class="p">)</span>
+
+<span class="c1"># Eigenvectors (aka eigendistortions) and associated eigenvectors are found in the</span>
+<span class="c1"># distortions dict attribute</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">sharex</span><span class="o">=</span><span class="s2">&quot;all&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">eig_jac</span><span class="o">.</span><span class="n">eigendistortions</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;coolwarm&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">&quot;Eigendistortions&quot;</span><span class="p">,</span> <span class="n">xlabel</span><span class="o">=</span><span class="s2">&quot;Eigenvector index&quot;</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="s2">&quot;Entry&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">eig_jac</span><span class="o">.</span><span class="n">eigenvalues</span><span class="p">,</span> <span class="s2">&quot;.&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">&quot;Eigenvalues&quot;</span><span class="p">,</span> <span class="n">xlabel</span><span class="o">=</span><span class="s2">&quot;Eigenvector index&quot;</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="s2">&quot;Eigenvalue&quot;</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Jacobian == weight matrix M?: True
+</pre></div>
+</div>
+<img alt="../../_images/c20194d8fae6675d57a93aab166d7100eb4db4cf0470c37e3c27c38a3b3582fc.png" src="../../_images/c20194d8fae6675d57a93aab166d7100eb4db4cf0470c37e3c27c38a3b3582fc.png" />
+<img alt="../../_images/bf80bcb37ec4d4fd6a9291e88a2e3bcc2b199465e73fd7acd043389d5105be01.png" src="../../_images/bf80bcb37ec4d4fd6a9291e88a2e3bcc2b199465e73fd7acd043389d5105be01.png" />
+</div>
+</div>
+</section>
+<section id="what-do-these-eigendistortions-mean">
+<h3>1.4 - What do these eigendistortions <em>mean</em>?<a class="headerlink" href="#what-do-these-eigendistortions-mean" title="Link to this heading">#</a></h3>
+<p>The first eigenvector (with the largest eigenvalue) is the direction in which we can distort our input <span class="math notranslate nohighlight">\(x\)</span> and change the response of the model the <em>most</em>, i.e. its most noticeable distortion. For the last eigenvector, since its associated eigenvalue is 0, then <em>no change in response occurs</em> when we distort the input in that direction, i.e. <span class="math notranslate nohighlight">\(f(x+\epsilon)=f(x)\)</span>. So this distortion would be <em>imperceptible</em> to the model.</p>
+<p>In most cases, our input would be much larger. An <span class="math notranslate nohighlight">\(n\times n\)</span> image has <span class="math notranslate nohighlight">\(n^2\)</span> entries, meaning the Fisher matrix is <span class="math notranslate nohighlight">\(n^2 \times n^2\)</span>, and therefore <span class="math notranslate nohighlight">\(n^2\)</span> possible eigendistortions – certainly too large to store in memory. We need to instead resort to numerical methods to compute the eigendistortions. To do this, we can just set our synthesis <code class="docutils literal notranslate"><span class="pre">method='power'</span></code> to estimate the first eigenvector (most noticeable distortion) and last eigenvector (least noticeable distortion) for the image.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">eig_pow</span> <span class="o">=</span> <span class="n">Eigendistortion</span><span class="p">(</span><span class="n">x0</span><span class="p">,</span> <span class="n">mdl_linear</span><span class="p">)</span>
+<span class="n">eig_pow</span><span class="o">.</span><span class="n">synthesize</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="s2">&quot;power&quot;</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+<span class="n">eigdist_pow</span> <span class="o">=</span> <span class="n">eig_pow</span><span class="o">.</span><span class="n">eigendistortions</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Indices of computed eigenvectors: </span><span class="si">{</span><span class="n">eig_pow</span><span class="o">.</span><span class="n">eigenindex</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<script type="application/vnd.jupyter.widget-view+json">{"version_major": 2, "version_minor": 0, "model_id": "e5253de3966c423082be63fdadd6ce0c"}</script><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Top k=1 eigendists computed | Stop criterion 1.00E-07 reached.
+</pre></div>
+</div>
+<script type="application/vnd.jupyter.widget-view+json">{"version_major": 2, "version_minor": 0, "model_id": "9d68b463bda34b02925c66a0d6ce35c8"}</script><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Bottom k=1 eigendists computed | Stop criterion 1.00E-07 reached.
+Indices of computed eigenvectors: tensor([ 0, 24])
+</pre></div>
+</div>
+</div>
+</div>
+<p>Now let’s compare the eigendistortions we got from these two methods:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">eigdist_jac</span> <span class="o">=</span> <span class="n">eig_jac</span><span class="o">.</span><span class="n">eigendistortions</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">eig_pow</span><span class="o">.</span><span class="n">eigenindex</span><span class="p">,</span> <span class="n">eig_pow</span><span class="o">.</span><span class="n">eigenvalues</span><span class="p">,</span> <span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="n">markersize</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Power&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">eig_jac</span><span class="o">.</span><span class="n">eigenvalues</span><span class="p">,</span> <span class="s2">&quot;.-&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Jacobian&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set</span><span class="p">(</span>
+    <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Power method vs Jacobian&quot;</span><span class="p">,</span>
+    <span class="n">xlabel</span><span class="o">=</span><span class="s2">&quot;Eigenvector index&quot;</span><span class="p">,</span>
+    <span class="n">ylabel</span><span class="o">=</span><span class="s2">&quot;Eigenvalue&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">&quot;Synth. method&quot;</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">sharex</span><span class="o">=</span><span class="s2">&quot;all&quot;</span><span class="p">,</span> <span class="n">sharey</span><span class="o">=</span><span class="s2">&quot;all&quot;</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">eigdist_pow</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">eigdist_jac</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">&quot;Difference in first eigendists&quot;</span><span class="p">)</span>
+
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">stem</span><span class="p">(</span><span class="n">eigdist_pow</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">eigdist_jac</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">&quot;Difference in last eigendists&quot;</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">stem</span><span class="p">(</span><span class="n">eigdist_jac</span> <span class="o">@</span> <span class="n">eigdist_pow</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set</span><span class="p">(</span>
+    <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Power method&#39;s last eigenvec projected on all Jacobian method&#39;s eigenvec&quot;</span><span class="p">,</span>
+    <span class="n">xlabel</span><span class="o">=</span><span class="s2">&quot;Eigenvector index&quot;</span><span class="p">,</span>
+    <span class="n">ylabel</span><span class="o">=</span><span class="s2">&quot;Projection&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span>
+    <span class="s2">&quot;Are the first eigendistortions the same?&quot;</span><span class="p">,</span>
+    <span class="n">eigdist_pow</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">eigdist_jac</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">atol</span><span class="o">=</span><span class="mf">1e-3</span><span class="p">),</span>
+<span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span>
+    <span class="s2">&quot;Are the last eigendistortions the same?&quot;</span><span class="p">,</span>
+    <span class="n">eigdist_pow</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">eigdist_jac</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">atol</span><span class="o">=</span><span class="mf">1e-3</span><span class="p">),</span>
+<span class="p">)</span>
+
+<span class="c1"># find eigendistortions of Jacobian-method whose eigenvalues are zero</span>
+<span class="n">ind_zero</span> <span class="o">=</span> <span class="n">eig_jac</span><span class="o">.</span><span class="n">eigenvalues</span><span class="o">.</span><span class="n">isclose</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="n">atol</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Are the first eigendistortions the same? True
+Are the last eigendistortions the same? False
+</pre></div>
+</div>
+<img alt="../../_images/67b15a9ac3560f2ff265814db1c4253ab976c24f29044fb39c4e0a8975fd95f5.png" src="../../_images/67b15a9ac3560f2ff265814db1c4253ab976c24f29044fb39c4e0a8975fd95f5.png" />
+<img alt="../../_images/e604c84172bf447fdcf2888857c21de5b7a0df83f09ff33a2a145d26767315a6.png" src="../../_images/e604c84172bf447fdcf2888857c21de5b7a0df83f09ff33a2a145d26767315a6.png" />
+<img alt="../../_images/dbc238a9cb14450a2f46727acbf835c5bf6ea0bf77229f8633b184ecc87322a8.png" src="../../_images/dbc238a9cb14450a2f46727acbf835c5bf6ea0bf77229f8633b184ecc87322a8.png" />
+</div>
+</div>
+<p>The power method’s first eigendistortion matches the ground-truth first eigendistortion obtained via the Jacobian solve. And while the last eigendistortions don’t match, the last power method eigendistortion lies in the span of all the eigendistortions whose eigenvalues are zero. Each of these eigendistortions whose eigenvalues are zero are equivalent. Any distortion of <span class="math notranslate nohighlight">\(x\)</span> in the span of these eigendistortions would result in <em>no change</em> in the model output, and would therefore be imperceptible to the model.</p>
+</section>
+<section id="the-fisher-information-matrix-is-locally-adaptive">
+<span id="fisher-locally-adaptive"></span><h3>1.5 - The Fisher information matrix is locally adaptive<a class="headerlink" href="#the-fisher-information-matrix-is-locally-adaptive" title="Link to this heading">#</a></h3>
+<p>Different inputs should in general have different sets of eigendistortions – a noticeable distortion in one image would not necessarily be noticeable in a different image. The only case where they should be the same regardless of input is when the model is fully linear, as in this simple example. So let’s check if the Jacobian at a different input still equals the weight matrix <span class="math notranslate nohighlight">\(M\)</span>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># generate some random input</span>
+<span class="n">x1</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn_like</span><span class="p">(</span><span class="n">x0</span><span class="p">)</span>
+
+<span class="n">eig_jac2</span> <span class="o">=</span> <span class="n">Eigendistortion</span><span class="p">(</span><span class="n">x1</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="n">mdl_linear</span><span class="p">)</span>
+<span class="n">eig_jac2</span><span class="o">.</span><span class="n">synthesize</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="s2">&quot;exact&quot;</span><span class="p">)</span>
+
+<span class="c1"># since the model is linear, the Jacobian should be the exact same as before</span>
+<span class="nb">print</span><span class="p">(</span>
+    <span class="sa">f</span><span class="s2">&quot;Does the jacobian at x1 still equal the model weight matrix?&quot;</span>
+    <span class="sa">f</span><span class="s2">&quot; </span><span class="si">{</span><span class="n">eig_jac2</span><span class="o">.</span><span class="n">jacobian</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">mdl_linear</span><span class="o">.</span><span class="n">M</span><span class="o">.</span><span class="n">weight</span><span class="o">.</span><span class="n">data</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Does the jacobian at x1 still equal the model weight matrix? True
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/agent/workspace/neurorse_plenoptic_main@2/lib/python3.11/site-packages/plenoptic/tools/validate.py:103: UserWarning: input_tensor range is (-2.241367816925049, 1.7851709127426147); plenoptic&#39;s methods have largely been tested with the range [0, 1]. Synthesis should still work, but if you have any problems, please open an issue.
+  warnings.warn(
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="example-2-which-layer-of-resnet-is-a-better-model-of-human-visual-distortion-perception">
+<h2>Example 2: Which layer of ResNet is a better model of human visual distortion perception?<a class="headerlink" href="#example-2-which-layer-of-resnet-is-a-better-model-of-human-visual-distortion-perception" title="Link to this heading">#</a></h2>
+<p>Now that we understand what eigendistortions are and how the <a class="reference internal" href="../../api/generated/plenoptic.synthesize.eigendistortion.Eigendistortion.html#plenoptic.synthesize.eigendistortion.Eigendistortion" title="plenoptic.synthesize.eigendistortion.Eigendistortion"><code class="xref py py-class docutils literal notranslate"><span class="pre">Eigendistortion</span></code></a> class works, let’s compute them real images using a more complex model: ResNet18. The response vector <span class="math notranslate nohighlight">\(y\)</span> doesn’t necessarily have to be the output of the last layer of the model; we can also compute Eigendistortions for intermediate model layers too. Let’s synthesize distortions for an image using different layers of ResNet18 to see which layer produces extremal eigendistortions that align more with human perception.</p>
+<section id="load-an-example-an-image">
+<h3>2.1 - Load an example an image<a class="headerlink" href="#load-an-example-an-image" title="Link to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># this will be the img_height and width of the input, you can change this to</span>
+<span class="c1"># accommodate your machine</span>
+<span class="n">n</span> <span class="o">=</span> <span class="mi">128</span>
+<span class="n">img</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">color_wheel</span><span class="p">()</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">DEVICE</span><span class="p">)</span>
+<span class="c1"># center crop the image to nxn</span>
+<span class="n">img</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">tools</span><span class="o">.</span><span class="n">center_crop</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
+<span class="n">po</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">as_rgb</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">zoom</span><span class="o">=</span><span class="mi">2</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../_images/72d4d9ddf8bbd7344b26c4c16d9b0aa340fcdfcf00b0a46f70c3058627e8b00b.png" src="../../_images/72d4d9ddf8bbd7344b26c4c16d9b0aa340fcdfcf00b0a46f70c3058627e8b00b.png" />
+</div>
+</div>
+</section>
+<section id="instantiate-models-and-eigendistortion-objects">
+<h3>2.2 - Instantiate models and Eigendistortion objects<a class="headerlink" href="#instantiate-models-and-eigendistortion-objects" title="Link to this heading">#</a></h3>
+<p>Let’s make a wrapper class that can return the nth layer output of ResNet18. We’re going to use this to compare eigendistortions synthesized using different layers of ResNet18 as models for distortion perception.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">TorchVision</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">return_node</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">extractor</span> <span class="o">=</span> <span class="n">feature_extraction</span><span class="o">.</span><span class="n">create_feature_extractor</span><span class="p">(</span>
+            <span class="n">model</span><span class="p">,</span> <span class="n">return_nodes</span><span class="o">=</span><span class="p">[</span><span class="n">return_node</span><span class="p">]</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">model</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">return_node</span> <span class="o">=</span> <span class="n">return_node</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">extractor</span><span class="p">(</span><span class="n">x</span><span class="p">)[</span><span class="bp">self</span><span class="o">.</span><span class="n">return_node</span><span class="p">]</span>
+
+
+<span class="c1"># different potential models of human visual perception of distortions</span>
+<span class="n">resnet</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">resnet18</span><span class="p">(</span><span class="n">weights</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">ResNet18_Weights</span><span class="o">.</span><span class="n">IMAGENET1K_V1</span><span class="p">,</span> <span class="n">progress</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">resnet</span> <span class="o">=</span> <span class="n">resnet</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">DEVICE</span><span class="p">)</span>
+<span class="n">resnet18_a</span> <span class="o">=</span> <span class="n">TorchVision</span><span class="p">(</span><span class="n">resnet</span><span class="p">,</span> <span class="s2">&quot;maxpool&quot;</span><span class="p">)</span>
+<span class="n">po</span><span class="o">.</span><span class="n">tools</span><span class="o">.</span><span class="n">remove_grad</span><span class="p">(</span><span class="n">resnet18_a</span><span class="p">)</span>
+<span class="n">resnet18_a</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
+<span class="n">resnet18_b</span> <span class="o">=</span> <span class="n">TorchVision</span><span class="p">(</span><span class="n">resnet</span><span class="p">,</span> <span class="s2">&quot;layer2&quot;</span><span class="p">)</span>
+<span class="n">po</span><span class="o">.</span><span class="n">tools</span><span class="o">.</span><span class="n">remove_grad</span><span class="p">(</span><span class="n">resnet18_b</span><span class="p">)</span>
+<span class="n">resnet18_b</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
+
+<span class="n">ed_resneta</span> <span class="o">=</span> <span class="n">Eigendistortion</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">resnet18_a</span><span class="p">)</span>
+<span class="n">ed_resnetb</span> <span class="o">=</span> <span class="n">Eigendistortion</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">resnet18_b</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading: &quot;https://download.pytorch.org/models/resnet18-f37072fd.pth&quot; to /home/agent/workspace/neurorse_plenoptic_main@2/.cache/torch/hub/checkpoints/resnet18-f37072fd.pth
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="synthesizing-distortions">
+<h3>2.3 - Synthesizing distortions<a class="headerlink" href="#synthesizing-distortions" title="Link to this heading">#</a></h3>
+<p>The input dimensionality in this example is huge compared to our linear model example – it is <span class="math notranslate nohighlight">\((\textrm{n_chan} \times \textrm{img_height} \times \textrm{img_width})^2\)</span>, meaning the Fisher matrix is too massive to compute exactly. We must turn to iterative methods. Let’s synthesize the extremal eigendistortions for this picture of Einstein using the different layers of ResNet as defined above.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Bump up n_steps if you wish</span>
+<span class="n">ed_resneta</span><span class="o">.</span><span class="n">synthesize</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="s2">&quot;power&quot;</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="mi">400</span><span class="p">)</span>
+<span class="n">ed_resnetb</span><span class="o">.</span><span class="n">synthesize</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="s2">&quot;power&quot;</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="mi">400</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<script type="application/vnd.jupyter.widget-view+json">{"version_major": 2, "version_minor": 0, "model_id": "353514ac0f204507b5e9f6a2c79ea117"}</script><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Top k=1 eigendists computed | Stop criterion 1.00E-07 reached.
+</pre></div>
+</div>
+<script type="application/vnd.jupyter.widget-view+json">{"version_major": 2, "version_minor": 0, "model_id": "7db5e602b62b49e0a600cc42bd40d192"}</script><script type="application/vnd.jupyter.widget-view+json">{"version_major": 2, "version_minor": 0, "model_id": "2a0707a89d5f437c80cfbd0e4182ed08"}</script><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Top k=1 eigendists computed | Stop criterion 1.00E-07 reached.
+</pre></div>
+</div>
+<script type="application/vnd.jupyter.widget-view+json">{"version_major": 2, "version_minor": 0, "model_id": "0bb9a9523d3a405f8194c2c832e1bc24"}</script></div>
+</div>
+</section>
+<section id="visualizing-eigendistortions">
+<h3>2.4 - Visualizing eigendistortions<a class="headerlink" href="#visualizing-eigendistortions" title="Link to this heading">#</a></h3>
+<p>Let’s display the eigendistortions.</p>
+<p><code class="docutils literal notranslate"><span class="pre">plenoptic</span></code> includes a <a class="reference internal" href="../../api/generated/plenoptic.synthesize.eigendistortion.display_eigendistortion_all.html#plenoptic.synthesize.eigendistortion.display_eigendistortion_all" title="plenoptic.synthesize.eigendistortion.display_eigendistortion_all"><code class="xref py py-func docutils literal notranslate"><span class="pre">display_eigendistortion_all</span></code></a> function to visualize multiple eigendistortiosn together. Here, we show the original image on the bottom left, with the synthesized maximal eigendistortion in the top middle, and some constant <span class="math notranslate nohighlight">\(\alpha\)</span> times the eigendistortion added to the image in the bottom middle. The rightmost column has a similar layout, but displays the minimal eigendistortion. Let’s display the eigendistortions for the maxpool layer (pretty early in the model):</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">po</span><span class="o">.</span><span class="n">synth</span><span class="o">.</span><span class="n">eigendistortion</span><span class="o">.</span><span class="n">display_eigendistortion_all</span><span class="p">(</span>
+    <span class="n">ed_resneta</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">as_rgb</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">suptitle</span><span class="o">=</span><span class="s2">&quot;ResNet18 Maxpool Layer&quot;</span><span class="p">,</span> <span class="n">zoom</span><span class="o">=</span><span class="mi">2</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../_images/71daee8fb06ce5844c2fa29e939b04655a0e2aa91d57acb2fd43c739e2e1a0c6.png" src="../../_images/71daee8fb06ce5844c2fa29e939b04655a0e2aa91d57acb2fd43c739e2e1a0c6.png" />
+<img alt="../../_images/71daee8fb06ce5844c2fa29e939b04655a0e2aa91d57acb2fd43c739e2e1a0c6.png" src="../../_images/71daee8fb06ce5844c2fa29e939b04655a0e2aa91d57acb2fd43c739e2e1a0c6.png" />
+</div>
+</div>
+<p>And the eigendistortions for layer 2 (about halfway through the model):</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">po</span><span class="o">.</span><span class="n">synth</span><span class="o">.</span><span class="n">eigendistortion</span><span class="o">.</span><span class="n">display_eigendistortion_all</span><span class="p">(</span>
+    <span class="n">ed_resnetb</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">as_rgb</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">suptitle</span><span class="o">=</span><span class="s2">&quot;ResNet18 Layer2&quot;</span><span class="p">,</span> <span class="n">zoom</span><span class="o">=</span><span class="mi">2</span>
+<span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../_images/3c40b159e4b0a2cb4fb9484a41160d1b1ef8ea584e2f4d2473786548e62db12b.png" src="../../_images/3c40b159e4b0a2cb4fb9484a41160d1b1ef8ea584e2f4d2473786548e62db12b.png" />
+</div>
+</div>
+</section>
+<section id="which-synthesized-extremal-eigendistortions-better-characterize-human-perception">
+<h3>2.5 - Which synthesized extremal eigendistortions better characterize human perception?<a class="headerlink" href="#which-synthesized-extremal-eigendistortions-better-characterize-human-perception" title="Link to this heading">#</a></h3>
+<p>Let’s compare eigendistortions within a model first. One thing we immediately notice is that the first eigendistortion (labeled <code class="docutils literal notranslate"><span class="pre">maxdist</span></code>) is indeed more noticeable than <code class="docutils literal notranslate"><span class="pre">mindist</span></code>. <code class="docutils literal notranslate"><span class="pre">maxdist</span></code> is localized to a single portion of the image, and has lower, more prominent spatial frequency content than <code class="docutils literal notranslate"><span class="pre">mindist</span></code>. <code class="docutils literal notranslate"><span class="pre">mindist</span></code> looks more like high frequency noise distributed across the image.</p>
+<p>But how do the distortions compare between models – which model better characterizes human visual perception of distortions? The only way to truly this is to run an experiment and ask human observers which distortions are most/least noticeable to them. The best model should produce a maximally noticeable distortion that is more noticeable than other models’ maximally noticeable distortions, and its minimally noticeable distortion should be less noticeable than other models’ minimally noticeable distortions.</p>
+<p>See <a class="reference external" href="https://www.cns.nyu.edu/pub/lcv/berardino17c-final.pdf">Berardino et al. 2017</a> for more details.</p>
+</section>
+<section id="synthesizing-distortions-for-other-images">
+<h3>2.6 - Synthesizing distortions for other images<a class="headerlink" href="#synthesizing-distortions-for-other-images" title="Link to this heading">#</a></h3>
+<p>Remember the Fisher matrix is locally adaptive, meaning that a different image should have a different set of eigendistortions. Let’s finish off this notebook with another set of extremal eigendistortions for these two ResNet18 layers on a different image.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">img</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">curie</span><span class="p">()</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">DEVICE</span><span class="p">)</span>
+
+<span class="c1"># center crop the image to nxn</span>
+<span class="n">img</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">tools</span><span class="o">.</span><span class="n">center_crop</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
+<span class="c1"># because this is a grayscale image but ResNet expects a color image,</span>
+<span class="c1"># need to duplicate along the color dimension</span>
+<span class="n">img3</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">repeat_interleave</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="n">ed_resneta</span> <span class="o">=</span> <span class="n">Eigendistortion</span><span class="p">(</span><span class="n">img3</span><span class="p">,</span> <span class="n">resnet18_a</span><span class="p">)</span>
+<span class="n">ed_resnetb</span> <span class="o">=</span> <span class="n">Eigendistortion</span><span class="p">(</span><span class="n">img3</span><span class="p">,</span> <span class="n">resnet18_b</span><span class="p">)</span>
+
+<span class="n">ed_resneta</span><span class="o">.</span><span class="n">synthesize</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="s2">&quot;power&quot;</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="mi">400</span><span class="p">)</span>
+<span class="n">ed_resnetb</span><span class="o">.</span><span class="n">synthesize</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="s2">&quot;power&quot;</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="mi">400</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<script type="application/vnd.jupyter.widget-view+json">{"version_major": 2, "version_minor": 0, "model_id": "b4438d62641042cd8f31d4c8574b159d"}</script><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Top k=1 eigendists computed | Stop criterion 1.00E-07 reached.
+</pre></div>
+</div>
+<script type="application/vnd.jupyter.widget-view+json">{"version_major": 2, "version_minor": 0, "model_id": "629d0071707c42b5bdc64fc0502a6599"}</script><script type="application/vnd.jupyter.widget-view+json">{"version_major": 2, "version_minor": 0, "model_id": "80ebb017a015464e9e7adb09b9545aa4"}</script><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Top k=1 eigendists computed | Stop criterion 1.00E-07 reached.
+</pre></div>
+</div>
+<script type="application/vnd.jupyter.widget-view+json">{"version_major": 2, "version_minor": 0, "model_id": "ae81112c507a409ea1a419124a78499b"}</script></div>
+</div>
+<p>Unlike our <a class="reference internal" href="#fisher-locally-adaptive"><span class="std std-ref">previous example</span></a>, eigendistortions for either ResNet layer will differ depending upon the image they start with. We can see that below, where the Curie-based eigendistortions are different from the color wheel-based ones we examined earlier. First, the eigendistortions for the maxpool layer (pretty early in the model):</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">po</span><span class="o">.</span><span class="n">synth</span><span class="o">.</span><span class="n">eigendistortion</span><span class="o">.</span><span class="n">display_eigendistortion_all</span><span class="p">(</span>
+    <span class="n">ed_resneta</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">as_rgb</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">suptitle</span><span class="o">=</span><span class="s2">&quot;ResNet18 Maxpool Layer&quot;</span><span class="p">,</span> <span class="n">zoom</span><span class="o">=</span><span class="mi">2</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../_images/9109f134e40bf1f96cd49f847e6fff871a5be40ffb2299f4b8aad532af277dbf.png" src="../../_images/9109f134e40bf1f96cd49f847e6fff871a5be40ffb2299f4b8aad532af277dbf.png" />
+<img alt="../../_images/9109f134e40bf1f96cd49f847e6fff871a5be40ffb2299f4b8aad532af277dbf.png" src="../../_images/9109f134e40bf1f96cd49f847e6fff871a5be40ffb2299f4b8aad532af277dbf.png" />
+</div>
+</div>
+<p>And the eigendistortions for layer 2 (about halfway through the model):</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">po</span><span class="o">.</span><span class="n">synth</span><span class="o">.</span><span class="n">eigendistortion</span><span class="o">.</span><span class="n">display_eigendistortion_all</span><span class="p">(</span>
+    <span class="n">ed_resnetb</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">as_rgb</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">suptitle</span><span class="o">=</span><span class="s2">&quot;ResNet18 Layer2&quot;</span><span class="p">,</span> <span class="n">zoom</span><span class="o">=</span><span class="mi">2</span>
+<span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../_images/456db985bfb943d12fd398859b086d36b1c7ea6274499234c9efb34bb9bcb39d.png" src="../../_images/456db985bfb943d12fd398859b086d36b1c7ea6274499234c9efb34bb9bcb39d.png" />
+</div>
+</div>
+</section>
+</section>
+<section id="appendix-more-mathematical-detail">
+<span id="eigendistortion-math-details"></span><h2>Appendix: More mathematical detail<a class="headerlink" href="#appendix-more-mathematical-detail" title="Link to this heading">#</a></h2>
+<p>If we have a model that takes an N-dimensional input and outputs an M-dimensional response, then its Jacobian,
+<span class="math notranslate nohighlight">\(J=\frac{\partial f}{\partial x}\)</span>, is an <span class="math notranslate nohighlight">\(M\times N\)</span> matrix of partial derivatives that tells us how much a change in
+each entry of the input would change each entry of the output. With the assumption of additive Gaussian noise in the
+output space Fisher Information Matrix, <span class="math notranslate nohighlight">\(F\)</span>, is a symmetric positive semi-definite, <span class="math notranslate nohighlight">\(N\times N\)</span> matrix computed using
+the Jacobian, <span class="math notranslate nohighlight">\(F=J^TJ\)</span>. If you are familiar with linear algebra, you might notice that  the eigenvectors of <span class="math notranslate nohighlight">\(F\)</span> are
+the right singular vectors of the Jacobian. Thus, an eigendecomposition <span class="math notranslate nohighlight">\(F=V\Lambda V\)</span> yields directions of the
+<em>input space</em> (vectors in <span class="math notranslate nohighlight">\(V\)</span>) along which changes in the <em>output space</em> are rank-ordered by entries in diagonal
+matrix <span class="math notranslate nohighlight">\(\Lambda\)</span>.</p>
+<p>Given some input image <span class="math notranslate nohighlight">\(x_0\)</span>, an <strong>eigendistortion</strong> is an additive perturbation, <span class="math notranslate nohighlight">\(\epsilon\)</span>, in the <em>input domain</em>
+that changes the response in a model’s <em>output domain</em> of interest (e.g. an intermediate layer of a neural net, the
+output of a nonlinear model, etc.).
+These perturbations are named <em>eigendistortions</em> because they push <span class="math notranslate nohighlight">\(x_0\)</span> along eigenvectors of the Fisher Information Matrix.
+So we expect distortions <span class="math notranslate nohighlight">\(x_0\)</span> along the direction of the eigenvector with the maximum eigenvalue will change the
+representation the <em>most</em>, and distortions along the eigenvector with the minimum eigenvalue will change the
+representation  the <em>least</em>. (And pushing along intermediate eigenvectors will change the representation by an
+intermediate amount.)</p>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="../index.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">User Guide</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="MAD_Competition_1.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">MAD Competition Conceptual Introduction</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introduction">Introduction</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#example-1-linear-model-small-1d-input-image">Example 1: Linear model, small 1D input “image”</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#creating-the-model">1.1) Creating the model</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#synthesizing-eigendistortions-of-linear-model">1.2 - Synthesizing eigendistortions of linear model</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#comparing-our-synthesis-to-ground-truth">1.3 - Comparing our synthesis to ground-truth</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#what-do-these-eigendistortions-mean">1.4 - What do these eigendistortions <em>mean</em>?</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-fisher-information-matrix-is-locally-adaptive">1.5 - The Fisher information matrix is locally adaptive</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#example-2-which-layer-of-resnet-is-a-better-model-of-human-visual-distortion-perception">Example 2: Which layer of ResNet is a better model of human visual distortion perception?</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#load-an-example-an-image">2.1 - Load an example an image</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#instantiate-models-and-eigendistortion-objects">2.2 - Instantiate models and Eigendistortion objects</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#synthesizing-distortions">2.3 - Synthesizing distortions</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#visualizing-eigendistortions">2.4 - Visualizing eigendistortions</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#which-synthesized-extremal-eigendistortions-better-characterize-human-perception">2.5 - Which synthesized extremal eigendistortions better characterize human perception?</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#synthesizing-distortions-for-other-images">2.6 - Synthesizing distortions for other images</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#appendix-more-mathematical-detail">Appendix: More mathematical detail</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2019-2025, Plenoptic authors.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.0.4.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>
