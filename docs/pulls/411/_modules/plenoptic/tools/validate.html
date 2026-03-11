@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>plenoptic.tools.validate &#8212; plenoptic 1.3.2.dev488 documentation</title>
+    <title>plenoptic.tools.validate &#8212; plenoptic 1.3.2.dev496 documentation</title>
   
   
   
@@ -43,7 +43,7 @@
   <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
 <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script src="../../../_static/documentation_options.js?v=a8626b16"></script>
+    <script src="../../../_static/documentation_options.js?v=80cf9c89"></script>
     <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -134,8 +134,8 @@
       
     
     
-    <img src="../../../_static/Plenoptic_Logo_CMYK_Full_Wide.svg" class="logo__image only-light" alt="plenoptic 1.3.2.dev488 documentation - Home"/>
-    <img src="../../../_static/Plenoptic_Logo_CMYK_Full_DarkMode_Wide.svg" class="logo__image only-dark pst-js-only" alt="plenoptic 1.3.2.dev488 documentation - Home"/>
+    <img src="../../../_static/Plenoptic_Logo_CMYK_Full_Wide.svg" class="logo__image only-light" alt="plenoptic 1.3.2.dev496 documentation - Home"/>
+    <img src="../../../_static/Plenoptic_Logo_CMYK_Full_DarkMode_Wide.svg" class="logo__image only-dark pst-js-only" alt="plenoptic 1.3.2.dev496 documentation - Home"/>
   
   
 </a></div>
@@ -561,7 +561,7 @@
 <span class="sd">    Intentionally fail:</span>
 
 <span class="sd">    &gt;&gt;&gt; import plenoptic as po</span>
-<span class="sd">    &gt;&gt;&gt; img = torch.randint(low=0, high=255, size=(1, 256, 256))</span>
+<span class="sd">    &gt;&gt;&gt; img = torch.randint(low=0, high=255, size=(1, 1, 32, 32))</span>
 <span class="sd">    &gt;&gt;&gt; po.tools.validate.validate_input(img)</span>
 <span class="sd">    Traceback (most recent call last):</span>
 <span class="sd">    TypeError: Only float or complex dtypes are allowed ...</span>
@@ -1091,10 +1091,9 @@
         <span class="p">)</span>
     <span class="n">output</span> <span class="o">=</span> <span class="n">penalty_function</span><span class="p">(</span><span class="n">test_img</span><span class="p">)</span>
     <span class="n">output_dtype</span> <span class="o">=</span> <span class="n">output</span><span class="o">.</span><span class="n">dtype</span>
-    <span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">is_complex</span><span class="p">(</span><span class="n">output</span><span class="p">):</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">torch</span><span class="o">.</span><span class="n">is_float_point</span><span class="p">(</span><span class="n">output</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
-            <span class="s2">&quot;penalty_function should not return a complex output&quot;</span>
-            <span class="sa">f</span><span class="s2">&quot;, but got type </span><span class="si">{</span><span class="n">output_dtype</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;penalty_function must return a float output, but got type </span><span class="si">{</span><span class="n">output_dtype</span><span class="si">}</span><span class="s2">&quot;</span>
         <span class="p">)</span>
     <span class="k">if</span> <span class="n">output_dtype</span> <span class="o">!=</span> <span class="n">allowed_dtypes</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
