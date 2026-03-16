@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Contributing &#8212; plenoptic 1.3.2.dev320 documentation</title>
+    <title>Contributing &#8212; plenoptic 1.3.2.dev500 documentation</title>
   
   
   
@@ -33,7 +33,7 @@
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=9c3e77be" />
-    <link rel="stylesheet" type="text/css" href="../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
     <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
     <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=d54d67fd" />
@@ -44,7 +44,7 @@
   <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
 <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script src="../_static/documentation_options.js?v=5ca987fd"></script>
+    <script src="../_static/documentation_options.js?v=6ab89ce2"></script>
     <script src="../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -136,8 +136,8 @@
       
     
     
-    <img src="../_static/Plenoptic_Logo_CMYK_Full_Wide.svg" class="logo__image only-light" alt="plenoptic 1.3.2.dev320 documentation - Home"/>
-    <img src="../_static/Plenoptic_Logo_CMYK_Full_DarkMode_Wide.svg" class="logo__image only-dark pst-js-only" alt="plenoptic 1.3.2.dev320 documentation - Home"/>
+    <img src="../_static/Plenoptic_Logo_CMYK_Full_Wide.svg" class="logo__image only-light" alt="plenoptic 1.3.2.dev500 documentation - Home"/>
+    <img src="../_static/Plenoptic_Logo_CMYK_Full_DarkMode_Wide.svg" class="logo__image only-dark pst-js-only" alt="plenoptic 1.3.2.dev500 documentation - Home"/>
   
   
 </a></div>
@@ -552,13 +552,7 @@ open an issue to track progress.</p></li>
 </ul>
 <section id="supported-versions">
 <h2>Supported versions<a class="headerlink" href="#supported-versions" title="Link to this heading">#</a></h2>
-<p><code class="docutils literal notranslate"><span class="pre">plenoptic</span></code> tries to follow
-<a class="reference external" href="https://scientific-python.org/specs/spec-0000/">SPEC-0</a>: we support python
-versions are supported for 3 years following initial release. This means that we
-support three python feature versions (e.g., 3.10, 3.11, and 3.12) at any one
-time and that we’ll transition between versions during the fourth quarter of
-each year. We run our CPU tests on all three versions, and the GPU tests and
-documentation build use the middle version.</p>
+<p><code class="docutils literal notranslate"><span class="pre">plenoptic</span></code> tries to follow <a class="reference external" href="https://pytorch.org">pytorch</a>: we support the python versions that they support. We run our CPU tests on all supported versions, and the GPU tests and documentation build use the middle version.</p>
 </section>
 <section id="contributing-to-the-code">
 <span id="id1"></span><h2>Contributing to the code<a class="headerlink" href="#contributing-to-the-code" title="Link to this heading">#</a></h2>
@@ -772,14 +766,23 @@ function names as variables. The example above will run
 </ul>
 <p>View the <a class="reference external" href="https://doc.pytest.org/en/latest/usage.html">pytest documentation</a> for
 more info.</p>
+<section id="cpu-and-gpu-tests">
+<h3>CPU and GPU tests<a class="headerlink" href="#cpu-and-gpu-tests" title="Link to this heading">#</a></h3>
+<p>Plenoptic tests are all run on both the CPU and the GPU, and both must pass before any PR is merged.</p>
+<ul class="simple">
+<li><p>On the CPU, tests are run using <a class="reference external" href="https://github.com/features/actions">GitHub actions</a>. Tests use all supported python versions and the most recent pytorch version.</p></li>
+<li><p>On the GPU, tests are run using a Simons Foundation-hosted <a class="reference external" href="https://www.jenkins.io/">Jenkins</a> instance. Tests use the middle supported python version and the pytorch version specified in <a class="reference external" href="https://github.com/plenoptic-org/plenoptic/blob/main/jenkins/Dockerfile">jenkins/Dockerfile</a>, which we manually update as pytorch puts out new releases.</p></li>
+</ul>
+<p>Some of our tests check for reproducibility of synthesis methods. See <a class="reference internal" href="#exact-reproducibility"><span class="std std-ref">below</span></a> for a discussion of some difficulties guaranteeing reproducibility across different devices, but the tl;dr is that the tests that are most likely to fail for this reason are only run on the GPU and are expected to fail on GPUs that are different from that used by the Jenkins runner. Thus, if you run the full test suite locally (using a GPU) and find that tests in <code class="docutils literal notranslate"><span class="pre">test_uploaded_files.py</span></code> are failing when you have changed nothing that should affect them, you can probably safely ignore this — this is only a problem if these tests fail during the CI. Ask a maintainer if you have questions here.</p>
+</section>
 <section id="running-pytest-with-non-standard-cache-directories">
 <h3>Running pytest with non-standard cache directories<a class="headerlink" href="#running-pytest-with-non-standard-cache-directories" title="Link to this heading">#</a></h3>
 <p>When running tests on some machines (e.g., nodes of the Flatiron cluster), the default cache directories used by some of the libraries will not exist, so running the tests like normal will result in errors that complain about directories not existing or not having permission to create directories in e.g., <code class="docutils literal notranslate"><span class="pre">/home/wbroderick</span></code>.</p>
 <p>To avoid this problem, we can use environment variables to control the behavior of these libraries. To do so for pooch (downloading test files), torch (downloading pretrained models), and matplotlib (caching config files), prepend the following to your pytest command: <code class="docutils literal notranslate"><span class="pre">PYTORCH_KERNEL_CACHE_PATH=~/.cache/torch/kernels</span> <span class="pre">TORCH_HOME=~/.cache/torch</span> <span class="pre">MPLCONFIGDIR=~/.cache/matplotlib</span> <span class="pre">PLENOPTIC_CACHE_DIR=~/.cache/plenoptic</span></code> (or replace <code class="docutils literal notranslate"><span class="pre">~/.cache/</span></code> with some other directory).</p>
-<blockquote>
-<div><p>[!NOTE]
-This may also be helpful when building the documentation.</p>
-</div></blockquote>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>This may also be helpful when building the documentation.</p>
+</div>
 <p>See relevant torch <a class="reference external" href="https://docs.pytorch.org/docs/stable/notes/cuda.html#just-in-time-compilation">1</a> and <a class="reference external" href="https://docs.pytorch.org/docs/stable/hub.html#where-are-my-downloaded-models-saved">2</a>, <a class="reference external" href="https://www.fatiando.org/pooch/latest/user-defined-cache.html">pooch</a>, and <a class="reference external" href="https://matplotlib.org/stable/install/environment_variables_faq.html#envvar-MPLCONFIGDIR">matplotlib</a> docs.</p>
 </section>
 <section id="using-nox-to-simplify-testing-and-linting">
@@ -963,15 +966,17 @@ file, so make sure to update them. The hash can be computed by calling
 since they take a long time. In order to run them, you must explicitly set the
 environment variable <code class="docutils literal notranslate"><span class="pre">RUN_REGRESSION_SYNTH=1</span></code> when calling pytest.</p>
 <section id="exact-reproducibility">
-<h4>Exact reproducibility<a class="headerlink" href="#exact-reproducibility" title="Link to this heading">#</a></h4>
+<span id="id5"></span><h4>Exact reproducibility<a class="headerlink" href="#exact-reproducibility" title="Link to this heading">#</a></h4>
 <p>Exact reproducibility with pytorch is hard. See <a class="reference external" href="https://github.com/plenoptic-org/plenoptic/issues/368">issue #368</a> for some details, but the tl;dr is: you should not expect to get the same outputs (or even, within floating point precision) when running synthesis for long enough (seems to be &gt; 1000 iterations) on devices with different CUDA versions and driver versions. Small differences in the output of e.g., <code class="docutils literal notranslate"><span class="pre">torch.einsum</span></code> / <code class="docutils literal notranslate"><span class="pre">torch.matmul</span></code> will lead to small differences in the gradient, which will accumulate and eventually lead to fairly different optimization outputs.</p>
 <p>To deal with this, your regression tests should save their output into the <code class="docutils literal notranslate"><span class="pre">uploaded_files</span></code> folder after synthesis (and before checking). The contents of that folder will be made available as <a class="reference external" href="https://www.jenkins.io/doc/pipeline/tour/tests-and-artifacts/">Jenkins artifacts</a>, which you can then download after the test. This will allow you to download the output of any failing test, manually verify the results look good, and then upload them to the OSF to test against.</p>
+<p>To deal with this, all tests for reproducibility should use dtype <code class="docutils literal notranslate"><span class="pre">torch.float64</span></code> (rather than the default <code class="docutils literal notranslate"><span class="pre">torch.float32</span></code>). Additionally, these regression tests should save their output into the <code class="docutils literal notranslate"><span class="pre">uploaded_files</span></code> folder after synthesis (and before checking). The contents of that folder will be made available as <a class="reference external" href="https://www.jenkins.io/doc/pipeline/tour/tests-and-artifacts/">Jenkins artifacts</a>, which you can then download after the test. This will allow you to download the output of any failing test, manually verify the results look good, and then upload them to the OSF to test against.</p>
+<p>Most of these tests are only run when explicitly enabled by setting the environmental variable <code class="docutils literal notranslate"><span class="pre">RUN_REGRESSION_SYNTH=1</span></code>, which we only do on the GPU, since they take a while to run.</p>
 </section>
 </section>
 <section id="test-parameterizations-and-fixtures">
 <h3>Test parameterizations and fixtures<a class="headerlink" href="#test-parameterizations-and-fixtures" title="Link to this heading">#</a></h3>
 <section id="parametrize">
-<span id="id5"></span><h4>Parametrize<a class="headerlink" href="#parametrize" title="Link to this heading">#</a></h4>
+<span id="id6"></span><h4>Parametrize<a class="headerlink" href="#parametrize" title="Link to this heading">#</a></h4>
 <p>If you have many variants on a test you wish to run, you should probably make
 use of pytests’ <code class="docutils literal notranslate"><span class="pre">parametrize</span></code> mark. There are many examples throughout our
 existing tests (and see official <a class="reference external" href="https://docs.pytest.org/en/stable/parametrize.html">pytest
@@ -1048,7 +1053,7 @@ and <code class="docutils literal notranslate"><span class="pre">'LNL'</span></c
 <section id="documentation">
 <h2>Documentation<a class="headerlink" href="#documentation" title="Link to this heading">#</a></h2>
 <section id="adding-documentation">
-<span id="id6"></span><h3>Adding documentation<a class="headerlink" href="#adding-documentation" title="Link to this heading">#</a></h3>
+<span id="id7"></span><h3>Adding documentation<a class="headerlink" href="#adding-documentation" title="Link to this heading">#</a></h3>
 <p>The amount and form of documentation that need to be added alongside a change
 depends on the size of the submitted change. For a significant change (a new
 model or synthesis method), please include a new tutorial notebook that walks
@@ -1062,7 +1067,11 @@ runners and hosted on GitHub pages. If that means nothing to you, don’t worry!
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>{class}`~plenoptic.synthesize.metamer.Metamer`
 </pre></div>
 </div>
-<p>You should similarly refer to code objects in other packages (e.g., pytorch and matplotlib), though the syntax is different. See <a class="reference external" href="https://myst-parser.readthedocs.io/en/latest/syntax/cross-referencing.html#reference-roles">myst-parser docs</a> for more details and the existing documentation for more examples. As part of the pull request review process, we run linters that will check for missing cross-references. The only objects that can be referred to simply as <code class="docutils literal notranslate"><span class="pre">monospace</span></code> font are function arguments and generic attributes / method (e.g., saying that plenoptic models must have a <code class="docutils literal notranslate"><span class="pre">forward</span></code> <!-- skip-lint --> method). The linter will ignore all monospace font that have the word “argument” or “keyword” after them (e.g., “the <code class="docutils literal notranslate"><span class="pre">scales</span></code> keyword” or “the <code class="docutils literal notranslate"><span class="pre">scales</span></code> argument”) or an html comment containing “skip-lint” (e.g., “the <code class="docutils literal notranslate"><span class="pre">scales</span></code> <!-- skip-lint --> method”; html comments are not rendered in sphinx).</p>
+<p>You should similarly refer to code objects in other packages (e.g., pytorch and matplotlib), though the syntax is different. See <a class="reference external" href="https://myst-parser.readthedocs.io/en/latest/syntax/cross-referencing.html#reference-roles">myst-parser docs</a> for more details and the existing documentation for more examples. As part of the pull request review process, we run linters that will check for missing cross-references. The only objects that can be referred to simply as <code class="docutils literal notranslate"><span class="pre">monospace</span></code> font are function arguments and generic attributes / method (e.g., saying that plenoptic models must have a <code class="docutils literal notranslate"><span class="pre">forward</span></code> <!-- skip-lint --> method). The linter will ignore all monospace font that have the word “argument” or “keyword” after them (e.g., “the <code class="docutils literal notranslate"><span class="pre">scales</span></code> keyword” or “the <code class="docutils literal notranslate"><span class="pre">scales</span></code> argument”) or an html comment containing “skip-lint”, for example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>the `scales` &lt;!-- skip-lint --&gt; method
+</pre></div>
+</div>
+<p>(html comments are not rendered in sphinx).</p>
 <p>The regular markdown files contain everything else, especially discussions about why you should use some code in the package and the theory behind it, and should all be located in one of the subfolders within the <code class="docutils literal notranslate"><span class="pre">docs/</span></code> directory. Decide which subfolder to place it in (ask for your help if you’re unsure) and add it to that subfolder’s <code class="docutils literal notranslate"><span class="pre">index.md</span></code> by adding the name of the file (without extension) to the <code class="docutils literal notranslate"><span class="pre">toctree</span></code> block.</p>
 <p>In order for table of contents to look good, your <code class="docutils literal notranslate"><span class="pre">md</span></code> file must be well structured. All markdown files (text-based notebooks and regular) must have a single H1 header (you can have as many sub-headers as you’d like).</p>
 <p>You should <a class="reference internal" href="#build-the-documentation"><span class="std std-ref">build the docs yourself</span></a> to ensure it looks correct before pushing.</p>
@@ -1106,7 +1115,7 @@ of the <code class="docutils literal notranslate"><span class="pre">rst</span></
 done, <code class="docutils literal notranslate"><span class="pre">linting/check_apidocs.py</span></code> will fail (this check is included in our
 pre-commit config and thus is required to pass for a PR to merge).</p>
 <p>If the new function or class does not belong in one of the existing <code class="docutils literal notranslate"><span class="pre">rst</span></code> files
-found in <code class="docutils literal notranslate"><span class="pre">docs/api/</span></code>, you can create a new one, referring to the existing ones
+found in <code class="docutils literal notranslate"><span class="pre">docs/api/</span></code>, you can create a new one, referring to the existing files
 as templates. You must then add it to the <code class="docutils literal notranslate"><span class="pre">api_order</span></code> list in <code class="docutils literal notranslate"><span class="pre">docs/conf.py</span></code>.
 This list determines the order in which these documents are displayed in the
 index page of the API documentation, roughly from most to least important. Ask
@@ -1114,7 +1123,7 @@ for help if you’re not sure where to put it.</p>
 </section>
 </section>
 <section id="docstrings">
-<span id="id7"></span><h3>Docstrings<a class="headerlink" href="#docstrings" title="Link to this heading">#</a></h3>
+<span id="id8"></span><h3>Docstrings<a class="headerlink" href="#docstrings" title="Link to this heading">#</a></h3>
 <p>All public-facing functions and classes should have complete docstrings, which
 start with a one-line short summary of the function, a medium-length description
 of the function / class and what it does, and a complete description of all
@@ -1184,11 +1193,14 @@ for docstring structure.</p>
 </ul>
 </section>
 <section id="build-the-documentation">
-<span id="id8"></span><h3>Build the documentation<a class="headerlink" href="#build-the-documentation" title="Link to this heading">#</a></h3>
-<p>NOTE: If you just want to read the documentation, you do not need to do this;
+<span id="id9"></span><h3>Build the documentation<a class="headerlink" href="#build-the-documentation" title="Link to this heading">#</a></h3>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>If you just want to read the documentation, you do not need to do this;
 documentation is built automatically, pushed to the
 <a class="reference external" href="https://github.com/plenoptic-org/plenoptic-documentation">plenoptic-documentation</a>
 github repo and published at <a class="reference external" href="http://docs.plenoptic.org/">http://docs.plenoptic.org/</a>.</p>
+</div>
 <p>However, it can be built locally as well. You would do this if you’ve made changes locally to the documentation (or the docstrings) that you would like to examine before pushing. All additional requirements are included in the <code class="docutils literal notranslate"><span class="pre">[docs]</span></code> optional dependency bundle, which you can install with <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">plenoptic[docs]</span></code>.</p>
 <p>Then, to build the documentation, run: <code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">-C</span> <span class="pre">docs</span> <span class="pre">html</span> <span class="pre">O=&quot;-j</span> <span class="pre">auto&quot;</span></code>. (<code class="docutils literal notranslate"><span class="pre">-j</span> <span class="pre">auto</span></code> tells sphinx to parallelize the build, using as many cores as possible, a specific number can be set.)</p>
 <p>By default, the text-based notebooks (see <a class="reference internal" href="#adding-documentation"><span class="std std-ref">earlier</span></a>) are not run because they take a longish time to do so, especially if you do not have a GPU. In order to run all of them, prepend <code class="docutils literal notranslate"><span class="pre">RUN_NB=1</span></code> to the <code class="docutils literal notranslate"><span class="pre">make</span></code> command above. In order to run specific notebooks, set <code class="docutils literal notranslate"><span class="pre">RUN_NB</span></code> to a globbable comma-separated string in the above, e.g., <code class="docutils literal notranslate"><span class="pre">RUN_NB=Metamer,MAD</span></code> to run <code class="docutils literal notranslate"><span class="pre">docs/user_guide/synthesis/Metamer</span></code>, <code class="docutils literal notranslate"><span class="pre">docs/user_guide/synthesis/MAD_Competition_1</span></code>, and <code class="docutils literal notranslate"><span class="pre">docs/user_guide/synthesis/MAD_Competition_2</span></code>.</p>
@@ -1262,6 +1274,7 @@ around.</p>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#testing">Testing</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cpu-and-gpu-tests">CPU and GPU tests</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#running-pytest-with-non-standard-cache-directories">Running pytest with non-standard cache directories</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#using-nox-to-simplify-testing-and-linting">Using nox to simplify testing and linting</a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#multi-python-version-testing-with-pyenv">Multi-python version testing with pyenv</a></li>
