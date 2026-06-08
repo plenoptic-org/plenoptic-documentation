@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>plenoptic.plot.display &#8212; plenoptic 1.4.1.dev172 documentation</title>
+    <title>plenoptic.plot.display &#8212; plenoptic 2.0.1.dev16 documentation</title>
   
   
   
@@ -43,7 +43,7 @@
   <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=0790524f97105ba85085" />
 <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=0790524f97105ba85085" />
 
-    <script src="../../../_static/documentation_options.js?v=85fe6400"></script>
+    <script src="../../../_static/documentation_options.js?v=63d6856a"></script>
     <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -58,7 +58,7 @@
     <script>
         DOCUMENTATION_OPTIONS.theme_version = '0.18.0';
         DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://docs.plenoptic.org/docs/branch/main/_static/version_switcher.json';
-        DOCUMENTATION_OPTIONS.theme_switcher_version_match = '1.4.1';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = '2.0.1';
         DOCUMENTATION_OPTIONS.show_version_warning_banner =
             true;
         </script>
@@ -69,7 +69,7 @@
     <link rel="search" title="Search" href="../../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="1.4.1" />
+  <meta name="docsearch:version" content="2.0.1" />
   
     
     <script src="../../../_static/searchtools.js"></script>
@@ -141,8 +141,8 @@
       
     
     
-    <img src="../../../_static/Plenoptic_Logo_CMYK_Full_Wide.svg" class="logo__image only-light" alt="plenoptic 1.4.1.dev172 documentation - Home"/>
-    <img src="../../../_static/Plenoptic_Logo_CMYK_Full_DarkMode_Wide.svg" class="logo__image only-dark pst-js-only" alt="plenoptic 1.4.1.dev172 documentation - Home"/>
+    <img src="../../../_static/Plenoptic_Logo_CMYK_Full_Wide.svg" class="logo__image only-light" alt="plenoptic 2.0.1.dev16 documentation - Home"/>
+    <img src="../../../_static/Plenoptic_Logo_CMYK_Full_DarkMode_Wide.svg" class="logo__image only-dark pst-js-only" alt="plenoptic 2.0.1.dev16 documentation - Home"/>
   
   
 </a></div>
@@ -528,6 +528,7 @@
     <span class="s2">&quot;plot_representation&quot;</span><span class="p">,</span>
     <span class="s2">&quot;pyrshow&quot;</span><span class="p">,</span>
     <span class="s2">&quot;update_plot&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;histogram&quot;</span><span class="p">,</span>
 <span class="p">]</span>
 
 
@@ -712,8 +713,12 @@
 
 <span class="sd">    Raises</span>
 <span class="sd">    ------</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If ``images`` is not a 4d tensor or list of 4d tensors.</span>
 <span class="sd">    TypeError</span>
-<span class="sd">        If ``batch_idx`` or ``channel_idx`` takes an illegal value.</span>
+<span class="sd">        If ``batch_idx`` or ``channel_idx`` are not an int or ``None``.</span>
+<span class="sd">    IndexError</span>
+<span class="sd">        If ``batch_idx`` or ``channel_idx`` are out of bounds.</span>
 <span class="sd">    ValueError</span>
 <span class="sd">        If ``zoom`` takes an illegal value.</span>
 <span class="sd">    ValueError</span>
@@ -726,12 +731,8 @@
 
 <span class="sd">    See Also</span>
 <span class="sd">    --------</span>
-<span class="sd">    :func:`~plenoptic.plot.metamer_imshow`</span>
-<span class="sd">        Show the image synthesized by a :class:`~plenoptic.Metamer` object.</span>
-<span class="sd">    :func:`~plenoptic.plot.mad_imshow`</span>
-<span class="sd">        Show the image synthesized by a :class:`~plenoptic.MADCompetition` object.</span>
-<span class="sd">    :func:`~plenoptic.plot.eigendistortion_imshow`</span>
-<span class="sd">        Show the image synthesized by a :class:`~plenoptic.Eigendistortion` object.</span>
+<span class="sd">    :func:`~plenoptic.plot.synthesis_imshow`</span>
+<span class="sd">        Show the image synthesized by a synthesis object.</span>
 <span class="sd">    animshow</span>
 <span class="sd">        Animate a video.</span>
 <span class="sd">    pyrshow</span>
@@ -746,16 +747,24 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
         <span class="n">image</span> <span class="o">=</span> <span class="p">[</span><span class="n">image</span><span class="p">]</span>
+    <span class="k">if</span> <span class="nb">any</span><span class="p">([</span><span class="n">im</span><span class="o">.</span><span class="n">ndim</span> <span class="o">!=</span> <span class="mi">4</span> <span class="k">for</span> <span class="n">im</span> <span class="ow">in</span> <span class="n">image</span><span class="p">]):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;imshow only accepts images as 4d tensors!&quot;</span><span class="p">)</span>
     <span class="n">images_to_plot</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">heights</span><span class="p">,</span> <span class="n">widths</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">im</span> <span class="ow">in</span> <span class="n">image</span><span class="p">:</span>
         <span class="n">im</span> <span class="o">=</span> <span class="n">to_numpy</span><span class="p">(</span><span class="n">im</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">im</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">batch_idx</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">orig_shape</span> <span class="o">=</span> <span class="n">im</span><span class="o">.</span><span class="n">shape</span>
+        <span class="k">if</span> <span class="n">batch_idx</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="c1"># this preserves the number of dimensions</span>
                 <span class="n">im</span> <span class="o">=</span> <span class="n">im</span><span class="p">[</span><span class="n">batch_idx</span> <span class="p">:</span> <span class="n">batch_idx</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>
             <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;batch_idx must be an int or None but got </span><span class="si">{</span><span class="n">batch_idx</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">im</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">IndexError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">batch_idx</span><span class="si">=}</span><span class="s2"> is out of bounds for dimension 0 with size &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">orig_shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="p">)</span>
         <span class="k">if</span> <span class="n">channel_idx</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="c1"># this preserves the number of dimensions</span>
@@ -763,6 +772,11 @@
             <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
                     <span class="sa">f</span><span class="s2">&quot;channel_idx must be an int or None but got </span><span class="si">{</span><span class="n">channel_idx</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="p">)</span>
+            <span class="k">if</span> <span class="n">im</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">IndexError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">channel_idx</span><span class="si">=}</span><span class="s2"> is out of bounds for dimension 1 with size &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">orig_shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
                 <span class="p">)</span>
         <span class="c1"># allow RGB and RGBA</span>
         <span class="k">if</span> <span class="n">as_rgb</span><span class="p">:</span>
@@ -838,13 +852,6 @@
 <span class="sd">    input ``image`` will correspond to a pixel or an integer number of pixels. When</span>
 <span class="sd">    ``zoom&lt;1``, an integer number of input elements will be averaged into a single</span>
 <span class="sd">    pixel.</span>
-
-<span class="sd">    This functions returns a matplotlib FuncAnimation object. See our</span>
-<span class="sd">    documentation (e.g., :ref:`quickstart-nb`) for examples on how to view it in</span>
-<span class="sd">    a Jupyter notebook. In order to save, use ``anim.save(filename)``. In either</span>
-<span class="sd">    case, this can take a while and you&#39;ll need the appropriate writer installed</span>
-<span class="sd">    and on your path, e.g., ffmpeg, imagemagick, etc). See</span>
-<span class="sd">    :doc:`matplotlib documentation &lt;matplotlib:api/animation_api&gt;` for more details.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -949,6 +956,8 @@
 
 <span class="sd">    Raises</span>
 <span class="sd">    ------</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If ``videos`` is not a 5d tensor or list of 4d tensors.</span>
 <span class="sd">    TypeError</span>
 <span class="sd">        If ``batch_idx`` or ``channel_idx`` takes an illegal value.</span>
 <span class="sd">    ValueError</span>
@@ -963,13 +972,18 @@
 <span class="sd">    --------</span>
 <span class="sd">    imshow</span>
 <span class="sd">        Display an image.</span>
-<span class="sd">    :func:`~plenoptic.plot.metamer_animshow`</span>
-<span class="sd">        Animate synthesis process for a :class:`~plenoptic.Metamer` object.</span>
-<span class="sd">    :func:`~plenoptic.plot.mad_animshow`</span>
-<span class="sd">        Animate synthesis process for a :class:`~plenoptic.MADCompetition` object.</span>
+<span class="sd">    :func:`~plenoptic.plot.synthesis_animate`</span>
+<span class="sd">        Animate synthesis process for a :class:`~plenoptic.Metamer` or a</span>
+<span class="sd">        :class:`~plenoptic.MADCompetition` object.</span>
 
 <span class="sd">    Notes</span>
 <span class="sd">    -----</span>
+<span class="sd">    - This functions returns a matplotlib FuncAnimation object. See below for how</span>
+<span class="sd">      to view to view it in a Jupyter notebook. See Examples section for how to save to</span>
+<span class="sd">      disk. In either case, this can take a while and you&#39;ll need the appropriate writer</span>
+<span class="sd">      installed and on your path, e.g., ffmpeg, imagemagick, etc). See :doc:`matplotlib</span>
+<span class="sd">      documentation &lt;matplotlib:api/animation_api&gt;` for more details.</span>
+
 <span class="sd">    - Unless specified, we use the ffmpeg backend, which requires that you have</span>
 <span class="sd">      ffmpeg installed and on your path (https://ffmpeg.org/download.html). To</span>
 <span class="sd">      use a different, use the matplotlib rcParams:</span>
@@ -978,6 +992,17 @@
 <span class="sd">      &lt;https://matplotlib.org/stable/api/animation_api.html#writer-classes&gt;`_</span>
 <span class="sd">      for more details.</span>
 
+<span class="sd">    - To view in a Jupyter notebook, we recommend adding the following to the first cell</span>
+<span class="sd">      of your notebook (requires ffmpeg):</span>
+
+<span class="sd">      .. code:: python</span>
+
+<span class="sd">          import matplotlib.pyplot as plt</span>
+<span class="sd">          plt.rcParams[&quot;animation.html&quot;] = &quot;html5&quot;</span>
+<span class="sd">          # use single-threaded ffmpeg for animation writer</span>
+<span class="sd">          plt.rcParams[&quot;animation.writer&quot;] = &quot;ffmpeg&quot;</span>
+<span class="sd">          plt.rcParams[&quot;animation.ffmpeg_args&quot;] = [&quot;-threads&quot;, &quot;1&quot;]</span>
+
 <span class="sd">    - This interpolation avoidance is only guaranteed for the saved image; it should</span>
 <span class="sd">      generally hold in notebooks as well, but will fail if, e.g., you plot an image</span>
 <span class="sd">      that&#39;s 2000 pixels wide on an monitor 1000 pixels wide; the browser handles the</span>
@@ -985,6 +1010,8 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">video</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
         <span class="n">video</span> <span class="o">=</span> <span class="p">[</span><span class="n">video</span><span class="p">]</span>
+    <span class="k">if</span> <span class="nb">any</span><span class="p">([</span><span class="n">vid</span><span class="o">.</span><span class="n">ndim</span> <span class="o">!=</span> <span class="mi">5</span> <span class="k">for</span> <span class="n">vid</span> <span class="ow">in</span> <span class="n">video</span><span class="p">]):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;animshow only accepts videos as 5d tensors!&quot;</span><span class="p">)</span>
     <span class="n">videos_to_show</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">heights</span><span class="p">,</span> <span class="n">widths</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">vid</span> <span class="ow">in</span> <span class="n">video</span><span class="p">:</span>
@@ -1336,7 +1363,7 @@
 <div class="viewcode-block" id="stem_plot">
 <a class="viewcode-back" href="../../../api/generated/plenoptic.plot.stem_plot.html#plenoptic.plot.stem_plot">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">stem_plot</span><span class="p">(</span>
-    <span class="n">data</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">data</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
     <span class="n">ax</span><span class="p">:</span> <span class="n">mpl</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">Axes</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">title</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
     <span class="n">ylim</span><span class="p">:</span> <span class="nb">tuple</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">|</span> <span class="n">Literal</span><span class="p">[</span><span class="kc">False</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -1387,10 +1414,10 @@
 <span class="sd">    break up the plot, as we see below.</span>
 
 <span class="sd">    .. plot::</span>
+<span class="sd">      :context: reset</span>
 
 <span class="sd">      &gt;&gt;&gt; import plenoptic as po</span>
 <span class="sd">      &gt;&gt;&gt; import numpy as np</span>
-<span class="sd">      &gt;&gt;&gt; import matplotlib.pyplot as plt</span>
 <span class="sd">      &gt;&gt;&gt; # if ylim=None, as in this example, the minimum y-valuewill get</span>
 <span class="sd">      &gt;&gt;&gt; # set to 0, so we want to make sure our values are all positive</span>
 <span class="sd">      &gt;&gt;&gt; y = np.abs(np.random.randn(55))</span>
@@ -1406,11 +1433,9 @@
 <span class="sd">    In this case, this function will just clean up the plot a little bit.</span>
 
 <span class="sd">    .. plot::</span>
+<span class="sd">      :context: close-figs</span>
 
-<span class="sd">      &gt;&gt;&gt; import plenoptic as po</span>
-<span class="sd">      &gt;&gt;&gt; import numpy as np</span>
-<span class="sd">      &gt;&gt;&gt; import matplotlib.pyplot as plt</span>
-<span class="sd">      &gt;&gt;&gt; # if ylim=None, as in this example, the minimum y-valuewill get</span>
+<span class="sd">      &gt;&gt;&gt; # if ylim=None, as in this example, the minimum y-value will get</span>
 <span class="sd">      &gt;&gt;&gt; # set to 0, so we want to make sure our values are all positive</span>
 <span class="sd">      &gt;&gt;&gt; y = np.abs(np.random.randn(55))</span>
 <span class="sd">      &gt;&gt;&gt; po.plot.stem_plot(y)</span>
@@ -1874,6 +1899,172 @@
             <span class="n">data</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">values</span><span class="p">()),</span> <span class="n">dim</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
         <span class="n">_rescale_ylim</span><span class="p">(</span><span class="n">axes</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">axes</span></div>
+
+
+
+<div class="viewcode-block" id="histogram">
+<a class="viewcode-back" href="../../../api/generated/plenoptic.plot.histogram.html#plenoptic.plot.histogram">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">histogram</span><span class="p">(</span>
+    <span class="n">data</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">],</span>
+    <span class="n">labels</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">batch_idx</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="n">channel_idx</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">ylim</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">|</span> <span class="n">Literal</span><span class="p">[</span><span class="kc">False</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">xlim</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">|</span> <span class="n">Literal</span><span class="p">[</span><span class="kc">False</span><span class="p">,</span> <span class="s2">&quot;range&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;range&quot;</span><span class="p">,</span>
+    <span class="n">xlabel</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Literal</span><span class="p">[</span><span class="kc">False</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Values&quot;</span><span class="p">,</span>
+    <span class="n">ax</span><span class="p">:</span> <span class="n">mpl</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">Axes</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">title</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;Histogram of tensor values&quot;</span><span class="p">,</span>
+    <span class="n">alpha</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.4</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">mpl</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">Axes</span><span class="p">:</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Plot histogram of values from tensor.</span>
+
+<span class="sd">    Intended use for this is to plot distributions of pixel values.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    data</span>
+<span class="sd">        The data to plot. Must either be a single tensor or a list of tensors.</span>
+<span class="sd">    labels</span>
+<span class="sd">        Labels to use for legend. Must match ``data``: if ``data`` is a single</span>
+<span class="sd">        tensor, must be a single string; if ``data`` is a list of tensors, must</span>
+<span class="sd">        be a list of the same length. If ``None``, no legend is created.</span>
+<span class="sd">    batch_idx</span>
+<span class="sd">        Which index to take from the batch (first) dimension.  If ``None``, we</span>
+<span class="sd">        use all batches.</span>
+<span class="sd">    channel_idx</span>
+<span class="sd">        Which index to take from the channel (second) dimension. If ``None``,</span>
+<span class="sd">        we use all channels.</span>
+<span class="sd">    ylim</span>
+<span class="sd">        If tuple, the ylimit to set for this axis. If ``False``, we leave</span>
+<span class="sd">        it untouched.</span>
+<span class="sd">    xlim</span>
+<span class="sd">        If ``&quot;range&quot;``, set the xlimits to the range across plotted data.</span>
+<span class="sd">        If tuple, the xlimit to set for this axis. If ``False``, we leave</span>
+<span class="sd">        it untouched.</span>
+<span class="sd">    xlabel</span>
+<span class="sd">        Label to put on the x-axis.</span>
+<span class="sd">    ax</span>
+<span class="sd">        Pre-existing axes for plot. If ``None``, we call</span>
+<span class="sd">        :func:`matplotlib.pyplot.gca()`.</span>
+<span class="sd">    title</span>
+<span class="sd">        Title for the axis.</span>
+<span class="sd">    alpha</span>
+<span class="sd">        Alpha value for the histogram bars.</span>
+<span class="sd">    **kwargs</span>
+<span class="sd">        Passed to :func:`matplotlib.pyplot.hist`.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    ax</span>
+<span class="sd">        Created axes.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If ``labels`` and ``data`` are both lists but have different lengths</span>
+
+<span class="sd">    See Also</span>
+<span class="sd">    --------</span>
+<span class="sd">    :func:`~plenoptic.plot.synthesis_histogram`</span>
+<span class="sd">        Use this function to plot histogram of values from a synthesis object.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    .. plot::</span>
+<span class="sd">      :context: reset</span>
+
+<span class="sd">      &gt;&gt;&gt; import plenoptic as po</span>
+<span class="sd">      &gt;&gt;&gt; import torch</span>
+<span class="sd">      &gt;&gt;&gt; img = po.data.einstein()</span>
+<span class="sd">      &gt;&gt;&gt; po.plot.histogram(img)</span>
+<span class="sd">      &lt;Axes: ... &#39;Histogram of tensor values&#39;...&gt;</span>
+
+<span class="sd">    Plot on an existing axis:</span>
+
+<span class="sd">    .. plot::</span>
+<span class="sd">      :context: close-figs</span>
+
+<span class="sd">      &gt;&gt;&gt; fig, axes = plt.subplots(1, 2, figsize=(8, 4))</span>
+<span class="sd">      &gt;&gt;&gt; po.plot.histogram(img, ax=axes[1])</span>
+<span class="sd">      &lt;Axes: ... &#39;Histogram of tensor values&#39;...&gt;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_freedman_diaconis_bins</span><span class="p">(</span><span class="n">a</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Calculate number of hist bins using Freedman-Diaconis rule.</span>
+
+<span class="sd">        Copied from seaborn.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        a</span>
+<span class="sd">            The array to histogram.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        n_bins</span>
+<span class="sd">            Number of bins to use for histogram.</span>
+<span class="sd">        &quot;&quot;&quot;</span>  <span class="c1"># numpydoc ignore=EX01</span>
+        <span class="c1"># From https://stats.stackexchange.com/questions/798/</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+        <span class="n">iqr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="p">[</span><span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.75</span><span class="p">]))[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="k">return</span> <span class="mi">1</span>
+        <span class="n">h</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">iqr</span> <span class="o">/</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="o">**</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="mi">3</span><span class="p">))</span>
+        <span class="c1"># fall back to sqrt(a) bins if iqr is 0</span>
+        <span class="k">if</span> <span class="n">h</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">size</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ceil</span><span class="p">((</span><span class="n">a</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">-</span> <span class="n">a</span><span class="o">.</span><span class="n">min</span><span class="p">())</span> <span class="o">/</span> <span class="n">h</span><span class="p">))</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="p">[</span><span class="n">data</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="n">labels</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">create_legend</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="c1"># so we can iterate through labels along with data</span>
+        <span class="n">labels</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">*</span> <span class="p">[</span><span class="s2">&quot;&quot;</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">create_legend</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="n">labels</span> <span class="o">=</span> <span class="p">[</span><span class="n">labels</span><span class="p">]</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">labels</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;labels must have the same length as data!&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">batch_idx</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="p">[</span><span class="n">d</span><span class="p">[</span><span class="n">batch_idx</span><span class="p">]</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">data</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">channel_idx</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="p">[</span><span class="n">d</span><span class="p">[</span><span class="n">channel_idx</span><span class="p">]</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">data</span><span class="p">]</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="p">[</span><span class="n">to_numpy</span><span class="p">(</span><span class="n">d</span><span class="p">)</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">data</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="n">xlim</span> <span class="o">==</span> <span class="s2">&quot;range&quot;</span><span class="p">:</span>
+        <span class="n">tmp_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="n">xlim</span> <span class="o">=</span> <span class="p">(</span><span class="n">tmp_data</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">tmp_data</span><span class="o">.</span><span class="n">max</span><span class="p">())</span>
+
+    <span class="k">if</span> <span class="n">ax</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span>
+
+    <span class="k">for</span> <span class="n">d</span><span class="p">,</span> <span class="n">lab</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">labels</span><span class="p">):</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span>
+            <span class="n">d</span><span class="p">,</span>
+            <span class="n">bins</span><span class="o">=</span><span class="nb">min</span><span class="p">(</span><span class="n">_freedman_diaconis_bins</span><span class="p">(</span><span class="n">d</span><span class="p">),</span> <span class="mi">50</span><span class="p">),</span>
+            <span class="n">label</span><span class="o">=</span><span class="n">lab</span><span class="p">,</span>
+            <span class="n">alpha</span><span class="o">=</span><span class="n">alpha</span><span class="p">,</span>
+            <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+        <span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">create_legend</span><span class="p">:</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">ylim</span><span class="p">:</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="n">ylim</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">xlim</span><span class="p">:</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="n">xlim</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">xlabel</span><span class="p">:</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="n">xlabel</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">title</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">ax</span></div>
 
 </pre></div>
 

@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>plenoptic.metric._perceptual_distance &#8212; plenoptic 1.4.1.dev172 documentation</title>
+    <title>plenoptic.metric._perceptual_distance &#8212; plenoptic 2.0.1.dev16 documentation</title>
   
   
   
@@ -43,7 +43,7 @@
   <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=0790524f97105ba85085" />
 <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=0790524f97105ba85085" />
 
-    <script src="../../../_static/documentation_options.js?v=85fe6400"></script>
+    <script src="../../../_static/documentation_options.js?v=63d6856a"></script>
     <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -58,7 +58,7 @@
     <script>
         DOCUMENTATION_OPTIONS.theme_version = '0.18.0';
         DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://docs.plenoptic.org/docs/branch/main/_static/version_switcher.json';
-        DOCUMENTATION_OPTIONS.theme_switcher_version_match = '1.4.1';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = '2.0.1';
         DOCUMENTATION_OPTIONS.show_version_warning_banner =
             true;
         </script>
@@ -69,7 +69,7 @@
     <link rel="search" title="Search" href="../../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="1.4.1" />
+  <meta name="docsearch:version" content="2.0.1" />
   
     
     <script src="../../../_static/searchtools.js"></script>
@@ -141,8 +141,8 @@
       
     
     
-    <img src="../../../_static/Plenoptic_Logo_CMYK_Full_Wide.svg" class="logo__image only-light" alt="plenoptic 1.4.1.dev172 documentation - Home"/>
-    <img src="../../../_static/Plenoptic_Logo_CMYK_Full_DarkMode_Wide.svg" class="logo__image only-dark pst-js-only" alt="plenoptic 1.4.1.dev172 documentation - Home"/>
+    <img src="../../../_static/Plenoptic_Logo_CMYK_Full_Wide.svg" class="logo__image only-light" alt="plenoptic 2.0.1.dev16 documentation - Home"/>
+    <img src="../../../_static/Plenoptic_Logo_CMYK_Full_DarkMode_Wide.svg" class="logo__image only-dark pst-js-only" alt="plenoptic 2.0.1.dev16 documentation - Home"/>
   
   
 </a></div>
@@ -785,7 +785,11 @@
 
 <div class="viewcode-block" id="nlpd">
 <a class="viewcode-back" href="../../../api/generated/plenoptic.metric.nlpd.html#plenoptic.metric.nlpd">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">nlpd</span><span class="p">(</span><span class="n">img1</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">img2</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">nlpd</span><span class="p">(</span>
+    <span class="n">img1</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
+    <span class="n">img2</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
+    <span class="n">epsilon</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e-10</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Compute the normalized Laplacian Pyramid Distance.</span>
 
@@ -805,6 +809,9 @@
 <span class="sd">    these, effectively giving larger weight to the lower frequency coefficients</span>
 <span class="sd">    (which are fewer in number, due to subsampling).</span>
 
+<span class="sd">    .. versionchanged:: 2.0.0</span>
+<span class="sd">       Made ``epsilon`` parameter public (previously, was hard-coded to ``1e-10``).</span>
+
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    img1</span>
@@ -817,6 +824,11 @@
 <span class="sd">        for each channel (so channels are treated in the same way as batches). Both</span>
 <span class="sd">        images should have values between 0 and 1. Otherwise, the result may be</span>
 <span class="sd">        inaccurate, and we will raise a warning (but will still compute it).</span>
+<span class="sd">    epsilon</span>
+<span class="sd">        Float added to the computation of the average distance on each band, helpful for</span>
+<span class="sd">        stabilizing gradient around zero for optimization purposes. Note that the</span>
+<span class="sd">        distance between two identical images will thus be ``sqrt(epsilon)`` (see</span>
+<span class="sd">        Examples).</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -857,6 +869,14 @@
 <span class="sd">    &gt;&gt;&gt; curie_img = po.data.curie()</span>
 <span class="sd">    &gt;&gt;&gt; po.metric.nlpd(einstein_img, curie_img)</span>
 <span class="sd">    tensor([[1.3507]])</span>
+
+<span class="sd">    Distance between two identical images is ``sqrt(epsilon)`` (this is useful for</span>
+<span class="sd">    stabilitizing gradient around zero during optimization):</span>
+
+<span class="sd">    &gt;&gt;&gt; po.metric.nlpd(einstein_img, einstein_img)</span>
+<span class="sd">    tensor([[1.0000e-05]])</span>
+<span class="sd">    &gt;&gt;&gt; po.metric.nlpd(einstein_img, einstein_img, epsilon=1e-20)</span>
+<span class="sd">    tensor([[1.0000e-10]])</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">img1</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="n">img2</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
@@ -888,7 +908,6 @@
     <span class="n">y1</span> <span class="o">=</span> <span class="n">normalized_laplacian_pyramid</span><span class="p">(</span><span class="n">img1</span><span class="p">)</span>
     <span class="n">y2</span> <span class="o">=</span> <span class="n">normalized_laplacian_pyramid</span><span class="p">(</span><span class="n">img2</span><span class="p">)</span>
 
-    <span class="n">epsilon</span> <span class="o">=</span> <span class="mf">1e-10</span>  <span class="c1"># for optimization purpose (stabilizing the gradient around zero)</span>
     <span class="n">dist</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">6</span><span class="p">):</span>
         <span class="n">dist</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">mean</span><span class="p">((</span><span class="n">y1</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">y2</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">**</span> <span class="mi">2</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span> <span class="o">+</span> <span class="n">epsilon</span><span class="p">))</span>

@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>plenoptic.tensors &#8212; plenoptic 1.4.1.dev172 documentation</title>
+    <title>plenoptic.tensors &#8212; plenoptic 2.0.1.dev16 documentation</title>
   
   
   
@@ -43,7 +43,7 @@
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=0790524f97105ba85085" />
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=0790524f97105ba85085" />
 
-    <script src="../../_static/documentation_options.js?v=85fe6400"></script>
+    <script src="../../_static/documentation_options.js?v=63d6856a"></script>
     <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -58,7 +58,7 @@
     <script>
         DOCUMENTATION_OPTIONS.theme_version = '0.18.0';
         DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://docs.plenoptic.org/docs/branch/main/_static/version_switcher.json';
-        DOCUMENTATION_OPTIONS.theme_switcher_version_match = '1.4.1';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = '2.0.1';
         DOCUMENTATION_OPTIONS.show_version_warning_banner =
             true;
         </script>
@@ -69,7 +69,7 @@
     <link rel="search" title="Search" href="../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="1.4.1" />
+  <meta name="docsearch:version" content="2.0.1" />
   
     
     <script src="../../_static/searchtools.js"></script>
@@ -141,8 +141,8 @@
       
     
     
-    <img src="../../_static/Plenoptic_Logo_CMYK_Full_Wide.svg" class="logo__image only-light" alt="plenoptic 1.4.1.dev172 documentation - Home"/>
-    <img src="../../_static/Plenoptic_Logo_CMYK_Full_DarkMode_Wide.svg" class="logo__image only-dark pst-js-only" alt="plenoptic 1.4.1.dev172 documentation - Home"/>
+    <img src="../../_static/Plenoptic_Logo_CMYK_Full_Wide.svg" class="logo__image only-light" alt="plenoptic 2.0.1.dev16 documentation - Home"/>
+    <img src="../../_static/Plenoptic_Logo_CMYK_Full_DarkMode_Wide.svg" class="logo__image only-dark pst-js-only" alt="plenoptic 2.0.1.dev16 documentation - Home"/>
   
   
 </a></div>
@@ -521,6 +521,8 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">skimage</span><span class="w"> </span><span class="kn">import</span> <span class="n">color</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">torch</span><span class="w"> </span><span class="kn">import</span> <span class="n">Tensor</span>
 
+<span class="kn">from</span><span class="w"> </span><span class="nn">.io</span><span class="w"> </span><span class="kn">import</span> <span class="n">LoadWarning</span>
+
 <span class="n">NUMPY_TO_TORCH_TYPES</span> <span class="o">=</span> <span class="p">{</span>
     <span class="nb">bool</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">bool</span><span class="p">,</span>  <span class="c1"># np.bool deprecated in fav of built-in</span>
     <span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">uint8</span><span class="p">,</span>
@@ -826,6 +828,20 @@
     <span class="k">return</span> <span class="n">min_int</span>
 
 
+<span class="k">def</span><span class="w"> </span><span class="nf">_warn_raise</span><span class="p">(</span><span class="n">message</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">should_raise</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Raise a warning or a ValueError with appropriate message.</span>
+
+<span class="sd">    If ``should_raise``, we raise a ValueError. Else, we warn with our</span>
+<span class="sd">    custom ``LoadWarning`` class.</span>
+<span class="sd">    &quot;&quot;&quot;</span>  <span class="c1"># noqa: DOC501</span>
+    <span class="c1"># numpydoc ignore=PR01</span>
+    <span class="k">if</span> <span class="n">should_raise</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="n">LoadWarning</span><span class="p">)</span>
+
+
 <span class="k">def</span><span class="w"> </span><span class="nf">_check_tensor_equality</span><span class="p">(</span>
     <span class="n">x</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span>
     <span class="n">y</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span>
@@ -833,8 +849,10 @@
     <span class="n">yname</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;y&quot;</span><span class="p">,</span>
     <span class="n">rtol</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e-5</span><span class="p">,</span>
     <span class="n">atol</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e-8</span><span class="p">,</span>
+    <span class="n">raise_on_checks</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="n">error_prepend_str</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;Different </span><span class="si">{error_type}</span><span class="s2">&quot;</span><span class="p">,</span>
-    <span class="n">error_append_str</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+    <span class="n">error_append_str_1</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+    <span class="n">error_append_str_2</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
 <span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Check two tensors for equality: device, size, dtype, and values.</span>
@@ -851,46 +869,66 @@
 <span class="sd">    rtol, atol</span>
 <span class="sd">        Relative and absolute tolerance for value comparison, passed to</span>
 <span class="sd">        :func:`torch.allclose`.</span>
+<span class="sd">    raise_on_checks</span>
+<span class="sd">        Determines behavior if any of the checks fail. If ``True``, we raise a</span>
+<span class="sd">        ``ValueError``. If ``False``, we instead raise a ``LoadWarning``. The</span>
+<span class="sd">        exception is checking the device or dtype, that always results in a</span>
+<span class="sd">        ``ValueError``.</span>
 <span class="sd">    error_prepend_str</span>
 <span class="sd">        String to start error message with, should contain the string-formatting field</span>
 <span class="sd">        ``&quot;{error_type}&quot;``.</span>
-<span class="sd">    error_append_str</span>
-<span class="sd">        String to finish error message with.</span>
+<span class="sd">    error_append_str_1</span>
+<span class="sd">        String to finish error message with if issue is with shape or value.</span>
+<span class="sd">    error_append_str_2</span>
+<span class="sd">        String to finish error message with if issue is with dtype or device.</span>
 
 <span class="sd">    Raises</span>
 <span class="sd">    ------</span>
 <span class="sd">    ValueError</span>
 <span class="sd">        If any of the device, dtype, size, or values differ.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">error_str</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">error_str_1</span> <span class="o">=</span> <span class="p">(</span>
         <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">error_prepend_str</span><span class="si">}</span><span class="s2">&quot;</span>
         <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="si">{</span><span class="n">xname</span><span class="si">}</span><span class="s2">: </span><span class="se">{{</span><span class="s2">xvalue</span><span class="se">}}</span><span class="s2">&quot;</span>
         <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="si">{</span><span class="n">yname</span><span class="si">}</span><span class="s2">: </span><span class="se">{{</span><span class="s2">yvalue</span><span class="se">}}</span><span class="s2">&quot;</span>
         <span class="sa">f</span><span class="s2">&quot;</span><span class="se">{{</span><span class="s2">difference</span><span class="se">}}</span><span class="s2">&quot;</span>
-        <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">error_append_str</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">error_append_str_1</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="p">)</span>
+    <span class="n">error_str_2</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">error_prepend_str</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="si">{</span><span class="n">xname</span><span class="si">}</span><span class="s2">: </span><span class="se">{{</span><span class="s2">xvalue</span><span class="se">}}</span><span class="s2">&quot;</span>
+        <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="si">{</span><span class="n">yname</span><span class="si">}</span><span class="s2">: </span><span class="se">{{</span><span class="s2">yvalue</span><span class="se">}}</span><span class="s2">&quot;</span>
+        <span class="sa">f</span><span class="s2">&quot;</span><span class="se">{{</span><span class="s2">difference</span><span class="se">}}</span><span class="s2">&quot;</span>
+        <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">error_append_str_2</span><span class="si">}</span><span class="s2">&quot;</span>
     <span class="p">)</span>
     <span class="k">if</span> <span class="n">x</span><span class="o">.</span><span class="n">device</span> <span class="o">!=</span> <span class="n">y</span><span class="o">.</span><span class="n">device</span><span class="p">:</span>
-        <span class="n">error_str</span> <span class="o">=</span> <span class="n">error_str</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+        <span class="n">error_str</span> <span class="o">=</span> <span class="n">error_str_2</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
             <span class="n">error_type</span><span class="o">=</span><span class="s2">&quot;device&quot;</span><span class="p">,</span> <span class="n">xvalue</span><span class="o">=</span><span class="n">x</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="n">yvalue</span><span class="o">=</span><span class="n">y</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="n">difference</span><span class="o">=</span><span class="s2">&quot;&quot;</span>
+        <span class="p">)</span>
+        <span class="n">error_str</span> <span class="o">+=</span> <span class="p">(</span>
+            <span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">Use the map_location arg to properly load on a different device.&quot;</span>
         <span class="p">)</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">error_str</span><span class="p">)</span>
     <span class="c1"># they&#39;re allowed to be different shapes if they both have 1 element (e.g., a scalar</span>
     <span class="c1"># and a 1-element tensor)</span>
     <span class="k">if</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span> <span class="o">!=</span> <span class="n">y</span><span class="o">.</span><span class="n">shape</span> <span class="ow">and</span> <span class="ow">not</span> <span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">nelement</span><span class="p">()</span> <span class="o">==</span> <span class="n">y</span><span class="o">.</span><span class="n">nelement</span><span class="p">()</span> <span class="o">==</span> <span class="mi">1</span><span class="p">):</span>
-        <span class="n">error_str</span> <span class="o">=</span> <span class="n">error_str</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+        <span class="n">error_str</span> <span class="o">=</span> <span class="n">error_str_1</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
             <span class="n">error_type</span><span class="o">=</span><span class="s2">&quot;shape&quot;</span><span class="p">,</span> <span class="n">xvalue</span><span class="o">=</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">yvalue</span><span class="o">=</span><span class="n">y</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">difference</span><span class="o">=</span><span class="s2">&quot;&quot;</span>
         <span class="p">)</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">error_str</span><span class="p">)</span>
+        <span class="n">_warn_raise</span><span class="p">(</span><span class="n">error_str</span><span class="p">,</span> <span class="n">raise_on_checks</span><span class="p">)</span>
     <span class="k">elif</span> <span class="n">x</span><span class="o">.</span><span class="n">dtype</span> <span class="o">!=</span> <span class="n">y</span><span class="o">.</span><span class="n">dtype</span><span class="p">:</span>
-        <span class="n">error_str</span> <span class="o">=</span> <span class="n">error_str</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+        <span class="n">error_str</span> <span class="o">=</span> <span class="n">error_str_2</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
             <span class="n">error_type</span><span class="o">=</span><span class="s2">&quot;dtype&quot;</span><span class="p">,</span> <span class="n">xvalue</span><span class="o">=</span><span class="n">x</span><span class="o">.</span><span class="n">dtype</span><span class="p">,</span> <span class="n">yvalue</span><span class="o">=</span><span class="n">y</span><span class="o">.</span><span class="n">dtype</span><span class="p">,</span> <span class="n">difference</span><span class="o">=</span><span class="s2">&quot;&quot;</span>
+        <span class="p">)</span>
+        <span class="n">error_str</span> <span class="o">+=</span> <span class="p">(</span>
+            <span class="s2">&quot; Use the to method to ensure your synthesis object has the proper dtype.&quot;</span>
         <span class="p">)</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">error_str</span><span class="p">)</span>
     <span class="k">elif</span> <span class="ow">not</span> <span class="n">torch</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">rtol</span><span class="o">=</span><span class="n">rtol</span><span class="p">,</span> <span class="n">atol</span><span class="o">=</span><span class="n">atol</span><span class="p">):</span>
-        <span class="n">error_str</span> <span class="o">=</span> <span class="n">error_str</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+        <span class="n">error_str</span> <span class="o">=</span> <span class="n">error_str_1</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
             <span class="n">error_type</span><span class="o">=</span><span class="s2">&quot;values&quot;</span><span class="p">,</span> <span class="n">xvalue</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">yvalue</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">difference</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Difference: </span><span class="si">{</span><span class="n">x</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">y</span><span class="si">}</span><span class="s2">&quot;</span>
         <span class="p">)</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">error_str</span><span class="p">)</span>
+        <span class="n">_warn_raise</span><span class="p">(</span><span class="n">error_str</span><span class="p">,</span> <span class="n">raise_on_checks</span><span class="p">)</span>
 </pre></div>
 
                 </article>
