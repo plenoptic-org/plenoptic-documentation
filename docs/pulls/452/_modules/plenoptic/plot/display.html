@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>plenoptic.plot.display &#8212; plenoptic 2.0.1.dev1 documentation</title>
+    <title>plenoptic.plot.display &#8212; plenoptic 2.0.1.dev20 documentation</title>
   
   
   
@@ -43,7 +43,7 @@
   <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=0790524f97105ba85085" />
 <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=0790524f97105ba85085" />
 
-    <script src="../../../_static/documentation_options.js?v=1ee97501"></script>
+    <script src="../../../_static/documentation_options.js?v=a177e172"></script>
     <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -141,8 +141,8 @@
       
     
     
-    <img src="../../../_static/Plenoptic_Logo_CMYK_Full_Wide.svg" class="logo__image only-light" alt="plenoptic 2.0.1.dev1 documentation - Home"/>
-    <img src="../../../_static/Plenoptic_Logo_CMYK_Full_DarkMode_Wide.svg" class="logo__image only-dark pst-js-only" alt="plenoptic 2.0.1.dev1 documentation - Home"/>
+    <img src="../../../_static/Plenoptic_Logo_CMYK_Full_Wide.svg" class="logo__image only-light" alt="plenoptic 2.0.1.dev20 documentation - Home"/>
+    <img src="../../../_static/Plenoptic_Logo_CMYK_Full_DarkMode_Wide.svg" class="logo__image only-dark pst-js-only" alt="plenoptic 2.0.1.dev20 documentation - Home"/>
   
   
 </a></div>
@@ -744,6 +744,153 @@
 <span class="sd">    generally hold in notebooks as well, but will fail if, e.g., you plot an image</span>
 <span class="sd">    that&#39;s 2000 pixels wide on an monitor 1000 pixels wide; the browser handles the</span>
 <span class="sd">    rescaling in a way we can&#39;t control.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    Plot a single grayscale image:</span>
+
+<span class="sd">    .. plot::</span>
+<span class="sd">      :context: reset</span>
+
+<span class="sd">      &gt;&gt;&gt; import plenoptic as po</span>
+<span class="sd">      &gt;&gt;&gt; einstein = po.data.einstein()</span>
+<span class="sd">      &gt;&gt;&gt; einstein.shape</span>
+<span class="sd">      torch.Size([1, 1, 256, 256])</span>
+<span class="sd">      &gt;&gt;&gt; po.plot.imshow(einstein)</span>
+<span class="sd">      &lt;PyrFigure size ... with 1 Axes&gt;</span>
+
+<span class="sd">    For an image tensor with multiple elements along the batch dimension and a</span>
+<span class="sd">    single channel element, this function will plot each batch independently as</span>
+<span class="sd">    grayscale images:</span>
+
+<span class="sd">    .. plot::</span>
+<span class="sd">      :context: close-figs</span>
+
+<span class="sd">      &gt;&gt;&gt; import torch</span>
+<span class="sd">      &gt;&gt;&gt; curie = po.data.curie()</span>
+<span class="sd">      &gt;&gt;&gt; imgs = torch.cat([einstein, curie])</span>
+<span class="sd">      &gt;&gt;&gt; print(imgs.shape)</span>
+<span class="sd">      torch.Size([2, 1, 256, 256])</span>
+<span class="sd">      &gt;&gt;&gt; po.plot.imshow(imgs)</span>
+<span class="sd">      &lt;PyrFigure size ... with 2 Axes&gt;</span>
+
+<span class="sd">    A list of 4d tensors will be concatenated along the batch dimension before plotting.</span>
+<span class="sd">    Thus, the following example is the same as above:</span>
+
+<span class="sd">    .. plot::</span>
+<span class="sd">      :context: close-figs</span>
+
+<span class="sd">      &gt;&gt;&gt; po.plot.imshow([einstein, curie])</span>
+<span class="sd">      &lt;PyrFigure size ... with 2 Axes&gt;</span>
+
+<span class="sd">    You may use the ``title`` argument for any number of images, either as a string</span>
+<span class="sd">    applied to all images or as a list the length of images. Additionally, ``col_wrap``</span>
+<span class="sd">    specifies the number of images per row:</span>
+
+<span class="sd">    .. plot::</span>
+<span class="sd">      :context: close-figs</span>
+
+<span class="sd">      &gt;&gt;&gt; po.plot.imshow(imgs, title=[&quot;einstein&quot;, &quot;curie&quot;], col_wrap=1)</span>
+<span class="sd">      &lt;PyrFigure size ... with 2 Axes&gt;</span>
+
+<span class="sd">    Specifying ``batch_idx`` will plot the corresponding element in</span>
+<span class="sd">    the batch dimension (i.e., ``imgs[batch_idx]``):</span>
+
+<span class="sd">    .. plot::</span>
+<span class="sd">      :context: close-figs</span>
+
+<span class="sd">      &gt;&gt;&gt; print(imgs.shape)</span>
+<span class="sd">      torch.Size([2, 1, 256, 256])</span>
+<span class="sd">      &gt;&gt;&gt; po.plot.imshow(imgs, batch_idx=1)</span>
+<span class="sd">      &lt;PyrFigure size ... with 1 Axes&gt;</span>
+
+<span class="sd">    The vrange argument allows control over the min and max values of the color range.</span>
+<span class="sd">    In addition to a 2-tuple of floats, this functions accepts several special strings</span>
+<span class="sd">    (see docstring for details). For example, ``&quot;auto1&quot;`` sets all images to have the</span>
+<span class="sd">    same range:</span>
+
+<span class="sd">    .. plot::</span>
+<span class="sd">      :context: close-figs</span>
+
+<span class="sd">      &gt;&gt;&gt; einsteins_scaled = torch.cat([einstein, einstein * 2])</span>
+<span class="sd">      &gt;&gt;&gt; po.plot.imshow(einsteins_scaled, vrange=&quot;auto1&quot;)</span>
+<span class="sd">      &lt;PyrFigure size ... with 2 Axes&gt;</span>
+
+<span class="sd">    Meanwhile, ``&quot;indep1&quot;`` sets each image&#39;s range independently. Note the different</span>
+<span class="sd">    ranges in the titles!</span>
+
+<span class="sd">    .. plot::</span>
+<span class="sd">      :context: close-figs</span>
+
+<span class="sd">      &gt;&gt;&gt; po.plot.imshow(einsteins_scaled, vrange=&quot;indep1&quot;)</span>
+<span class="sd">      &lt;PyrFigure size ... with 2 Axes&gt;</span>
+
+<span class="sd">    The ``zoom`` argument allows users to set the ratio of display to image pixels,</span>
+<span class="sd">    increasing or decreasing the size of the resulting plot:</span>
+
+<span class="sd">    .. plot::</span>
+<span class="sd">      :context: close-figs</span>
+
+<span class="sd">      &gt;&gt;&gt; po.plot.imshow(einstein, zoom=0.5)</span>
+<span class="sd">      &lt;PyrFigure size ... with 1 Axes&gt;</span>
+
+<span class="sd">    Note that if ``zoom&lt;1`` and the value is not a divisor of the largest image size,</span>
+<span class="sd">    this function will raise an error:</span>
+
+<span class="sd">    &gt;&gt;&gt; print(einstein.shape)</span>
+<span class="sd">    torch.Size([1, 1, 256, 256])</span>
+<span class="sd">    &gt;&gt;&gt; po.plot.imshow(einstein, zoom=0.7)</span>
+<span class="sd">    Traceback (most recent call last):</span>
+<span class="sd">    Exception: zoom * signal.shape must result in integers!</span>
+
+<span class="sd">    You can use the ``plot_complex`` argument to control how complex tensors are</span>
+<span class="sd">    plotted:</span>
+
+<span class="sd">    .. plot::</span>
+<span class="sd">      :context: close-figs</span>
+
+<span class="sd">      &gt;&gt;&gt; einstein_fft = torch.fft.fft2(einstein)</span>
+<span class="sd">      &gt;&gt;&gt; po.plot.imshow([einstein, einstein_fft], plot_complex=&quot;logpolar&quot;)</span>
+<span class="sd">      &lt;PyrFigure size ... with 3 Axes&gt;</span>
+
+<span class="sd">    To plot a RGB(A) image in color, you must set ``as_rgb=True``:</span>
+
+<span class="sd">    .. plot::</span>
+<span class="sd">      :context: close-figs</span>
+
+<span class="sd">      &gt;&gt;&gt; color_wheel = po.data.color_wheel()</span>
+<span class="sd">      &gt;&gt;&gt; print(color_wheel.shape)</span>
+<span class="sd">      torch.Size([1, 3, 600, 600])</span>
+<span class="sd">      &gt;&gt;&gt; po.plot.imshow(color_wheel, as_rgb=True, zoom=0.5)</span>
+<span class="sd">      &lt;PyrFigure size ... with 1 Axes&gt;</span>
+
+<span class="sd">    Otherwise, images with multiple channels will have each channel plotted as a</span>
+<span class="sd">    separate grayscale image:</span>
+
+<span class="sd">    .. plot::</span>
+<span class="sd">      :context: close-figs</span>
+
+<span class="sd">      &gt;&gt;&gt; po.plot.imshow(color_wheel, zoom=0.5, title=[&quot;R&quot;, &quot;G&quot;, &quot;B&quot;])</span>
+<span class="sd">      &lt;PyrFigure size ... with 3 Axes&gt;</span>
+
+<span class="sd">    This function will raise a ``ValueError`` if ``as_rgb=True`` and the input image</span>
+<span class="sd">    doesn&#39;t have the required number of channels:</span>
+
+<span class="sd">    &gt;&gt;&gt; print(einstein.shape)</span>
+<span class="sd">    torch.Size([1, 1, 256, 256])</span>
+<span class="sd">    &gt;&gt;&gt; po.plot.imshow(einstein, as_rgb=True)</span>
+<span class="sd">    Traceback (most recent call last):</span>
+<span class="sd">    ValueError: If as_rgb is True, then channel must have 3 or 4 elements!</span>
+
+<span class="sd">    Images will be automatically rescaled to be displayed at the same heights and widths</span>
+<span class="sd">    if sizes are scalar multiples of each other:</span>
+
+<span class="sd">    .. plot::</span>
+<span class="sd">      :context: close-figs</span>
+
+<span class="sd">      &gt;&gt;&gt; einstein_cropped = po.process.center_crop(einstein, 32)</span>
+<span class="sd">      &gt;&gt;&gt; po.plot.imshow([einstein, einstein_cropped])</span>
+<span class="sd">      &lt;PyrFigure size ... with 2 Axes&gt;</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
         <span class="n">image</span> <span class="o">=</span> <span class="p">[</span><span class="n">image</span><span class="p">]</span>
