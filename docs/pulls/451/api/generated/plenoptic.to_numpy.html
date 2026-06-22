@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>plenoptic.to_numpy &#8212; plenoptic 2.0.2.dev3 documentation</title>
+    <title>plenoptic.to_numpy &#8212; plenoptic 2.0.2.dev21 documentation</title>
   
   
   
@@ -44,7 +44,7 @@
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=a95f357e85573c9b56d5" />
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=a95f357e85573c9b56d5" />
 
-    <script src="../../_static/documentation_options.js?v=f7dfc09d"></script>
+    <script src="../../_static/documentation_options.js?v=35c02c39"></script>
     <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -144,8 +144,8 @@
       
     
     
-    <img src="../../_static/Plenoptic_Logo_CMYK_Full_Wide.svg" class="logo__image only-light" alt="plenoptic 2.0.2.dev3 documentation - Home"/>
-    <img src="../../_static/Plenoptic_Logo_CMYK_Full_DarkMode_Wide.svg" class="logo__image only-dark pst-js-only" alt="plenoptic 2.0.2.dev3 documentation - Home"/>
+    <img src="../../_static/Plenoptic_Logo_CMYK_Full_Wide.svg" class="logo__image only-light" alt="plenoptic 2.0.2.dev21 documentation - Home"/>
+    <img src="../../_static/Plenoptic_Logo_CMYK_Full_DarkMode_Wide.svg" class="logo__image only-dark pst-js-only" alt="plenoptic 2.0.2.dev21 documentation - Home"/>
   
   
 </a></div>
@@ -680,6 +680,39 @@ nothing.</p></li>
 <dd class="field-odd"><p><em>array</em> – The former tensor, now an array.</p>
 </dd>
 </dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">plenoptic</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">po</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">tensor</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">rand</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">256</span><span class="p">,</span> <span class="mi">256</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">array1</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">(</span><span class="n">tensor</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Type: </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">array1</span><span class="p">)</span><span class="si">}</span><span class="s2">, Shape: </span><span class="si">{</span><span class="n">array1</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="go">Type: &lt;class &#39;numpy.ndarray&#39;&gt;, Shape: (1, 1, 256, 256)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">array2</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">(</span><span class="n">tensor</span><span class="p">,</span> <span class="n">squeeze</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Type: </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">array2</span><span class="p">)</span><span class="si">}</span><span class="s2">, Shape: </span><span class="si">{</span><span class="n">array2</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="go">Type: &lt;class &#39;numpy.ndarray&#39;&gt;, Shape: (256, 256)</span>
+</pre></div>
+</div>
+<p>This is handy for saving the synthesized metamer as an image to disk (here, we use
+<a class="reference internal" href="plenoptic.convert_float_to_int.html#plenoptic.convert_float_to_int" title="plenoptic.convert_float_to_int"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.convert_float_to_int</span></code></a> to convert the image to an 8-bit integer
+for saving).</p>
+<p>Note that we clip the image to [0, 1] before converting and saving; it contains some
+values just outside that range. In general, it’s up to the user to ensure this is
+reasonable (you could also use <a class="reference internal" href="plenoptic.process.rescale.html#plenoptic.process.rescale" title="plenoptic.process.rescale"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.process.rescale</span></code></a> to linearly rescale
+the image to that same range).</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">imageio</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Load in an example metamer synthesis</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">img</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">einstein</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Gaussian</span><span class="p">(</span><span class="mi">30</span><span class="p">)</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">po</span><span class="o">.</span><span class="n">remove_grad</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">met</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">Metamer</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">model</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">met</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">met</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">po</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">fetch_data</span><span class="p">(</span><span class="s2">&quot;example_metamer_gaussian.pt&quot;</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">met_squeezed</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">(</span><span class="n">met</span><span class="o">.</span><span class="n">metamer</span><span class="p">,</span> <span class="n">squeeze</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">met_squeezed</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">convert_float_to_int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">met_squeezed</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">imageio</span><span class="o">.</span><span class="n">v3</span><span class="o">.</span><span class="n">imwrite</span><span class="p">(</span><span class="s2">&quot;example_metamer_gaussian.png&quot;</span><span class="p">,</span> <span class="n">met_squeezed</span><span class="p">)</span>
+</pre></div>
+</div>
 </dd></dl>
 
 </section>
