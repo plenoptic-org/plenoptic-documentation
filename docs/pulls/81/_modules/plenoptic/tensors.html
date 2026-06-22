@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>plenoptic.tensors &#8212; plenoptic 2.0.2.dev18 documentation</title>
+    <title>plenoptic.tensors &#8212; plenoptic 2.0.2.dev36 documentation</title>
   
   
   
@@ -26,8 +26,8 @@
   </noscript>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="../../_static/styles/theme.css?digest=0790524f97105ba85085" rel="stylesheet" />
-<link href="../../_static/styles/pydata-sphinx-theme.css?digest=0790524f97105ba85085" rel="stylesheet" />
+  <link href="../../_static/styles/theme.css?digest=a95f357e85573c9b56d5" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=a95f357e85573c9b56d5" rel="stylesheet" />
 
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
@@ -38,12 +38,12 @@
     <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=fe04b56e" />
   
   <!-- So that users can add custom icons -->
-  <script defer src="../../_static/scripts/fontawesome.js?digest=0790524f97105ba85085"></script>
+  <script defer src="../../_static/scripts/fontawesome.js?digest=a95f357e85573c9b56d5"></script>
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=0790524f97105ba85085" />
-<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=0790524f97105ba85085" />
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=a95f357e85573c9b56d5" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=a95f357e85573c9b56d5" />
 
-    <script src="../../_static/documentation_options.js?v=1f7bebe3"></script>
+    <script src="../../_static/documentation_options.js?v=9a866cb0"></script>
     <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -56,7 +56,7 @@
     <script src="../../_static/design-tabs.js?v=f930bc37"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/plenoptic/tensors';</script>
     <script>
-        DOCUMENTATION_OPTIONS.theme_version = '0.18.0';
+        DOCUMENTATION_OPTIONS.theme_version = '0.19.0';
         DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://docs.plenoptic.org/docs/branch/main/_static/version_switcher.json';
         DOCUMENTATION_OPTIONS.theme_switcher_version_match = '2.0.2';
         DOCUMENTATION_OPTIONS.show_version_warning_banner =
@@ -141,8 +141,8 @@
       
     
     
-    <img src="../../_static/Plenoptic_Logo_CMYK_Full_Wide.svg" class="logo__image only-light" alt="plenoptic 2.0.2.dev18 documentation - Home"/>
-    <img src="../../_static/Plenoptic_Logo_CMYK_Full_DarkMode_Wide.svg" class="logo__image only-dark pst-js-only" alt="plenoptic 2.0.2.dev18 documentation - Home"/>
+    <img src="../../_static/Plenoptic_Logo_CMYK_Full_Wide.svg" class="logo__image only-light" alt="plenoptic 2.0.2.dev36 documentation - Home"/>
+    <img src="../../_static/Plenoptic_Logo_CMYK_Full_DarkMode_Wide.svg" class="logo__image only-dark pst-js-only" alt="plenoptic 2.0.2.dev36 documentation - Home"/>
   
   
 </a></div>
@@ -579,6 +579,40 @@
 <span class="sd">    -------</span>
 <span class="sd">    array</span>
 <span class="sd">        The former tensor, now an array.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; import plenoptic as po</span>
+<span class="sd">    &gt;&gt;&gt; import torch</span>
+<span class="sd">    &gt;&gt;&gt; tensor = torch.rand((1, 1, 256, 256))</span>
+<span class="sd">    &gt;&gt;&gt; array1 = po.to_numpy(tensor)</span>
+<span class="sd">    &gt;&gt;&gt; print(f&quot;Type: {type(array1)}, Shape: {array1.shape}&quot;)</span>
+<span class="sd">    Type: &lt;class &#39;numpy.ndarray&#39;&gt;, Shape: (1, 1, 256, 256)</span>
+<span class="sd">    &gt;&gt;&gt; array2 = po.to_numpy(tensor, squeeze=True)</span>
+<span class="sd">    &gt;&gt;&gt; print(f&quot;Type: {type(array2)}, Shape: {array2.shape}&quot;)</span>
+<span class="sd">    Type: &lt;class &#39;numpy.ndarray&#39;&gt;, Shape: (256, 256)</span>
+
+<span class="sd">    This is handy for saving the synthesized metamer as an image to disk (here, we use</span>
+<span class="sd">    :func:`plenoptic.convert_float_to_int` to convert the image to an 8-bit integer</span>
+<span class="sd">    for saving).</span>
+
+<span class="sd">    Note that we clip the image to [0, 1] before converting and saving; it contains some</span>
+<span class="sd">    values just outside that range. In general, it&#39;s up to the user to ensure this is</span>
+<span class="sd">    reasonable (you could also use :func:`plenoptic.process.rescale` to linearly rescale</span>
+<span class="sd">    the image to that same range).</span>
+
+<span class="sd">    &gt;&gt;&gt; import imageio</span>
+<span class="sd">    &gt;&gt;&gt; import numpy as np</span>
+<span class="sd">    &gt;&gt;&gt; # Load in an example metamer synthesis</span>
+<span class="sd">    &gt;&gt;&gt; img = po.data.einstein()</span>
+<span class="sd">    &gt;&gt;&gt; model = po.models.Gaussian(30).eval()</span>
+<span class="sd">    &gt;&gt;&gt; po.remove_grad(model)</span>
+<span class="sd">    &gt;&gt;&gt; met = po.Metamer(img, model)</span>
+<span class="sd">    &gt;&gt;&gt; met.to(torch.float64)</span>
+<span class="sd">    &gt;&gt;&gt; met.load(po.data.fetch_data(&quot;example_metamer_gaussian.pt&quot;))</span>
+<span class="sd">    &gt;&gt;&gt; met_squeezed = po.to_numpy(met.metamer, squeeze=True)</span>
+<span class="sd">    &gt;&gt;&gt; met_squeezed = po.convert_float_to_int(np.clip(met_squeezed, 0, 1))</span>
+<span class="sd">    &gt;&gt;&gt; imageio.v3.imwrite(&quot;example_metamer_gaussian.png&quot;, met_squeezed)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">with</span> <span class="n">contextlib</span><span class="o">.</span><span class="n">suppress</span><span class="p">(</span><span class="ne">AttributeError</span><span class="p">):</span>
         <span class="c1"># if this fails, it&#39;s already a numpy array</span>
@@ -958,8 +992,8 @@
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script defer src="../../_static/scripts/bootstrap.js?digest=0790524f97105ba85085"></script>
-<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=0790524f97105ba85085"></script>
+  <script defer src="../../_static/scripts/bootstrap.js?digest=a95f357e85573c9b56d5"></script>
+<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=a95f357e85573c9b56d5"></script>
 
   <footer class="bd-footer">
 <div class="bd-footer__inner bd-page-width">
@@ -993,7 +1027,7 @@
         <div class="footer-item">
 <p class="theme-version">
   <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
-  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.18.0.
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.19.0.
 </p></div>
       
     </div>
