@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Reproducibility and Compatibility &#8212; plenoptic 2.0.2.dev94 documentation</title>
+    <title>Reproducibility and Compatibility &#8212; plenoptic 2.0.2.dev98 documentation</title>
   
   
   
@@ -44,7 +44,7 @@
   <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=a95f357e85573c9b56d5" />
 <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=a95f357e85573c9b56d5" />
 
-    <script src="../_static/documentation_options.js?v=50054ce9"></script>
+    <script src="../_static/documentation_options.js?v=8fe76541"></script>
     <script src="../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -144,8 +144,8 @@
       
     
     
-    <img src="../_static/Plenoptic_Logo_CMYK_Full_Wide.svg" class="logo__image only-light" alt="plenoptic 2.0.2.dev94 documentation - Home"/>
-    <img src="../_static/Plenoptic_Logo_CMYK_Full_DarkMode_Wide.svg" class="logo__image only-dark pst-js-only" alt="plenoptic 2.0.2.dev94 documentation - Home"/>
+    <img src="../_static/Plenoptic_Logo_CMYK_Full_Wide.svg" class="logo__image only-light" alt="plenoptic 2.0.2.dev98 documentation - Home"/>
+    <img src="../_static/Plenoptic_Logo_CMYK_Full_DarkMode_Wide.svg" class="logo__image only-dark pst-js-only" alt="plenoptic 2.0.2.dev98 documentation - Home"/>
   
   
 </a></div>
@@ -547,6 +547,11 @@
 <li><p>Use <code class="docutils literal notranslate"><span class="pre">torch.float64</span></code> dtype (torch defaults to <code class="docutils literal notranslate"><span class="pre">torch.float32</span></code>). <a class="reference external" href="https://docs.pytorch.org/docs/stable/generated/torch.set_default_dtype.html#torch.set_default_dtype" title="(in PyTorch v2.12)"><code class="xref py py-func docutils literal notranslate"><span class="pre">torch.set_default_dtype</span></code></a> might be helpful for this. See <a class="reference external" href="https://docs.pytorch.org/docs/stable/tensor_attributes.html#torch.dtype" title="(in PyTorch v2.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">torch.dtype</span></code></a> for more information.</p></li>
 <li><p>Note the versions of plenoptic and pytorch when performing your analysis. We do not believe the versions of other packages are likely to affect reproducibility, but breaking changes in both plenoptic and pytorch have broken reproducibility.</p></li>
 <li><p>If you <em>really</em> need to guarantee reproducibility and you used a GPU, note all relevant information, especially the CUDA and driver versions. See <a class="reference external" href="https://github.com/plenoptic-org/plenoptic/issues/368">plenoptic issue #368</a> for a discussion here.</p></li>
+<li><p>Use <a class="reference external" href="https://docs.pytorch.org/docs/stable/generated/torch.use_deterministic_algorithms.html#torch.use_deterministic_algorithms" title="(in PyTorch v2.12)"><code class="xref py py-func docutils literal notranslate"><span class="pre">torch.use_deterministic_algorithms</span></code></a> to use deterministic algorithms where available, which largely affects operations performed on CUDA tensors (i.e., on the GPU). See the documentation of that function for a full list of affected operations, which includes convolution when performed on the GPU. Note that, as the torch docs say: “deterministic operations tend to have worse performance than nondeterministic operations.”</p>
+<ul>
+<li><p>And note that not all operations can be done in a deterministic fashion! If you need strict reproducibility, you may need to avoid such operations or perform them on the CPU.</p></li>
+</ul>
+</li>
 </ul>
 <p>Small differences in the output of computations resulting from any of the latter three points above can result in small differences in the gradient that accumulate over the course of synthesis, so that it is easier to guarantee reproducibility for procedures that take fewer iterations than those that take more.</p>
 <p>However, even when following all of the above steps, as discussed <a class="reference internal" href="#reproduce-limits"><span class="std std-ref">below</span></a>, we cannot guarantee perfect reproducibility.</p>
