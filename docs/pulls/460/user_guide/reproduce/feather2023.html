@@ -1,0 +1,945 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Reproducing ResNet50 Image Metamers from Feather et al., 2023 &#8212; plenoptic 2.0.2.dev166 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=90905a2f556bf617f1a9" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=90905a2f556bf617f1a9" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=9c3e77be" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=fe04b56e" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="../../_static/scripts/fontawesome.js?digest=90905a2f556bf617f1a9"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9" />
+
+    <script src="../../_static/documentation_options.js?v=3c9efddb"></script>
+    <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=6dbb43f8"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../_static/togglebutton.js?v=b8b12719"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
+    <script type="application/vnd.jupyter.widget-state+json">{"state": {"eeb646d3952b46a686d9a20de263a195": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": "2", "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "efada5f25a1541f580d451dccc5ec8be": {"model_name": "ProgressStyleModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "ProgressStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "bar_color": null, "description_width": ""}}, "dc0296b1ec244f178afcecd37be890f6": {"model_name": "FloatProgressModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "FloatProgressModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "ProgressView", "bar_style": "success", "description": "", "description_allow_html": false, "layout": "IPY_MODEL_eeb646d3952b46a686d9a20de263a195", "max": 1.0, "min": 0.0, "orientation": "horizontal", "style": "IPY_MODEL_efada5f25a1541f580d451dccc5ec8be", "tabbable": null, "tooltip": null, "value": 1.0}}, "13359c4ff0be413d85f950c1a1c8c693": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "ccb7ccfa1d194fa496c955323599e11c": {"model_name": "HTMLStyleModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "background": null, "description_width": "", "font_size": null, "text_color": null}}, "4bf4a86a01904351b3bc88e6a89f6515": {"model_name": "HTMLModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "HTMLView", "description": "", "description_allow_html": false, "layout": "IPY_MODEL_13359c4ff0be413d85f950c1a1c8c693", "placeholder": "\u200b", "style": "IPY_MODEL_ccb7ccfa1d194fa496c955323599e11c", "tabbable": null, "tooltip": null, "value": "100%"}}, "f47ceb395c7147438cfdc635cde6aad7": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "864e76d87b304ad3a110b3d4c82613f8": {"model_name": "HTMLStyleModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "background": null, "description_width": "", "font_size": null, "text_color": null}}, "2c1f2b62a3c44d42bfd234d479adf79a": {"model_name": "HTMLModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "HTMLView", "description": "", "description_allow_html": false, "layout": "IPY_MODEL_f47ceb395c7147438cfdc635cde6aad7", "placeholder": "\u200b", "style": "IPY_MODEL_864e76d87b304ad3a110b3d4c82613f8", "tabbable": null, "tooltip": null, "value": "\u200712.9M/12.9M\u2007[00:00&lt;00:00,\u200726.5GB/s]"}}, "b6ef914262d34df7adf6f90b99f75169": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": "inline-flex", "flex": null, "flex_flow": "row wrap", "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": "79px"}}, "912df526d69540aa90648af315149da1": {"model_name": "HBoxModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HBoxModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "HBoxView", "box_style": "", "children": ["IPY_MODEL_4bf4a86a01904351b3bc88e6a89f6515", "IPY_MODEL_dc0296b1ec244f178afcecd37be890f6", "IPY_MODEL_2c1f2b62a3c44d42bfd234d479adf79a"], "layout": "IPY_MODEL_b6ef914262d34df7adf6f90b99f75169", "tabbable": null, "tooltip": null}}, "debe5dc629c14c86add32c789abfee50": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": "2", "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "849c5e67495141d2a2084dad047b2a31": {"model_name": "ProgressStyleModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "ProgressStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "bar_color": null, "description_width": ""}}, "8f2568d17ed547d0ab60aac8e6e11641": {"model_name": "FloatProgressModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "FloatProgressModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "ProgressView", "bar_style": "success", "description": "", "description_allow_html": false, "layout": "IPY_MODEL_debe5dc629c14c86add32c789abfee50", "max": 1.0, "min": 0.0, "orientation": "horizontal", "style": "IPY_MODEL_849c5e67495141d2a2084dad047b2a31", "tabbable": null, "tooltip": null, "value": 1.0}}, "af4467786ca74ef39f16ef72b0880def": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "d30c0cd587ac4849b06d12ea206d6d18": {"model_name": "HTMLStyleModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "background": null, "description_width": "", "font_size": null, "text_color": null}}, "b26e3b940abe4644961ab4c3ecc2055d": {"model_name": "HTMLModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "HTMLView", "description": "", "description_allow_html": false, "layout": "IPY_MODEL_af4467786ca74ef39f16ef72b0880def", "placeholder": "\u200b", "style": "IPY_MODEL_d30c0cd587ac4849b06d12ea206d6d18", "tabbable": null, "tooltip": null, "value": "100%"}}, "6ce766b1e5874c6aac0fbec2b515082c": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "aff291fa818d4d708682d6f00fbf4735": {"model_name": "HTMLStyleModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "background": null, "description_width": "", "font_size": null, "text_color": null}}, "d9f6844c5b44485391521f3ed477024b": {"model_name": "HTMLModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "HTMLView", "description": "", "description_allow_html": false, "layout": "IPY_MODEL_6ce766b1e5874c6aac0fbec2b515082c", "placeholder": "\u200b", "style": "IPY_MODEL_aff291fa818d4d708682d6f00fbf4735", "tabbable": null, "tooltip": null, "value": "\u20079.71M/9.71M\u2007[00:00&lt;00:00,\u200719.3GB/s]"}}, "eed8afe67dd04664a7879ae79042ae6f": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": "inline-flex", "flex": null, "flex_flow": "row wrap", "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": "79px"}}, "59f194e75a134689aefe4e266a536c24": {"model_name": "HBoxModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HBoxModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "HBoxView", "box_style": "", "children": ["IPY_MODEL_b26e3b940abe4644961ab4c3ecc2055d", "IPY_MODEL_8f2568d17ed547d0ab60aac8e6e11641", "IPY_MODEL_d9f6844c5b44485391521f3ed477024b"], "layout": "IPY_MODEL_eed8afe67dd04664a7879ae79042ae6f", "tabbable": null, "tooltip": null}}, "d55b3413f4a549f391922a0acdf0e063": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": "2", "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "db1e59de9a1b4b3989328f503d67d6e4": {"model_name": "ProgressStyleModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "ProgressStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "bar_color": null, "description_width": ""}}, "bd300be07a804a9192b6c0ca3234b3fb": {"model_name": "FloatProgressModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "FloatProgressModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "ProgressView", "bar_style": "success", "description": "", "description_allow_html": false, "layout": "IPY_MODEL_d55b3413f4a549f391922a0acdf0e063", "max": 1.0, "min": 0.0, "orientation": "horizontal", "style": "IPY_MODEL_db1e59de9a1b4b3989328f503d67d6e4", "tabbable": null, "tooltip": null, "value": 1.0}}, "91047c8bd0f043caa4240330f59872b2": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "ef6c53c0be7e469896033aad09bca855": {"model_name": "HTMLStyleModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "background": null, "description_width": "", "font_size": null, "text_color": null}}, "f48afa832298460bbf273bc322840f32": {"model_name": "HTMLModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "HTMLView", "description": "", "description_allow_html": false, "layout": "IPY_MODEL_91047c8bd0f043caa4240330f59872b2", "placeholder": "\u200b", "style": "IPY_MODEL_ef6c53c0be7e469896033aad09bca855", "tabbable": null, "tooltip": null, "value": "100%"}}, "9f27480454824477beaaa28eed73b36e": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "aaea011936f84579bd5008142c6a9a17": {"model_name": "HTMLStyleModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "background": null, "description_width": "", "font_size": null, "text_color": null}}, "eaa112d9b1b84276be22fa65e4d15ada": {"model_name": "HTMLModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "HTMLView", "description": "", "description_allow_html": false, "layout": "IPY_MODEL_9f27480454824477beaaa28eed73b36e", "placeholder": "\u200b", "style": "IPY_MODEL_aaea011936f84579bd5008142c6a9a17", "tabbable": null, "tooltip": null, "value": "\u20078.10M/8.10M\u2007[00:00&lt;00:00,\u200715.4GB/s]"}}, "0ed77e36a14f4dd7bfa1ee384294f8bb": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": "inline-flex", "flex": null, "flex_flow": "row wrap", "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": "79px"}}, "7b388d1cb061421d9853447da9925fe9": {"model_name": "HBoxModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HBoxModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "HBoxView", "box_style": "", "children": ["IPY_MODEL_f48afa832298460bbf273bc322840f32", "IPY_MODEL_bd300be07a804a9192b6c0ca3234b3fb", "IPY_MODEL_eaa112d9b1b84276be22fa65e4d15ada"], "layout": "IPY_MODEL_0ed77e36a14f4dd7bfa1ee384294f8bb", "tabbable": null, "tooltip": null}}}, "version_major": 2, "version_minor": 0}</script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script crossorigin="anonymous" data-jupyter-widgets-cdn="https://cdn.jsdelivr.net/npm/" src="https://cdn.jsdelivr.net/npm/@jupyter-widgets/html-manager@1.0.6/dist/embed-amd.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'user_guide/reproduce/feather2023';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_version = '0.20.0';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://docs.plenoptic.org/docs/branch/main/_static/version_switcher.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = '2.0.2';
+        DOCUMENTATION_OPTIONS.show_version_warning_banner =
+            true;
+        </script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <script defer="defer" src="../../_static/custom-icon.js?v=0bae05a2"></script>
+    <link rel="icon" href="../../_static/plenoptic.ico"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Display and animate functions" href="../advanced/Display.html" />
+    <link rel="prev" title="Reproducing Wang and Simoncelli, 2008 (MAD Competition)" href="Original_MAD.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="2.0.2" />
+  
+    
+    <script src="../../_static/searchtools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script src="../../searchindex.js"></script>
+  
+  </head>
+  <body data-default-mode="">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class=" navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/Plenoptic_Logo_CMYK_Full_Wide.svg" class="logo__image only-light" alt="plenoptic 2.0.2.dev166 documentation - Home"/>
+    <img src="../../_static/Plenoptic_Logo_CMYK_Full_DarkMode_Wide.svg" class="logo__image only-dark pst-js-only" alt="plenoptic 2.0.2.dev166 documentation - Home"/>
+  
+  
+</a></div>
+    
+      <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-2"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-2"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-2"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-2">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+    
+  </div>
+  
+  <div class=" navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../getting_started/index.html">
+    Getting started
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../api/index.html">
+    API
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../reference/index.html">
+    Reference
+  </a>
+</li>
+
+            <li class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button"
+                data-bs-toggle="dropdown" aria-expanded="false"
+                aria-controls="pst-nav-more-links">
+                    More
+                </button>
+                <ul id="pst-nav-more-links" class="dropdown-menu">
+                    
+<li class=" ">
+  <a class="nav-link dropdown-item nav-external" href="https://github.com/plenoptic-org/plenoptic/releases">
+    Changelog
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../developers/index.html">
+    For developers
+  </a>
+</li>
+
+                </ul>
+            </li>
+            
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://plenoptic.org" title="Home" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-solid fa-house fa-lg" aria-hidden="true"></i><span class="visually-hidden">Home</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/plenoptic-org/plenoptic" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fab fa-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://pypi.org/project/plenoptic" title="PyPI" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-custom fa-lg" data-prefix="fa-custom" data-icon="pypi" aria-hidden="true"></i><span class="visually-hidden">PyPI</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../getting_started/index.html">
+    Getting started
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../api/index.html">
+    API
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../reference/index.html">
+    Reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://github.com/plenoptic-org/plenoptic/releases">
+    Changelog
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../developers/index.html">
+    For developers
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://plenoptic.org" title="Home" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-solid fa-house fa-lg" aria-hidden="true"></i><span class="visually-hidden">Home</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/plenoptic-org/plenoptic" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fab fa-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://pypi.org/project/plenoptic" title="PyPI" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-custom fa-lg" data-prefix="fa-custom" data-icon="pypi" aria-hidden="true"></i><span class="visually-hidden">PyPI</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item pst-sidebar-collapse"><button id="pst-collapse-sidebar-button" aria-expanded="true" aria-controls="pst-primary-sidebar">
+  <svg class="pst-icon" role="img" aria-hidden="true" focusable="false" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+    <path fill="currentColor" d="M3 15.5C2.36232 15.5 1.74874 15.2564 1.28478 14.8189C0.820828 14.3815 0.541576 13.7832 0.504167 13.1467L0.5 13L0.5 3C0.499965 2.36232 0.743605 1.74874 1.18107 1.28478C1.61854 0.820828 2.21676 0.541576 2.85333 0.504167L3 0.5L13 0.5C13.6377 0.499965 14.2513 0.743605 14.7152 1.18107C15.1792 1.61854 15.4584 2.21676 15.4958 2.85333L15.5 3L15.5 13C15.5 13.6377 15.2564 14.2513 14.8189 14.7152C14.3815 15.1792 13.7832 15.4584 13.1467 15.4958L13 15.5L3 15.5ZM3 13.8333L10.5 13.8333L10.5 2.16667L3 2.16667C2.79589 2.16669 2.59889 2.24163 2.44636 2.37726C2.29383 2.5129 2.19638 2.69979 2.1725 2.9025L2.16667 3L2.16667 13C2.16669 13.2041 2.24163 13.4011 2.37726 13.5536C2.5129 13.7062 2.69979 13.8036 2.9025 13.8275L3 13.8333ZM6.65583 10.325L6.5775 10.2558L4.91083 8.58917C4.76735 8.44567 4.68116 8.25476 4.66843 8.05223C4.65569 7.84971 4.71729 7.6495 4.84167 7.48917L4.91083 7.41083L6.5775 5.74417C6.72747 5.59471 6.9287 5.50794 7.14032 5.50148C7.35194 5.49502 7.55809 5.56935 7.7169 5.70937C7.8757 5.8494 7.97525 6.04463 7.99533 6.25539C8.01541 6.46616 7.95451 6.67667 7.825 6.84417L7.75583 6.9225L6.67917 8L7.75583 9.0775C7.89931 9.22099 7.98551 9.41191 7.99824 9.61443C8.01097 9.81695 7.94938 10.0172 7.825 10.1775L7.75583 10.2558C7.61234 10.3993 7.42142 10.4855 7.2189 10.4982C7.01638 10.511 6.81617 10.4494 6.65583 10.325Z"/>
+  </svg>
+  <span class="pst-collapse-sidebar-label">Collapse Sidebar</span>
+  <span class="pst-expand-sidebar-label">Expand Sidebar</span>
+</button></div>
+        <div class="sidebar-primary-item">
+
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><p aria-level="2" class="caption" role="heading"><span class="caption-text">Synthesis method introductions</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../synthesis/Eigendistortions.html">Eigendistortions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../synthesis/MAD_Competition_1.html">MAD Competition Conceptual Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../synthesis/MAD_Competition_2.html">MAD Competition Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../synthesis/Metamer.html">Metamers</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Models and metrics</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../models_and_metrics/Perceptual_distance.html">Perceptual distance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../models_and_metrics/Steerable_Pyramid.html">Steerable Pyramid</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../models_and_metrics/deep_nets.html">Using Deep Neural Networks with plenoptic</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../models_and_metrics/portilla_simoncelli/ps_index.html">Portilla-Simoncelli Texture Model</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../models_and_metrics/portilla_simoncelli/getting_started/index.html">Getting started</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../models_and_metrics/portilla_simoncelli/getting_started/ps_intro.html">What is a visual texture?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../models_and_metrics/portilla_simoncelli/getting_started/ps_basic_synthesis.html">Using the Portilla-Simoncelli model in plenoptic</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../models_and_metrics/portilla_simoncelli/understanding/index.html">Understanding the Model</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../models_and_metrics/portilla_simoncelli/understanding/ps_examples.html">Example Portilla-Simoncelli metamers from different texture classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../models_and_metrics/portilla_simoncelli/understanding/ps_understand_stats.html">Understanding Portilla-Simoncelli model statistics</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../models_and_metrics/portilla_simoncelli/technical_details/index.html">Technical details</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../models_and_metrics/portilla_simoncelli/technical_details/ps_optimization.html">Portilla-Simoncelli optimization details</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../models_and_metrics/portilla_simoncelli/technical_details/ps_limitations.html">Portilla-Simoncelli Model Limitations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../models_and_metrics/portilla_simoncelli/technical_details/ps_matlab_differences.html">Notable differences between Matlab and Plenoptic Implementations</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../models_and_metrics/portilla_simoncelli/advanced_usage/index.html">Advanced usage</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../models_and_metrics/portilla_simoncelli/advanced_usage/ps_extensions.html">More than just texture metamers</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Reproducing examples from the literature</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="Demo_Eigendistortion.html">Reproducing Berardino et al., 2017 (Eigendistortions)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Original_MAD.html">Reproducing Wang and Simoncelli, 2008 (MAD Competition)</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Reproducing ResNet50 Image Metamers from Feather et al., 2023</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Advanced Usage</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../advanced/Display.html">Display and animate functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/Synthesis_extensions.html">Extending existing synthesis objects</a></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../index.html" class="nav-link">User Guide</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Reproducing ResNet50 Image Metamers from Feather et al., 2023</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <div class="cell tag_hide-input docutils container">
+<details class="admonition hide above-input">
+<summary aria-label="Toggle hidden content">
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">pooch</span>
+
+<span class="c1"># don&#39;t have pooch output messages about downloading or untarring</span>
+<span class="n">logger</span> <span class="o">=</span> <span class="n">pooch</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span>
+<span class="n">logger</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="s2">&quot;WARNING&quot;</span><span class="p">)</span>
+
+<span class="c1"># don&#39;t need to show warning about setting up optimizer and scheduler</span>
+<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span>
+    <span class="s2">&quot;ignore&quot;</span><span class="p">,</span>
+    <span class="n">message</span><span class="o">=</span><span class="s2">&quot;You will need to call setup&quot;</span><span class="p">,</span>
+    <span class="n">category</span><span class="o">=</span><span class="ne">UserWarning</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</details>
+</div>
+<div class="important admonition">
+<p class="admonition-title">Run this notebook yourself!</p>
+<p>Download the executed notebook: <strong><a class="reference download internal" download="" href="../../_downloads/afeb5ba1292f9f5a40954bc5b559232c/feather2023.ipynb"><code class="xref download myst-nb docutils literal notranslate"><span class="pre">feather2023.ipynb</span></code></a></strong>!</p>
+<p>Run it in your browser: <strong><a class="binder reference external" href="https://mybinder.org/v2/gh/plenoptic-org/plenoptic-binder/HEAD?urlpath=%2Fdoc%2Ftree%2Fplenoptic%2Fnotebooks%2Ffeather2023.ipynb">feather2023.ipynb</a></strong>!</p>
+</div>
+<section class="tex2jax_ignore mathjax_ignore" id="reproducing-resnet50-image-metamers-from-feather-et-al-2023">
+<span id="feather2023"></span><h1>Reproducing ResNet50 Image Metamers from Feather et al., 2023<a class="headerlink" href="#reproducing-resnet50-image-metamers-from-feather-et-al-2023" title="Link to this heading">#</a></h1>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>This notebook requires the optional dependency <code class="docutils literal notranslate"><span class="pre">torchvision</span></code>, which can be installed with <code class="docutils literal notranslate"><span class="pre">pip</span></code>.</p>
+</div>
+<p>In this notebook, we will reproduce some of the model metamers presented in <span class="bibtex-citation" id="id1"><a class="reference internal" href="../../reference/citation.html#id21" title="Jenelle Feather, Guillaume Leclerc, Aleksander Mądry, and Josh H. McDermott. Model metamers reveal divergent invariances between biological and artificial neural networks. Nature Neuroscience, 26(11):2017-2034, oct 2023. URL: http://dx.doi.org/10.1038/s41593-023-01442-0, doi:10.1038/s41593-023-01442-0.">Feather <em>et al.</em>, 2023</a></span>: metamers for layers 2, 3, and 4 of the standard ImageNet-trained ResNet50, as shown in Figure 2e of that paper.</p>
+<div class="warning admonition">
+<p class="admonition-title">Using Deep Nets with plenoptic</p>
+<p>We strongly recommended reading <a class="reference internal" href="../models_and_metrics/deep_nets.html#deep-nets"><span class="std std-ref">Using Deep Neural Networks with plenoptic</span></a> before this notebook, to better understand the use of <a class="reference internal" href="../../api/generated/plenoptic.models.DeepNetFeatures.html#plenoptic.models.DeepNetFeatures" title="plenoptic.models.DeepNetFeatures"><code class="xref py py-class docutils literal notranslate"><span class="pre">DeepNetFeatures</span></code></a>.</p>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">plenoptic</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">po</span>
+
+<span class="c1"># this notebook uses torchvision, which is an optional dependency. if this import fails,</span>
+<span class="c1"># install torchvision in your plenoptic environment and restart the notebook kernel.</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">torchvision</span>
+<span class="k">except</span> <span class="ne">ModuleNotFoundError</span><span class="p">:</span>
+    <span class="k">raise</span> <span class="ne">ModuleNotFoundError</span><span class="p">(</span>
+        <span class="s2">&quot;optional dependency torchvision not found!&quot;</span>
+        <span class="s2">&quot; please install it in your plenoptic environment &quot;</span>
+        <span class="s2">&quot;and restart the notebook kernel&quot;</span>
+    <span class="p">)</span>
+
+
+<span class="n">DEVICE</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s2">&quot;cuda&quot;</span> <span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">()</span> <span class="k">else</span> <span class="s2">&quot;cpu&quot;</span><span class="p">)</span>
+
+<span class="c1"># so that relative sizes of axes created by po.plot.imshow and others look right</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s2">&quot;figure.dpi&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">72</span>
+
+<span class="c1"># set seed for reproducibility</span>
+<span class="n">po</span><span class="o">.</span><span class="n">set_seed</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="warning dropdown admonition">
+<p class="admonition-title">This notebook retrieves cached synthesis results</p>
+<p>The example metamers shown in this notebook takes about 15 minutes to synthesize on a GPU. Thus, instead of performing synthesis in this notebook, we have cached the result of it online and download them for investigation.</p>
+</div>
+<section id="prepare-model-and-image-for-synthesis">
+<h2>Prepare model and image for synthesis<a class="headerlink" href="#prepare-model-and-image-for-synthesis" title="Link to this heading">#</a></h2>
+<p>In the following block, we create a separate <a class="reference internal" href="../../api/generated/plenoptic.models.DeepNetFeatures.html#plenoptic.models.DeepNetFeatures" title="plenoptic.models.DeepNetFeatures"><code class="xref py py-class docutils literal notranslate"><span class="pre">DeepNetFeatures</span></code></a> model for each of layers 2, 3, and 4. We then prepare the image. Finally, we ensure that the model and image have the proper device and dtype, and remove the gradient from all model parameters. To learn more about any of these steps and why we take them, read <a class="reference internal" href="../models_and_metrics/deep_nets.html#deep-nets"><span class="std std-ref">Using Deep Neural Networks with plenoptic</span></a>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">weights</span> <span class="o">=</span> <span class="n">torchvision</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">ResNet50_Weights</span><span class="o">.</span><span class="n">IMAGENET1K_V1</span>
+<span class="n">deepnet</span> <span class="o">=</span> <span class="n">torchvision</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">resnet50</span><span class="p">(</span><span class="n">weights</span><span class="o">=</span><span class="n">weights</span><span class="p">)</span>
+<span class="n">deepnet</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
+<span class="n">transform</span> <span class="o">=</span> <span class="n">weights</span><span class="o">.</span><span class="n">transforms</span><span class="p">()</span>
+<span class="n">norm</span> <span class="o">=</span> <span class="n">torchvision</span><span class="o">.</span><span class="n">transforms</span><span class="o">.</span><span class="n">Normalize</span><span class="p">(</span><span class="n">transform</span><span class="o">.</span><span class="n">mean</span><span class="p">,</span> <span class="n">transform</span><span class="o">.</span><span class="n">std</span><span class="p">)</span>
+
+<span class="n">layers</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;layer2&quot;</span><span class="p">,</span> <span class="s2">&quot;layer3&quot;</span><span class="p">,</span> <span class="s2">&quot;layer4&quot;</span><span class="p">]</span>
+<span class="n">models</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">target_layer</span> <span class="ow">in</span> <span class="n">layers</span><span class="p">:</span>
+    <span class="n">models</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">po</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">DeepNetFeatures</span><span class="p">(</span><span class="n">deepnet</span><span class="p">,</span> <span class="n">target_layer</span><span class="p">,</span> <span class="n">norm</span><span class="p">))</span>
+
+<span class="n">img</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">macaque</span><span class="p">()</span>
+<span class="c1"># here we downsample the original image by a factor of 4 and then lop off the bottom.</span>
+<span class="c1"># that way, when we take the central 224 pixels in the following block, we end up with a</span>
+<span class="c1"># decent image.</span>
+<span class="n">img</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">process</span><span class="o">.</span><span class="n">blur_downsample</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="mi">2</span><span class="p">)[</span><span class="o">...</span><span class="p">,</span> <span class="p">:</span><span class="o">-</span><span class="mi">59</span><span class="p">,</span> <span class="p">:]</span>
+<span class="n">img</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">process</span><span class="o">.</span><span class="n">center_crop</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">transform</span><span class="o">.</span><span class="n">crop_size</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="c1"># po.plot.imshow(img, as_rgb=True);</span>
+
+<span class="n">img</span> <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">DEVICE</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">model</span> <span class="ow">in</span> <span class="n">models</span><span class="p">:</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">DEVICE</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+    <span class="n">po</span><span class="o">.</span><span class="n">remove_grad</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="initialize-and-load-metamer-objects">
+<h2>Initialize and load Metamer objects<a class="headerlink" href="#initialize-and-load-metamer-objects" title="Link to this heading">#</a></h2>
+<p>Now that our models and images are prepared, we can initialize our <a class="reference internal" href="../../api/generated/plenoptic.Metamer.html#plenoptic.Metamer" title="plenoptic.Metamer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Metamer</span></code></a> objects. We’ll then load in the cached output so we can examine the resulting metamers.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">metamers</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">model</span><span class="p">,</span> <span class="n">target_layer</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">models</span><span class="p">,</span> <span class="n">layers</span><span class="p">):</span>
+    <span class="n">met</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">Metamer</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">model</span><span class="p">)</span>
+    <span class="n">met</span><span class="o">.</span><span class="n">load</span><span class="p">(</span>
+        <span class="n">po</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">fetch_data</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;ResNet50-</span><span class="si">{</span><span class="n">target_layer</span><span class="si">}</span><span class="s2">_macaque_metamer.pt&quot;</span><span class="p">),</span>
+        <span class="n">map_location</span><span class="o">=</span><span class="n">DEVICE</span><span class="p">,</span>
+        <span class="n">tensor_equality_atol</span><span class="o">=</span><span class="mf">1e-6</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">metamers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">met</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<script type="application/vnd.jupyter.widget-view+json">{"version_major": 2, "version_minor": 0, "model_id": "912df526d69540aa90648af315149da1"}</script><script type="application/vnd.jupyter.widget-view+json">{"version_major": 2, "version_minor": 0, "model_id": "59f194e75a134689aefe4e266a536c24"}</script><script type="application/vnd.jupyter.widget-view+json">{"version_major": 2, "version_minor": 0, "model_id": "7b388d1cb061421d9853447da9925fe9"}</script></div>
+</div>
+<div class="dropdown note admonition">
+<p class="admonition-title">How to run this synthesis manually</p>
+<p>These hyperparameters are the ones that work best for this target image. They should make a good starting point for other images, but you are encouraged to play around with the learning rate and scheduler!</p>
+<p>Note that, as shown in the following block, <code class="docutils literal notranslate"><span class="pre">&quot;layer2&quot;</span></code> and <code class="docutils literal notranslate"><span class="pre">&quot;layer3&quot;</span></code> metamers were synthesized using the same hyperparameters, but we found better results for <code class="docutils literal notranslate"><span class="pre">&quot;layer4&quot;</span></code> with a slightly higher learning rate and slightly longer gaps before reducing learning rate size.</p>
+<p>In the following, <code class="docutils literal notranslate"><span class="pre">target_layer</span></code> is a string defining the layer we’re targeting. The following has been tested with all of <code class="docutils literal notranslate"><span class="pre">&quot;layer2&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;layer3&quot;</span></code>, and <code class="docutils literal notranslate"><span class="pre">&quot;layer4&quot;</span></code>:</p>
+<!-- TestFeatureExtractor.test_resnet_macaque_metamer -->
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">scheduler</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">lr_scheduler</span><span class="o">.</span><span class="n">StepLR</span>
+<span class="n">scheduler_kwargs</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;step_size&quot;</span><span class="p">:</span> <span class="mi">5000</span> <span class="k">if</span> <span class="n">target_layer</span> <span class="o">==</span> <span class="s2">&quot;layer4&quot;</span> <span class="k">else</span> <span class="mi">3000</span><span class="p">,</span>
+    <span class="s2">&quot;gamma&quot;</span><span class="p">:</span> <span class="mf">0.5</span>
+<span class="p">}</span>
+<span class="n">lr</span> <span class="o">=</span> <span class="mf">3e-2</span> <span class="k">if</span> <span class="n">target_layer</span> <span class="o">==</span> <span class="s2">&quot;layer4&quot;</span> <span class="k">else</span> <span class="mf">1e-2</span>
+<span class="n">met</span><span class="o">.</span><span class="n">setup</span><span class="p">(</span>
+    <span class="n">optimizer_kwargs</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;lr&quot;</span><span class="p">:</span> <span class="n">lr</span><span class="p">,</span> <span class="s2">&quot;amsgrad&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">},</span>
+    <span class="n">scheduler</span><span class="o">=</span><span class="n">scheduler</span><span class="p">,</span>
+    <span class="n">scheduler_kwargs</span><span class="o">=</span><span class="n">scheduler_kwargs</span>
+<span class="p">)</span>
+<span class="c1"># by setting stop_iters_to_check=max_iter, we ensure it keeps going through</span>
+<span class="c1"># all 12k iterations</span>
+<span class="n">met</span><span class="o">.</span><span class="n">synthesize</span><span class="p">(</span><span class="n">max_iter</span><span class="o">=</span><span class="mi">12000</span><span class="p">,</span> <span class="n">stop_iters_to_check</span><span class="o">=</span><span class="mi">12000</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>Note that the synthesis procedure we used differs somewhat with that of <span class="bibtex-citation" id="id2"><a class="reference internal" href="../../reference/citation.html#id21" title="Jenelle Feather, Guillaume Leclerc, Aleksander Mądry, and Josh H. McDermott. Model metamers reveal divergent invariances between biological and artificial neural networks. Nature Neuroscience, 26(11):2017-2034, oct 2023. URL: http://dx.doi.org/10.1038/s41593-023-01442-0, doi:10.1038/s41593-023-01442-0.">Feather <em>et al.</em>, 2023</a></span>. Our goal was to reproduce the ResNet50 metamers shown in the paper, not their exact procedure. Furthermore, we erred on the side of simplicity and so preferred plenoptic’s defaults where possible. The following table summarizes these differences:</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p></p></th>
+<th class="head"><p>Our example</p></th>
+<th class="head"><p>Feather et al., 2023</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Loss function</p></td>
+<td><p>Mean-squared error (plenoptic default)</p></td>
+<td><p>Euclidean distance, normalized by L2-norm of target representation</p></td>
+</tr>
+<tr class="row-odd"><td><p>Initial image</p></td>
+<td><p>Uniformly-distributed noise between 0 and 1 (plenoptic default)</p></td>
+<td><p>Normally-distributed noise with mean of 0.5 and standard deviation of 0.05</p></td>
+</tr>
+<tr class="row-even"><td><p>Number of iterations</p></td>
+<td><p>12,000</p></td>
+<td><p>24,000</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Like the paper, we do find better results when we use a learning-rate scheduler to halve the optimizer’s learning rate regularly, using <a class="reference external" href="https://docs.pytorch.org/docs/stable/generated/torch.optim.lr_scheduler.StepLR.html#torch.optim.lr_scheduler.StepLR" title="(in PyTorch v2.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">StepLR</span></code></a>, as described in the dropdown above.</p>
+<p>Now, let’s visualize the metamers for each of these layers:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">14</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">ax</span><span class="p">,</span> <span class="n">met</span><span class="p">,</span> <span class="n">target_layer</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">axes</span><span class="p">,</span> <span class="n">metamers</span><span class="p">,</span> <span class="n">layers</span><span class="p">):</span>
+    <span class="n">_</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">plot</span><span class="o">.</span><span class="n">synthesis_imshow</span><span class="p">(</span><span class="n">met</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="n">target_layer</span><span class="p">,</span> <span class="n">zoom</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Clipping input data to the valid range for imshow with RGB data ([0..1] for floats or [0..255] for integers). Got range [-6.0994378654044635e-05..0.9998934653801562].
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Clipping input data to the valid range for imshow with RGB data ([0..1] for floats or [0..255] for integers). Got range [-9.835890479956682e-05..0.9999884848957512].
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Clipping input data to the valid range for imshow with RGB data ([0..1] for floats or [0..255] for integers). Got range [-0.0007176468298579246..1.0004567192821816].
+</pre></div>
+</div>
+<img alt="../../_images/4c1c02f03047c97a8641392a554ef43cfc04ce0814400ae2d5470173947109da.png" src="../../_images/4c1c02f03047c97a8641392a554ef43cfc04ce0814400ae2d5470173947109da.png" />
+</div>
+</div>
+<p>In the above figure, we can see that our metamers look similar to those in <span class="bibtex-citation" id="id3"><a class="reference internal" href="../../reference/citation.html#id21" title="Jenelle Feather, Guillaume Leclerc, Aleksander Mądry, and Josh H. McDermott. Model metamers reveal divergent invariances between biological and artificial neural networks. Nature Neuroscience, 26(11):2017-2034, oct 2023. URL: http://dx.doi.org/10.1038/s41593-023-01442-0, doi:10.1038/s41593-023-01442-0.">Feather <em>et al.</em>, 2023</a></span>, figure 2e: the layer 2 metamer looks almost identical to the target image, the layer 3 metamer starts to add RGB noise, and the layer 4 has started to lose much of the structure in random RGB noise.</p>
+</section>
+<section id="synthesis-success">
+<span id="feather-synthesis-success"></span><h2>Synthesis success?<a class="headerlink" href="#synthesis-success" title="Link to this heading">#</a></h2>
+<p>As indicated in the table above, the examples shown in the notebook only ran for 12,000 iterations of synthesis, whereas the metamers in <span class="bibtex-citation" id="id4"><a class="reference internal" href="../../reference/citation.html#id21" title="Jenelle Feather, Guillaume Leclerc, Aleksander Mądry, and Josh H. McDermott. Model metamers reveal divergent invariances between biological and artificial neural networks. Nature Neuroscience, 26(11):2017-2034, oct 2023. URL: http://dx.doi.org/10.1038/s41593-023-01442-0, doi:10.1038/s41593-023-01442-0.">Feather <em>et al.</em>, 2023</a></span> ran for twice that. Due to differences in the optimization procedure, it’s not easy to directly interpret what this means. What we would like to know is whether synthesis has succeeded in these examples. The metamer loss (as stored in <a class="reference internal" href="../../api/generated/plenoptic.Metamer.html#plenoptic.Metamer.losses" title="plenoptic.Metamer.losses"><code class="xref py py-attr docutils literal notranslate"><span class="pre">plenoptic.Metamer.losses</span></code></a>) measures the difference between the target image and the model metamer, but is difficult to interpret. Is <span class="math notranslate nohighlight">\(10^{-6}\)</span> small enough?</p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p>See <a class="reference internal" href="../models_and_metrics/portilla_simoncelli/technical_details/ps_optimization.html#good-enough"><span class="std std-ref">What is a “good” metamer?</span></a> for another approach to this question.</p>
+</div>
+<p>The authors of <span class="bibtex-citation" id="id5"><a class="reference internal" href="../../reference/citation.html#id21" title="Jenelle Feather, Guillaume Leclerc, Aleksander Mądry, and Josh H. McDermott. Model metamers reveal divergent invariances between biological and artificial neural networks. Nature Neuroscience, 26(11):2017-2034, oct 2023. URL: http://dx.doi.org/10.1038/s41593-023-01442-0, doi:10.1038/s41593-023-01442-0.">Feather <em>et al.</em>, 2023</a></span> define two criteria for synthesis success. Quoting from the Methods section, pdf page 19:</p>
+<ul class="simple">
+<li><p>First, “the activations for the model metamer had to be matched to those for the signal better than would be expected by chance”. To do this, they compared the activity at the target layer for the model metamer and the target image using three metrics: Spearman <span class="math notranslate nohighlight">\(\rho\)</span>, Pearson <span class="math notranslate nohighlight">\(R^2\)</span>, and the signal-to-noise ratio. They then used these same metrics to generate a null distribution between 1,000,000 randomly chosen image pairs from the training dataset, and ensured that the model metamer fell outside this distribution.</p></li>
+<li><p>Second, “the models had to produce the same class label for the model metamer and the natural signal”.</p></li>
+</ul>
+<p>Without the null distributions of these three metrics, we cannot check the first criterion in this notebook. We note this criterion to point out that you should use a similar check when synthesizing your own model metamers for an experiment.</p>
+<p>We can check the second one. Let’s define a little helper function to return ResNet50’s classification of an image. Fortunately for us, <code class="docutils literal notranslate"><span class="pre">torchvision</span></code> stores the image category labels along with the model weights:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">imagenet_categories</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">weights</span><span class="o">.</span><span class="n">meta</span><span class="p">[</span><span class="s2">&quot;categories&quot;</span><span class="p">])</span>
+<span class="c1"># Move deepnet to float64 since we know our images are all float64</span>
+<span class="n">deepnet</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">DEVICE</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">get_category</span><span class="p">(</span><span class="n">image</span><span class="p">):</span>
+    <span class="c1"># Get probabilities of each image category</span>
+    <span class="n">image_cat</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">functional</span><span class="o">.</span><span class="n">softmax</span><span class="p">(</span><span class="n">deepnet</span><span class="p">(</span><span class="n">norm</span><span class="p">(</span><span class="n">image</span><span class="p">)),</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="c1"># Convert to 1d numpy array, so we can use as index in</span>
+    <span class="c1"># imagenet_categories above.</span>
+    <span class="n">image_cat</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">(</span><span class="n">image_cat</span><span class="o">.</span><span class="n">squeeze</span><span class="p">())</span>
+    <span class="k">return</span> <span class="n">imagenet_categories</span><span class="p">[</span><span class="n">image_cat</span><span class="o">.</span><span class="n">argmax</span><span class="p">()]</span>
+
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Target image category: </span><span class="si">{</span><span class="n">get_category</span><span class="p">(</span><span class="n">img</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">met</span><span class="p">,</span> <span class="n">target_layer</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">metamers</span><span class="p">,</span> <span class="n">layers</span><span class="p">):</span>
+    <span class="n">met_cat</span> <span class="o">=</span> <span class="n">get_category</span><span class="p">(</span><span class="n">met</span><span class="o">.</span><span class="n">metamer</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">target_layer</span><span class="si">}</span><span class="s2"> metamer category: </span><span class="si">{</span><span class="n">met_cat</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Target image category: guenon
+layer2 metamer category: guenon
+layer3 metamer category: guenon
+layer4 metamer category: guenon
+</pre></div>
+</div>
+</div>
+</div>
+<p>We can see that all three of the above metamers are classified as the same category as the target image, a <a class="reference external" href="https://en.wikipedia.org/wiki/Guenon">guenon</a>. (Though guenon isn’t the actual species of the monkey in question (a <a class="reference external" href="https://en.wikipedia.org/wiki/Celebes_crested_macaque">Celebes crested macaque</a>), it’s another Old World monkey, and a reasonable category for it.)</p>
+<p>In this notebook we have demonstrated how to use plenoptic to synthesize image metamers for several ResNet50 layers, as done in <span class="bibtex-citation" id="id6"><a class="reference internal" href="../../reference/citation.html#id21" title="Jenelle Feather, Guillaume Leclerc, Aleksander Mądry, and Josh H. McDermott. Model metamers reveal divergent invariances between biological and artificial neural networks. Nature Neuroscience, 26(11):2017-2034, oct 2023. URL: http://dx.doi.org/10.1038/s41593-023-01442-0, doi:10.1038/s41593-023-01442-0.">Feather <em>et al.</em>, 2023</a></span>. That paper contains much more than these metamers (including audio metamers, the effect of deep net training, and many experiments with humans), so if you are interested in learning more, we encourage you to give it a read!</p>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="Original_MAD.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Reproducing Wang and Simoncelli, 2008 (MAD Competition)</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../advanced/Display.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Display and animate functions</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#prepare-model-and-image-for-synthesis">Prepare model and image for synthesis</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#initialize-and-load-metamer-objects">Initialize and load Metamer objects</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#synthesis-success">Synthesis success?</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9"></script>
+<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2019-2025, Plenoptic authors.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.1.0.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.20.0.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>
