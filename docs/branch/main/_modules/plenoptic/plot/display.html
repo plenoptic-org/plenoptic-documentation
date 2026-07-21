@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>plenoptic.plot.display &#8212; plenoptic 0.0.1.dev28 documentation</title>
+    <title>plenoptic.plot.display &#8212; plenoptic 0.0.1.dev34 documentation</title>
   
   
   
@@ -43,7 +43,7 @@
   <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9" />
 <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9" />
 
-    <script src="../../../_static/documentation_options.js?v=da43de0f"></script>
+    <script src="../../../_static/documentation_options.js?v=616e27e3"></script>
     <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -141,8 +141,8 @@
       
     
     
-    <img src="../../../_static/Plenoptic_Logo_CMYK_Full_Wide.svg" class="logo__image only-light" alt="plenoptic 0.0.1.dev28 documentation - Home"/>
-    <img src="../../../_static/Plenoptic_Logo_CMYK_Full_DarkMode_Wide.svg" class="logo__image only-dark pst-js-only" alt="plenoptic 0.0.1.dev28 documentation - Home"/>
+    <img src="../../../_static/Plenoptic_Logo_CMYK_Full_Wide.svg" class="logo__image only-light" alt="plenoptic 0.0.1.dev34 documentation - Home"/>
+    <img src="../../../_static/Plenoptic_Logo_CMYK_Full_DarkMode_Wide.svg" class="logo__image only-dark pst-js-only" alt="plenoptic 0.0.1.dev34 documentation - Home"/>
   
   
 </a></div>
@@ -1532,12 +1532,17 @@
     <span class="k">return</span> <span class="n">stem_container</span>
 
 
-<span class="k">def</span><span class="w"> </span><span class="nf">_rescale_ylim</span><span class="p">(</span><span class="n">axes</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">mpl</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">Axes</span><span class="p">],</span> <span class="n">data</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_rescale_ylim</span><span class="p">(</span>
+    <span class="n">axes</span><span class="p">:</span> <span class="n">mpl</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">Axes</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="n">mpl</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">Axes</span><span class="p">],</span> <span class="n">data</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span>
+<span class="p">):</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Rescale y-limits nicely.</span>
 
 <span class="sd">    We take the axes and set their limits to be ``(-y_max, y_max)``,</span>
 <span class="sd">    where ``y_max=np.abs(data).max()``.</span>
+
+<span class="sd">    If one of the axes object has an image artist (e.g., if ``len(ax.images)``), then we</span>
+<span class="sd">    skip it.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -1546,7 +1551,9 @@
 <span class="sd">    data</span>
 <span class="sd">        The data to use when rescaling (or a dictionary of such values).</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">to_numpy</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">axes</span><span class="p">,</span> <span class="s2">&quot;__iter__&quot;</span><span class="p">):</span>
+        <span class="n">axes</span> <span class="o">=</span> <span class="p">[</span><span class="n">axes</span><span class="p">]</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">find_ymax</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -1575,6 +1582,9 @@
         <span class="c1"># then this is a dictionary</span>
         <span class="n">y_max</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">([</span><span class="n">find_ymax</span><span class="p">(</span><span class="n">d</span><span class="p">)</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">values</span><span class="p">()])</span>
     <span class="k">for</span> <span class="n">ax</span> <span class="ow">in</span> <span class="n">axes</span><span class="p">:</span>
+        <span class="c1"># don&#39;t try to update ylim on image axes, does weird things</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">images</span><span class="p">):</span>
+            <span class="k">continue</span>
         <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">((</span><span class="o">-</span><span class="n">y_max</span><span class="p">,</span> <span class="n">y_max</span><span class="p">))</span>
 
 
@@ -1792,9 +1802,15 @@
     <span class="n">data</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span> <span class="o">|</span> <span class="nb">dict</span><span class="p">,</span>
     <span class="n">model</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">batch_idx</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="n">rescale_ylim</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Update the information in some axes (for an animation).</span>
+
+<span class="sd">    .. versionchanged:: 2.1</span>
+<span class="sd">       Adds ``rescale_ylim`` argument, which determines whether we rescale y-limits</span>
+<span class="sd">       or not (only for axes without images). This argument is also passed to</span>
+<span class="sd">       ``model.update_plot``.</span>
 
 <span class="sd">    This is used for creating an animation over time. In order to create the animation,</span>
 <span class="sd">    we need to know how to update the matplotlib Artists, and this provides a simple way</span>
@@ -1819,8 +1835,9 @@
 <span class="sd">      dictionary with the same number of keys as ``axes``, which we can iterate through</span>
 <span class="sd">      in order, and whose values are :class:`torch.Tensor`.</span>
 
-<span class="sd">    In all cases, ``data`` Tensors should be 3d (if the plot we&#39;re updating is a</span>
-<span class="sd">    line or stem plot) or 4d (if it&#39;s an image or scatter plot).</span>
+<span class="sd">    In both cases, ``data`` Tensors should be 3d (if the plot we&#39;re updating is a line</span>
+<span class="sd">    or stem plot) or 4d (if it&#39;s an image or scatter plot). The only exception for this</span>
+<span class="sd">    is if ``model`` is set and knows how to handle tensors of different dimensionality.</span>
 
 <span class="sd">    RGB(A) images are special, since we store that info along the channel</span>
 <span class="sd">    dimension, so they only work with single-axis mode (which will only have a</span>
@@ -1832,9 +1849,10 @@
 <span class="sd">    :func:`plenoptic.models.PortillaSimoncelli.update_plot`</span>
 <span class="sd">    for an example).</span>
 
-<span class="sd">    If ``model`` is set, we try to call ``model.update_plot()`` (which must also return</span>
-<span class="sd">    artists). If ``model`` doesn&#39;t have an ``update_plot`` method, then we try to figure</span>
-<span class="sd">    out how to update the axes ourselves, based on the shape of the data.</span>
+<span class="sd">    If ``model`` is set, we try to call ``model.update_plot(axes, batch_idx, data,</span>
+<span class="sd">    rescale_ylim)`` (which must also return artists). If ``model`` doesn&#39;t have an</span>
+<span class="sd">    ``update_plot`` method, then we try to figure out how to update the axes ourselves,</span>
+<span class="sd">    based on the shape of the data.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -1849,6 +1867,8 @@
 <span class="sd">        behavior if ``None``.</span>
 <span class="sd">    batch_idx</span>
 <span class="sd">        Which index to take from the batch dimension.</span>
+<span class="sd">    rescale_ylim</span>
+<span class="sd">        Whether to rescale the ylimits or not.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -1861,24 +1881,26 @@
 <span class="sd">    ValueError</span>
 <span class="sd">        If ``data`` (or its values, if it&#39;s a ``dict``) are not 3 or 4 dimensional.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
-        <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
-            <span class="k">if</span> <span class="n">v</span><span class="o">.</span><span class="n">ndim</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">]:</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">artists</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">update_plot</span><span class="p">(</span>
+            <span class="n">axes</span><span class="o">=</span><span class="n">axes</span><span class="p">,</span> <span class="n">batch_idx</span><span class="o">=</span><span class="n">batch_idx</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span> <span class="n">rescale_ylim</span><span class="o">=</span><span class="n">rescale_ylim</span>
+        <span class="p">)</span>
+    <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+                <span class="k">if</span> <span class="n">v</span><span class="o">.</span><span class="n">ndim</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">]:</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                        <span class="s2">&quot;update_plot expects 3 or 4 dimensional data&quot;</span>
+                        <span class="s2">&quot;; unexpected behavior will result otherwise!&quot;</span>
+                        <span class="sa">f</span><span class="s2">&quot; Got data of shape </span><span class="si">{</span><span class="n">v</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span>
+                    <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">data</span><span class="o">.</span><span class="n">ndim</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">]:</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
                     <span class="s2">&quot;update_plot expects 3 or 4 dimensional data&quot;</span>
                     <span class="s2">&quot;; unexpected behavior will result otherwise!&quot;</span>
-                    <span class="sa">f</span><span class="s2">&quot; Got data of shape </span><span class="si">{</span><span class="n">v</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot; Got data of shape </span><span class="si">{</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span>
                 <span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">data</span><span class="o">.</span><span class="n">ndim</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">]:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="s2">&quot;update_plot expects 3 or 4 dimensional data&quot;</span>
-                <span class="s2">&quot;; unexpected behavior will result otherwise!&quot;</span>
-                <span class="sa">f</span><span class="s2">&quot; Got data of shape </span><span class="si">{</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span>
-            <span class="p">)</span>
-    <span class="k">try</span><span class="p">:</span>
-        <span class="n">artists</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">update_plot</span><span class="p">(</span><span class="n">axes</span><span class="o">=</span><span class="n">axes</span><span class="p">,</span> <span class="n">batch_idx</span><span class="o">=</span><span class="n">batch_idx</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
-    <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
         <span class="n">ax_artists</span> <span class="o">=</span> <span class="n">_get_artists_from_axes</span><span class="p">(</span><span class="n">axes</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
         <span class="n">artists</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
@@ -1938,6 +1960,8 @@
                 <span class="c1"># in channel, but for images, it should be at the end</span>
                 <span class="n">art</span><span class="o">.</span><span class="n">set_data</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">moveaxis</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">))</span>
                 <span class="n">artists</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">art</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">rescale_ylim</span><span class="p">:</span>
+            <span class="n">_rescale_ylim</span><span class="p">(</span><span class="n">axes</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">([</span><span class="n">v</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">values</span><span class="p">()]))</span>
     <span class="c1"># make sure to always return a list</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">artists</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
         <span class="n">artists</span> <span class="o">=</span> <span class="p">[</span><span class="n">artists</span><span class="p">]</span>
@@ -1956,9 +1980,16 @@
     <span class="n">batch_idx</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
     <span class="n">title</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
     <span class="n">as_rgb</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">axes_direction</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;horizontal&quot;</span><span class="p">,</span> <span class="s2">&quot;vertical&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;horizontal&quot;</span><span class="p">,</span>
+    <span class="n">gridspec_kwargs</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">mpl</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">Axes</span><span class="p">]:</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Plot model representation.</span>
+
+<span class="sd">    .. versionchanged:: 2.1</span>
+
+<span class="sd">       Adds ``axes_direction``, ``gridspec_kwargs`` arguments, supports data argument</span>
+<span class="sd">       containing both 3d and 4d values in same dictionary.</span>
 
 <span class="sd">    We try to plot ``data`` on ``ax``, using the ``model.plot_representation`` method,</span>
 <span class="sd">    if it has it, and otherwise use a function that makes sense based on the</span>
@@ -2012,6 +2043,12 @@
 <span class="sd">        model has its own plot_representation_error() method. Else, it will</span>
 <span class="sd">        be passed to :func:`~plenoptic.plot.imshow`, see that method&#39;s</span>
 <span class="sd">        docstring for details.</span>
+<span class="sd">    axes_direction</span>
+<span class="sd">        When creating multiple axes, whether those axes should be placed</span>
+<span class="sd">        horizontally or vertically.</span>
+<span class="sd">    gridspec_kwargs</span>
+<span class="sd">        Dictionary of kwargs to pass to</span>
+<span class="sd">        :external+matplotlib:class:`matplotlib.gridspec.GridSpec`.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -2073,27 +2110,44 @@
         <span class="c1"># want to make sure the axis we&#39;re taking over is basically invisible.</span>
         <span class="n">ax</span> <span class="o">=</span> <span class="n">_clean_up_axes</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;top&quot;</span><span class="p">,</span> <span class="s2">&quot;right&quot;</span><span class="p">,</span> <span class="s2">&quot;bottom&quot;</span><span class="p">,</span> <span class="s2">&quot;left&quot;</span><span class="p">],</span> <span class="p">[</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="s2">&quot;y&quot;</span><span class="p">])</span>
         <span class="n">axes</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">values</span><span class="p">())[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
-            <span class="c1"># then this is &#39;vector-like&#39;</span>
-            <span class="n">gs</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">get_subplotspec</span><span class="p">()</span><span class="o">.</span><span class="n">subgridspec</span><span class="p">(</span>
-                <span class="nb">min</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)),</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">/</span> <span class="mi">4</span><span class="p">))</span>
-            <span class="p">)</span>
-            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">items</span><span class="p">()):</span>
-                <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="n">gs</span><span class="p">[</span><span class="n">i</span> <span class="o">%</span> <span class="mi">4</span><span class="p">,</span> <span class="n">i</span> <span class="o">//</span> <span class="mi">4</span><span class="p">])</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">round_down</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">x</span> <span class="o">//</span> <span class="mi">4</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">modulo</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">x</span> <span class="o">%</span> <span class="mi">4</span>
+
+        <span class="k">if</span> <span class="n">axes_direction</span> <span class="o">==</span> <span class="s2">&quot;horizontal&quot;</span><span class="p">:</span>
+            <span class="n">n_rows</span><span class="p">,</span> <span class="n">n_cols</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">/</span> <span class="mi">4</span><span class="p">)),</span> <span class="nb">min</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">))</span>
+            <span class="n">get_row</span> <span class="o">=</span> <span class="n">modulo</span>
+            <span class="n">get_col</span> <span class="o">=</span> <span class="n">round_down</span>
+        <span class="k">elif</span> <span class="n">axes_direction</span> <span class="o">==</span> <span class="s2">&quot;vertical&quot;</span><span class="p">:</span>
+            <span class="n">n_cols</span><span class="p">,</span> <span class="n">n_rows</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">/</span> <span class="mi">4</span><span class="p">)),</span> <span class="nb">min</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">))</span>
+            <span class="n">get_col</span> <span class="o">=</span> <span class="n">modulo</span>
+            <span class="n">get_row</span> <span class="o">=</span> <span class="n">round_down</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Don&#39;t know how to handle </span><span class="si">{</span><span class="n">axes_direction</span><span class="si">=}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">gridspec_kwargs</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">gridspec_kwargs</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">gs</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">get_subplotspec</span><span class="p">()</span><span class="o">.</span><span class="n">subgridspec</span><span class="p">(</span><span class="n">n_rows</span><span class="p">,</span> <span class="n">n_cols</span><span class="p">,</span> <span class="o">**</span><span class="n">gridspec_kwargs</span><span class="p">)</span>
+
+        <span class="c1"># only include 3d (vector-like) data for rescale, not 4d (image-like)</span>
+        <span class="n">data_for_rescale</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">items</span><span class="p">()):</span>
+            <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="n">gs</span><span class="p">[</span><span class="n">get_col</span><span class="p">(</span><span class="n">i</span><span class="p">),</span> <span class="n">get_row</span><span class="p">(</span><span class="n">i</span><span class="p">)])</span>
+
+            <span class="k">if</span> <span class="n">v</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+                <span class="c1"># then this is &#39;vector-like&#39;</span>
                 <span class="c1"># only plot the specified batch, but plot each channel</span>
                 <span class="c1"># in a separate call. there should probably only be one,</span>
                 <span class="c1"># and if there&#39;s not you probably want to do things</span>
                 <span class="c1"># differently</span>
                 <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">v</span><span class="p">[</span><span class="n">batch_idx</span><span class="p">]:</span>
                     <span class="n">ax</span> <span class="o">=</span> <span class="n">stem_plot</span><span class="p">(</span><span class="n">to_numpy</span><span class="p">(</span><span class="n">d</span><span class="p">),</span> <span class="n">ax</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">ylim</span><span class="p">)</span>
-                <span class="n">axes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ax</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">values</span><span class="p">())[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
-            <span class="c1"># then this is &#39;image-like&#39;</span>
-            <span class="n">gs</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">get_subplotspec</span><span class="p">()</span><span class="o">.</span><span class="n">subgridspec</span><span class="p">(</span>
-                <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">/</span> <span class="mi">4</span><span class="p">)),</span> <span class="nb">min</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">))</span>
-            <span class="p">)</span>
-            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">items</span><span class="p">()):</span>
-                <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="n">gs</span><span class="p">[</span><span class="n">i</span> <span class="o">//</span> <span class="mi">4</span><span class="p">,</span> <span class="n">i</span> <span class="o">%</span> <span class="mi">4</span><span class="p">])</span>
+                <span class="n">data_for_rescale</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span>
+
+            <span class="k">elif</span> <span class="n">v</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
                 <span class="n">ax</span> <span class="o">=</span> <span class="n">_clean_up_axes</span><span class="p">(</span>
                     <span class="n">ax</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;top&quot;</span><span class="p">,</span> <span class="s2">&quot;right&quot;</span><span class="p">,</span> <span class="s2">&quot;bottom&quot;</span><span class="p">,</span> <span class="s2">&quot;left&quot;</span><span class="p">],</span> <span class="p">[</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="s2">&quot;y&quot;</span><span class="p">]</span>
                 <span class="p">)</span>
@@ -2106,16 +2160,21 @@
                     <span class="n">vrange</span><span class="o">=</span><span class="s2">&quot;indep0&quot;</span><span class="p">,</span>
                     <span class="n">as_rgb</span><span class="o">=</span><span class="n">as_rgb</span><span class="p">,</span>
                 <span class="p">)</span>
-                <span class="n">axes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ax</span><span class="p">)</span>
-            <span class="c1"># because we&#39;re plotting image data, don&#39;t want to change</span>
-            <span class="c1"># ylim at all</span>
-            <span class="n">ylim</span> <span class="o">=</span> <span class="kc">False</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Don&#39;t know what to do with data of shape </span><span class="si">{</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">ylim</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
-            <span class="n">data</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">values</span><span class="p">()),</span> <span class="n">dim</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-        <span class="n">_rescale_ylim</span><span class="p">(</span><span class="n">axes</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Don&#39;t know what to do with data with </span><span class="si">{</span><span class="n">v</span><span class="o">.</span><span class="n">ndim</span><span class="si">=}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+            <span class="n">axes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ax</span><span class="p">)</span>
+
+        <span class="n">data</span> <span class="o">=</span> <span class="n">data_for_rescale</span>
+
+    <span class="k">if</span> <span class="n">ylim</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">model</span><span class="o">.</span><span class="n">update_plot</span><span class="p">(</span><span class="n">axes</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">batch_idx</span><span class="p">,</span> <span class="n">rescale_ylim</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+                <span class="n">data</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">([</span><span class="n">v</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">values</span><span class="p">()],</span> <span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+            <span class="n">_rescale_ylim</span><span class="p">(</span><span class="n">axes</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">axes</span></div>
 
 

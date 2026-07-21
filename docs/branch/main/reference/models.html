@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Model requirements &#8212; plenoptic 0.0.1.dev28 documentation</title>
+    <title>Model requirements &#8212; plenoptic 0.0.1.dev34 documentation</title>
   
   
   
@@ -44,7 +44,7 @@
   <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9" />
 <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9" />
 
-    <script src="../_static/documentation_options.js?v=da43de0f"></script>
+    <script src="../_static/documentation_options.js?v=616e27e3"></script>
     <script src="../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -144,8 +144,8 @@
       
     
     
-    <img src="../_static/Plenoptic_Logo_CMYK_Full_Wide.svg" class="logo__image only-light" alt="plenoptic 0.0.1.dev28 documentation - Home"/>
-    <img src="../_static/Plenoptic_Logo_CMYK_Full_DarkMode_Wide.svg" class="logo__image only-dark pst-js-only" alt="plenoptic 0.0.1.dev28 documentation - Home"/>
+    <img src="../_static/Plenoptic_Logo_CMYK_Full_Wide.svg" class="logo__image only-light" alt="plenoptic 0.0.1.dev34 documentation - Home"/>
+    <img src="../_static/Plenoptic_Logo_CMYK_Full_DarkMode_Wide.svg" class="logo__image only-dark pst-js-only" alt="plenoptic 0.0.1.dev34 documentation - Home"/>
   
   
 </a></div>
@@ -546,13 +546,16 @@
 </ul>
 </li>
 <li><p>the above transformation must be differentiable by <a class="reference external" href="https://docs.pytorch.org/docs/stable/index.html" title="PyTorch 2.13">torch</a>. In practice, this generally means you perform all computations using <a class="reference external" href="https://docs.pytorch.org/docs/stable/torch.html" title="PyTorch 2.13">torch functions</a> (unless you want to write a custom <code class="docutils literal notranslate"><span class="pre">backward</span></code> method).</p></li>
+</ol>
+<ol class="arabic simple" id="remove-grad-doc" start="4">
 <li><p>must not have any learnable parameters. This is largely to save time by avoiding calculation of unnecessary gradients, but synthesis is performed with a <strong>fixed</strong> model — we are optimizing the input, not the model parameters. You can use the helper function <a class="reference internal" href="../api/generated/plenoptic.remove_grad.html#plenoptic.remove_grad" title="plenoptic.remove_grad"><code class="xref py py-func docutils literal notranslate"><span class="pre">remove_grad</span></code></a> to detach all parameters. Similarly, your model should probably be in evaluation mode (i.e., call <code class="docutils literal notranslate"><span class="pre">model.eval</span></code>), though this is not strictly required. See the <a class="reference external" href="https://pytorch.org/docs/stable/notes/autograd.html#locally-disable-grad-doc">pytorch documentation</a> for the difference between evaluation mode and disabling gradient computation.</p></li>
 <li><p>finally, your model inputs and outputs should be real- or complex-valued and should be <em>interpretable</em> for all possible values (within some range). The intention of stimulus synthesis is to facilitate model understanding — if the synthesized stimulus are meaningless, this defeats the purpose. (Note that domain restrictions, such as requiring integer-valued inputs, can probably be accomplished by adding a penalty to an objective function, but will make optimization harder.)</p></li>
 </ol>
+<p>Additionally, if you model has a <code class="docutils literal notranslate"><span class="pre">plot_representation</span></code> <!-- skip-lint --> method, it will be compatible with our existing plotting methods. See <a class="reference internal" href="../user_guide/advanced/Display.html#model-plot-rep"><span class="std std-ref">More complicated model representation plots</span></a> for more details.</p>
 <section id="compatibility-with-coarse-to-fine-synthesis">
 <span id="models-coarse-to-fine"></span><h2>Compatibility with coarse-to-fine synthesis<a class="headerlink" href="#compatibility-with-coarse-to-fine-synthesis" title="Link to this heading">#</a></h2>
 <p><a class="reference internal" href="../api/generated/plenoptic.MetamerCTF.html#plenoptic.MetamerCTF" title="plenoptic.MetamerCTF"><code class="xref py py-class docutils literal notranslate"><span class="pre">MetamerCTF</span></code></a> implements
-coarse-to-fine synthesis, as described in <span class="bibtex-citation" id="id1"><a class="reference internal" href="citation.html#id27" title="Javier Portilla and Eero P Simoncelli. A parametric texture model based on joint statistics of complex wavelet coefficients. International journal of computer vision, 40(1):49–70, 2000.">Portilla and Simoncelli, 2000</a></span>. To make use of coarse-to-fine synthesis, your model must meet the following additional requirements (use the <a class="reference internal" href="../api/generated/plenoptic.validate.validate_coarse_to_fine.html#plenoptic.validate.validate_coarse_to_fine" title="plenoptic.validate.validate_coarse_to_fine"><code class="xref py py-func docutils literal notranslate"><span class="pre">validate_coarse_to_fine</span></code></a> function to check and see <a class="reference internal" href="../api/generated/plenoptic.models.PortillaSimoncelli.html#plenoptic.models.PortillaSimoncelli" title="plenoptic.models.PortillaSimoncelli"><code class="xref py py-class docutils literal notranslate"><span class="pre">PortillaSimoncelli</span></code></a> for an example):</p>
+coarse-to-fine synthesis, as described in <span class="bibtex-citation" id="id1"><a class="reference internal" href="citation.html#id28" title="Javier Portilla and Eero P Simoncelli. A parametric texture model based on joint statistics of complex wavelet coefficients. International journal of computer vision, 40(1):49–70, 2000.">Portilla and Simoncelli, 2000</a></span>. To make use of coarse-to-fine synthesis, your model must meet the following additional requirements (use the <a class="reference internal" href="../api/generated/plenoptic.validate.validate_coarse_to_fine.html#plenoptic.validate.validate_coarse_to_fine" title="plenoptic.validate.validate_coarse_to_fine"><code class="xref py py-func docutils literal notranslate"><span class="pre">validate_coarse_to_fine</span></code></a> function to check and see <a class="reference internal" href="../api/generated/plenoptic.models.PortillaSimoncelli.html#plenoptic.models.PortillaSimoncelli" title="plenoptic.models.PortillaSimoncelli"><code class="xref py py-class docutils literal notranslate"><span class="pre">PortillaSimoncelli</span></code></a> for an example):</p>
 <ol class="arabic simple">
 <li><p>the model must have a <code class="docutils literal notranslate"><span class="pre">scales</span></code> <!-- skip-lint --> attribute.</p></li>
 <li><p>addition to a <a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="PyTorch 2.13"><code class="iref myst docutils literal notranslate"><span class="pre">torch.Tensor</span></code></a>, the <code class="docutils literal notranslate"><span class="pre">forward</span></code> <!-- skip-lint --> method must also be able to accept an optional <code class="docutils literal notranslate"><span class="pre">scales</span></code> argument (equivalently, when calling the model, if the model does not inherit <a class="reference external" href="https://docs.pytorch.org/docs/stable/generated/torch.nn.Module.html#torch.nn.Module" title="PyTorch 2.13"><code class="iref myst docutils literal notranslate"><span class="pre">torch.nn.Module</span></code></a>).</p></li>

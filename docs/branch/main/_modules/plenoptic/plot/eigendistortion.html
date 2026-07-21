@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>plenoptic.plot.eigendistortion &#8212; plenoptic 0.0.1.dev28 documentation</title>
+    <title>plenoptic.plot.eigendistortion &#8212; plenoptic 0.0.1.dev34 documentation</title>
   
   
   
@@ -43,7 +43,7 @@
   <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9" />
 <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9" />
 
-    <script src="../../../_static/documentation_options.js?v=da43de0f"></script>
+    <script src="../../../_static/documentation_options.js?v=616e27e3"></script>
     <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -141,8 +141,8 @@
       
     
     
-    <img src="../../../_static/Plenoptic_Logo_CMYK_Full_Wide.svg" class="logo__image only-light" alt="plenoptic 0.0.1.dev28 documentation - Home"/>
-    <img src="../../../_static/Plenoptic_Logo_CMYK_Full_DarkMode_Wide.svg" class="logo__image only-dark pst-js-only" alt="plenoptic 0.0.1.dev28 documentation - Home"/>
+    <img src="../../../_static/Plenoptic_Logo_CMYK_Full_Wide.svg" class="logo__image only-light" alt="plenoptic 0.0.1.dev34 documentation - Home"/>
+    <img src="../../../_static/Plenoptic_Logo_CMYK_Full_DarkMode_Wide.svg" class="logo__image only-dark pst-js-only" alt="plenoptic 0.0.1.dev34 documentation - Home"/>
   
   
 </a></div>
@@ -696,38 +696,29 @@
 <span class="sd">    .. plot::</span>
 <span class="sd">      :context: close-figs</span>
 
-<span class="sd">      &gt;&gt;&gt; from torchvision import models</span>
-<span class="sd">      &gt;&gt;&gt; from torchvision.models import feature_extraction</span>
-<span class="sd">      &gt;&gt;&gt; class TorchVision(torch.nn.Module):</span>
-<span class="sd">      ...     def __init__(self, model, return_node: str):</span>
-<span class="sd">      ...         super().__init__()</span>
-<span class="sd">      ...         self.extractor = feature_extraction.create_feature_extractor(</span>
-<span class="sd">      ...             model, return_nodes=[return_node]</span>
-<span class="sd">      ...         )</span>
-<span class="sd">      ...         self.model = model</span>
-<span class="sd">      ...         self.return_node = return_node</span>
-<span class="sd">      ...</span>
-<span class="sd">      ...     def forward(self, x):</span>
-<span class="sd">      ...         return self.extractor(x)[self.return_node]</span>
-<span class="sd">      &gt;&gt;&gt; def normalize(img_tensor):</span>
-<span class="sd">      ...     &quot;Standardize the image for vgg16.&quot;</span>
-<span class="sd">      ...     return (img_tensor - img_tensor.mean()) / img_tensor.std()</span>
-<span class="sd">      &gt;&gt;&gt; img = po.process.center_crop(po.data.parrot(False).to(torch.float64), 254)</span>
-<span class="sd">      &gt;&gt;&gt; orig_mean = img.mean().detach()</span>
-<span class="sd">      &gt;&gt;&gt; orig_std = img.std().detach()</span>
-<span class="sd">      &gt;&gt;&gt; img = normalize(img)</span>
-<span class="sd">      &gt;&gt;&gt; vgg = models.vgg16(weights=models.VGG16_Weights.IMAGENET1K_V1)</span>
-<span class="sd">      &gt;&gt;&gt; vgg = TorchVision(vgg, &quot;features.11&quot;).to(torch.float64)</span>
+<span class="sd">      &gt;&gt;&gt; import einops</span>
+<span class="sd">      &gt;&gt;&gt; import torchvision</span>
+<span class="sd">      &gt;&gt;&gt; img = po.data.parrot(False).to(torch.float64)</span>
+<span class="sd">      &gt;&gt;&gt; weights = torchvision.models.VGG16_Weights.IMAGENET1K_V1</span>
+<span class="sd">      &gt;&gt;&gt; transform = weights.transforms()</span>
+<span class="sd">      &gt;&gt;&gt; norm = torchvision.transforms.Normalize(transform.mean, transform.std)</span>
+<span class="sd">      &gt;&gt;&gt; img = norm(po.process.center_crop(img, 254))</span>
+<span class="sd">      &gt;&gt;&gt; vgg = torchvision.models.vgg16(weights=weights, progress=False)</span>
+<span class="sd">      &gt;&gt;&gt; vgg = po.models.DeepNetFeatures(vgg, &quot;features.11&quot;)</span>
+<span class="sd">      &gt;&gt;&gt; vgg.eval().to(torch.float64)</span>
+<span class="sd">      DeepNetFeatures(...)</span>
 <span class="sd">      &gt;&gt;&gt; po.remove_grad(vgg)</span>
-<span class="sd">      &gt;&gt;&gt; vgg.eval()</span>
-<span class="sd">      TorchVision(...)</span>
 <span class="sd">      &gt;&gt;&gt; eig_vgg = po.Eigendistortion(img, vgg)</span>
 <span class="sd">      &gt;&gt;&gt; eig_vgg.load(</span>
 <span class="sd">      ...     po.data.fetch_data(&quot;berardino_vgg16.pt&quot;),</span>
 <span class="sd">      ...     map_location=&quot;cpu&quot;,</span>
 <span class="sd">      ... )</span>
 <span class="sd">      &gt;&gt;&gt; def unnormalize(x):</span>
-<span class="sd">      ...     return x * orig_std + orig_mean</span>
+<span class="sd">      ...     std = torch.as_tensor(transform.std, device=x.device, dtype=x.dtype)</span>
+<span class="sd">      ...     std = einops.rearrange(std, &quot;c -&gt; 1 c 1 1&quot;)</span>
+<span class="sd">      ...     mean = torch.as_tensor(transform.mean, device=x.device, dtype=x.dtype)</span>
+<span class="sd">      ...     mean = einops.rearrange(mean, &quot;c -&gt; 1 c 1 1&quot;)</span>
+<span class="sd">      ...     return x * std + mean</span>
 <span class="sd">      &gt;&gt;&gt; po.plot.eigendistortion_imshow_all(eig_vgg, process_image=unnormalize)</span>
 <span class="sd">      &lt;PyrFigure size ...&gt;</span>
 

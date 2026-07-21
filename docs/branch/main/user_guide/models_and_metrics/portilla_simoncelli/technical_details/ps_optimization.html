@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Portilla-Simoncelli optimization details &#8212; plenoptic 0.0.1.dev28 documentation</title>
+    <title>Portilla-Simoncelli optimization details &#8212; plenoptic 0.0.1.dev34 documentation</title>
   
   
   
@@ -44,7 +44,7 @@
   <link rel="preload" as="script" href="../../../../_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9" />
 <link rel="preload" as="script" href="../../../../_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9" />
 
-    <script src="../../../../_static/documentation_options.js?v=da43de0f"></script>
+    <script src="../../../../_static/documentation_options.js?v=616e27e3"></script>
     <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -144,8 +144,8 @@
       
     
     
-    <img src="../../../../_static/Plenoptic_Logo_CMYK_Full_Wide.svg" class="logo__image only-light" alt="plenoptic 0.0.1.dev28 documentation - Home"/>
-    <img src="../../../../_static/Plenoptic_Logo_CMYK_Full_DarkMode_Wide.svg" class="logo__image only-dark pst-js-only" alt="plenoptic 0.0.1.dev28 documentation - Home"/>
+    <img src="../../../../_static/Plenoptic_Logo_CMYK_Full_Wide.svg" class="logo__image only-light" alt="plenoptic 0.0.1.dev34 documentation - Home"/>
+    <img src="../../../../_static/Plenoptic_Logo_CMYK_Full_DarkMode_Wide.svg" class="logo__image only-dark pst-js-only" alt="plenoptic 0.0.1.dev34 documentation - Home"/>
   
   
 </a></div>
@@ -479,6 +479,7 @@
 <ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../../Perceptual_distance.html">Perceptual distance</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../Steerable_Pyramid.html">Steerable Pyramid</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../deep_nets.html">Using Deep Neural Networks with plenoptic</a></li>
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="../ps_index.html">Portilla-Simoncelli Texture Model</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
 <li class="toctree-l2 has-children"><a class="reference internal" href="../getting_started/index.html">Getting started</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3"><a class="reference internal" href="../getting_started/ps_intro.html">What is a visual texture?</a></li>
@@ -507,6 +508,7 @@
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../../../reproduce/Demo_Eigendistortion.html">Reproducing Berardino et al., 2017 (Eigendistortions)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../reproduce/Original_MAD.html">Reproducing Wang and Simoncelli, 2008 (MAD Competition)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../reproduce/feather2023.html">Reproducing ResNet50 Image Metamers from Feather et al., 2023</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Advanced Usage</span></p>
 <ul class="nav bd-sidenav">
@@ -582,8 +584,8 @@
 <span id="ps-optimization"></span><h1>Portilla-Simoncelli optimization details<a class="headerlink" href="#portilla-simoncelli-optimization-details" title="Link to this heading">#</a></h1>
 <p>As you read the other Portilla-Simoncelli notebooks, you may have noticed that the example metamer synthesis code is a bit more complicated than the <a class="reference internal" href="../../../synthesis/Metamer.html#metamer-nb"><span class="std std-ref">basic Metamer usage</span></a>. There are two choices that are important for finding good solutions: the LBFGS optimization algorithm and a custom loss function. This notebook will discuss those two choices in a bit more detail, as well as what “good” means.</p>
 <section id="what-is-a-good-metamer">
-<h2>What is a “good” metamer?<a class="headerlink" href="#what-is-a-good-metamer" title="Link to this heading">#</a></h2>
-<p>In theory, model metamers are sets of images that have different pixel values and identical model outputs. In practice, metamer synthesis is a non-convex optimization problem in a high-dimensional space. In such problems, one typically optimizes until optimization has converged (i.e., the loss has stopped decreasing) or your result is “good enough” (i.e., the loss is low enough). Each study must determine what “good enough” means for them, and you are encouraged to read papers that have used model metamers (e.g., <span class="bibtex-citation" id="id1"><a class="reference internal" href="../../../../reference/citation.html#id21" title="Jeremy Freeman and Eero P Simoncelli. Metamers of the ventral stream. Nature Neuroscience, 14(9):1195–1201, aug 2011. arXiv:PMC3164938, doi:10.1038/nn.2889.">Freeman and Simoncelli, 2011</a></span>, <span class="bibtex-citation" id="id2"><a class="reference internal" href="../../../../reference/citation.html#id20" title="Jenelle Feather, Alex Durango, Ray Gonzalez, and Josh McDermott. Metamers of neural networks reveal divergence from human perceptual systems. In NeurIPS, 10078–10089. 2019.">Feather <em>et al.</em>, 2019</a></span>, <span class="bibtex-citation" id="id3"><a class="reference internal" href="../../../../reference/citation.html#id17" title="William F Broderick, Gizem Rufo, Jonathan Winawer, and Eero P Simoncelli. Foveated metamers of the early visual system. eLife, October 2025. URL: http://dx.doi.org/10.7554/eLife.90554.2, doi:10.7554/elife.90554.2.">Broderick <em>et al.</em>, 2025</a></span>) to see the approaches they have taken.</p>
+<span id="good-enough"></span><h2>What is a “good” metamer?<a class="headerlink" href="#what-is-a-good-metamer" title="Link to this heading">#</a></h2>
+<p>In theory, model metamers are sets of images that have different pixel values and identical model outputs. In practice, metamer synthesis is a non-convex optimization problem in a high-dimensional space. In such problems, one typically optimizes until optimization has converged (i.e., the loss has stopped decreasing) or your result is “good enough” (i.e., the loss is low enough). Each study must determine what “good enough” means for them, and you are encouraged to read papers that have used model metamers (e.g., <span class="bibtex-citation" id="id1"><a class="reference internal" href="../../../../reference/citation.html#id22" title="Jeremy Freeman and Eero P Simoncelli. Metamers of the ventral stream. Nature Neuroscience, 14(9):1195–1201, aug 2011. arXiv:PMC3164938, doi:10.1038/nn.2889.">Freeman and Simoncelli, 2011</a></span>, <span class="bibtex-citation" id="id2"><a class="reference internal" href="../../../../reference/citation.html#id20" title="Jenelle Feather, Alex Durango, Ray Gonzalez, and Josh McDermott. Metamers of neural networks reveal divergence from human perceptual systems. In NeurIPS, 10078–10089. 2019.">Feather <em>et al.</em>, 2019</a></span>, <span class="bibtex-citation" id="id3"><a class="reference internal" href="../../../../reference/citation.html#id17" title="William F Broderick, Gizem Rufo, Jonathan Winawer, and Eero P Simoncelli. Foveated metamers of the early visual system. eLife, October 2025. URL: http://dx.doi.org/10.7554/eLife.90554.2, doi:10.7554/elife.90554.2.">Broderick <em>et al.</em>, 2025</a></span>) to see the approaches they have taken.</p>
 <p>For the purposes of plenoptic, which provides implementations for researchers to use in their own experiments, “best” means “the lowest loss in the shortest time possible”. Therefore, for the purposes of plenoptic’s <a class="reference internal" href="../../../../api/generated/plenoptic.models.PortillaSimoncelli.html#plenoptic.models.PortillaSimoncelli" title="plenoptic.models.PortillaSimoncelli"><code class="xref py py-class docutils literal notranslate"><span class="pre">PortillaSimoncelli</span></code></a> implementation, we evaluated multiple possible configurations of optimizers, optimizer configurations, and optimization loss functions against each other and against the <a class="reference external" href="https://github.com/LabForComputationalVision/textureSynth">earlier MATLAB implementation</a>. This investigation can be found in <a class="reference external" href="https://github.com/plenoptic-org/plenoptic/issues/365">Issue #365</a>; the results are summarized in this notebook.</p>
 <div class="note admonition">
 <p class="admonition-title">What about perceptual quality?</p>

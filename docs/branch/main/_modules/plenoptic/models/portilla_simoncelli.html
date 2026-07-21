@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>plenoptic.models.portilla_simoncelli &#8212; plenoptic 0.0.1.dev28 documentation</title>
+    <title>plenoptic.models.portilla_simoncelli &#8212; plenoptic 0.0.1.dev34 documentation</title>
   
   
   
@@ -43,7 +43,7 @@
   <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9" />
 <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9" />
 
-    <script src="../../../_static/documentation_options.js?v=da43de0f"></script>
+    <script src="../../../_static/documentation_options.js?v=616e27e3"></script>
     <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -141,8 +141,8 @@
       
     
     
-    <img src="../../../_static/Plenoptic_Logo_CMYK_Full_Wide.svg" class="logo__image only-light" alt="plenoptic 0.0.1.dev28 documentation - Home"/>
-    <img src="../../../_static/Plenoptic_Logo_CMYK_Full_DarkMode_Wide.svg" class="logo__image only-dark pst-js-only" alt="plenoptic 0.0.1.dev28 documentation - Home"/>
+    <img src="../../../_static/Plenoptic_Logo_CMYK_Full_Wide.svg" class="logo__image only-light" alt="plenoptic 0.0.1.dev34 documentation - Home"/>
+    <img src="../../../_static/Plenoptic_Logo_CMYK_Full_DarkMode_Wide.svg" class="logo__image only-dark pst-js-only" alt="plenoptic 0.0.1.dev34 documentation - Home"/>
   
   
 </a></div>
@@ -535,7 +535,7 @@
 <span class="kn">import</span><span class="w"> </span><span class="nn">torch.nn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">nn</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">torch</span><span class="w"> </span><span class="kn">import</span> <span class="n">Tensor</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">..plot.display</span><span class="w"> </span><span class="kn">import</span> <span class="n">_clean_up_axes</span><span class="p">,</span> <span class="n">_update_stem</span><span class="p">,</span> <span class="n">stem_plot</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..plot.display</span><span class="w"> </span><span class="kn">import</span> <span class="n">_clean_up_axes</span><span class="p">,</span> <span class="n">_rescale_ylim</span><span class="p">,</span> <span class="n">_update_stem</span><span class="p">,</span> <span class="n">stem_plot</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">..process</span><span class="w"> </span><span class="kn">import</span> <span class="n">signal</span><span class="p">,</span> <span class="n">stats</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">..process.steerable_pyramid_freq</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">SCALES_TYPE</span> <span class="k">as</span> <span class="n">PYR_SCALES_TYPE</span><span class="p">,</span>
@@ -624,11 +624,11 @@
 <span class="sd">    .. plot::</span>
 <span class="sd">      :context: reset</span>
 
-<span class="sd">       &gt;&gt;&gt; import plenoptic as po</span>
-<span class="sd">       &gt;&gt;&gt; img = po.data.reptile_skin()</span>
-<span class="sd">       &gt;&gt;&gt; ps_model = po.models.PortillaSimoncelli(img.shape[2:])</span>
-<span class="sd">       &gt;&gt;&gt; ps_model(img)</span>
-<span class="sd">       tensor([[[ 4.1716e-01, 5.4735e-02, ..., 4.7756e-03]]])</span>
+<span class="sd">      &gt;&gt;&gt; import plenoptic as po</span>
+<span class="sd">      &gt;&gt;&gt; img = po.data.reptile_skin()</span>
+<span class="sd">      &gt;&gt;&gt; ps_model = po.models.PortillaSimoncelli(img.shape[2:])</span>
+<span class="sd">      &gt;&gt;&gt; ps_model(img)</span>
+<span class="sd">      tensor([[[ 4.1716e-01, 5.4735e-02, ..., 4.7756e-03]]])</span>
 
 <span class="sd">    Visualize texture statistics:</span>
 
@@ -1762,13 +1762,16 @@
 <span class="sd">          component of the pyramid coefficients and the real and imaginary</span>
 <span class="sd">          components (at the same orientation) at the next-coarsest scale.</span>
 
+<span class="sd">        .. versionchanged:: 2.1.0</span>
+<span class="sd">           ``data`` argument can now be a dictionary (as returned by</span>
+<span class="sd">            :meth:`convert_to_dict` as well as a tensor).</span>
+
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        data</span>
-<span class="sd">            The data to show on the plot. Else, should look like the output of</span>
-<span class="sd">            ``self.forward(img)``, with the exact same structure (e.g., as</span>
-<span class="sd">            returned by ``metamer.representation_error()`` or another instance</span>
-<span class="sd">            of this class).</span>
+<span class="sd">            The data to show on the plot. Should look like the output of</span>
+<span class="sd">            :meth:`forward` or :meth:`convert_to_dict`, with the exact same</span>
+<span class="sd">            structure (e.g., as returned by another instance of this class).</span>
 <span class="sd">        ax</span>
 <span class="sd">            Axes where we will plot the data. If a ``plt.Axes`` instance, will</span>
 <span class="sd">            subdivide into 6 or 8 new axes (depending on self.n_scales). If</span>
@@ -1796,6 +1799,10 @@
 <span class="sd">        ------</span>
 <span class="sd">        ValueError</span>
 <span class="sd">            If both ``figsize`` and ``ax`` are not ``None``.</span>
+<span class="sd">        ValueError</span>
+<span class="sd">            If ``data`` is a dictionary and contains additional keys.</span>
+<span class="sd">        KeyError</span>
+<span class="sd">            If ``data`` is a dictionary and is missing keys.</span>
 
 <span class="sd">        Examples</span>
 <span class="sd">        --------</span>
@@ -1804,24 +1811,33 @@
 
 <span class="sd">          &gt;&gt;&gt; import plenoptic as po</span>
 <span class="sd">          &gt;&gt;&gt; img = po.data.reptile_skin()</span>
-<span class="sd">          &gt;&gt;&gt; portilla_simoncelli_model = po.models.PortillaSimoncelli(img.shape[2:])</span>
-<span class="sd">          &gt;&gt;&gt; representation_tensor = portilla_simoncelli_model(img)</span>
-<span class="sd">          &gt;&gt;&gt; fig, axes = portilla_simoncelli_model.plot_representation(</span>
-<span class="sd">          ...     representation_tensor</span>
-<span class="sd">          ... )</span>
+<span class="sd">          &gt;&gt;&gt; ps_model = po.models.PortillaSimoncelli(img.shape[2:])</span>
+<span class="sd">          &gt;&gt;&gt; representation_tensor = ps_model(img)</span>
+<span class="sd">          &gt;&gt;&gt; fig, axes = ps_model.plot_representation(representation_tensor)</span>
+
+<span class="sd">        Plot the dictionary representation:</span>
+
+<span class="sd">        .. plot::</span>
+<span class="sd">          :context: close-figs</span>
+
+<span class="sd">          &gt;&gt;&gt; representation_dict = ps_model.convert_to_dict(representation_tensor)</span>
+<span class="sd">          &gt;&gt;&gt; fig, axes = ps_model.plot_representation(representation_tensor)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">ax</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">figsize</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">figsize</span> <span class="o">=</span> <span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
         <span class="k">elif</span> <span class="n">ax</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">figsize</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;figsize can&#39;t be set if ax is not None&quot;</span><span class="p">)</span>
-        <span class="c1"># pick the batch_idx we want (but keep the data 3d), and average over</span>
-        <span class="c1"># channels (but keep the data 3d). We keep data 3d because</span>
-        <span class="c1"># convert_to_dict relies on it.</span>
-        <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">batch_idx</span><span class="p">]</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">keepdim</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="c1"># each of these values should now be a 3d tensor with 1 element in each</span>
-        <span class="c1"># of the first two dims</span>
-        <span class="n">rep</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">convert_to_dict</span><span class="p">(</span><span class="n">data</span><span class="p">)</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
-        <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_representation_for_plotting</span><span class="p">(</span><span class="n">rep</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">):</span>
+            <span class="c1"># pick the batch_idx we want (but keep the data 3d), and average over</span>
+            <span class="c1"># channels (but keep the data 3d). We keep data 3d because</span>
+            <span class="c1"># convert_to_dict relies on it.</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">batch_idx</span><span class="p">]</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">keepdim</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="c1"># each of these values should now be a 3d tensor with 1 element in each</span>
+            <span class="c1"># of the first two dims</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">convert_to_dict</span><span class="p">(</span><span class="n">data</span><span class="p">)</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span><span class="p">[</span><span class="n">batch_idx</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_representation_for_plotting</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
 
         <span class="c1"># Determine plot grid layout</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_scales</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
@@ -1882,8 +1898,15 @@
 <span class="sd">            If the tensors in ``rep`` looks like they have more than one batch</span>
 <span class="sd">            or channel. Should select or average over those dimensions.</span>
 <span class="sd">        ValueError</span>
-<span class="sd">            If ``rep`` contains unexpected keys.</span>
+<span class="sd">            If ``rep`` contains additional keys.</span>
+<span class="sd">        KeyError</span>
+<span class="sd">            If ``rep`` is missing any keys.</span>
 <span class="sd">        &quot;&quot;&quot;</span>  <span class="c1"># numpydoc ignore=EX01</span>
+        <span class="k">if</span> <span class="nb">set</span><span class="p">(</span><span class="n">rep</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span> <span class="o">&gt;</span> <span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_necessary_stats_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;representation contains additional keys!&quot;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">set</span><span class="p">(</span><span class="n">rep</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span> <span class="o">&lt;</span> <span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_necessary_stats_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
+            <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="s2">&quot;representation is missing keys!&quot;</span><span class="p">)</span>
+
         <span class="k">if</span> <span class="n">rep</span><span class="p">[</span><span class="s2">&quot;skew_reconstructed&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">ndim</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
                 <span class="s2">&quot;Currently, only know how to plot single batch and channel at&quot;</span>
@@ -1911,8 +1934,6 @@
             <span class="s2">&quot;cross_scale_correlation_magnitude&quot;</span><span class="p">,</span>
             <span class="s2">&quot;cross_scale_correlation_real&quot;</span><span class="p">,</span>
         <span class="p">]</span>
-        <span class="k">if</span> <span class="nb">set</span><span class="p">(</span><span class="n">rep</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span> <span class="o">!=</span> <span class="nb">set</span><span class="p">(</span><span class="n">all_keys</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;representation has unexpected keys!&quot;</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">all_keys</span><span class="p">:</span>
             <span class="c1"># if we only have one scale, no cross-scale stats</span>
             <span class="k">if</span> <span class="n">k</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;cross_scale&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_scales</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
@@ -1928,8 +1949,9 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">update_plot</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">axes</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">plt</span><span class="o">.</span><span class="n">Axes</span><span class="p">],</span>
-        <span class="n">data</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span>
+        <span class="n">data</span><span class="p">:</span> <span class="n">Tensor</span> <span class="o">|</span> <span class="nb">dict</span><span class="p">,</span>
         <span class="n">batch_idx</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="n">rescale_ylim</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">plt</span><span class="o">.</span><span class="n">Artist</span><span class="p">]:</span>
 <span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Update the information in our representation plot.</span>
@@ -1953,6 +1975,10 @@
 
 <span class="sd">        Currently, this averages over all channels in the representation.</span>
 
+<span class="sd">        .. versionchanged:: 2.1.0</span>
+<span class="sd">           ``data`` argument can now be a dictionary (as returned by</span>
+<span class="sd">            :meth:`convert_to_dict` as well as a tensor).</span>
+
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        axes</span>
@@ -1960,12 +1986,13 @@
 <span class="sd">            created by ``plot_representation`` and so contain stem plots</span>
 <span class="sd">            in the correct order.</span>
 <span class="sd">        data</span>
-<span class="sd">            The data to show on the plot. Else, should look like the output of</span>
-<span class="sd">            ``self.forward(img)``, with the exact same structure (e.g., as</span>
-<span class="sd">            returned by ``metamer.representation_error()`` or another instance</span>
-<span class="sd">            of this class).</span>
+<span class="sd">            The new data to use for updating the plot. Should look like the output of</span>
+<span class="sd">            :meth:`forward` or :meth:`convert_to_dict`, with the exact same structure</span>
+<span class="sd">            (e.g., as returned by another instance of this class).</span>
 <span class="sd">        batch_idx</span>
 <span class="sd">            Which index to take from the batch dimension (the first one).</span>
+<span class="sd">        rescale_ylim</span>
+<span class="sd">            Whether to rescale the y-limits to all have the same limits or not.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -1993,13 +2020,16 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">stem_artists</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">axes</span> <span class="o">=</span> <span class="p">[</span><span class="n">ax</span> <span class="k">for</span> <span class="n">ax</span> <span class="ow">in</span> <span class="n">axes</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">containers</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">]</span>
-        <span class="c1"># pick the batch_idx we want (but keep the data 3d), and average over</span>
-        <span class="c1"># channels (but keep the data 3d). We keep data 3d because</span>
-        <span class="c1"># convert_to_dict relies on it.</span>
-        <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">batch_idx</span><span class="p">]</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">keepdim</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="c1"># each of these values should now be a 3d tensor with 1 element in each</span>
-        <span class="c1"># of the first two dims</span>
-        <span class="n">rep</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">convert_to_dict</span><span class="p">(</span><span class="n">data</span><span class="p">)</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">):</span>
+            <span class="c1"># pick the batch_idx we want (but keep the data 3d), and average over</span>
+            <span class="c1"># channels (but keep the data 3d). We keep data 3d because</span>
+            <span class="c1"># convert_to_dict relies on it.</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">batch_idx</span><span class="p">]</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">keepdim</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="c1"># each of these values should now be a 3d tensor with 1 element in each</span>
+            <span class="c1"># of the first two dims</span>
+            <span class="n">rep</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">convert_to_dict</span><span class="p">(</span><span class="n">data</span><span class="p">)</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">rep</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span><span class="p">[</span><span class="n">batch_idx</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
         <span class="n">rep</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_representation_for_plotting</span><span class="p">(</span><span class="n">rep</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">ax</span><span class="p">,</span> <span class="n">d</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">axes</span><span class="p">,</span> <span class="n">rep</span><span class="o">.</span><span class="n">values</span><span class="p">()):</span>
             <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
@@ -2009,6 +2039,8 @@
 
             <span class="n">sc</span> <span class="o">=</span> <span class="n">_update_stem</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">containers</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">vals</span><span class="p">)</span>
             <span class="n">stem_artists</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="n">sc</span><span class="o">.</span><span class="n">markerline</span><span class="p">,</span> <span class="n">sc</span><span class="o">.</span><span class="n">stemlines</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">rescale_ylim</span><span class="p">:</span>
+            <span class="n">_rescale_ylim</span><span class="p">(</span><span class="n">axes</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">([</span><span class="n">v</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">rep</span><span class="o">.</span><span class="n">values</span><span class="p">()]))</span>
         <span class="k">return</span> <span class="n">stem_artists</span></div>
 </div>
 
