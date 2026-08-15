@@ -1,0 +1,344 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Synthesis object design &mdash; plenoptic 1.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/plot_directive.css" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=8d563738"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Tips and Tricks" href="tips.html" />
+    <link rel="prev" title="Reproducing Berardino et al., 2017 (Eigendistortions)" href="tutorials/applications/Demo_Eigendistortion.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+<div style="background-color: rgb(248, 215, 218); color: rgb(114, 28, 36); text-align: center;">
+  <div>
+    <div>This is documentation for <strong>an old version</strong>.
+      <a href="https://docs.plenoptic.org/" style="background-color: rgb(220, 53, 69); color: rgb(255, 255, 255); margin: 1rem; padding: 0.375rem 0.75rem; border-radius: 4px; display: inline-block; text-align: center;">Switch to stable version</a>
+    </div>
+  </div>
+</div>
+ 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            plenoptic
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Basic concepts</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="conceptual_intro.html">Conceptual Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="models.html">Model requirements</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials/00_quickstart.html">Quickstart</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Synthesis method introductions</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="tutorials/intro/02_Eigendistortions.html">Eigendistortions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials/intro/05_Geodesics.html">Representational Geodesic</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials/intro/06_Metamer.html">Metamers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials/intro/07_Simple_MAD.html">MAD Competition Conceptual Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials/intro/08_MAD_Competition.html">MAD Competition Usage</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Models and metrics</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="tutorials/models/03_Steerable_Pyramid.html">Steerable Pyramid</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials/models/04_Perceptual_distance.html">Perceptual distance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials/models/Metamer-Portilla-Simoncelli.html">Portilla-Simoncelli Texture Metamer</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Synthesis method examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="tutorials/applications/09_Original_MAD.html">Reproducing Wang and Simoncelli, 2008 (MAD Competition)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials/applications/Demo_Eigendistortion.html">Reproducing Berardino et al., 2017 (Eigendistortions)</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Advanced usage</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Synthesis object design</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#all-synthesis-methods">All synthesis methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#helper-display-functions">Helper / display functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#optimized-synthesis">Optimized synthesis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#how-to-order-methods">How to order methods</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="tips.html">Tips and Tricks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="reproducibility.html">Reproducibility</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/modules.html">Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials/advanced/Display.html">Display and animate functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials/advanced/Synthesis_extensions.html">Extending existing synthesis objects</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">plenoptic</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Synthesis object design</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/synthesis.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="synthesis-object-design">
+<span id="synthesis-objects"></span><h1>Synthesis object design<a class="headerlink" href="#synthesis-object-design" title="Link to this heading"></a></h1>
+<p>The following describes how synthesis objects are structured. This is probably
+most useful if you are creating a new synthesis method that you would like to
+include in or be compliant with <code class="docutils literal notranslate"><span class="pre">plenoptic</span></code>, rather than using existing ones.</p>
+<p>The synthesis methods included in <code class="docutils literal notranslate"><span class="pre">plenoptic</span></code> generate one or more novel
+images based on the output of a model. These images can be used to better
+understand the model or as stimuli for an experiment comparing the model against
+another system. Beyond this rather vague description, however, there is a good
+deal of variability. We use inheritance in order to try and keep synthesis
+methods as similar as possible, to facilitate user interaction with them (and
+testing), but we want to avoid forcing too much similarity.</p>
+<p>In the following description:</p>
+<dl class="simple">
+<dt>** <em>must</em> connotes a requirement; any synthesis object not meeting this property</dt><dd><p>will not be merged and is not considered “plenoptic-compliant”.</p>
+</dd>
+</dl>
+<ul class="simple">
+<li><p><em>should</em> connotes a suggestion; a compelling reason is required if the
+property is not met.</p></li>
+<li><p><em>may</em> connotes an option; these properties may make things easier (for
+developers or users), but are completely optional.</p></li>
+</ul>
+<section id="all-synthesis-methods">
+<h2>All synthesis methods<a class="headerlink" href="#all-synthesis-methods" title="Link to this heading"></a></h2>
+<p>To that end, all synthesis methods must inherit the
+<a class="reference internal" href="api/plenoptic.synthesize.html#plenoptic.synthesize.synthesis.Synthesis" title="plenoptic.synthesize.synthesis.Synthesis"><code class="xref py py-class docutils literal notranslate"><span class="pre">plenoptic.synthesize.synthesis.Synthesis</span></code></a> class. This requires the synthesis method
+to have a <code class="docutils literal notranslate"><span class="pre">synthesize()</span></code> method, and provides helper functions for <code class="docutils literal notranslate"><span class="pre">save()</span></code>,
+<code class="docutils literal notranslate"><span class="pre">load()</span></code>, and <code class="docutils literal notranslate"><span class="pre">to()</span></code>, which must be used when implementing them.
+Furthermore:</p>
+<ul class="simple">
+<li><p>the initialization method (<code class="docutils literal notranslate"><span class="pre">__init__()</span></code>) must accept any images as its first
+input(s). If only a single image is accepted, it must be named <code class="docutils literal notranslate"><span class="pre">image</span></code>. If
+more than one, their names must be of the form <code class="docutils literal notranslate"><span class="pre">image_X</span></code>, replacing <code class="docutils literal notranslate"><span class="pre">X</span></code>
+with a more descriptive string. These must all have type <code class="docutils literal notranslate"><span class="pre">torch.Tensor</span></code> and
+they must be validated with <a class="reference internal" href="api/plenoptic.tools.html#plenoptic.tools.validate.validate_input" title="plenoptic.tools.validate.validate_input"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.tools.validate.validate_input()</span></code></a>.
+This should be stored in an attribute with the same name as the argument.</p></li>
+<li><p>the initialization method’s next argument(s) must be any models or metrics
+that the synthesis will be based on. Similarly, if a single model / metric is
+accepted, they must be named <code class="docutils literal notranslate"><span class="pre">model</span></code> / <code class="docutils literal notranslate"><span class="pre">metric</span></code>. If more than one, their
+names should be of the form <code class="docutils literal notranslate"><span class="pre">X_model</span></code> / <code class="docutils literal notranslate"><span class="pre">X_metric</span></code>, replacing <code class="docutils literal notranslate"><span class="pre">X</span></code> with a
+more descriptive string. These must be validated with
+<a class="reference internal" href="api/plenoptic.tools.html#plenoptic.tools.validate.validate_model" title="plenoptic.tools.validate.validate_model"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.tools.validate.validate_model()</span></code></a> /
+<a class="reference internal" href="api/plenoptic.tools.html#plenoptic.tools.validate.validate_metric" title="plenoptic.tools.validate.validate_metric"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.tools.validate.validate_metric()</span></code></a>. This should be stored in an
+attribute with the same name as the argument.</p></li>
+<li><p>any other arguments to the initialization method may follow.</p></li>
+<li><p>the object must be able to work on GPU and CPU. Users must be able to use
+the GPU either by initializing the synthesis object with tensors or models
+already on the GPU or by calling <code class="docutils literal notranslate"><span class="pre">.to()</span></code>. The easiest way to do this is to
+use <code class="docutils literal notranslate"><span class="pre">torch.rand_like()</span></code> and analogous methods, and explicitly calling
+<code class="docutils literal notranslate"><span class="pre">.to()</span></code> on any other newly-created tensors.</p></li>
+<li><p>ideally, the same for different float and complex data types (e.g., support
+both <code class="docutils literal notranslate"><span class="pre">torch.float32</span></code> and <code class="docutils literal notranslate"><span class="pre">torch.float64</span></code>), though this is not a strict
+requirement if there’s a good reason.</p></li>
+<li><p>if <code class="docutils literal notranslate"><span class="pre">synthesize()</span></code> operates in an iterative fashion, it must accept a
+<code class="docutils literal notranslate"><span class="pre">max_iter:</span> <span class="pre">int</span></code> argument to specify how long to run synthesis for and a
+<code class="docutils literal notranslate"><span class="pre">stop_criterion:</span> <span class="pre">float</span></code> argument to allow for early termination if some
+convergence is reached. <em>What</em> exactly is being checked for convergence (e.g.,
+change in loss, change in pixel values) may vary, but it must be clarified
+in the docstring. A <code class="docutils literal notranslate"><span class="pre">stop_iters_to_check:</span> <span class="pre">int</span></code> argument may also be
+included, which specifies how many iterations ago to check. If it is not
+included, the number of iterations must be clarified in docstring.</p></li>
+<li><p>additionally, if synthesis is iterative, <a class="reference external" href="https://tqdm.github.io/docs/shortcuts/#tqdmauto">tqdm.auto.tqdm</a> must be used as a progress
+bar, initialized with <code class="docutils literal notranslate"><span class="pre">pbar</span> <span class="pre">=</span> <span class="pre">tqdm(range(max_iter))</span></code>, which should present
+information using <code class="docutils literal notranslate"><span class="pre">pbar.set_postfix()</span></code> (such the loss or whatever else is
+checked for convergence, as discussed above).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">synthesize()</span></code> must not return anything. The outputs of synthesis must
+be stored as attributes of the object. The number of large attributes should
+be minimized in order to reduce overall size in memory.</p></li>
+<li><p>the synthesis output must be stored as an attribute with the same name as
+the class (e.g., <code class="docutils literal notranslate"><span class="pre">Metamer.metamer</span></code>).</p></li>
+<li><p>any attribute or method that the user does not need should be hidden (i.e.,
+start with <code class="docutils literal notranslate"><span class="pre">_</span></code>).</p></li>
+<li><p>consider using the <code class="docutils literal notranslate"><span class="pre">&#64;property</span></code> decorator to make important attributes
+write-only or differentiate between the public and private views. For example,
+the optimized attribute of the <a class="reference internal" href="api/plenoptic.synthesize.html#plenoptic.synthesize.geodesic.Geodesic" title="plenoptic.synthesize.geodesic.Geodesic"><code class="xref py py-class docutils literal notranslate"><span class="pre">plenoptic.synthesize.geodesic.Geodesic</span></code></a>
+class is named <code class="docutils literal notranslate"><span class="pre">_geodesic</span></code>, but the <code class="docutils literal notranslate"><span class="pre">geodesic</span></code> attribute returns this
+tensor concatenated with two (unchanging) endpoints, as this is what the user
+will most often want to interact with.</p></li>
+</ul>
+<p>The above are the only requirements that all synthesis methods must meet.</p>
+</section>
+<section id="helper-display-functions">
+<h2>Helper / display functions<a class="headerlink" href="#helper-display-functions" title="Link to this heading"></a></h2>
+<p>It may also be useful to include some functions for investigating the status or
+output(s) of synthesis. As a general rule, if a function will be called during
+synthesis (e.g., to compute a loss value), it should be a method of the object.
+If it is only called afterwards (e.g., to display the synthesis outputs in a
+useful way), it should be included as a function in the same file (see
+<a class="reference internal" href="api/plenoptic.synthesize.html#plenoptic.synthesize.metamer.display_metamer" title="plenoptic.synthesize.metamer.display_metamer"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.synthesize.metamer.display_metamer()</span></code></a> for an example).</p>
+<p>Functions that show images or videos should be called <code class="docutils literal notranslate"><span class="pre">display_X</span></code>, whereas
+those that show numbers as a scatter plot, line plot, etc. should be called
+<code class="docutils literal notranslate"><span class="pre">plot_X</span></code>. These must be axes-level matplotlib functions: they must accept
+an axis as an optional argument named <code class="docutils literal notranslate"><span class="pre">ax</span></code>, which will contain the plot. If no
+<code class="docutils literal notranslate"><span class="pre">ax</span></code> is supplied, <code class="docutils literal notranslate"><span class="pre">matplotlib.pyplot.gca()</span></code> must be used to create / grab
+the axis. If a multi-axis figure is called for (e.g., to display the synthesis
+output and plot the loss), a function named <code class="docutils literal notranslate"><span class="pre">plot_synthesis_status()</span></code> should
+be created. This must have an optional <code class="docutils literal notranslate"><span class="pre">fig</span></code> argument, creating a figure if
+none is supplied. See <a class="reference internal" href="api/plenoptic.synthesize.html#plenoptic.synthesize.metamer.plot_synthesis_status" title="plenoptic.synthesize.metamer.plot_synthesis_status"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.synthesize.metamer.plot_synthesis_status()</span></code></a>
+for an example. If possible, this plot should be able to be animated to show
+progress over time. See
+<a class="reference internal" href="api/plenoptic.synthesize.html#plenoptic.synthesize.metamer.plot_synthesis_status" title="plenoptic.synthesize.metamer.plot_synthesis_status"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.synthesize.metamer.plot_synthesis_status()</span></code></a> for an example.</p>
+<p>See our <a class="reference internal" href="tutorials/advanced/Display.html"><span class="doc">Display and animate functions</span></a> notebook for description and examples of the
+included plotting and display code.</p>
+</section>
+<section id="optimized-synthesis">
+<h2>Optimized synthesis<a class="headerlink" href="#optimized-synthesis" title="Link to this heading"></a></h2>
+<p>Many synthesis methods will use an optimizer to generate their outputs. If the
+method makes use of a <code class="docutils literal notranslate"><span class="pre">torch.optim.Optimizer</span></code> object, it must inherit
+<a class="reference internal" href="api/plenoptic.synthesize.html#plenoptic.synthesize.synthesis.OptimizedSynthesis" title="plenoptic.synthesize.synthesis.OptimizedSynthesis"><code class="xref py py-class docutils literal notranslate"><span class="pre">plenoptic.synthesize.synthesis.OptimizedSynthesis</span></code></a> class (this is a
+subclass of:class:<cite>plenoptic.synthesize.synthesis.Synthesis</cite>, so the above all
+still applies).</p>
+<p>Currently, the following are required (if not all of these are applicable to new
+methods, we may modify <code class="docutils literal notranslate"><span class="pre">OptimizedSynthesis</span></code>):</p>
+<ul class="simple">
+<li><p>the points about iterative synthesis described above all hold:
+<code class="docutils literal notranslate"><span class="pre">synthesize()</span></code> must accept <code class="docutils literal notranslate"><span class="pre">max_iter</span></code>, <code class="docutils literal notranslate"><span class="pre">stop_criterion</span></code>, may accept
+<code class="docutils literal notranslate"><span class="pre">stop_iters_to_check</span></code>, and must use <a class="reference external" href="https://tqdm.github.io/docs/shortcuts/#tqdmauto">tqdm.auto.tqdm</a>.</p></li>
+<li><p>the object must have an <code class="docutils literal notranslate"><span class="pre">objective_function()</span></code> method, which returns a
+measure of “how bad” the current synthesis output is. Optimization is
+minimizing this value.</p></li>
+<li><p>the object must have a <code class="docutils literal notranslate"><span class="pre">_check_convergence()</span></code> method, which is used (along
+with <code class="docutils literal notranslate"><span class="pre">stop_criterion</span></code> and, optionally, <code class="docutils literal notranslate"><span class="pre">stop_iters_to_check</span></code>) to determine
+if synthesis has converged.</p></li>
+<li><p>the object must have an <code class="docutils literal notranslate"><span class="pre">_initialize()</span></code> method, which initializes the
+synthesis output (e.g., with an appropriately-shaped sample of noise) and is
+called during the object’s initilization.</p></li>
+<li><p>the initialization method may accept some argument to affect this
+initialization, which should be named <code class="docutils literal notranslate"><span class="pre">initial_X</span></code> (replacing <code class="docutils literal notranslate"><span class="pre">X</span></code> as
+appropriate). For example, this could be another image to use for
+initialization (<code class="docutils literal notranslate"><span class="pre">initial_image</span></code>) or some property of noise used to generate
+an initial image (<code class="docutils literal notranslate"><span class="pre">initial_noise</span></code>).</p></li>
+<li><p>the initialization method must accept <code class="docutils literal notranslate"><span class="pre">range_penalty_lambda:</span> <span class="pre">float</span></code> and
+<code class="docutils literal notranslate"><span class="pre">allowed_range:</span> <span class="pre">Tuple[float,</span> <span class="pre">float]</span></code> arguments, which should be used with
+<a class="reference internal" href="api/plenoptic.tools.html#plenoptic.tools.optim.penalize_range" title="plenoptic.tools.optim.penalize_range"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.tools.optim.penalize_range()</span></code></a> to constrain the range of
+synthesis output.</p></li>
+<li><p>the <code class="docutils literal notranslate"><span class="pre">synthesize()</span></code> method must accept an optional <code class="docutils literal notranslate"><span class="pre">optimizer:</span>
+<span class="pre">torch.optim.Optimizer</span></code> argument, which defaults to <code class="docutils literal notranslate"><span class="pre">None</span></code>.
+<code class="docutils literal notranslate"><span class="pre">OptimizedSynthesis._initialize_optimizer()</span></code> is a helper function that
+should be called to set this up: it creates a default optimizer if the user
+does not specify one and double-checks that the optimizer parameter is the
+correct object if the user did.</p></li>
+<li><p>during synthesis, the object should update the <code class="docutils literal notranslate"><span class="pre">_losses</span></code>,
+<code class="docutils literal notranslate"><span class="pre">_gradient_norm</span></code>, and <code class="docutils literal notranslate"><span class="pre">_pixel_change_norm</span></code> attributes on each iteration.</p></li>
+<li><p>the object may have a <code class="docutils literal notranslate"><span class="pre">_closure()</span></code> method, which performs the gradient
+calculation. This (when passed to <code class="docutils literal notranslate"><span class="pre">optimizer.step()</span></code> during the synthesis
+loop in <code class="docutils literal notranslate"><span class="pre">synthesize()</span></code>) enables optimization algorithms that perform several
+evaluations of the gradient before taking a step (e.g., second-order methods).
+See <code class="docutils literal notranslate"><span class="pre">OptimizedSynthesis._closure()</span></code> for the simplest version of this.</p></li>
+<li><p>the <code class="docutils literal notranslate"><span class="pre">synthesize()</span></code> method should accept a <code class="docutils literal notranslate"><span class="pre">store_progress</span></code> argument, which
+optionally stores additional information over iteration, such as the synthesis
+output-in-progress. <code class="docutils literal notranslate"><span class="pre">OptimizedSynthesis</span></code> has a setter method for this
+attribute, which will enable things are correct. This argument can be an
+integer (in which case, the attributes are updated every <code class="docutils literal notranslate"><span class="pre">store_progress</span></code>
+iterations), <code class="docutils literal notranslate"><span class="pre">True</span></code> (same behavior as <code class="docutils literal notranslate"><span class="pre">1</span></code>), or <code class="docutils literal notranslate"><span class="pre">False</span></code> (no updating of
+attributes). This should probably be done in a method named <code class="docutils literal notranslate"><span class="pre">_store()</span></code>.</p></li>
+<li><p>the <code class="docutils literal notranslate"><span class="pre">synthesize()</span></code> method should be callable multiple times with the same
+object, in which case progress is resumed. On all subsequent calls,
+<code class="docutils literal notranslate"><span class="pre">optimizer</span></code> must be <code class="docutils literal notranslate"><span class="pre">None</span></code> (this is checked by
+<code class="docutils literal notranslate"><span class="pre">OptimizedSynthesis._initialize_optimizer()</span></code>) and <code class="docutils literal notranslate"><span class="pre">store_progress</span></code>,
+<code class="docutils literal notranslate"><span class="pre">stop_criterion</span></code>, and <code class="docutils literal notranslate"><span class="pre">stop_iters_to_check</span></code> must have the same values.</p></li>
+</ul>
+</section>
+<section id="how-to-order-methods">
+<h2>How to order methods<a class="headerlink" href="#how-to-order-methods" title="Link to this heading"></a></h2>
+<p>Python doesn’t care how you order any of the methods or properties of a class,
+but doing so in a consistent manner will make reading the code easier, so try to
+follow these guidelines:</p>
+<ul class="simple">
+<li><p>The caller should (almost always) be above the callee and related concepts
+should be close together.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">__init__()</span></code> should be first, followed by any methods called within it. This
+will probably include <code class="docutils literal notranslate"><span class="pre">_initialize()</span></code>, for those classes that have it.</p></li>
+<li><p>After all those initialization-related methods, <code class="docutils literal notranslate"><span class="pre">synthesize()</span></code> should come
+next. Again, this should be followed by most of the the methods called within
+it, ordered roughly by importance. Thus, the first methods should probably be
+<code class="docutils literal notranslate"><span class="pre">objective_function()</span></code> and <code class="docutils literal notranslate"><span class="pre">_optimizer_step()</span></code>, followed by
+<code class="docutils literal notranslate"><span class="pre">_check_convergence()</span></code>. What shouldn’t be included in this section are
+helper methods that aren’t scientifically interesting (e.g.,
+<code class="docutils literal notranslate"><span class="pre">_initialize_optimizer()</span></code>, <code class="docutils literal notranslate"><span class="pre">_store()</span></code>).</p></li>
+<li><p>Next, any other content-related methods, such as helper methods that perform
+useful computations that are not called by <code class="docutils literal notranslate"><span class="pre">__init__()</span></code> or <code class="docutils literal notranslate"><span class="pre">synthesize()</span></code>
+(e.g., <a class="reference internal" href="api/plenoptic.synthesize.html#plenoptic.synthesize.geodesic.Geodesic.calculate_jerkiness" title="plenoptic.synthesize.geodesic.Geodesic.calculate_jerkiness"><code class="xref py py-class docutils literal notranslate"><span class="pre">plenoptic.synthesize.geodesic.Geodesic.calculate_jerkiness</span></code></a>).</p></li>
+<li><p>Next, the helper functions we ignored from earlier, such as
+<code class="docutils literal notranslate"><span class="pre">_initialize_optimizer()</span></code> and <code class="docutils literal notranslate"><span class="pre">_store()</span></code>.</p></li>
+<li><p>Next, <code class="docutils literal notranslate"><span class="pre">save()</span></code>, <code class="docutils literal notranslate"><span class="pre">load()</span></code>, <code class="docutils literal notranslate"><span class="pre">to()</span></code>.</p></li>
+<li><p>Finally, all the properties.</p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="tutorials/applications/Demo_Eigendistortion.html" class="btn btn-neutral float-left" title="Reproducing Berardino et al., 2017 (Eigendistortions)" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="tips.html" class="btn btn-neutral float-right" title="Tips and Tricks" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2019, Lab for Computational Vision.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

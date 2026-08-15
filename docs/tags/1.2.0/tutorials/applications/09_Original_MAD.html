@@ -1,0 +1,441 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Reproducing Wang and Simoncelli, 2008 (MAD Competition) &mdash; plenoptic 1.2.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/tabs.css?v=4c969af8" />
+      <link rel="stylesheet" type="text/css" href="../../_static/nbsphinx-code-cells.css?v=2aa19091" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=6efca38a"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=f281be69"></script>
+      <script src="../../_static/tabs.js?v=3ee01567"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+      <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Reproducing Berardino et al., 2017 (Eigendistortions)" href="Demo_Eigendistortion.html" />
+    <link rel="prev" title="Portilla-Simoncelli Texture Metamer" href="../models/Metamer-Portilla-Simoncelli.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+<div style="background-color: rgb(248, 215, 218); color: rgb(114, 28, 36); text-align: center;">
+  <div>
+    <div>This is documentation for <strong>an old version</strong>.
+      <a href="https://docs.plenoptic.org/" style="background-color: rgb(220, 53, 69); color: rgb(255, 255, 255); margin: 1rem; padding: 0.375rem 0.75rem; border-radius: 4px; display: inline-block; text-align: center;">Switch to stable version</a>
+    </div>
+  </div>
+</div>
+ 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            plenoptic
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Basic concepts</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../jupyter.html">Using Jupyter to Run Example Notebooks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../jupyter.html#ffmpeg-and-videos">ffmpeg and videos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../conceptual_intro.html">Conceptual Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../models.html">Model requirements</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../00_quickstart.html">Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../citation.html">Citation Guide</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Synthesis method introductions</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../intro/02_Eigendistortions.html">Eigendistortions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intro/06_Metamer.html">Metamers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intro/07_Simple_MAD.html">MAD Competition Conceptual Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intro/08_MAD_Competition.html">MAD Competition Usage</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Models and metrics</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../models/03_Steerable_Pyramid.html">Steerable Pyramid</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../models/04_Perceptual_distance.html">Perceptual distance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../models/Metamer-Portilla-Simoncelli.html">Portilla-Simoncelli Texture Metamer</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Synthesis method examples</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Reproducing Wang and Simoncelli, 2008 (MAD Competition)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Demo_Eigendistortion.html">Reproducing Berardino et al., 2017 (Eigendistortions)</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Advanced usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../synthesis.html">Synthesis object design</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tips.html">Tips and Tricks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../reproducibility.html">Reproducibility</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/modules.html">API Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/Display.html">Display and animate functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/Synthesis_extensions.html">Extending existing synthesis objects</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">plenoptic</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Reproducing Wang and Simoncelli, 2008 (MAD Competition)</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/tutorials/applications/09_Original_MAD.nblink.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <p><strong>Under development</strong> – this currently contains examples of the earlier MAD synthesis, but we have yet to reproduce it using <code class="docutils literal notranslate"><span class="pre">plenoptic</span></code>.</p>
+<section id="Reproducing-Wang-and-Simoncelli,-2008-(MAD-Competition)">
+<h1>Reproducing Wang and Simoncelli, 2008 (MAD Competition)<a class="headerlink" href="#Reproducing-Wang-and-Simoncelli,-2008-(MAD-Competition)" title="Link to this heading"></a></h1>
+<p>Goal here is to reproduce original MAD Competition results, as generated using the <a class="reference external" href="https://github.com/LabForComputationalVision/MAD_Competition">matlab code</a> originally provided by Zhou Wang and then modified by the authors. MAD Competition is a synthesis method for efficiently computing two models, by generating sets of images that minimize/maximize one model’s loss while holding the other’s constant. For more details, see the <code class="docutils literal notranslate"><span class="pre">07_MAD_Competition</span></code> and <code class="docutils literal notranslate"><span class="pre">08_Simple_MAD</span></code> notebooks.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">plenoptic</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">po</span>
+
+<span class="o">%</span><span class="k">matplotlib</span> inline
+
+<span class="o">%</span><span class="k">load_ext</span> autoreload
+<span class="o">%</span><span class="k">autoreload</span> 2
+</pre></div>
+</div>
+</div>
+<section id="SSIM">
+<h2>SSIM<a class="headerlink" href="#SSIM" title="Link to this heading"></a></h2>
+<p>Before we discuss MAD Competition, let’s look a little at SSIM, since that’s the metric used in the original paper, and which we’ll be using here. Important to remember that SSIM is a similarity metric, so higher is better, and thus a value of 1 means the images are identical and it’s bounded between 0 and 1.</p>
+<p>We have tests to show that this matches the output of the MATLAB code, won’t show here.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">img1</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">einstein</span><span class="p">()</span>
+<span class="n">img2</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">curie</span><span class="p">()</span>
+<span class="n">noisy</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">tools</span><span class="o">.</span><span class="n">add_noise</span><span class="p">(</span><span class="n">img1</span><span class="p">,</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">8</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<p>We can see that increasing the noise level decreases the SSIM value, but not linearly</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">po</span><span class="o">.</span><span class="n">metric</span><span class="o">.</span><span class="n">ssim</span><span class="p">(</span><span class="n">img1</span><span class="p">,</span> <span class="n">noisy</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+/home/billbrod/Documents/plenoptic/src/plenoptic/metric/perceptual_distance.py:42: UserWarning: Image range falls outside [0, 1]. img1: tensor([0.0039, 1.0000]), img2: tensor([-12.3002,  11.9818]). Continuing anyway...
+  warnings.warn(&#34;Image range falls outside [0, 1].&#34;
+/home/billbrod/micromamba/envs/plenoptic/lib/python3.10/site-packages/torch/functional.py:504: UserWarning: torch.meshgrid: in an upcoming release, it will be required to pass the indexing argument. (Triggered internally at ../aten/src/ATen/native/TensorShape.cpp:3526.)
+  return _VF.meshgrid(tensors, **kwargs)  # type: ignore[attr-defined]
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+tensor([[0.0026],
+        [0.0016],
+        [0.0004]])
+</pre></div></div>
+</div>
+<p>And that our noise level does match the MSE</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">po</span><span class="o">.</span><span class="n">metric</span><span class="o">.</span><span class="n">mse</span><span class="p">(</span><span class="n">img1</span><span class="p">,</span> <span class="n">noisy</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+tensor([[2.0000],
+        [4.0000],
+        [8.0000]])
+</pre></div></div>
+</div>
+</section>
+<section id="MAD-Competition">
+<h2>MAD Competition<a class="headerlink" href="#MAD-Competition" title="Link to this heading"></a></h2>
+<p>The following figure shows the results of MAD Competition synthesis using the original MATLAB code. It shows the original image in the top left. We then added some Gaussian noise (with a specified standard error) to get the image right below it. The four images to the right of that are the MAD-synthesized images. The first two have the same mean-squared error (MSE) as the first image (and each other), but the best and worst SSIM value (SSIM is a similarity metric, so higher is better), while the
+second two have the same SSIM as the first image, but the best and worst MSE. By comparing these images, we can get a sense for what MSE and SSIM consider important for image quality.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># We need to download some additional data for this portion of the notebook.</span>
+<span class="c1"># In order to do so, we use an optional dependency, pooch. If the following raises an</span>
+<span class="c1"># ImportError or ModuleNotFoundError then install pooch in your plenoptic</span>
+<span class="c1"># environment and restart your kernel.</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">results</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">tools</span><span class="o">.</span><span class="n">external</span><span class="o">.</span><span class="n">plot_MAD_results</span><span class="p">(</span><span class="s2">&quot;samp6&quot;</span><span class="p">,</span> <span class="p">[</span><span class="mi">128</span><span class="p">],</span> <span class="n">vrange</span><span class="o">=</span><span class="s2">&quot;row1&quot;</span><span class="p">,</span> <span class="n">zoom</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/tutorials_applications_09_Original_MAD_9_0.png" src="../../_images/tutorials_applications_09_Original_MAD_9_0.png" />
+</div>
+</div>
+<p>There’s lots of info here, on the outputs of the MATLAB synthesis. We will later add stuff to investigate this using <code class="docutils literal notranslate"><span class="pre">plenoptic</span></code>.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">results</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+{&#39;L128&#39;: {&#39;FIX_MSE&#39;: 127.99999999999999,
+  &#39;FIX_SSIM&#39;: 0.8183184633106257,
+  &#39;mse_fixmse_maxssim&#39;: array([128., 128., 128., 128., 128., 128., 128., 128., 128., 128., 128.,
+         128., 128., 128., 128., 128., 128., 128., 128., 128., 128., 128.,
+         128., 128., 128., 128., 128., 128., 128., 128., 128., 128., 128.,
+         128., 128., 128., 128., 128., 128., 128., 128., 128., 128., 128.,
+         128., 128., 128., 128., 128., 128., 128., 128., 128., 128., 128.,
+         128., 128., 128., 128., 128., 128., 128., 128., 128., 128., 128.,
+         128., 128., 128., 128., 128., 128., 128., 128., 128., 128., 128.,
+         128., 128., 128., 128., 128., 128., 128., 128., 128., 128., 128.,
+         128., 128., 128., 128., 128., 128., 128., 128., 128., 128., 128.,
+         128.]),
+  &#39;ssim_fixmse_maxssim&#39;: array([0.82669306, 0.83641599, 0.84768936, 0.86021352, 0.87332037,
+         0.8861153 , 0.89794336, 0.90864194, 0.91828312, 0.9270046 ,
+         0.93495769, 0.94226293, 0.94896492, 0.95506452, 0.9605342 ,
+         0.96533558, 0.96945409, 0.97290935, 0.97575609, 0.97807185,
+         0.97994388, 0.98145704, 0.98268627, 0.98369369, 0.98452855,
+         0.98522884, 0.98582351, 0.98633451, 0.98677852, 0.98716831,
+         0.98751374, 0.98782249, 0.98810062, 0.98835294, 0.98858334,
+         0.98879493, 0.98899028, 0.98917148, 0.98934029, 0.98949816,
+         0.9896463 , 0.98978576, 0.98991742, 0.99004203, 0.99016023,
+         0.99027259, 0.99037961, 0.9904817 , 0.99057924, 0.99067257,
+         0.99076198, 0.99084774, 0.99093007, 0.9910092 , 0.99108531,
+         0.99115858, 0.99122917, 0.99129722, 0.99136287, 0.99142623,
+         0.99148744, 0.99154658, 0.99160377, 0.99165909, 0.99171263,
+         0.99176448, 0.9918147 , 0.99186338, 0.99191058, 0.99195637,
+         0.99200081, 0.99204396, 0.99208587, 0.99212661, 0.99216622,
+         0.99220476, 0.99224226, 0.99227877, 0.99231435, 0.99234902,
+         0.99238284, 0.99241583, 0.99244804, 0.99247949, 0.99251023,
+         0.99254029, 0.99256969, 0.99259847, 0.99262665, 0.99265426,
+         0.99268134, 0.99270789, 0.99273395, 0.99275955, 0.99278469,
+         0.99280941, 0.99283372, 0.99285765, 0.9928812 , 0.99290441]),
+  &#39;mse_fixmse_minssim&#39;: array([128., 128., 128., 128., 128., 128., 128., 128., 128., 128., 128.,
+         128., 128., 128., 128., 128., 128., 128., 128., 128., 128., 128.,
+         128., 128., 128., 128., 128., 128., 128., 128., 128., 128., 128.,
+         128., 128., 128., 128., 128., 128., 128., 128., 128., 128., 128.,
+         128., 128., 128., 128., 128., 128., 128., 128., 128., 128., 128.,
+         128., 128., 128., 128., 128., 128., 128., 128., 128., 128., 128.,
+         128., 128., 128., 128., 128., 128., 128., 128., 128., 128., 128.,
+         128., 128., 128., 128., 128., 128., 128., 128., 128., 128., 128.,
+         128., 128., 128., 128., 128., 128., 128., 128., 128., 128., 128.,
+         128.]),
+  &#39;ssim_fixmse_minssim&#39;: array([0.81069721, 0.80415136, 0.79827382, 0.7927989 , 0.78758476,
+         0.7825861 , 0.77782948, 0.77338629, 0.76933555, 0.7657286 ,
+         0.76258054, 0.75987991, 0.75759382, 0.75567185, 0.75405628,
+         0.7526936 , 0.75154034, 0.75056265, 0.74973342, 0.74902986,
+         0.74843227, 0.74792359, 0.7474892 , 0.74711674, 0.74679588,
+         0.74651809, 0.74627635, 0.74606493, 0.74587912, 0.74571508,
+         0.74556965, 0.74544023, 0.74532467, 0.74522116, 0.74512817,
+         0.74504441, 0.74496878, 0.74490032, 0.74483822, 0.74478177,
+         0.74473035, 0.74468342, 0.74464051, 0.74460123, 0.7445652 ,
+         0.74453212, 0.74450172, 0.74447375, 0.74444799, 0.74442426,
+         0.74440239, 0.74438221, 0.7443636 , 0.74434643, 0.74433057,
+         0.74431594, 0.74430244, 0.74428997, 0.74427846, 0.74426784,
+         0.74425803, 0.74424898, 0.74424062, 0.74423291, 0.74422579,
+         0.74421923, 0.74421317, 0.74420758, 0.74420242, 0.74419767,
+         0.74419328, 0.74418924, 0.74418551, 0.74418208, 0.74417891,
+         0.74417599, 0.74417331, 0.74417083, 0.74416855, 0.74416646,
+         0.74416453, 0.74416275, 0.74416112, 0.74415963, 0.74415825,
+         0.74415699, 0.74415583, 0.74415477, 0.7441538 , 0.74415291,
+         0.7441521 , 0.74415135, 0.74415068, 0.74415006, 0.7441495 ,
+         0.74414899, 0.74414853, 0.74414811, 0.74414773, 0.74414739]),
+  &#39;maxssim&#39;: 0.99290440833461,
+  &#39;minssim&#39;: 0.7441473913547447,
+  &#39;mse_fixssim_minmse&#39;: array([127.62569966, 127.25907758, 126.89830629, 126.5432421 ,
+         126.19375253, 125.84970824, 125.51098323, 125.17745477,
+         124.84900331, 124.5255124 , 124.2068686 , 123.89296145,
+         123.58368333, 123.27892946, 122.97859775, 122.68258882,
+         122.39080584, 122.10315454, 121.81954311, 121.53988213,
+         121.26408454, 120.99206555, 120.72374258, 120.45903523,
+         120.19786522, 119.94015629, 119.68583422, 119.43482671,
+         119.18706338, 118.94247568, 118.70099686, 118.46256195,
+         118.22710767, 117.99457239, 117.76489611, 117.53802042,
+         117.31388843, 117.09244474, 116.87363542, 116.65740794,
+         116.44371116, 116.23249528, 116.02371179, 115.81731348,
+         115.61325436, 115.41148964, 115.21197571, 115.01467011,
+         114.81953145, 114.62651948, 114.43559495, 114.24671966,
+         114.0598564 , 113.87496892, 113.69202191, 113.510981  ,
+         113.33181268, 113.15448433, 112.97896417, 112.80522123,
+         112.63322535, 112.46294714, 112.29435797, 112.12742994,
+         111.96213588, 111.79844929, 111.63634436, 111.47579594,
+         111.31677951, 111.15927119, 111.00324769, 110.8486863 ,
+         110.6955649 , 110.54386192, 110.39355633, 110.24462762,
+         110.09705579, 109.95082136, 109.8059053 , 109.66228908,
+         109.5199546 , 109.37888422, 109.23906072, 109.10046731,
+         108.96308761, 108.82690563, 108.69190575, 108.55807275,
+         108.42539176, 108.29384826, 108.16342808, 108.03411739,
+         107.90590266, 107.77877069, 107.6527086 , 107.52770378,
+         107.40374392, 107.280817  , 107.15891125, 107.03801519]),
+  &#39;ssim_fixssim_minmse&#39;: array([0.81831846, 0.81831846, 0.81831846, 0.81831846, 0.81831846,
+         0.81831846, 0.81831846, 0.81831846, 0.81831846, 0.81831846,
+         0.81831846, 0.81831846, 0.81831846, 0.81831846, 0.81831846,
+         0.81831846, 0.81831846, 0.81831846, 0.81831846, 0.81831846,
+         0.81831846, 0.81831846, 0.81831846, 0.81831846, 0.81831846,
+         0.81831846, 0.81831846, 0.81831846, 0.81831846, 0.81831846,
+         0.81831846, 0.81831846, 0.81831846, 0.81831846, 0.81831846,
+         0.81831846, 0.81831846, 0.81831846, 0.81831846, 0.81831846,
+         0.81831846, 0.81831846, 0.81831846, 0.81831846, 0.81831846,
+         0.81831846, 0.81831846, 0.81831846, 0.81831846, 0.81831846,
+         0.81831846, 0.81831846, 0.81831846, 0.81831846, 0.81831846,
+         0.81831846, 0.81831846, 0.81831846, 0.81831846, 0.81831846,
+         0.81831846, 0.81831846, 0.81831846, 0.81831846, 0.81831846,
+         0.81831846, 0.81831846, 0.81831846, 0.81831846, 0.81831846,
+         0.81831846, 0.81831846, 0.81831846, 0.81831846, 0.81831846,
+         0.81831846, 0.81831846, 0.81831846, 0.81831846, 0.81831846,
+         0.81831846, 0.81831846, 0.81831846, 0.81831846, 0.81831846,
+         0.81831846, 0.81831846, 0.81831846, 0.81831846, 0.81831846,
+         0.81831846, 0.81831846, 0.81831846, 0.81831846, 0.81831846,
+         0.81831846, 0.81831846, 0.81831846, 0.81831846, 0.81831846]),
+  &#39;mse_fixssim_maxmse&#39;: array([ 131.81989257,  136.34348117,  141.63201819,  147.93891278,
+          155.38338115,  164.2072263 ,  174.58969259,  180.77038681,
+          187.35687873,  194.48181227,  198.57370304,  202.66885863,
+          206.95343129,  211.44231618,  216.13691245,  221.02634466,
+          226.11581241,  231.45406809,  237.02262995,  242.83028251,
+          248.81360619,  255.03345526,  261.46183743,  268.20589445,
+          271.92855589,  275.50581231,  279.16591822,  282.90724991,
+          286.73714745,  290.64830841,  294.64536986,  298.72977854,
+          302.9070491 ,  307.17661949,  311.52367919,  315.9615864 ,
+          320.49015071,  325.12141654,  329.86378322,  334.71438487,
+          339.66399361,  344.73644098,  349.93210914,  355.25219363,
+          360.69572122,  366.26837608,  371.96846258,  377.80329199,
+          383.77938626,  389.88638347,  396.14353339,  402.54835547,
+          409.12344679,  415.86473831,  422.7769448 ,  429.86538679,
+          437.11955142,  444.55628708,  452.18579893,  460.02165701,
+          468.0649593 ,  476.29650757,  484.7347087 ,  493.40456576,
+          502.30552879,  511.44021594,  520.83114704,  530.48547572,
+          540.40541267,  550.59925317,  561.07367344,  571.86215993,
+          582.96345493,  594.39243813,  606.16232589,  618.28830266,
+          630.7534013 ,  643.57218989,  656.77008653,  670.38608448,
+          684.42229927,  698.90648368,  713.75502045,  729.09525608,
+          744.89191175,  761.03686543,  777.65684378,  794.83179371,
+          812.49479186,  830.66898008,  849.46972268,  868.84766347,
+          888.75751215,  909.25712128,  930.36668338,  952.1656941 ,
+          974.65873922,  997.87604088, 1021.77859313, 1046.42121422]),
+  &#39;ssim_fixssim_maxmse&#39;: array([0.81838315, 0.81837394, 0.81840433, 0.81841667, 0.8184811 ,
+         0.81854265, 0.81865555, 0.8185667 , 0.81860168, 0.8186602 ,
+         0.81849321, 0.81849264, 0.81849454, 0.81849667, 0.81850134,
+         0.81850698, 0.81852163, 0.8185241 , 0.81853312, 0.81854646,
+         0.81856169, 0.81858209, 0.81861676, 0.8186252 , 0.8184758 ,
+         0.81848028, 0.81848157, 0.81848229, 0.8184804 , 0.81848067,
+         0.81848019, 0.81847912, 0.81847739, 0.81847648, 0.81848131,
+         0.81848611, 0.81848742, 0.81848633, 0.81848348, 0.81848151,
+         0.81848324, 0.81848096, 0.81847737, 0.81847369, 0.81847083,
+         0.81846829, 0.81846601, 0.81846364, 0.81846065, 0.81845897,
+         0.81845727, 0.8184584 , 0.81845481, 0.81845096, 0.81844714,
+         0.81844336, 0.81844286, 0.81844313, 0.8184418 , 0.81843787,
+         0.81843385, 0.81843244, 0.81843006, 0.81842643, 0.81842301,
+         0.81842012, 0.8184164 , 0.81841261, 0.81841113, 0.81841123,
+         0.81841167, 0.81840845, 0.81840571, 0.81840289, 0.81840006,
+         0.81839648, 0.81839794, 0.81840175, 0.81840656, 0.81840632,
+         0.8184053 , 0.8184015 , 0.81841222, 0.8184118 , 0.81841594,
+         0.81844041, 0.81845594, 0.81846008, 0.81847317, 0.81848535,
+         0.81848382, 0.81848619, 0.81849768, 0.81851117, 0.81852665,
+         0.81853106, 0.81853637, 0.81854015, 0.81854653, 0.81855083]),
+  &#39;minmse&#39;: 107.03801518643529,
+  &#39;maxmse&#39;: 1046.4212142210524,
+  &#39;noise_level&#39;: 128,
+  &#39;original_image&#39;: &#39;samp6&#39;}}
+</pre></div></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../models/Metamer-Portilla-Simoncelli.html" class="btn btn-neutral float-left" title="Portilla-Simoncelli Texture Metamer" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="Demo_Eigendistortion.html" class="btn btn-neutral float-right" title="Reproducing Berardino et al., 2017 (Eigendistortions)" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2019, Plenoptic authors.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
