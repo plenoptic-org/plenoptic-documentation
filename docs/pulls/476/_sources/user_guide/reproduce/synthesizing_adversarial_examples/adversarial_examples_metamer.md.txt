@@ -62,18 +62,18 @@ po.set_seed(4)
 
 ## Prepare model and images for synthesis
 
-In the following block, we create a {class}`~plenoptic.models.DeepNetFeatures` model matching the output of `"layer4"` of a classic image recognition network, [ResNet50](https://en.wikipedia.org/wiki/Residual_neural_network), trained to classify images into one of [1000 categories](https://deeplearning.cms.waikato.ac.nz/user-guide/class-maps/IMAGENET/).. After creating the model, we then prepare the original image and an image of a different class whose represetnation we try to match. Finally, we ensure that the model and images have the proper device and dtype, and remove the gradient from all model parameters.
+In the following block, we create a {class}`~plenoptic.models.DeepNetFeatures` model matching the output of final layer `"fc"` of a classic image recognition network, [ResNet50](https://en.wikipedia.org/wiki/Residual_neural_network), trained to classify images into one of [1000 categories](https://deeplearning.cms.waikato.ac.nz/user-guide/class-maps/IMAGENET/).. After creating the model, we then prepare the original image and an image of a different class whose represetnation we try to match. Finally, we ensure that the model and images have the proper device and dtype, and remove the gradient from all model parameters.
 
 To learn more about any of these steps and why we take them, read [](deep_nets).
 
-As part of this procedure, we must choose an image whose `"layer4"` representation (and thus, categorization) we would like to match. For this example let us fool the network into thinking a macaque is a cheeseburger (image taken from the Caltech256 dataset {cite:alp}`griffin_caltech_2022`).
+As part of this procedure, we must choose an image whose `"fc"` representation (and thus, categorization) we would like to match. For this example let us fool the network into thinking a macaque is a cheeseburger (image taken from the Caltech256 dataset {cite:alp}`griffin_caltech_2022`).
 
 +++
 
-:::{admonition} Why choose `"layer4"`?
+:::{admonition} Would matching other layers also work?
 :class: dropdown hint
 
-Ideally, metamers of an early layer should also be metamers of all subsequent layers. However this is not the case in practise because of the additional constraint on the metamer image we put in pixel space (explained in the following sections). Even when the loss has converged, there will still be some residual error between the original representation and the synthesized representation at the matched layer that can propagate through the network and cause later representation to diverge. By choosing the last convolutional layer of the network ("layer 4"), we minimize this divergence in reprensetation, which gives the network more consistent classification behaviour of the metamer image.
+Ideally, metamers of an early layer should also be metamers of all subsequent layers. However this is not the case in practise because of the additional constraint on the metamer image we put in pixel space (explained in the following sections). Even when the loss has converged, there will still be some residual error between the original representation and the synthesized representation at the matched layer that can propagate through the network and cause later representation to diverge. By choosing the last fully connected layer of the network (`"fc"`), we can ensure the network always has the desired classification behaviour of the metamer image.
 :::
 
 ```{code-cell} ipython3
@@ -82,7 +82,7 @@ deepnet = torchvision.models.resnet50(weights=weights)
 deepnet.eval()
 transform = weights.transforms()
 norm = torchvision.transforms.Normalize(transform.mean, transform.std)
-target_layer = "layer4"
+target_layer = "fc"
 model = po.models.DeepNetFeatures(deepnet, target_layer, norm)
 
 img = po.data.macaque()
@@ -129,8 +129,8 @@ def get_category(image):
 def get_likely_categories(category_probs):
     likely_idx = torch.where(category_probs > 0.01)[0]
     likely_idx = likely_idx[torch.argsort(category_probs[likely_idx], descending=True)]
-    likely_cats = "\n- ".join(imagenet_categories[likely_idx].tolist())
-    return likely_cats
+    likely_cats = imagenet_categories[likely_idx].tolist()
+    return "\n".join(f"- {cat}" for cat in likely_cats)
 ```
 
 ResNet50 is trained to classify images into one of [1000 categories](https://deeplearning.cms.waikato.ac.nz/user-guide/class-maps/IMAGENET/). The following plot shows the classification probabilities for the original image as a stem plot. Each of the 1000 categories is represented by a line, whose y-value gives the model's probability that the image belongs to the corresponding category (the x-value is arbitrary). The title shows the label of the most likely category, and the text on the plot shows the other categories with probability higher than 0.01.
@@ -139,7 +139,7 @@ ResNet50 is trained to classify images into one of [1000 categories](https://dee
 category_probs, category = get_category(img)
 po.plot.stem_plot(category_probs, title=category)
 likely_cats = get_likely_categories(category_probs)
-plt.text(700, 0.5, f"Likely categories:\n- {likely_cats}");
+plt.text(700, 0.5, f"Likely categories:\n{likely_cats}");
 ```
 
 The category of our initial image, [guenon](https://en.wikipedia.org/wiki/Guenon), is an Old World monkey. Though it isn't the actual species of the monkey in question (a [Celebes crested macaque](https://en.wikipedia.org/wiki/Celebes_crested_macaque)), it's a reasonable category for it. Notice the model is highly confident in its classification, with a probability of about 0.8 and no other category exceeding a probability of 0.1. The other predicted categories are all [Old World monkeys](https://en.wikipedia.org/wiki/Old_World_monkey).
@@ -150,7 +150,7 @@ Now let us make the same plot for the target image.
 category_probs, category = get_category(target_img)
 po.plot.stem_plot(category_probs, title=category)
 likely_cats = get_likely_categories(category_probs)
-plt.text(500, 0.5, f"Likely categories:\n- {likely_cats}");
+plt.text(500, 0.5, f"Likely categories:\n{likely_cats}");
 ```
 
 Putting it all together, the goal of the synthesis procedure in this notebook is to create an image that looks like our original macaque image while being classified as a cheeseburger.
@@ -201,7 +201,7 @@ met.setup(initial_image=img, optimizer_kwargs={"lr": 0.001})
 Everything has been set up, so now let's synthesize the adversarial example!
 
 ```{code-cell} ipython3
-met.synthesize(store_progress=True, max_iter=1000)
+met.synthesize(max_iter=1000)
 po.plot.synthesis_status(met);
 ```
 
@@ -235,7 +235,7 @@ for i, name in enumerate(["Original", "Target", "Adversarial"]):
     axes[i, 0].xaxis.set_visible(False)
     axes[i, 0].yaxis.set_visible(False)
     axes[i, 1].text(
-        1, 0.5, f"Likely categories:\n- {likely_cats}", transform=axes[i, 1].transAxes
+        1, 0.5, f"Likely categories:\n{likely_cats}", transform=axes[i, 1].transAxes
     )
 category_probs, category = get_category(met.metamer)
 glue("category_name", str(category), display=False)

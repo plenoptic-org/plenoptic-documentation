@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>plenoptic.models.feature_extractor &#8212; plenoptic 2.1.1.dev135 documentation</title>
+    <title>plenoptic.models.feature_extractor &#8212; plenoptic 2.1.1.dev142 documentation</title>
   
   
   
@@ -43,7 +43,7 @@
   <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9" />
 <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9" />
 
-    <script src="../../../_static/documentation_options.js?v=28aaad8b"></script>
+    <script src="../../../_static/documentation_options.js?v=063d0adb"></script>
     <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -141,8 +141,8 @@
       
     
     
-    <img src="../../../_static/Plenoptic_Logo_CMYK_Full_Wide.svg" class="logo__image only-light" alt="plenoptic 2.1.1.dev135 documentation - Home"/>
-    <img src="../../../_static/Plenoptic_Logo_CMYK_Full_DarkMode_Wide.svg" class="logo__image only-dark pst-js-only" alt="plenoptic 2.1.1.dev135 documentation - Home"/>
+    <img src="../../../_static/Plenoptic_Logo_CMYK_Full_Wide.svg" class="logo__image only-light" alt="plenoptic 2.1.1.dev142 documentation - Home"/>
+    <img src="../../../_static/Plenoptic_Logo_CMYK_Full_DarkMode_Wide.svg" class="logo__image only-dark pst-js-only" alt="plenoptic 2.1.1.dev142 documentation - Home"/>
   
   
 </a></div>
@@ -977,6 +977,11 @@
 <span class="sd">            A list of the artists used to update the information on the</span>
 <span class="sd">            plots.</span>
 
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        ValueError</span>
+<span class="sd">            If the data to use is not 2, 3, or 4 dimensional.</span>
+
 <span class="sd">        See Also</span>
 <span class="sd">        --------</span>
 <span class="sd">        plot_representation</span>
@@ -1020,23 +1025,50 @@
             <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">convert_to_dict</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
 
         <span class="n">artists</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="n">per_channel_reps</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">items</span><span class="p">()):</span>
-            <span class="c1"># Average representation across channels</span>
-            <span class="n">avg_channel_rep</span> <span class="o">=</span> <span class="n">v</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">keepdim</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-            <span class="c1"># Average representation across additional dimensions (probably space)</span>
-            <span class="n">per_channel_rep</span> <span class="o">=</span> <span class="n">v</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="nb">tuple</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">v</span><span class="o">.</span><span class="n">ndim</span><span class="p">)))</span>
-            <span class="k">while</span> <span class="n">per_channel_rep</span><span class="o">.</span><span class="n">ndim</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">:</span>
-                <span class="n">per_channel_rep</span> <span class="o">=</span> <span class="n">per_channel_rep</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-            <span class="n">per_channel_reps</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">per_channel_rep</span><span class="p">)</span>
-            <span class="n">art</span> <span class="o">=</span> <span class="n">display</span><span class="o">.</span><span class="n">update_plot</span><span class="p">(</span>
-                <span class="n">axes</span><span class="p">[</span><span class="mi">2</span> <span class="o">*</span> <span class="n">i</span> <span class="p">:</span> <span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)],</span>
-                <span class="p">{</span><span class="s2">&quot;00&quot;</span><span class="p">:</span> <span class="n">avg_channel_rep</span><span class="p">,</span> <span class="s2">&quot;01&quot;</span><span class="p">:</span> <span class="n">per_channel_rep</span><span class="p">},</span>
-                <span class="n">batch_idx</span><span class="o">=</span><span class="n">batch_idx</span><span class="p">,</span>
-            <span class="p">)</span>
+        <span class="n">axis_i</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="c1"># keep track of the axes which contain plots to rescale and the data plotted on</span>
+        <span class="c1"># them</span>
+        <span class="n">rescalable_axes</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">rescalable_reps</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">v</span><span class="o">.</span><span class="n">ndim</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">]:</span>
+                <span class="c1"># Average representation across channels</span>
+                <span class="n">avg_channel_rep</span> <span class="o">=</span> <span class="n">v</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">keepdim</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                <span class="c1"># Average representation across additional dimensions (probably space)</span>
+                <span class="n">per_channel_rep</span> <span class="o">=</span> <span class="n">v</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="nb">tuple</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">v</span><span class="o">.</span><span class="n">ndim</span><span class="p">)))</span>
+                <span class="k">while</span> <span class="n">per_channel_rep</span><span class="o">.</span><span class="n">ndim</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">:</span>
+                    <span class="n">per_channel_rep</span> <span class="o">=</span> <span class="n">per_channel_rep</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+                <span class="n">rescalable_reps</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">per_channel_rep</span><span class="p">)</span>
+                <span class="n">art</span> <span class="o">=</span> <span class="n">display</span><span class="o">.</span><span class="n">update_plot</span><span class="p">(</span>
+                    <span class="n">axes</span><span class="p">[</span><span class="n">axis_i</span> <span class="p">:</span> <span class="n">axis_i</span> <span class="o">+</span> <span class="mi">2</span><span class="p">],</span>
+                    <span class="p">{</span><span class="s2">&quot;00&quot;</span><span class="p">:</span> <span class="n">avg_channel_rep</span><span class="p">,</span> <span class="s2">&quot;01&quot;</span><span class="p">:</span> <span class="n">per_channel_rep</span><span class="p">},</span>
+                    <span class="n">batch_idx</span><span class="o">=</span><span class="n">batch_idx</span><span class="p">,</span>
+                <span class="p">)</span>
+                <span class="c1"># the second axis, showing per-channel rep, is a stem plot and so we</span>
+                <span class="c1"># want to rescale it</span>
+                <span class="n">rescalable_axes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">axis_i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+                <span class="n">axis_i</span> <span class="o">+=</span> <span class="mi">2</span>
+            <span class="k">elif</span> <span class="n">v</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+                <span class="c1"># then there&#39;s only a single axis</span>
+                <span class="n">art</span> <span class="o">=</span> <span class="n">display</span><span class="o">.</span><span class="n">update_plot</span><span class="p">(</span>
+                    <span class="n">axes</span><span class="p">[</span><span class="n">axis_i</span><span class="p">],</span>
+                    <span class="p">{</span><span class="s2">&quot;_container0&quot;</span><span class="p">:</span> <span class="n">v</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">1</span><span class="p">)},</span>
+                    <span class="n">batch_idx</span><span class="o">=</span><span class="n">batch_idx</span><span class="p">,</span>
+                <span class="p">)</span>
+                <span class="c1"># this axis is a stem plot, and so we want to rescale it</span>
+                <span class="n">rescalable_axes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">axis_i</span><span class="p">)</span>
+                <span class="n">rescalable_reps</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+                <span class="n">axis_i</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="s2">&quot;Only 2, 3, or 4d data is supported; don&#39;t know&quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot; how to handle data with ndim=</span><span class="si">{</span><span class="n">v</span><span class="o">.</span><span class="n">ndim</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="p">)</span>
             <span class="n">artists</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">art</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">rescale_ylim</span><span class="p">:</span>
-            <span class="n">display</span><span class="o">.</span><span class="n">_rescale_ylim</span><span class="p">(</span><span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">::</span><span class="mi">2</span><span class="p">],</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">(</span><span class="n">per_channel_reps</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+            <span class="n">display</span><span class="o">.</span><span class="n">_rescale_ylim</span><span class="p">(</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">axes</span><span class="p">)[</span><span class="n">rescalable_axes</span><span class="p">],</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">(</span><span class="n">rescalable_reps</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+            <span class="p">)</span>
         <span class="k">return</span> <span class="n">artists</span></div>
 
 
@@ -1093,6 +1125,8 @@
 <span class="sd">        ------</span>
 <span class="sd">        ValueError</span>
 <span class="sd">            If both ``figsize`` and ``ax`` are not ``None``.</span>
+<span class="sd">        ValueError</span>
+<span class="sd">            If the data to plot is not 2, 3, or 4 dimensional.</span>
 
 <span class="sd">        Examples</span>
 <span class="sd">        --------</span>
@@ -1190,17 +1224,33 @@
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">items</span><span class="p">()):</span>
             <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="n">gs</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
 
-            <span class="c1"># Average representation across channels</span>
-            <span class="n">avg_channel_rep</span> <span class="o">=</span> <span class="n">v</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">keepdim</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-            <span class="c1"># Average representation across additional dimensions (probably space)</span>
-            <span class="n">per_channel_rep</span> <span class="o">=</span> <span class="n">v</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="nb">tuple</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">v</span><span class="o">.</span><span class="n">ndim</span><span class="p">)))</span>
-            <span class="k">while</span> <span class="n">per_channel_rep</span><span class="o">.</span><span class="n">ndim</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">:</span>
-                <span class="n">per_channel_rep</span> <span class="o">=</span> <span class="n">per_channel_rep</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">v</span><span class="o">.</span><span class="n">ndim</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">]:</span>
+                <span class="c1"># Average representation across channels</span>
+                <span class="n">avg_channel_rep</span> <span class="o">=</span> <span class="n">v</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">keepdim</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                <span class="c1"># Average representation across additional dimensions (probably space)</span>
+                <span class="n">per_channel_rep</span> <span class="o">=</span> <span class="n">v</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="nb">tuple</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">v</span><span class="o">.</span><span class="n">ndim</span><span class="p">)))</span>
+                <span class="k">while</span> <span class="n">per_channel_rep</span><span class="o">.</span><span class="n">ndim</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">:</span>
+                    <span class="n">per_channel_rep</span> <span class="o">=</span> <span class="n">per_channel_rep</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 
-            <span class="k">if</span> <span class="n">avg_channel_rep</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
-                <span class="n">height_ratios</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
-            <span class="k">elif</span> <span class="n">avg_channel_rep</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
-                <span class="n">height_ratios</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+                <span class="k">if</span> <span class="n">avg_channel_rep</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+                    <span class="n">height_ratios</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+                <span class="k">elif</span> <span class="n">avg_channel_rep</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
+                    <span class="n">height_ratios</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+                <span class="n">plot_data</span> <span class="o">=</span> <span class="p">{</span>
+                    <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2"> avg across channels&quot;</span><span class="p">:</span> <span class="n">avg_channel_rep</span><span class="p">,</span>
+                    <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2"> per channel (n=</span><span class="si">{</span><span class="n">v</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">:</span> <span class="n">per_channel_rep</span><span class="p">,</span>
+                <span class="p">}</span>
+
+            <span class="k">elif</span> <span class="n">v</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+                <span class="c1"># then we can just plot all channels, single plot. need to make the data</span>
+                <span class="c1"># 3d for generic plot_representation to work</span>
+                <span class="n">plot_data</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">1</span><span class="p">)}</span>
+                <span class="n">height_ratios</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="s2">&quot;Only 2, 3, or 4d data is supported; don&#39;t know&quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot; how to handle data with ndim=</span><span class="si">{</span><span class="n">v</span><span class="o">.</span><span class="n">ndim</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="p">)</span>
 
             <span class="c1"># this warning is not relevant here</span>
             <span class="k">with</span> <span class="n">warnings</span><span class="o">.</span><span class="n">catch_warnings</span><span class="p">():</span>
@@ -1208,10 +1258,7 @@
                     <span class="s2">&quot;ignore&quot;</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="s2">&quot;data has keys, so we&#39;re ignoring title&quot;</span>
                 <span class="p">)</span>
                 <span class="n">ax</span> <span class="o">=</span> <span class="n">display</span><span class="o">.</span><span class="n">plot_representation</span><span class="p">(</span>
-                    <span class="n">data</span><span class="o">=</span><span class="p">{</span>
-                        <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2"> avg across channels&quot;</span><span class="p">:</span> <span class="n">avg_channel_rep</span><span class="p">,</span>
-                        <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2"> per channel (n=</span><span class="si">{</span><span class="n">v</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">:</span> <span class="n">per_channel_rep</span><span class="p">,</span>
-                    <span class="p">},</span>
+                    <span class="n">data</span><span class="o">=</span><span class="n">plot_data</span><span class="p">,</span>
                     <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span>
                     <span class="n">batch_idx</span><span class="o">=</span><span class="n">batch_idx</span><span class="p">,</span>
                     <span class="n">axes_direction</span><span class="o">=</span><span class="s2">&quot;vertical&quot;</span><span class="p">,</span>
