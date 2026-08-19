@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Contributing &#8212; plenoptic 2.1.1.dev112 documentation</title>
+    <title>Contributing &#8212; plenoptic 2.1.1.dev115 documentation</title>
   
   
   
@@ -44,7 +44,7 @@
   <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9" />
 <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9" />
 
-    <script src="../_static/documentation_options.js?v=2abc9dce"></script>
+    <script src="../_static/documentation_options.js?v=e1350d03"></script>
     <script src="../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -143,8 +143,8 @@
       
     
     
-    <img src="../_static/Plenoptic_Logo_CMYK_Full_Wide.svg" class="logo__image only-light" alt="plenoptic 2.1.1.dev112 documentation - Home"/>
-    <img src="../_static/Plenoptic_Logo_CMYK_Full_DarkMode_Wide.svg" class="logo__image only-dark pst-js-only" alt="plenoptic 2.1.1.dev112 documentation - Home"/>
+    <img src="../_static/Plenoptic_Logo_CMYK_Full_Wide.svg" class="logo__image only-light" alt="plenoptic 2.1.1.dev115 documentation - Home"/>
+    <img src="../_static/Plenoptic_Logo_CMYK_Full_DarkMode_Wide.svg" class="logo__image only-dark pst-js-only" alt="plenoptic 2.1.1.dev115 documentation - Home"/>
   
   
 </a></div>
@@ -1016,11 +1016,27 @@ the standard <code class="docutils literal notranslate"><span class="pre">jupyte
 <h3>Long-running synthesis and tutorial notebooks<a class="headerlink" href="#long-running-synthesis-and-tutorial-notebooks" title="Link to this heading">#</a></h3>
 <p>Occasionally, we want to include one or more synthesis calls within a tutorial
 notebook that take a long time to run (for example, because we’re reproducing a
-result from the literature). In order to avoid having the documentation build
-take a long time, we instead write a regression test (in
-<code class="docutils literal notranslate"><span class="pre">tests/test_uploaded_files.py</span></code>), which runs the synthesis, saves the output, and
+result from the literature). There are two issues here: this will make our CI
+take along time and may take an unreasonable amount of time on a user’s laptop
+if they try to follow the notebook (and do not have a GPU available).</p>
+<p>There are two possible solutions, each of which is covered in a following
+section:</p>
+<ul class="simple">
+<li><p>Run the synthesis in a test, cache the outputs, and retrieve them in the
+notebook.</p></li>
+<li><p>Have the notebook’s number of iterations controlled by the environmental
+variable <code class="docutils literal notranslate"><span class="pre">MAX_ITER</span></code>.</p></li>
+</ul>
+<p>One or the other of these should be used if a notebook takes more than 5 minutes
+on a CPU. In both cases, some amount of text in the notebook is required as an
+explanation to the user. See existing notebooks for examples.</p>
+<section id="cache-and-retrieve-outputs">
+<h4>Cache and retrieve outputs.<a class="headerlink" href="#cache-and-retrieve-outputs" title="Link to this heading">#</a></h4>
+<p>To cache and retrieve outputs, write a regression test (in
+<code class="docutils literal notranslate"><span class="pre">tests/test_uploaded_files.py</span></code>) which runs the synthesis, saves the output, and
 compares it against a cached version stored in our OSF project. See
-<code class="docutils literal notranslate"><span class="pre">tests/test_uploaded_files.py</span></code> to see how these tests look. Some important notes:</p>
+<code class="docutils literal notranslate"><span class="pre">tests/test_uploaded_files.py</span></code> to see how these tests look. Some important
+notes:</p>
 <ul>
 <li><p>The new tests should be added to the <code class="docutils literal notranslate"><span class="pre">TestTutorialNotebooks</span></code> class in
 <code class="docutils literal notranslate"><span class="pre">test_uploaded_files.py</span></code>.</p></li>
@@ -1056,6 +1072,20 @@ file, so make sure to update them. The hash can be computed by calling
 <p><code class="docutils literal notranslate"><span class="pre">pytest</span></code> does not run the tests found under <code class="docutils literal notranslate"><span class="pre">TestTutorialNotebooks</span></code> by default,
 since they take a long time. In order to run them, you must explicitly set the
 environment variable <code class="docutils literal notranslate"><span class="pre">RUN_REGRESSION_SYNTH=1</span></code> when calling pytest.</p>
+</section>
+<section id="use-max-iter-environmental-variable">
+<h4>Use <code class="docutils literal notranslate"><span class="pre">MAX_ITER</span></code> environmental variable<a class="headerlink" href="#use-max-iter-environmental-variable" title="Link to this heading">#</a></h4>
+<p>Another approach is to have the number of synthesis iterations (the <code class="docutils literal notranslate"><span class="pre">max_iter</span></code>
+argument accepted by all <code class="docutils literal notranslate"><span class="pre">synthesize</span></code> <!-- skip-lint --> methods) controlled by an environmental
+variable, <code class="docutils literal notranslate"><span class="pre">MAX_ITER</span></code>. In this case, <code class="docutils literal notranslate"><span class="pre">MAX_ITER</span></code> should be set at the top of the
+notebook, with some default value: <code class="docutils literal notranslate"><span class="pre">MAX_ITER</span> <span class="pre">=</span> <span class="pre">int(os.environ.get(&quot;MAX_ITER&quot;,</span> <span class="pre">500))</span></code>,
+accompanied by some text explaining what’s going on to the user.</p>
+<p>This is useful because the “run notebooks” job in <code class="docutils literal notranslate"><span class="pre">ci.yml</span></code>, which runs all of
+our notebooks on the CPU, sets <code class="docutils literal notranslate"><span class="pre">MAX_ITER=10</span></code>, drastically reducing the duration
+of these runs.</p>
+<p>See <code class="docutils literal notranslate"><span class="pre">docs/user_guide/models_and_metrics/deep_nets.md</span></code> and
+<code class="docutils literal notranslate"><span class="pre">docs/tutorials/introductory_tutorial.md</span></code> for examples.</p>
+</section>
 <section id="exact-reproducibility">
 <span id="id9"></span><h4>Exact reproducibility<a class="headerlink" href="#exact-reproducibility" title="Link to this heading">#</a></h4>
 <p>Exact reproducibility with pytorch is hard. See <a class="reference external" href="https://github.com/plenoptic-org/plenoptic/issues/368">issue #368</a> for some details, but the tl;dr is: you should not expect to get the same outputs (or even, within floating point precision) when running synthesis for long enough (seems to be &gt; 1000 iterations) on devices with different CUDA versions and driver versions. Small differences in the output of e.g., <code class="docutils literal notranslate"><span class="pre">torch.einsum</span></code> / <code class="docutils literal notranslate"><span class="pre">torch.matmul</span></code> will lead to small differences in the gradient, which will accumulate and eventually lead to fairly different optimization outputs.</p>
@@ -1404,6 +1434,8 @@ github repo and published at <a class="reference external" href="http://docs.ple
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#adding-tests">Adding tests</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#testing-notebooks">Testing notebooks</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#long-running-synthesis-and-tutorial-notebooks">Long-running synthesis and tutorial notebooks</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#cache-and-retrieve-outputs">Cache and retrieve outputs.</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#use-max-iter-environmental-variable">Use <code class="docutils literal notranslate"><span class="pre">MAX_ITER</span></code> environmental variable</a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#exact-reproducibility">Exact reproducibility</a></li>
 </ul>
 </li>
