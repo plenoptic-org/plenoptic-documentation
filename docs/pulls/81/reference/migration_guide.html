@@ -1,0 +1,1198 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Plenoptic 2.0 Migration Guide &#8212; plenoptic 2.0.2.dev36 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=a95f357e85573c9b56d5" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=a95f357e85573c9b56d5" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=9c3e77be" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/2.0.0/css/dataTables.dataTables.min.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=fe04b56e" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="../_static/scripts/fontawesome.js?digest=a95f357e85573c9b56d5"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=a95f357e85573c9b56d5" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=a95f357e85573c9b56d5" />
+
+    <script src="../_static/documentation_options.js?v=9a866cb0"></script>
+    <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=6dbb43f8"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=b8b12719"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
+    <script src="https://cdn.datatables.net/2.0.0/js/dataTables.min.js"></script>
+    <script src="../_static/search-table.js?v=8762c80d"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'reference/migration_guide';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_version = '0.19.0';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://docs.plenoptic.org/docs/branch/main/_static/version_switcher.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = '2.0.2';
+        DOCUMENTATION_OPTIONS.show_version_warning_banner =
+            true;
+        </script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <script defer="defer" src="../_static/custom-icon.js?v=0bae05a2"></script>
+    <link rel="icon" href="../_static/plenoptic.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="For developers" href="../developers/index.html" />
+    <link rel="prev" title="Citation Guide and Bibliography" href="citation.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="2.0.2" />
+  
+    
+    <script src="../_static/searchtools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script src="../searchindex.js"></script>
+  
+  </head>
+  <body data-default-mode="">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class=" navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/Plenoptic_Logo_CMYK_Full_Wide.svg" class="logo__image only-light" alt="plenoptic 2.0.2.dev36 documentation - Home"/>
+    <img src="../_static/Plenoptic_Logo_CMYK_Full_DarkMode_Wide.svg" class="logo__image only-dark pst-js-only" alt="plenoptic 2.0.2.dev36 documentation - Home"/>
+  
+  
+</a></div>
+    
+      <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-2"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-2"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-2"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-2">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+    
+  </div>
+  
+  <div class=" navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../getting_started/index.html">
+    Getting started
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../user_guide/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../api/index.html">
+    API
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="index.html">
+    Reference
+  </a>
+</li>
+
+            <li class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button"
+                data-bs-toggle="dropdown" aria-expanded="false"
+                aria-controls="pst-nav-more-links">
+                    More
+                </button>
+                <ul id="pst-nav-more-links" class="dropdown-menu">
+                    
+<li class=" ">
+  <a class="nav-link dropdown-item nav-external" href="https://github.com/plenoptic-org/plenoptic/releases">
+    Changelog
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../developers/index.html">
+    For developers
+  </a>
+</li>
+
+                </ul>
+            </li>
+            
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://plenoptic.org" title="Home" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-solid fa-house fa-lg" aria-hidden="true"></i><span class="visually-hidden">Home</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/plenoptic-org/plenoptic" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fab fa-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://pypi.org/project/plenoptic" title="PyPI" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-custom fa-lg" data-prefix="fa-custom" data-icon="pypi" aria-hidden="true"></i><span class="visually-hidden">PyPI</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../getting_started/index.html">
+    Getting started
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../user_guide/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../api/index.html">
+    API
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="index.html">
+    Reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://github.com/plenoptic-org/plenoptic/releases">
+    Changelog
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../developers/index.html">
+    For developers
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://plenoptic.org" title="Home" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-solid fa-house fa-lg" aria-hidden="true"></i><span class="visually-hidden">Home</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/plenoptic-org/plenoptic" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fab fa-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://pypi.org/project/plenoptic" title="PyPI" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-custom fa-lg" data-prefix="fa-custom" data-icon="pypi" aria-hidden="true"></i><span class="visually-hidden">PyPI</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item pst-sidebar-collapse"><button id="pst-collapse-sidebar-button" aria-expanded="true" aria-controls="pst-primary-sidebar"><svg class="pst-icon svg-inline--fa" role="img" aria-hidden="true" focusable="false" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+    <path fill="currentColor" d="M3 15.5C2.36232 15.5 1.74874 15.2564 1.28478 14.8189C0.820828 14.3815 0.541576 13.7832 0.504167 13.1467L0.5 13L0.5 3C0.499965 2.36232 0.743605 1.74874 1.18107 1.28478C1.61854 0.820828 2.21676 0.541576 2.85333 0.504167L3 0.5L13 0.5C13.6377 0.499965 14.2513 0.743605 14.7152 1.18107C15.1792 1.61854 15.4584 2.21676 15.4958 2.85333L15.5 3L15.5 13C15.5 13.6377 15.2564 14.2513 14.8189 14.7152C14.3815 15.1792 13.7832 15.4584 13.1467 15.4958L13 15.5L3 15.5ZM3 13.8333L10.5 13.8333L10.5 2.16667L3 2.16667C2.79589 2.16669 2.59889 2.24163 2.44636 2.37726C2.29383 2.5129 2.19638 2.69979 2.1725 2.9025L2.16667 3L2.16667 13C2.16669 13.2041 2.24163 13.4011 2.37726 13.5536C2.5129 13.7062 2.69979 13.8036 2.9025 13.8275L3 13.8333ZM6.65583 10.325L6.5775 10.2558L4.91083 8.58917C4.76735 8.44567 4.68116 8.25476 4.66843 8.05223C4.65569 7.84971 4.71729 7.6495 4.84167 7.48917L4.91083 7.41083L6.5775 5.74417C6.72747 5.59471 6.9287 5.50794 7.14032 5.50148C7.35194 5.49502 7.55809 5.56935 7.7169 5.70937C7.8757 5.8494 7.97525 6.04463 7.99533 6.25539C8.01541 6.46616 7.95451 6.67667 7.825 6.84417L7.75583 6.9225L6.67917 8L7.75583 9.0775C7.89931 9.22099 7.98551 9.41191 7.99824 9.61443C8.01097 9.81695 7.94938 10.0172 7.825 10.1775L7.75583 10.2558C7.61234 10.3993 7.42142 10.4855 7.2189 10.4982C7.01638 10.511 6.81617 10.4494 6.65583 10.325Z"/>
+  </svg>
+  <span class="pst-collapse-sidebar-label">Collapse Sidebar</span>
+  <span class="pst-expand-sidebar-label">Expand Sidebar</span>
+</button></div>
+        <div class="sidebar-primary-item">
+
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="models.html">Model requirements</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tips.html">Tips and Tricks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="reproducibility.html">Reproducibility and Compatibility</a></li>
+<li class="toctree-l1"><a class="reference internal" href="citation.html">Citation Guide and Bibliography</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Plenoptic 2.0 Migration Guide</a></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="index.html" class="nav-link">Reference</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Plenoptic 2.0 Migration Guide</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="plenoptic-2-0-migration-guide">
+<span id="migrating-guide"></span><h1>Plenoptic 2.0 Migration Guide<a class="headerlink" href="#plenoptic-2-0-migration-guide" title="Link to this heading">#</a></h1>
+<p>Plenoptic version 2.0 introduces a substantial change to the package API: every class and function has been moved, in an attempt to flatten the hierarchy. The names, signature, and usage of individual classes and functions, with few exceptions, have not changed (see <a class="reference internal" href="#plotting-func-changes"><span class="std std-ref">Plotting function changes</span></a> for the exceptions). Therefore, it should be possible to update your plenoptic 1.0 code to work with 2.0 with only some replacements.</p>
+<p>A <a class="reference internal" href="#migration-script"><span class="std std-ref">Migration script</span></a> is provided below which should hopefully simplify this migration. We also recommend reading through the <a class="reference internal" href="#plotting-func-changes"><span class="std std-ref">Plotting function changes</span></a> to see if any of the changes to plotting functions are applicable for your usage. Finally, a <a class="reference internal" href="#migration-table"><span class="std std-ref">Table of API Changes</span></a> can be found on this page which summarizes all changes.</p>
+<p>If you have any problems with this process, please open <a class="reference external" href="https://github.com/plenoptic-org/plenoptic/discussions/new?category=plenoptic-2-0-migration-help">a discussion</a>, and we’ll help with this process!</p>
+<nav class="contents local" id="contents">
+<ul class="simple">
+<li><p><a class="reference internal" href="#plotting-function-changes" id="id4">Plotting function changes</a></p></li>
+<li><p><a class="reference internal" href="#migration-script" id="id5">Migration script</a></p></li>
+<li><p><a class="reference internal" href="#table-of-api-changes" id="id6">Table of API Changes</a></p></li>
+</ul>
+</nav>
+<section id="plotting-function-changes">
+<span id="plotting-func-changes"></span><h2><a class="toc-backref" href="#id4" role="doc-backlink">Plotting function changes</a><a class="headerlink" href="#plotting-function-changes" title="Link to this heading">#</a></h2>
+<p>All plotting functions in plenoptic are now present within the <code class="docutils literal notranslate"><span class="pre">plot</span></code> module. This includes those that operates on tensors (e.g., <a class="reference internal" href="../api/generated/plenoptic.plot.imshow.html#plenoptic.plot.imshow" title="plenoptic.plot.imshow"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.plot.imshow</span></code></a>, previously <code class="docutils literal notranslate"><span class="pre">plenoptic.imshow</span></code>) and synthesis objects (e.g., <a class="reference internal" href="../api/generated/plenoptic.plot.synthesis_loss.html#plenoptic.plot.synthesis_loss" title="plenoptic.plot.synthesis_loss"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.plot.synthesis_loss</span></code></a>, previously <code class="docutils literal notranslate"><span class="pre">plenoptic.synthesize.metamer.plot_loss</span></code>). Therefore, to avoid name collisions and redundancies (e.g., <code class="docutils literal notranslate"><span class="pre">plenoptic.plot.plot_loss</span></code>) and to clarify which functions operate on which synthesis objects, some of the function names have been changed. See <a class="reference internal" href="#migration-table"><span class="std std-ref">Table of API Changes</span></a> and search for <code class="docutils literal notranslate"><span class="pre">plot.</span></code> for a list.</p>
+<p>Additionally, many of the synthesis object plotting functions have been consolidated. For example, <code class="docutils literal notranslate"><span class="pre">plenoptic.synthesize.metamer.plot_loss</span></code> and <code class="docutils literal notranslate"><span class="pre">plenoptic.synthesize.mad_competition.plot_loss</span></code>, which would accept a <a class="reference internal" href="../api/generated/plenoptic.Metamer.html#plenoptic.Metamer" title="plenoptic.Metamer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Metamer</span></code></a> or <a class="reference internal" href="../api/generated/plenoptic.MADCompetition.html#plenoptic.MADCompetition" title="plenoptic.MADCompetition"><code class="xref py py-class docutils literal notranslate"><span class="pre">MADCompetition</span></code></a> object and plot the synthesis loss, have been consolidated into a single function: <a class="reference internal" href="../api/generated/plenoptic.plot.synthesis_loss.html#plenoptic.plot.synthesis_loss" title="plenoptic.plot.synthesis_loss"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.plot.synthesis_loss</span></code></a>, which accepts both object types.</p>
+<p>The argument names and acceptable argument values of these consolidated functions have changed slightly to reflect this consolidation. Consult their docstrings for details. (These updates cannot be handled automatically by the following <a class="reference internal" href="#migration-script"><span class="std std-ref">Migration script</span></a> and so need to be changed manually.)</p>
+</section>
+<section id="migration-script">
+<span id="id1"></span><h2><a class="toc-backref" href="#id5" role="doc-backlink">Migration script</a><a class="headerlink" href="#migration-script" title="Link to this heading">#</a></h2>
+<p>The developers wrote a <a class="reference external" href="https://github.com/plenoptic-org/plenoptic-migrate">little tool</a> to update the plenoptic codebase, documentation, and tests during the migration to plenoptic 2.0. You are welcome to use it on your own code, though we make no guarantees.</p>
+<p>The recommended way to use the tool is via <a class="reference external" href="https://docs.astral.sh/uv/#tools">uvx</a> or <a class="reference external" href="https://pipx.pypa.io/stable/">pipx</a>, both of which will create a temporary isolated virtual environment for the tool:</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-0" name="sd-tab-set-0" type="radio">
+<label class="sd-tab-label" for="sd-tab-item-0">
+pipx</label><div class="sd-tab-content docutils">
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>pipx<span class="w"> </span>run<span class="w"> </span>plenoptic-migrate<span class="w"> </span>--help
+</pre></div>
+</div>
+</div>
+<input id="sd-tab-item-1" name="sd-tab-set-0" type="radio">
+<label class="sd-tab-label" for="sd-tab-item-1">
+uvx</label><div class="sd-tab-content docutils">
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>uvx<span class="w"> </span>plenoptic-migrate<span class="w"> </span>--help
+</pre></div>
+</div>
+</div>
+</div>
+<p>View the tool’s help or <a class="reference external" href="https://github.com/plenoptic-org/plenoptic-migrate">README</a> for details on how to use.</p>
+</section>
+<section id="table-of-api-changes">
+<span id="migration-table"></span><h2><a class="toc-backref" href="#id6" role="doc-backlink">Table of API Changes</a><a class="headerlink" href="#table-of-api-changes" title="Link to this heading">#</a></h2>
+<p>The table below shows functions as they were called in plenoptic’s 1.x releases in the first column, and as they are called in <code class="docutils literal notranslate"><span class="pre">plenoptic&gt;=2.0.0</span></code> in the second. Note that for many functions and classes, there were multiple ways of calling them in plenoptic 1.x (e.g., <code class="docutils literal notranslate"><span class="pre">plenoptic.synthesize.Metamer</span></code> and <code class="docutils literal notranslate"><span class="pre">plenoptic.synthesize.metamer.Metamer</span></code>). This redundancy has been removed in <code class="docutils literal notranslate"><span class="pre">plenoptic&gt;=2.0.0</span></code>.</p>
+<div class="pst-scrollable-table-container"><table class="search-table table">
+<thead>
+<tr class="row-odd"><th class="head"><p>plenoptic 1.x</p></th>
+<th class="head"><p>plenoptic 2.0</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.synthesize.metamer.Metamer</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.Metamer.html#plenoptic.Metamer" title="plenoptic.Metamer"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.Metamer</span></code></a></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.synthesize.Metamer</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.Metamer.html#plenoptic.Metamer" title="plenoptic.Metamer"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.Metamer</span></code></a></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.synthesize.metamer.MetamerCTF</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.MetamerCTF.html#plenoptic.MetamerCTF" title="plenoptic.MetamerCTF"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.MetamerCTF</span></code></a></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.synthesize.MetamerCTF</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.MetamerCTF.html#plenoptic.MetamerCTF" title="plenoptic.MetamerCTF"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.MetamerCTF</span></code></a></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.synthesize.eigendistortion.Eigendistortion</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.Eigendistortion.html#plenoptic.Eigendistortion" title="plenoptic.Eigendistortion"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.Eigendistortion</span></code></a></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.synthesize.Eigendistortion</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.Eigendistortion.html#plenoptic.Eigendistortion" title="plenoptic.Eigendistortion"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.Eigendistortion</span></code></a></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.synthesize.mad_competition.MADCompetition</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.MADCompetition.html#plenoptic.MADCompetition" title="plenoptic.MADCompetition"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.MADCompetition</span></code></a></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.synthesize.MADCompetition</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.MADCompetition.html#plenoptic.MADCompetition" title="plenoptic.MADCompetition"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.MADCompetition</span></code></a></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.simulate.models.portilla_simoncelli.PortillaSimoncelli</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.models.PortillaSimoncelli.html#plenoptic.models.PortillaSimoncelli" title="plenoptic.models.PortillaSimoncelli"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.models.PortillaSimoncelli</span></code></a></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.simulate.PortillaSimoncelli</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.models.PortillaSimoncelli.html#plenoptic.models.PortillaSimoncelli" title="plenoptic.models.PortillaSimoncelli"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.models.PortillaSimoncelli</span></code></a></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.simulate.models.frontend.LinearNonlinear</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.models.LinearNonlinear.html#plenoptic.models.LinearNonlinear" title="plenoptic.models.LinearNonlinear"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.models.LinearNonlinear</span></code></a></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.simulate.LinearNonlinear</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.models.LinearNonlinear.html#plenoptic.models.LinearNonlinear" title="plenoptic.models.LinearNonlinear"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.models.LinearNonlinear</span></code></a></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.simulate.models.frontend.LuminanceGainControl</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.models.LuminanceGainControl.html#plenoptic.models.LuminanceGainControl" title="plenoptic.models.LuminanceGainControl"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.models.LuminanceGainControl</span></code></a></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.simulate.LuminanceGainControl</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.models.LuminanceGainControl.html#plenoptic.models.LuminanceGainControl" title="plenoptic.models.LuminanceGainControl"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.models.LuminanceGainControl</span></code></a></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.simulate.models.frontend.LuminanceContrastGainControl</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.models.LuminanceContrastGainControl.html#plenoptic.models.LuminanceContrastGainControl" title="plenoptic.models.LuminanceContrastGainControl"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.models.LuminanceContrastGainControl</span></code></a></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.simulate.LuminanceContrastGainControl</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.models.LuminanceContrastGainControl.html#plenoptic.models.LuminanceContrastGainControl" title="plenoptic.models.LuminanceContrastGainControl"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.models.LuminanceContrastGainControl</span></code></a></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.simulate.models.frontend.OnOff</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.models.OnOff.html#plenoptic.models.OnOff" title="plenoptic.models.OnOff"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.models.OnOff</span></code></a></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.simulate.OnOff</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.models.OnOff.html#plenoptic.models.OnOff" title="plenoptic.models.OnOff"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.models.OnOff</span></code></a></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.simulate.models.naive.Identity</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.models.Identity.html#plenoptic.models.Identity" title="plenoptic.models.Identity"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.models.Identity</span></code></a></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.simulate.Identity</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.models.Identity.html#plenoptic.models.Identity" title="plenoptic.models.Identity"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.models.Identity</span></code></a></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.simulate.models.naive.Linear</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.models.Linear.html#plenoptic.models.Linear" title="plenoptic.models.Linear"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.models.Linear</span></code></a></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.simulate.Linear</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.models.Linear.html#plenoptic.models.Linear" title="plenoptic.models.Linear"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.models.Linear</span></code></a></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.simulate.models.naive.Gaussian</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.models.Gaussian.html#plenoptic.models.Gaussian" title="plenoptic.models.Gaussian"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.models.Gaussian</span></code></a></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.simulate.Gaussian</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.models.Gaussian.html#plenoptic.models.Gaussian" title="plenoptic.models.Gaussian"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.models.Gaussian</span></code></a></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.simulate.models.naive.CenterSurround</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.models.CenterSurround.html#plenoptic.models.CenterSurround" title="plenoptic.models.CenterSurround"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.models.CenterSurround</span></code></a></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.simulate.CenterSurround</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.models.CenterSurround.html#plenoptic.models.CenterSurround" title="plenoptic.models.CenterSurround"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.models.CenterSurround</span></code></a></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.metric.naive.mse</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.metric.mse.html#plenoptic.metric.mse" title="plenoptic.metric.mse"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.metric.mse</span></code></a></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.metric.model_metric.model_metric_factory</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.metric.model_metric_factory.html#plenoptic.metric.model_metric_factory" title="plenoptic.metric.model_metric_factory"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.metric.model_metric_factory</span></code></a></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.metric.perceptual_distance.ssim</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.metric.ssim.html#plenoptic.metric.ssim" title="plenoptic.metric.ssim"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.metric.ssim</span></code></a></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.metric.perceptual_distance.ms_ssim</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.metric.ms_ssim.html#plenoptic.metric.ms_ssim" title="plenoptic.metric.ms_ssim"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.metric.ms_ssim</span></code></a></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.metric.perceptual_distance.nlpd</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.metric.nlpd.html#plenoptic.metric.nlpd" title="plenoptic.metric.nlpd"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.metric.nlpd</span></code></a></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.metric.perceptual_distance.ssim_map</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.process.ssim_map.html#plenoptic.process.ssim_map" title="plenoptic.process.ssim_map"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.process.ssim_map</span></code></a></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.metric.ssim_map</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.process.ssim_map.html#plenoptic.process.ssim_map" title="plenoptic.process.ssim_map"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.process.ssim_map</span></code></a></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.metric.perceptual_distance.normalized_laplacian_pyramid</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.process.normalized_laplacian_pyramid.html#plenoptic.process.normalized_laplacian_pyramid" title="plenoptic.process.normalized_laplacian_pyramid"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.process.normalized_laplacian_pyramid</span></code></a></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.metric.normalized_laplacian_pyramid</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.process.normalized_laplacian_pyramid.html#plenoptic.process.normalized_laplacian_pyramid" title="plenoptic.process.normalized_laplacian_pyramid"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.process.normalized_laplacian_pyramid</span></code></a></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.simulate.canonical_computations.laplacian_pyramid.LaplacianPyramid</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.process.LaplacianPyramid.html#plenoptic.process.LaplacianPyramid" title="plenoptic.process.LaplacianPyramid"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.process.LaplacianPyramid</span></code></a></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.simulate.LaplacianPyramid</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.process.LaplacianPyramid.html#plenoptic.process.LaplacianPyramid" title="plenoptic.process.LaplacianPyramid"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.process.LaplacianPyramid</span></code></a></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.simulate.canonical_computations.steerable_pyramid_freq.SteerablePyramidFreq</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.process.SteerablePyramidFreq.html#plenoptic.process.SteerablePyramidFreq" title="plenoptic.process.SteerablePyramidFreq"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.process.SteerablePyramidFreq</span></code></a></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.simulate.SteerablePyramidFreq</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.process.SteerablePyramidFreq.html#plenoptic.process.SteerablePyramidFreq" title="plenoptic.process.SteerablePyramidFreq"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.process.SteerablePyramidFreq</span></code></a></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.simulate.canonical_computations.filters.circular_gaussian2d</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.process.circular_gaussian2d.html#plenoptic.process.circular_gaussian2d" title="plenoptic.process.circular_gaussian2d"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.process.circular_gaussian2d</span></code></a></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.simulate.circular_gaussian2d</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.process.circular_gaussian2d.html#plenoptic.process.circular_gaussian2d" title="plenoptic.process.circular_gaussian2d"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.process.circular_gaussian2d</span></code></a></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.tools.signal.rectangular_to_polar</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.process.rectangular_to_polar.html#plenoptic.process.rectangular_to_polar" title="plenoptic.process.rectangular_to_polar"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.process.rectangular_to_polar</span></code></a></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.tools.rectangular_to_polar</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.process.rectangular_to_polar.html#plenoptic.process.rectangular_to_polar" title="plenoptic.process.rectangular_to_polar"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.process.rectangular_to_polar</span></code></a></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.tools.signal.polar_to_rectangular</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.process.polar_to_rectangular.html#plenoptic.process.polar_to_rectangular" title="plenoptic.process.polar_to_rectangular"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.process.polar_to_rectangular</span></code></a></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.tools.polar_to_rectangular</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.process.polar_to_rectangular.html#plenoptic.process.polar_to_rectangular" title="plenoptic.process.polar_to_rectangular"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.process.polar_to_rectangular</span></code></a></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.simulate.canonical_computations.non_linearities.local_gain_control</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.process.local_gain_control.html#plenoptic.process.local_gain_control" title="plenoptic.process.local_gain_control"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.process.local_gain_control</span></code></a></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.simulate.non_linearities.local_gain_control</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.process.local_gain_control.html#plenoptic.process.local_gain_control" title="plenoptic.process.local_gain_control"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.process.local_gain_control</span></code></a></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.simulate.canonical_computations.non_linearities.local_gain_release</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.process.local_gain_release.html#plenoptic.process.local_gain_release" title="plenoptic.process.local_gain_release"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.process.local_gain_release</span></code></a></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.simulate.non_linearities.local_gain_release</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.process.local_gain_release.html#plenoptic.process.local_gain_release" title="plenoptic.process.local_gain_release"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.process.local_gain_release</span></code></a></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.simulate.canonical_computations.non_linearities.rectangular_to_polar_dict</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.process.rectangular_to_polar_dict.html#plenoptic.process.rectangular_to_polar_dict" title="plenoptic.process.rectangular_to_polar_dict"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.process.rectangular_to_polar_dict</span></code></a></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.simulate.non_linearities.rectangular_to_polar_dict</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.process.rectangular_to_polar_dict.html#plenoptic.process.rectangular_to_polar_dict" title="plenoptic.process.rectangular_to_polar_dict"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.process.rectangular_to_polar_dict</span></code></a></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.simulate.canonical_computations.non_linearities.polar_to_rectangular_dict</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.process.polar_to_rectangular_dict.html#plenoptic.process.polar_to_rectangular_dict" title="plenoptic.process.polar_to_rectangular_dict"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.process.polar_to_rectangular_dict</span></code></a></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.simulate.non_linearities.polar_to_rectangular_dict</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.process.polar_to_rectangular_dict.html#plenoptic.process.polar_to_rectangular_dict" title="plenoptic.process.polar_to_rectangular_dict"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.process.polar_to_rectangular_dict</span></code></a></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.simulate.canonical_computations.non_linearities.local_gain_control_dict</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.process.local_gain_control_dict.html#plenoptic.process.local_gain_control_dict" title="plenoptic.process.local_gain_control_dict"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.process.local_gain_control_dict</span></code></a></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.simulate.non_linearities.local_gain_control_dict</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.process.local_gain_control_dict.html#plenoptic.process.local_gain_control_dict" title="plenoptic.process.local_gain_control_dict"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.process.local_gain_control_dict</span></code></a></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.simulate.canonical_computations.non_linearities.local_gain_release_dict</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.process.local_gain_release_dict.html#plenoptic.process.local_gain_release_dict" title="plenoptic.process.local_gain_release_dict"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.process.local_gain_release_dict</span></code></a></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.simulate.non_linearities.local_gain_release_dict</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.process.local_gain_release_dict.html#plenoptic.process.local_gain_release_dict" title="plenoptic.process.local_gain_release_dict"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.process.local_gain_release_dict</span></code></a></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.tools.conv.correlate_downsample</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.process.correlate_downsample.html#plenoptic.process.correlate_downsample" title="plenoptic.process.correlate_downsample"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.process.correlate_downsample</span></code></a></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.tools.correlate_downsample</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.process.correlate_downsample.html#plenoptic.process.correlate_downsample" title="plenoptic.process.correlate_downsample"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.process.correlate_downsample</span></code></a></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.tools.conv.blur_downsample</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.process.blur_downsample.html#plenoptic.process.blur_downsample" title="plenoptic.process.blur_downsample"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.process.blur_downsample</span></code></a></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.tools.blur_downsample</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.process.blur_downsample.html#plenoptic.process.blur_downsample" title="plenoptic.process.blur_downsample"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.process.blur_downsample</span></code></a></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.tools.conv.upsample_convolve</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.process.upsample_convolve.html#plenoptic.process.upsample_convolve" title="plenoptic.process.upsample_convolve"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.process.upsample_convolve</span></code></a></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.tools.upsample_convolve</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.process.upsample_convolve.html#plenoptic.process.upsample_convolve" title="plenoptic.process.upsample_convolve"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.process.upsample_convolve</span></code></a></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.tools.conv.upsample_blur</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.process.upsample_blur.html#plenoptic.process.upsample_blur" title="plenoptic.process.upsample_blur"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.process.upsample_blur</span></code></a></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.tools.upsample_blur</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.process.upsample_blur.html#plenoptic.process.upsample_blur" title="plenoptic.process.upsample_blur"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.process.upsample_blur</span></code></a></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.tools.conv.same_padding</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.process.same_padding.html#plenoptic.process.same_padding" title="plenoptic.process.same_padding"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.process.same_padding</span></code></a></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.tools.same_padding</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.process.same_padding.html#plenoptic.process.same_padding" title="plenoptic.process.same_padding"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.process.same_padding</span></code></a></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.tools.signal.shrink</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.process.shrink.html#plenoptic.process.shrink" title="plenoptic.process.shrink"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.process.shrink</span></code></a></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.tools.shrink</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.process.shrink.html#plenoptic.process.shrink" title="plenoptic.process.shrink"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.process.shrink</span></code></a></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.tools.signal.expand</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.process.expand.html#plenoptic.process.expand" title="plenoptic.process.expand"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.process.expand</span></code></a></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.tools.expand</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.process.expand.html#plenoptic.process.expand" title="plenoptic.process.expand"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.process.expand</span></code></a></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.tools.signal.rescale</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.process.rescale.html#plenoptic.process.rescale" title="plenoptic.process.rescale"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.process.rescale</span></code></a></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.tools.rescale</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.process.rescale.html#plenoptic.process.rescale" title="plenoptic.process.rescale"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.process.rescale</span></code></a></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.tools.signal.add_noise</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.process.add_noise.html#plenoptic.process.add_noise" title="plenoptic.process.add_noise"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.process.add_noise</span></code></a></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.tools.add_noise</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.process.add_noise.html#plenoptic.process.add_noise" title="plenoptic.process.add_noise"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.process.add_noise</span></code></a></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.tools.signal.center_crop</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.process.center_crop.html#plenoptic.process.center_crop" title="plenoptic.process.center_crop"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.process.center_crop</span></code></a></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.tools.center_crop</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.process.center_crop.html#plenoptic.process.center_crop" title="plenoptic.process.center_crop"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.process.center_crop</span></code></a></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.tools.signal.modulate_phase</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.process.modulate_phase.html#plenoptic.process.modulate_phase" title="plenoptic.process.modulate_phase"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.process.modulate_phase</span></code></a></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.tools.modulate_phase</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.process.modulate_phase.html#plenoptic.process.modulate_phase" title="plenoptic.process.modulate_phase"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.process.modulate_phase</span></code></a></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.tools.signal.autocorrelation</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.process.autocorrelation.html#plenoptic.process.autocorrelation" title="plenoptic.process.autocorrelation"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.process.autocorrelation</span></code></a></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.tools.autocorrelation</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.process.autocorrelation.html#plenoptic.process.autocorrelation" title="plenoptic.process.autocorrelation"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.process.autocorrelation</span></code></a></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.tools.stats.variance</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.process.variance.html#plenoptic.process.variance" title="plenoptic.process.variance"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.process.variance</span></code></a></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.tools.variance</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.process.variance.html#plenoptic.process.variance" title="plenoptic.process.variance"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.process.variance</span></code></a></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.tools.stats.skew</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.process.skew.html#plenoptic.process.skew" title="plenoptic.process.skew"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.process.skew</span></code></a></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.tools.skew</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.process.skew.html#plenoptic.process.skew" title="plenoptic.process.skew"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.process.skew</span></code></a></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.tools.stats.kurtosis</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.process.kurtosis.html#plenoptic.process.kurtosis" title="plenoptic.process.kurtosis"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.process.kurtosis</span></code></a></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.tools.kurtosis</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.process.kurtosis.html#plenoptic.process.kurtosis" title="plenoptic.process.kurtosis"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.process.kurtosis</span></code></a></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.tools.data.to_numpy</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.to_numpy.html#plenoptic.to_numpy" title="plenoptic.to_numpy"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.to_numpy</span></code></a></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.tools.to_numpy</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.to_numpy.html#plenoptic.to_numpy" title="plenoptic.to_numpy"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.to_numpy</span></code></a></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.tools.data.convert_float_to_int</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.convert_float_to_int.html#plenoptic.convert_float_to_int" title="plenoptic.convert_float_to_int"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.convert_float_to_int</span></code></a></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.tools.convert_float_to_int</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.convert_float_to_int.html#plenoptic.convert_float_to_int" title="plenoptic.convert_float_to_int"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.convert_float_to_int</span></code></a></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.data.fetch.fetch_data</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.data.fetch_data.html#plenoptic.data.fetch_data" title="plenoptic.data.fetch_data"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.data.fetch_data</span></code></a></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.data.fetch.DOWNLOADABLE_FILES</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.data.DOWNLOADABLE_FILES.html#plenoptic.data.DOWNLOADABLE_FILES" title="plenoptic.data.DOWNLOADABLE_FILES"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.data.DOWNLOADABLE_FILES</span></code></a></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.tools.data.make_disk</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.data.disk.html#plenoptic.data.disk" title="plenoptic.data.disk"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.data.disk</span></code></a></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.tools.make_disk</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.data.disk.html#plenoptic.data.disk" title="plenoptic.data.disk"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.data.disk</span></code></a></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.tools.data.polar_radius</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.data.polar_radius.html#plenoptic.data.polar_radius" title="plenoptic.data.polar_radius"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.data.polar_radius</span></code></a></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.tools.polar_radius</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.data.polar_radius.html#plenoptic.data.polar_radius" title="plenoptic.data.polar_radius"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.data.polar_radius</span></code></a></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.tools.data.polar_angle</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.data.polar_angle.html#plenoptic.data.polar_angle" title="plenoptic.data.polar_angle"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.data.polar_angle</span></code></a></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.tools.polar_angle</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.data.polar_angle.html#plenoptic.data.polar_angle" title="plenoptic.data.polar_angle"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.data.polar_angle</span></code></a></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.tools.data.load_images</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.load_images.html#plenoptic.load_images" title="plenoptic.load_images"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.load_images</span></code></a></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.tools.load_images</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.load_images.html#plenoptic.load_images" title="plenoptic.load_images"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.load_images</span></code></a></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.tools.validate.remove_grad</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.remove_grad.html#plenoptic.remove_grad" title="plenoptic.remove_grad"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.remove_grad</span></code></a></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.tools.remove_grad</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.remove_grad.html#plenoptic.remove_grad" title="plenoptic.remove_grad"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.remove_grad</span></code></a></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.tools.validate.validate_model</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.validate.validate_model.html#plenoptic.validate.validate_model" title="plenoptic.validate.validate_model"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.validate.validate_model</span></code></a></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.tools.validate_model</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.validate.validate_model.html#plenoptic.validate.validate_model" title="plenoptic.validate.validate_model"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.validate.validate_model</span></code></a></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.tools.validate.validate_input</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.validate.validate_input.html#plenoptic.validate.validate_input" title="plenoptic.validate.validate_input"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.validate.validate_input</span></code></a></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.tools.validate_input</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.validate.validate_input.html#plenoptic.validate.validate_input" title="plenoptic.validate.validate_input"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.validate.validate_input</span></code></a></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.tools.validate.validate_metric</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.validate.validate_metric.html#plenoptic.validate.validate_metric" title="plenoptic.validate.validate_metric"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.validate.validate_metric</span></code></a></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.tools.validate_metric</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.validate.validate_metric.html#plenoptic.validate.validate_metric" title="plenoptic.validate.validate_metric"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.validate.validate_metric</span></code></a></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.tools.validate.validate_coarse_to_fine</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.validate.validate_coarse_to_fine.html#plenoptic.validate.validate_coarse_to_fine" title="plenoptic.validate.validate_coarse_to_fine"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.validate.validate_coarse_to_fine</span></code></a></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.tools.validate_coarse_to_fine</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.validate.validate_coarse_to_fine.html#plenoptic.validate.validate_coarse_to_fine" title="plenoptic.validate.validate_coarse_to_fine"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.validate.validate_coarse_to_fine</span></code></a></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.tools.validate.validate_convert_tensor_dict</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.validate.validate_convert_tensor_dict.html#plenoptic.validate.validate_convert_tensor_dict" title="plenoptic.validate.validate_convert_tensor_dict"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.validate.validate_convert_tensor_dict</span></code></a></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.tools.validate_convert_tensor_dict</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.validate.validate_convert_tensor_dict.html#plenoptic.validate.validate_convert_tensor_dict" title="plenoptic.validate.validate_convert_tensor_dict"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.validate.validate_convert_tensor_dict</span></code></a></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.tools.optim.set_seed</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.set_seed.html#plenoptic.set_seed" title="plenoptic.set_seed"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.set_seed</span></code></a></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.tools.set_seed</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.set_seed.html#plenoptic.set_seed" title="plenoptic.set_seed"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.set_seed</span></code></a></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.tools.optim.mse</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.loss.mse.html#plenoptic.loss.mse" title="plenoptic.loss.mse"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.loss.mse</span></code></a></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.tools.mse</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.loss.mse.html#plenoptic.loss.mse" title="plenoptic.loss.mse"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.loss.mse</span></code></a></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.tools.optim.l2_norm</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.loss.l2_norm.html#plenoptic.loss.l2_norm" title="plenoptic.loss.l2_norm"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.loss.l2_norm</span></code></a></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.tools.l2_norm</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.loss.l2_norm.html#plenoptic.loss.l2_norm" title="plenoptic.loss.l2_norm"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.loss.l2_norm</span></code></a></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.tools.optim.relative_sse</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.loss.relative_sse.html#plenoptic.loss.relative_sse" title="plenoptic.loss.relative_sse"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.loss.relative_sse</span></code></a></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.tools.relative_sse</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.loss.relative_sse.html#plenoptic.loss.relative_sse" title="plenoptic.loss.relative_sse"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.loss.relative_sse</span></code></a></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.tools.optim.portilla_simoncelli_loss_factory</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.loss.portilla_simoncelli_loss_factory.html#plenoptic.loss.portilla_simoncelli_loss_factory" title="plenoptic.loss.portilla_simoncelli_loss_factory"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.loss.portilla_simoncelli_loss_factory</span></code></a></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.tools.portilla_simoncelli_loss_factory</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.loss.portilla_simoncelli_loss_factory.html#plenoptic.loss.portilla_simoncelli_loss_factory" title="plenoptic.loss.portilla_simoncelli_loss_factory"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.loss.portilla_simoncelli_loss_factory</span></code></a></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.tools.optim.groupwise_relative_l2_norm_factory</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.loss.groupwise_relative_l2_norm_factory.html#plenoptic.loss.groupwise_relative_l2_norm_factory" title="plenoptic.loss.groupwise_relative_l2_norm_factory"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.loss.groupwise_relative_l2_norm_factory</span></code></a></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.tools.groupwise_relative_l2_norm_factory</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.loss.groupwise_relative_l2_norm_factory.html#plenoptic.loss.groupwise_relative_l2_norm_factory" title="plenoptic.loss.groupwise_relative_l2_norm_factory"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.loss.groupwise_relative_l2_norm_factory</span></code></a></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.tools.optim.penalize_range</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.regularize.penalize_range.html#plenoptic.regularize.penalize_range" title="plenoptic.regularize.penalize_range"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.regularize.penalize_range</span></code></a></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.tools.regularization.penalize_range</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.regularize.penalize_range.html#plenoptic.regularize.penalize_range" title="plenoptic.regularize.penalize_range"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.regularize.penalize_range</span></code></a></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.tools.penalize_range</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.regularize.penalize_range.html#plenoptic.regularize.penalize_range" title="plenoptic.regularize.penalize_range"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.regularize.penalize_range</span></code></a></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.tools.io.examine_saved_synthesis</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.io.examine_saved_synthesis.html#plenoptic.io.examine_saved_synthesis" title="plenoptic.io.examine_saved_synthesis"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.io.examine_saved_synthesis</span></code></a></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.tools.examine_saved_synthesis</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.io.examine_saved_synthesis.html#plenoptic.io.examine_saved_synthesis" title="plenoptic.io.examine_saved_synthesis"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.io.examine_saved_synthesis</span></code></a></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.tools.external.plot_MAD_results</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.external.plot_MAD_results.html#plenoptic.external.plot_MAD_results" title="plenoptic.external.plot_MAD_results"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.external.plot_MAD_results</span></code></a></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.tools.plot_MAD_results</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.external.plot_MAD_results.html#plenoptic.external.plot_MAD_results" title="plenoptic.external.plot_MAD_results"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.external.plot_MAD_results</span></code></a></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.synthesize.metamer.plot_loss</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.plot.synthesis_loss.html#plenoptic.plot.synthesis_loss" title="plenoptic.plot.synthesis_loss"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.plot.synthesis_loss</span></code></a></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.synthesize.metamer.display_metamer</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.plot.synthesis_imshow.html#plenoptic.plot.synthesis_imshow" title="plenoptic.plot.synthesis_imshow"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.plot.synthesis_imshow</span></code></a></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.synthesize.metamer.plot_pixel_values</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.plot.synthesis_histogram.html#plenoptic.plot.synthesis_histogram" title="plenoptic.plot.synthesis_histogram"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.plot.synthesis_histogram</span></code></a></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.synthesize.metamer.plot_representation_error</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.plot.metamer_representation_error.html#plenoptic.plot.metamer_representation_error" title="plenoptic.plot.metamer_representation_error"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.plot.metamer_representation_error</span></code></a></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.synthesize.metamer.plot_synthesis_status</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.plot.synthesis_status.html#plenoptic.plot.synthesis_status" title="plenoptic.plot.synthesis_status"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.plot.synthesis_status</span></code></a></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.synthesize.metamer.animate</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.plot.synthesis_animate.html#plenoptic.plot.synthesis_animate" title="plenoptic.plot.synthesis_animate"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.plot.synthesis_animate</span></code></a></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.synthesize.mad_competition.display_mad_image</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.plot.synthesis_imshow.html#plenoptic.plot.synthesis_imshow" title="plenoptic.plot.synthesis_imshow"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.plot.synthesis_imshow</span></code></a></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.synthesize.mad_competition.display_mad_image_all</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.plot.mad_imshow_all.html#plenoptic.plot.mad_imshow_all" title="plenoptic.plot.mad_imshow_all"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.plot.mad_imshow_all</span></code></a></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.synthesize.mad_competition.plot_loss</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.plot.synthesis_loss.html#plenoptic.plot.synthesis_loss" title="plenoptic.plot.synthesis_loss"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.plot.synthesis_loss</span></code></a></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.synthesize.mad_competition.plot_loss_all</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.plot.mad_loss_all.html#plenoptic.plot.mad_loss_all" title="plenoptic.plot.mad_loss_all"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.plot.mad_loss_all</span></code></a></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.synthesize.mad_competition.plot_pixel_values</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.plot.synthesis_histogram.html#plenoptic.plot.synthesis_histogram" title="plenoptic.plot.synthesis_histogram"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.plot.synthesis_histogram</span></code></a></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.synthesize.mad_competition.plot_synthesis_status</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.plot.synthesis_status.html#plenoptic.plot.synthesis_status" title="plenoptic.plot.synthesis_status"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.plot.synthesis_status</span></code></a></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.synthesize.mad_competition.animate</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.plot.synthesis_animate.html#plenoptic.plot.synthesis_animate" title="plenoptic.plot.synthesis_animate"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.plot.synthesis_animate</span></code></a></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.synthesize.eigendistortion.display_eigendistortion</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.plot.synthesis_imshow.html#plenoptic.plot.synthesis_imshow" title="plenoptic.plot.synthesis_imshow"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.plot.synthesis_imshow</span></code></a></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.synthesize.eigendistortion.display_eigendistortion_all</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.plot.eigendistortion_imshow_all.html#plenoptic.plot.eigendistortion_imshow_all" title="plenoptic.plot.eigendistortion_imshow_all"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.plot.eigendistortion_imshow_all</span></code></a></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.tools.display.imshow</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.plot.imshow.html#plenoptic.plot.imshow" title="plenoptic.plot.imshow"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.plot.imshow</span></code></a></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.tools.imshow</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.plot.imshow.html#plenoptic.plot.imshow" title="plenoptic.plot.imshow"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.plot.imshow</span></code></a></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.imshow</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.plot.imshow.html#plenoptic.plot.imshow" title="plenoptic.plot.imshow"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.plot.imshow</span></code></a></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.tools.display.animshow</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.plot.animshow.html#plenoptic.plot.animshow" title="plenoptic.plot.animshow"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.plot.animshow</span></code></a></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.tools.animshow</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.plot.animshow.html#plenoptic.plot.animshow" title="plenoptic.plot.animshow"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.plot.animshow</span></code></a></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.animshow</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.plot.animshow.html#plenoptic.plot.animshow" title="plenoptic.plot.animshow"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.plot.animshow</span></code></a></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.tools.display.pyrshow</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.plot.pyrshow.html#plenoptic.plot.pyrshow" title="plenoptic.plot.pyrshow"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.plot.pyrshow</span></code></a></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.tools.pyrshow</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.plot.pyrshow.html#plenoptic.plot.pyrshow" title="plenoptic.plot.pyrshow"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.plot.pyrshow</span></code></a></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.pyrshow</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.plot.pyrshow.html#plenoptic.plot.pyrshow" title="plenoptic.plot.pyrshow"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.plot.pyrshow</span></code></a></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.tools.display.plot_representation</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.plot.plot_representation.html#plenoptic.plot.plot_representation" title="plenoptic.plot.plot_representation"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.plot.plot_representation</span></code></a></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.tools.plot_representation</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.plot.plot_representation.html#plenoptic.plot.plot_representation" title="plenoptic.plot.plot_representation"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.plot.plot_representation</span></code></a></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.tools.display.clean_stem_plot</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.plot.stem_plot.html#plenoptic.plot.stem_plot" title="plenoptic.plot.stem_plot"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.plot.stem_plot</span></code></a></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.tools.clean_stem_plot</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.plot.stem_plot.html#plenoptic.plot.stem_plot" title="plenoptic.plot.stem_plot"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.plot.stem_plot</span></code></a></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.tools.display.update_plot</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.plot.update_plot.html#plenoptic.plot.update_plot" title="plenoptic.plot.update_plot"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.plot.update_plot</span></code></a></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.tools.update_plot</span></code></p></td>
+<td><p><a class="reference internal" href="../api/generated/plenoptic.plot.update_plot.html#plenoptic.plot.update_plot" title="plenoptic.plot.update_plot"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.plot.update_plot</span></code></a></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>The following functions are completely new:</p>
+<div class="pst-scrollable-table-container"><table class="table" id="id2">
+<caption><span class="caption-number">Table 1 </span><span class="caption-text">New functions</span><a class="headerlink" href="#id2" title="Link to this table">#</a></caption>
+<tbody>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.plot.histogram</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.io.LoadWarning</span></code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>The following functions are deprecated and no longer accessible:</p>
+<div class="pst-scrollable-table-container"><table class="table" id="id3">
+<caption><span class="caption-number">Table 2 </span><span class="caption-text">Deprecated functions</span><a class="headerlink" href="#id3" title="Link to this table">#</a></caption>
+<tbody>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.tools.display.clean_up_axes</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.tools.clean_up_axes</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.tools.display.rescale_ylim</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.tools.rescale_ylim</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.tools.display.update_stem</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">plenoptic.tools.update_stem</span></code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="citation.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Citation Guide and Bibliography</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../developers/index.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">For developers</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=a95f357e85573c9b56d5"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=a95f357e85573c9b56d5"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2019-2025, Plenoptic authors.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.1.0.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.19.0.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>
