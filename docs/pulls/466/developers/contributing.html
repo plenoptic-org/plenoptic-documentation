@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Contributing &#8212; plenoptic 2.0.2.dev66 documentation</title>
+    <title>Contributing &#8212; plenoptic 2.1.1.dev167 documentation</title>
   
   
   
@@ -44,7 +44,7 @@
   <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9" />
 <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9" />
 
-    <script src="../_static/documentation_options.js?v=b607fba5"></script>
+    <script src="../_static/documentation_options.js?v=97ab34ed"></script>
     <script src="../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -59,7 +59,7 @@
     <script>
         DOCUMENTATION_OPTIONS.theme_version = '0.20.0';
         DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://docs.plenoptic.org/docs/branch/main/_static/version_switcher.json';
-        DOCUMENTATION_OPTIONS.theme_switcher_version_match = '2.0.2';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = '2.1.1';
         DOCUMENTATION_OPTIONS.show_version_warning_banner =
             true;
         </script>
@@ -71,7 +71,7 @@
     <link rel="prev" title="Synthesis object design" href="synthesis.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="2.0.2" />
+  <meta name="docsearch:version" content="2.1.1" />
   
     
     <script src="../_static/searchtools.js"></script>
@@ -143,8 +143,8 @@
       
     
     
-    <img src="../_static/Plenoptic_Logo_CMYK_Full_Wide.svg" class="logo__image only-light" alt="plenoptic 2.0.2.dev66 documentation - Home"/>
-    <img src="../_static/Plenoptic_Logo_CMYK_Full_DarkMode_Wide.svg" class="logo__image only-dark pst-js-only" alt="plenoptic 2.0.2.dev66 documentation - Home"/>
+    <img src="../_static/Plenoptic_Logo_CMYK_Full_Wide.svg" class="logo__image only-light" alt="plenoptic 2.1.1.dev167 documentation - Home"/>
+    <img src="../_static/Plenoptic_Logo_CMYK_Full_DarkMode_Wide.svg" class="logo__image only-dark pst-js-only" alt="plenoptic 2.1.1.dev167 documentation - Home"/>
   
   
 </a></div>
@@ -1049,7 +1049,6 @@ environment variable <code class="docutils literal notranslate"><span class="pre
 <section id="exact-reproducibility">
 <span id="id9"></span><h4>Exact reproducibility<a class="headerlink" href="#exact-reproducibility" title="Link to this heading">#</a></h4>
 <p>Exact reproducibility with pytorch is hard. See <a class="reference external" href="https://github.com/plenoptic-org/plenoptic/issues/368">issue #368</a> for some details, but the tl;dr is: you should not expect to get the same outputs (or even, within floating point precision) when running synthesis for long enough (seems to be &gt; 1000 iterations) on devices with different CUDA versions and driver versions. Small differences in the output of e.g., <code class="docutils literal notranslate"><span class="pre">torch.einsum</span></code> / <code class="docutils literal notranslate"><span class="pre">torch.matmul</span></code> will lead to small differences in the gradient, which will accumulate and eventually lead to fairly different optimization outputs.</p>
-<p>To deal with this, your regression tests should save their output into the <code class="docutils literal notranslate"><span class="pre">uploaded_files</span></code> folder after synthesis (and before checking). The contents of that folder will be made available as <a class="reference external" href="https://www.jenkins.io/doc/pipeline/tour/tests-and-artifacts/">Jenkins artifacts</a>, which you can then download after the test. This will allow you to download the output of any failing test, manually verify the results look good, and then upload them to the OSF to test against.</p>
 <p>To deal with this, all tests for reproducibility should use dtype <code class="docutils literal notranslate"><span class="pre">torch.float64</span></code> (rather than the default <code class="docutils literal notranslate"><span class="pre">torch.float32</span></code>). Additionally, these regression tests should save their output into the <code class="docutils literal notranslate"><span class="pre">uploaded_files</span></code> folder after synthesis (and before checking). The contents of that folder will be made available as <a class="reference external" href="https://www.jenkins.io/doc/pipeline/tour/tests-and-artifacts/">Jenkins artifacts</a>, which you can then download after the test. This will allow you to download the output of any failing test, manually verify the results look good, and then upload them to the OSF to test against.</p>
 <p>Most of these tests are only run when explicitly enabled by setting the environmental variable <code class="docutils literal notranslate"><span class="pre">RUN_REGRESSION_SYNTH=1</span></code>, which we only do on the GPU, since they take a while to run.</p>
 </section>
