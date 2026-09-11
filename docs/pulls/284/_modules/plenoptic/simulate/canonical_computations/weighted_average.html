@@ -1,0 +1,476 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>plenoptic.simulate.canonical_computations.weighted_average &mdash; plenoptic 1.1.1.dev88 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/plot_directive.css" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/tabs.css?v=4c969af8" />
+
+  
+      <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../_static/documentation_options.js?v=d2682407"></script>
+      <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../../_static/copybutton.js?v=f281be69"></script>
+      <script src="../../../../_static/tabs.js?v=3ee01567"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../index.html" class="icon icon-home">
+            plenoptic
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Basic concepts</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../jupyter.html">Using Jupyter to Run Example Notebooks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../jupyter.html#ffmpeg-and-videos">ffmpeg and videos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../conceptual_intro.html">Conceptual Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../models.html">Model requirements</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../tutorials/00_quickstart.html">Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../citation.html">Citation Guide</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Synthesis method introductions</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../tutorials/intro/02_Eigendistortions.html">Eigendistortions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../tutorials/intro/06_Metamer.html">Metamers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../tutorials/intro/07_Simple_MAD.html">MAD Competition Conceptual Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../tutorials/intro/08_MAD_Competition.html">MAD Competition Usage</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Models and metrics</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../tutorials/models/03_Steerable_Pyramid.html">Steerable Pyramid</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../tutorials/models/04_Perceptual_distance.html">Perceptual distance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../tutorials/models/Metamer-Portilla-Simoncelli.html">Portilla-Simoncelli Texture Metamer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../tutorials/models/pooled_texture_model.html">Pooled Texture Model</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Synthesis method examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../tutorials/applications/09_Original_MAD.html">Reproducing Wang and Simoncelli, 2008 (MAD Competition)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../tutorials/applications/Demo_Eigendistortion.html">Reproducing Berardino et al., 2017 (Eigendistortions)</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Advanced usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../synthesis.html">Synthesis object design</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../tips.html">Tips and Tricks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../reproducibility.html">Reproducibility</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../api/modules.html">API Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../tutorials/advanced/Display.html">Display and animate functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../tutorials/advanced/Synthesis_extensions.html">Extending existing synthesis objects</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">plenoptic</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">plenoptic.simulate.canonical_computations.weighted_average</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for plenoptic.simulate.canonical_computations.weighted_average</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python3</span>
+
+<span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">from</span> <span class="nn">torch</span> <span class="kn">import</span> <span class="n">Tensor</span>
+<span class="kn">import</span> <span class="nn">einops</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
+<span class="kn">from</span> <span class="nn">...tools.conv</span> <span class="kn">import</span> <span class="n">blur_downsample</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Literal</span>
+
+
+<div class="viewcode-block" id="SimpleAverage">
+<a class="viewcode-back" href="../../../../api/plenoptic.simulate.canonical_computations.html#plenoptic.simulate.canonical_computations.weighted_average.SimpleAverage">[docs]</a>
+<span class="k">class</span> <span class="nc">SimpleAverage</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Module to average over the last two dimensions of input&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+
+<div class="viewcode-block" id="SimpleAverage.forward">
+<a class="viewcode-back" href="../../../../api/plenoptic.simulate.canonical_computations.html#plenoptic.simulate.canonical_computations.weighted_average.SimpleAverage.forward">[docs]</a>
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Average over the last two dimensions of input.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">))</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="WeightedAverage">
+<a class="viewcode-back" href="../../../../api/plenoptic.simulate.canonical_computations.html#plenoptic.simulate.canonical_computations.weighted_average.WeightedAverage">[docs]</a>
+<span class="k">class</span> <span class="nc">WeightedAverage</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Module to take a weighted average over last two dimensions of tensors.</span>
+
+<span class="sd">    - Weights are set at initialization, must be non-negative, and 3d Tensors (different</span>
+<span class="sd">      weighting regions indexed on first dimension, height and width on last two).</span>
+
+<span class="sd">    - If two weights are set, they are multiplied together when taking the average</span>
+<span class="sd">      (e.g., separable polar angle and eccentricity weights).</span>
+
+<span class="sd">    - Weights are normalized at initialization so that they sum to 1 (as best as</span>
+<span class="sd">      possible). If any weighting region sums to near-zero, an exception is raised. If</span>
+<span class="sd">      there&#39;s variation across weighting region sums, a warning is raised.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    weights_1, weights_2 :</span>
+<span class="sd">        3d Tensors defining the weights for the average.</span>
+<span class="sd">    image_shape :</span>
+<span class="sd">        Last two dimensions of weights tensors</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    weights :</span>
+<span class="sd">        List of one or two 3d Tensors (depending on whether weights_2 set at</span>
+<span class="sd">        initialization) containing the normalized weights.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">weights_1</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span> <span class="n">weights_2</span><span class="p">:</span> <span class="n">Tensor</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_validate_weights</span><span class="p">(</span><span class="n">weights_1</span><span class="p">,</span> <span class="s2">&quot;_1&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">register_buffer</span><span class="p">(</span><span class="s2">&quot;_weights_1&quot;</span><span class="p">,</span> <span class="n">weights_1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_n_weights</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="n">input_einsum</span> <span class="o">=</span> <span class="s2">&quot;w1 h w&quot;</span>
+        <span class="n">output_einsum</span> <span class="o">=</span> <span class="s2">&quot;w1&quot;</span>
+        <span class="k">if</span> <span class="n">weights_2</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_validate_weights</span><span class="p">(</span><span class="n">weights_2</span><span class="p">,</span> <span class="s2">&quot;_2&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">weights_1</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">:]</span> <span class="o">!=</span> <span class="n">weights_2</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">:]:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="s2">&quot;weights_1 and weights_2 must have same height and width!&quot;</span>
+                <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_n_weights</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="n">input_einsum</span> <span class="o">+=</span> <span class="s2">&quot;, w2 h w&quot;</span>
+            <span class="n">output_einsum</span> <span class="o">+=</span> <span class="s2">&quot; w2&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">register_buffer</span><span class="p">(</span><span class="s2">&quot;_weights_2&quot;</span><span class="p">,</span> <span class="n">weights_2</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">image_shape</span> <span class="o">=</span> <span class="n">weights_1</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">:]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_input_einsum</span> <span class="o">=</span> <span class="n">input_einsum</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_output_einsum</span> <span class="o">=</span> <span class="n">output_einsum</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_weight_einsum</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">input_einsum</span><span class="si">}</span><span class="s2"> -&gt; </span><span class="si">{</span><span class="n">output_einsum</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_forward_einsum</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">input_einsum</span><span class="si">}</span><span class="s2">, b c </span><span class="se">{{</span><span class="s2">extra_dims</span><span class="se">}}</span><span class="s2"> h w -&gt; b c </span><span class="si">{</span><span class="n">output_einsum</span><span class="si">}</span><span class="s2"> </span><span class="se">{{</span><span class="s2">extra_dims</span><span class="se">}}</span><span class="s2">&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_extra_dims</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;i1&quot;</span><span class="p">,</span> <span class="s2">&quot;i1 i2&quot;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_normalize_weights</span><span class="p">()</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">weights</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">weights</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_weights_1</span><span class="p">]</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_n_weights</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">weights</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_weights_2</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">weights</span>
+
+    <span class="k">def</span> <span class="nf">_normalize_weights</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Normalize weights.</span>
+
+<span class="sd">        Call sum_weights() to multiply and sum all weights, then:</span>
+
+<span class="sd">        - Check whether any weighting region sum is near-zero. If so, raise ValueError</span>
+
+<span class="sd">        - Check variance of weighting region sums and raise warning if that variance is</span>
+<span class="sd">          not near-zero. (Ideally, all weighting region sums would be the same value.)</span>
+
+<span class="sd">        - Take the modal weighting region sum value and divide all weighting regions by</span>
+<span class="sd">          that value to normalize them. If we have two weight tensors, divide each by</span>
+<span class="sd">          the sqrt of the mode instead.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">weight_sums</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sum_weights</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">isclose</span><span class="p">(</span><span class="n">weight_sums</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">weight_sums</span><span class="p">))</span><span class="o">.</span><span class="n">any</span><span class="p">():</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;Some of the weights sum to zero! This will not work out well.&quot;</span>
+            <span class="p">)</span>
+        <span class="n">var</span> <span class="o">=</span> <span class="n">weight_sums</span><span class="o">.</span><span class="n">var</span><span class="p">()</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">torch</span><span class="o">.</span><span class="n">isclose</span><span class="p">(</span><span class="n">var</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">var</span><span class="p">)):</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+                <span class="s2">&quot;Looks like there&#39;s some variation in the sums across your weights.&quot;</span>
+                <span class="s2">&quot; That might be fine, but just wanted to make sure you knew...&quot;</span>
+            <span class="p">)</span>
+        <span class="n">mode</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">mode</span><span class="p">(</span><span class="n">weight_sums</span><span class="o">.</span><span class="n">flatten</span><span class="p">())</span><span class="o">.</span><span class="n">values</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">torch</span><span class="o">.</span><span class="n">isclose</span><span class="p">(</span><span class="n">mode</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">mode</span><span class="p">)):</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Weights don&#39;t sum to 1, normalizing...&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_n_weights</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_weights_1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_weights_1</span> <span class="o">/</span> <span class="n">mode</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_weights_1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_weights_1</span> <span class="o">/</span> <span class="n">mode</span><span class="o">.</span><span class="n">sqrt</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_weights_2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_weights_2</span> <span class="o">/</span> <span class="n">mode</span><span class="o">.</span><span class="n">sqrt</span><span class="p">()</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_validate_weights</span><span class="p">(</span><span class="n">weights</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span> <span class="n">idx</span><span class="p">:</span> <span class="s2">&quot;str&quot;</span> <span class="o">=</span> <span class="s2">&quot;_1&quot;</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">weights</span><span class="o">.</span><span class="n">ndim</span> <span class="o">!=</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;weights</span><span class="si">{</span><span class="n">idx</span><span class="si">}</span><span class="s2"> must be 3d!&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">weights</span><span class="o">.</span><span class="n">min</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;weights</span><span class="si">{</span><span class="n">idx</span><span class="si">}</span><span class="s2"> must be non-negative!&quot;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="WeightedAverage.forward">
+<a class="viewcode-back" href="../../../../api/plenoptic.simulate.canonical_computations.html#plenoptic.simulate.canonical_computations.weighted_average.WeightedAverage.forward">[docs]</a>
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">image</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Take the weighted average over last two dimensions of input.</span>
+
+<span class="sd">        All other dimensions are preserved.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        image :</span>
+<span class="sd">            4d to 6d Tensor.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        weighted_avg :</span>
+<span class="sd">            Weighted average. Dimensionality depends on both the input&#39;s dimensionality</span>
+<span class="sd">            and ``len(weights)``</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">image</span><span class="o">.</span><span class="n">ndim</span> <span class="o">&lt;</span> <span class="mi">4</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;image must be a tensor of 4 to 6 dimensions!&quot;</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">extra_dims</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_extra_dims</span><span class="p">[</span><span class="n">image</span><span class="o">.</span><span class="n">ndim</span> <span class="o">-</span> <span class="mi">4</span><span class="p">]</span>
+        <span class="k">except</span> <span class="ne">IndexError</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;image must be a tensor of 4 to 6 dimensions!&quot;</span><span class="p">)</span>
+        <span class="n">einsum_str</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_forward_einsum</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">extra_dims</span><span class="o">=</span><span class="n">extra_dims</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">einops</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">weights</span><span class="p">,</span> <span class="n">image</span><span class="p">,</span> <span class="n">einsum_str</span><span class="p">)</span><span class="o">.</span><span class="n">flatten</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="WeightedAverage.einsum">
+<a class="viewcode-back" href="../../../../api/plenoptic.simulate.canonical_computations.html#plenoptic.simulate.canonical_computations.weighted_average.WeightedAverage.einsum">[docs]</a>
+    <span class="k">def</span> <span class="nf">einsum</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">einsum_str</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">*</span><span class="n">tensors</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;More general version of forward.</span>
+
+<span class="sd">        This takes the input einsum_str and prepends self.weights to it and inserts the</span>
+<span class="sd">        weight dimensions into the output after &quot;b c&quot; (for batch, channel). Thus this</span>
+<span class="sd">        will be weird if there&#39;s no &quot;b c&quot; dimensions.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        einsum_str :</span>
+<span class="sd">            String of einsum notation, which must contain &quot;b c&quot; in the output. Intended</span>
+<span class="sd">            use is that this string produces a single output tensor.</span>
+<span class="sd">        tensors :</span>
+<span class="sd">            Any number of tensors</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        output :</span>
+<span class="sd">            The result of this einsum</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">einsum_str</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_input_einsum</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">einsum_str</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;-&gt;&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2"> -&gt; b c </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_output_einsum</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">einsum_str</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;-&gt;&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;b c&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="k">return</span> <span class="n">einops</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">weights</span><span class="p">,</span> <span class="o">*</span><span class="n">tensors</span><span class="p">,</span> <span class="n">einsum_str</span><span class="p">)</span><span class="o">.</span><span class="n">flatten</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="WeightedAverage.sum_weights">
+<a class="viewcode-back" href="../../../../api/plenoptic.simulate.canonical_computations.html#plenoptic.simulate.canonical_computations.weighted_average.WeightedAverage.sum_weights">[docs]</a>
+    <span class="k">def</span> <span class="nf">sum_weights</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Sum weights, largely used for diagnostic purposes.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        sum :</span>
+<span class="sd">            1d or 2d tensor (depending on ``len(weights)``) containing the sum of all</span>
+<span class="sd">            weights.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">einops</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">weights</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_weight_einsum</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="WeightedAveragePyramid">
+<a class="viewcode-back" href="../../../../api/plenoptic.simulate.canonical_computations.html#plenoptic.simulate.canonical_computations.weighted_average.WeightedAveragePyramid">[docs]</a>
+<span class="k">class</span> <span class="nc">WeightedAveragePyramid</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Module to take weighted average across scales.</span>
+
+<span class="sd">    This initializes a ``WeightedAverage`` per scale, down-sampling by a factor of 2</span>
+<span class="sd">    using the ``blur_downsample`` method (and normalizing independently).</span>
+
+<span class="sd">    As with ``WeightedAverage``:</span>
+
+<span class="sd">    - Weights are set at initialization, must be non-negative, and 3d Tensors (different</span>
+<span class="sd">      weighting regions indexed on first dimension, height and width on last two).</span>
+
+<span class="sd">    - If two weights are set, they are multiplied together when taking the average</span>
+<span class="sd">      (e.g., separable polar angle and eccentricity weights).</span>
+
+<span class="sd">    - Weights are normalized at initialization so that they sum to 1 (as best as</span>
+<span class="sd">      possible). If any weighting region sums to near-zero, an exception is raised. If</span>
+<span class="sd">      there&#39;s variation across weighting region sums, a warning is raised.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    weights_1, weights_2 :</span>
+<span class="sd">        3d Tensors defining the weights for the average.</span>
+<span class="sd">    n_scales :</span>
+<span class="sd">        Number of scales.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    weights :</span>
+<span class="sd">        ModuleList of ``WeightedAverage`` at each scale</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">weights_1</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span> <span class="n">weights_2</span><span class="p">:</span> <span class="n">Tensor</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">n_scales</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">4</span>
+    <span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_n_weights</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">weights_2</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="mi">2</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_scales</span> <span class="o">=</span> <span class="n">n_scales</span>
+        <span class="n">weights</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_scales</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">i</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">weights_1</span> <span class="o">=</span> <span class="n">blur_downsample</span><span class="p">(</span>
+                    <span class="n">weights_1</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="mi">1</span><span class="p">,</span> <span class="n">scale_filter</span><span class="o">=</span><span class="kc">True</span>
+                <span class="p">)</span>
+                <span class="n">weights_1</span> <span class="o">=</span> <span class="n">weights_1</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="nb">min</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">weights_2</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">weights_2</span> <span class="o">=</span> <span class="n">blur_downsample</span><span class="p">(</span>
+                        <span class="n">weights_2</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="mi">1</span><span class="p">,</span> <span class="n">scale_filter</span><span class="o">=</span><span class="kc">True</span>
+                    <span class="p">)</span>
+                    <span class="n">weights_2</span> <span class="o">=</span> <span class="n">weights_2</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="nb">min</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+            <span class="c1"># it&#39;s possible negative values will get introduced by the downsampling</span>
+            <span class="c1"># above, in which case we remove them</span>
+            <span class="n">weights</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">WeightedAverage</span><span class="p">(</span><span class="n">weights_1</span><span class="p">,</span> <span class="n">weights_2</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">weights</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">ModuleList</span><span class="p">(</span><span class="n">weights</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">idx</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">weights</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
+
+<div class="viewcode-block" id="WeightedAveragePyramid.forward">
+<a class="viewcode-back" href="../../../../api/plenoptic.simulate.canonical_computations.html#plenoptic.simulate.canonical_computations.weighted_average.WeightedAveragePyramid.forward">[docs]</a>
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">image</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Tensor</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Tensor</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Take the weighted average over last two dimensions of each input in list.</span>
+
+<span class="sd">        All other dimensions are preserved.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        image :</span>
+<span class="sd">            List of 4d to 6d Tensor, each of which has been downsampled by a factor of 2.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        weighted_avg :</span>
+<span class="sd">            Weighted average. Dimensionality depends on both the input&#39;s dimensionality</span>
+<span class="sd">            and whether ``weights_2`` was set at initialization. Scales are stacked</span>
+<span class="sd">            along last dimension.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">w</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span><span class="p">,</span> <span class="n">w</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">weights</span><span class="p">)],</span> <span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="WeightedAveragePyramid.einsum">
+<a class="viewcode-back" href="../../../../api/plenoptic.simulate.canonical_computations.html#plenoptic.simulate.canonical_computations.weighted_average.WeightedAveragePyramid.einsum">[docs]</a>
+    <span class="k">def</span> <span class="nf">einsum</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">einsum_str</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">*</span><span class="n">tensors</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Tensor</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Tensor</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;More general version of forward, operates on each</span>
+
+<span class="sd">        This takes the input einsum_str and prepends self.weights to it and inserts the</span>
+<span class="sd">        weight dimensions into the output after &quot;b c&quot; (for batch, channel). Thus this</span>
+<span class="sd">        will be weird if there&#39;s no &quot;b c&quot; dimensions.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        einsum_str :</span>
+<span class="sd">            String of einsum notation, which must contain &quot;b c&quot; in the output. Intended</span>
+<span class="sd">            use is that this string produces a single output tensor.</span>
+<span class="sd">        tensors :</span>
+<span class="sd">            Any number of lists of tensors (should all have same number of elements,</span>
+<span class="sd">            each corresponding to a different scale and thus downsampled by factor of 2).</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        output :</span>
+<span class="sd">            The result of this einsum. Scales are stacked along last dimension.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span>
+            <span class="p">[</span><span class="n">w</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="n">einsum_str</span><span class="p">,</span> <span class="o">*</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="o">*</span><span class="n">x</span><span class="p">,</span> <span class="n">w</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="n">tensors</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">weights</span><span class="p">)],</span> <span class="n">dim</span><span class="o">=-</span><span class="mi">1</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="WeightedAveragePyramid.sum_weights">
+<a class="viewcode-back" href="../../../../api/plenoptic.simulate.canonical_computations.html#plenoptic.simulate.canonical_computations.weighted_average.WeightedAveragePyramid.sum_weights">[docs]</a>
+    <span class="k">def</span> <span class="nf">sum_weights</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Sum weights, largely used for diagnostic purposes.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        sum :</span>
+<span class="sd">            2d or 3d tensor (depending on whether ``weights_2`` was set at</span>
+<span class="sd">            initialization) containing the sum of all weights on each scale.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">sums</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">weights</span><span class="p">:</span>
+            <span class="n">sums</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">w</span><span class="o">.</span><span class="n">sum_weights</span><span class="p">())</span>
+        <span class="k">return</span> <span class="n">einops</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="n">sums</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;* </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">weights</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">_output_einsum</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2019, Plenoptic authors.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
