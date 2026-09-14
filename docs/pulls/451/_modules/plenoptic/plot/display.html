@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>plenoptic.plot.display &#8212; plenoptic 2.1.1.dev158 documentation</title>
+    <title>plenoptic.plot.display &#8212; plenoptic 2.1.1.dev229 documentation</title>
   
   
   
@@ -43,7 +43,7 @@
   <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=cb8930eaaf36d9849b67" />
 <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=cb8930eaaf36d9849b67" />
 
-    <script src="../../../_static/documentation_options.js?v=d2e1e7e3"></script>
+    <script src="../../../_static/documentation_options.js?v=01f88a8c"></script>
     <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -141,8 +141,8 @@
       
     
     
-    <img src="../../../_static/Plenoptic_Logo_CMYK_Full_Wide.svg" class="logo__image only-light" alt="plenoptic 2.1.1.dev158 documentation - Home"/>
-    <img src="../../../_static/Plenoptic_Logo_CMYK_Full_DarkMode_Wide.svg" class="logo__image only-dark pst-js-only" alt="plenoptic 2.1.1.dev158 documentation - Home"/>
+    <img src="../../../_static/Plenoptic_Logo_CMYK_Full_Wide.svg" class="logo__image only-light" alt="plenoptic 2.1.1.dev229 documentation - Home"/>
+    <img src="../../../_static/Plenoptic_Logo_CMYK_Full_DarkMode_Wide.svg" class="logo__image only-dark pst-js-only" alt="plenoptic 2.1.1.dev229 documentation - Home"/>
   
   
 </a></div>
@@ -625,6 +625,13 @@
 <span class="sd">        displayed at the same height and width, thus, their heights and widths</span>
 <span class="sd">        must be scalar multiples of each other.</span>
 <span class="sd">    vrange</span>
+
+<span class="sd">        .. attention::</span>
+<span class="sd">           This argument only affects behavior for grayscale images. RGB</span>
+<span class="sd">           images will always be displayed with vrange [0, 1] (for floats) or</span>
+<span class="sd">           [0, 255] (for ints), because of how matplotlib handles them (see</span>
+<span class="sd">           ``vmin``, ``vmax`` args in :external:func:`matplotlib.pyplot.imshow`).</span>
+
 <span class="sd">        If a 2-tuple, specifies the image values vmin/vmax that are mapped to</span>
 <span class="sd">        the minimum and maximum value of the colormap, respectively. If a</span>
 <span class="sd">        string:</span>
@@ -700,9 +707,11 @@
 <span class="sd">        restrict the channels.</span>
 <span class="sd">    as_rgb</span>
 <span class="sd">        Whether to consider the channels as encoding RGB(A) values. If ``True``, we</span>
-<span class="sd">        attempt to plot the image in color, so your tensor must have 3 (or 4 if</span>
-<span class="sd">        you want the alpha channel) elements in the channel dimension. If ``False``,</span>
-<span class="sd">        we plot each channel as a separate grayscale image.</span>
+<span class="sd">        attempt to plot the image in color, so your tensor must have 3 (or 4 if you want</span>
+<span class="sd">        the alpha channel) elements in the channel dimension. Note that in this case,</span>
+<span class="sd">        the ``vrange`` argument is ignored and set to ``[0, 1]`` (if ``img`` has a</span>
+<span class="sd">        floating dtype) or ``[0, 255]`` (if integer dtype). If ``False``, we plot each</span>
+<span class="sd">        channel as a separate grayscale image.</span>
 <span class="sd">    **kwargs</span>
 <span class="sd">        Passed to :func:`matplotlib.pyplot.imshow`.</span>
 
@@ -728,6 +737,13 @@
 <span class="sd">        one batch and neither ``batch_idx`` nor ``channel_idx`` is set.</span>
 <span class="sd">    Exception</span>
 <span class="sd">        If ``plot_complex`` takes an illegal value.</span>
+
+<span class="sd">    Warns</span>
+<span class="sd">    -----</span>
+<span class="sd">    UserWarning</span>
+<span class="sd">        If vrange is set and at least one of the videos is RGB, because matplotlib will</span>
+<span class="sd">        only plot RGB images with vranges of [0, 1] (for floats) or [0, 255] (for ints)</span>
+<span class="sd">        (see ``vmin``, ``vmax`` args in :external:func:`matplotlib.pyplot.imshow`).</span>
 
 <span class="sd">    See Also</span>
 <span class="sd">    --------</span>
@@ -864,8 +880,62 @@
 <span class="sd">      &gt;&gt;&gt; po.plot.imshow(color_wheel, as_rgb=True, zoom=0.5)</span>
 <span class="sd">      &lt;PyrFigure size ... with 1 Axes&gt;</span>
 
-<span class="sd">    Otherwise, images with multiple channels will have each channel plotted as a</span>
-<span class="sd">    separate grayscale image:</span>
+<span class="sd">    When ``as_rgb=True``, we have no control over the ``vrange`` because of how</span>
+<span class="sd">    :func:`matplotlib.pyplot.imshow` handles color images (see the documentation of</span>
+<span class="sd">    that function for the ``vmin``, ``vmax`` args). Thus, regardless of user-specified</span>
+<span class="sd">    arguments, ``vrange`` is set to ``[0, 1]`` (for floating-typed inputs) or ``[0,</span>
+<span class="sd">    255]`` (for integer-typed inputs). Additionally, any values outside that range will</span>
+<span class="sd">    be clipped:</span>
+
+<span class="sd">    .. plot::</span>
+<span class="sd">      :context: close-figs</span>
+
+<span class="sd">      &gt;&gt;&gt; print(color_wheel.max(), (2 * color_wheel).max())</span>
+<span class="sd">      tensor(1.) tensor(2.)</span>
+<span class="sd">      &gt;&gt;&gt; po.plot.imshow(</span>
+<span class="sd">      ...     [color_wheel, 2 * color_wheel],</span>
+<span class="sd">      ...     title=&quot;vrange=indep1&quot;,</span>
+<span class="sd">      ...     as_rgb=True,</span>
+<span class="sd">      ...     zoom=0.5,</span>
+<span class="sd">      ... )</span>
+<span class="sd">      &lt;PyrFigure size ... with 2 Axes&gt;</span>
+<span class="sd">      &gt;&gt;&gt; po.plot.imshow(</span>
+<span class="sd">      ...     [color_wheel, 2 * color_wheel],</span>
+<span class="sd">      ...     title=&quot;vrange=auto1&quot;,</span>
+<span class="sd">      ...     vrange=&quot;auto1&quot;,</span>
+<span class="sd">      ...     as_rgb=True,</span>
+<span class="sd">      ...     zoom=0.5,</span>
+<span class="sd">      ... )</span>
+<span class="sd">      &lt;PyrFigure size ... with 2 Axes&gt;</span>
+
+<span class="sd">    Notice that:</span>
+
+<span class="sd">    - The two figures above are identical despite the different ``vrange`` argument.</span>
+
+<span class="sd">    - The two axes in each figure have the same plotted vrange (as shown in the title),</span>
+<span class="sd">      despite their different data ranges.</span>
+
+<span class="sd">    - That the image in the second axis (in each figure) has had many of its values</span>
+<span class="sd">      clipped to 1 and are thus displayed as white.</span>
+
+<span class="sd">    To visualize 3-channel images that aren&#39;t defined in one of the supported ranges</span>
+<span class="sd">    (e.g., differences of RGB images), one can rescale the input before plotting using</span>
+<span class="sd">    a function like :func:`plenoptic.process.rescale`:</span>
+
+<span class="sd">    .. plot::</span>
+<span class="sd">      :context: close-figs</span>
+
+<span class="sd">      &gt;&gt;&gt; small_range = 0.5 * color_wheel</span>
+<span class="sd">      &gt;&gt;&gt; big_range = 2 * color_wheel</span>
+<span class="sd">      &gt;&gt;&gt; imgs = [small_range, big_range]</span>
+<span class="sd">      &gt;&gt;&gt; titles = [f&quot;data_range=[{i.min()}, {i.max()}]&quot; for i in imgs]</span>
+<span class="sd">      &gt;&gt;&gt; imgs += [po.process.rescale(im) for im in imgs]</span>
+<span class="sd">      &gt;&gt;&gt; titles += [&quot;rescaled&quot;, &quot;rescaled&quot;]</span>
+<span class="sd">      &gt;&gt;&gt; po.plot.imshow(imgs, as_rgb=True, zoom=0.5, col_wrap=2, title=titles)</span>
+<span class="sd">      &lt;PyrFigure size ... with 4 Axes&gt;</span>
+
+<span class="sd">    If ``as_rgb=False``, images with multiple channels will have each channel plotted</span>
+<span class="sd">    as a separate grayscale image:</span>
 
 <span class="sd">    .. plot::</span>
 <span class="sd">      :context: close-figs</span>
@@ -1071,6 +1141,13 @@
 <span class="sd">    repeat</span>
 <span class="sd">        Whether to loop the animation or just play it once.</span>
 <span class="sd">    vrange</span>
+
+<span class="sd">        .. attention::</span>
+<span class="sd">           This argument only affects behavior for grayscale images. RGB</span>
+<span class="sd">           images will always be displayed with vrange [0, 1] (for floats) or</span>
+<span class="sd">           [0, 255] (for ints), because of how matplotlib handles them (see</span>
+<span class="sd">           :external:func:`matplotlib.pyplot.imshow`).</span>
+
 <span class="sd">        If a 2-tuple, specifies the image values vmin/vmax that are mapped to</span>
 <span class="sd">        the minimum and maximum value of the colormap, respectively. If a</span>
 <span class="sd">        string:</span>
@@ -1149,7 +1226,9 @@
 <span class="sd">        attempt to plot the image in color, so your tensor must have 3 (or 4 if</span>
 <span class="sd">        you want the alpha channel) elements in the channel dimension. If ``False``,</span>
 <span class="sd">        we plot each channel as a separate grayscale image. Note that if ``True``,</span>
-<span class="sd">        clipping may result, see Warns section below for details.</span>
+<span class="sd">        clipping may result, see Warns section below for details. Additionally, if</span>
+<span class="sd">        ``True``, the ``vrange`` argument is ignored and set to ``[0, 1]`` (if ``img``</span>
+<span class="sd">        has a floating dtype) or ``[0, 255]`` (if integer dtype).</span>
 <span class="sd">    **kwargs</span>
 <span class="sd">        Passed to :func:`matplotlib.pyplot.imshow`.</span>
 
@@ -1181,6 +1260,9 @@
 <span class="sd">        of :func:`matplotlib.pyplot.imshow`.) The warning will say how many frames of</span>
 <span class="sd">        which video were clipped. To avoid clipping, you should remap ``video`` to</span>
 <span class="sd">        [0, 1] before calling this function.</span>
+<span class="sd">    UserWarning</span>
+<span class="sd">        If vrange is set and at least one of the videos is RGB, because matplotlib will</span>
+<span class="sd">        only plot RGB images with vranges of [0, 1] (for floats) or [0, 255] (for ints).</span>
 
 <span class="sd">    See Also</span>
 <span class="sd">    --------</span>
