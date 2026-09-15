@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>plenoptic._synthesize.metamer &#8212; plenoptic 2.1.1.dev229 documentation</title>
+    <title>plenoptic._synthesize.metamer &#8212; plenoptic 2.1.1.dev231 documentation</title>
   
   
   
@@ -43,7 +43,7 @@
   <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=cb8930eaaf36d9849b67" />
 <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=cb8930eaaf36d9849b67" />
 
-    <script src="../../../_static/documentation_options.js?v=01f88a8c"></script>
+    <script src="../../../_static/documentation_options.js?v=46a469c7"></script>
     <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -141,8 +141,8 @@
       
     
     
-    <img src="../../../_static/Plenoptic_Logo_CMYK_Full_Wide.svg" class="logo__image only-light" alt="plenoptic 2.1.1.dev229 documentation - Home"/>
-    <img src="../../../_static/Plenoptic_Logo_CMYK_Full_DarkMode_Wide.svg" class="logo__image only-dark pst-js-only" alt="plenoptic 2.1.1.dev229 documentation - Home"/>
+    <img src="../../../_static/Plenoptic_Logo_CMYK_Full_Wide.svg" class="logo__image only-light" alt="plenoptic 2.1.1.dev231 documentation - Home"/>
+    <img src="../../../_static/Plenoptic_Logo_CMYK_Full_DarkMode_Wide.svg" class="logo__image only-dark pst-js-only" alt="plenoptic 2.1.1.dev231 documentation - Home"/>
   
   
 </a></div>
@@ -842,9 +842,9 @@
 <span class="sd">        &gt;&gt;&gt; met.losses</span>
 <span class="sd">        tensor([0.0194, 0.0198, 0.0179, 0.0160, 0.0145, 0.0132])</span>
 
-<span class="sd">        Synthesize a metamer, using ``store_progress`` so we can examine progress</span>
-<span class="sd">        later. (This also enables us to create a video of the metamer changing over</span>
-<span class="sd">        the course of synthesis, see</span>
+<span class="sd">        Set ``store_progress`` in order to examine the metamer-in-progress over the</span>
+<span class="sd">        course of synthesis. (This also enables us to create a video of the metamer</span>
+<span class="sd">        changing over the course of synthesis, see</span>
 <span class="sd">        :func:`~plenoptic.plot.synthesis_animate`.)</span>
 
 <span class="sd">        &gt;&gt;&gt; met = po.Metamer(img, model)</span>
@@ -1001,9 +1001,10 @@
 <span class="sd">        &gt;&gt;&gt; met.losses[-1]</span>
 <span class="sd">        tensor(0.0132)</span>
 
-<span class="sd">        Can be called with a different image. (Note that, because we called</span>
-<span class="sd">        :meth:`synthesize` with ``store_progress=True``, we cached the metamer</span>
-<span class="sd">        over the course of synthesis):</span>
+<span class="sd">        Can be called with a different image. In the following example, we compute the</span>
+<span class="sd">        objective function on the initial metamer, which thus matches the first stored</span>
+<span class="sd">        loss value (note that, because we called :meth:`synthesize` with</span>
+<span class="sd">        ``store_progress=True``, we cached the metamer over the course of synthesis).</span>
 
 <span class="sd">        &gt;&gt;&gt; met.objective_function(met.saved_metamer[0])</span>
 <span class="sd">        tensor(0.0194, grad_fn=&lt;AddBackward0&gt;)</span>
@@ -1152,15 +1153,6 @@
 <span class="sd">        &#39;pixel_change_norm&#39;: tensor(2.5326),</span>
 <span class="sd">        &#39;gradient_norm&#39;: tensor(0.0010)}</span>
 
-<span class="sd">        Get values from last iteration of synthesis:</span>
-
-<span class="sd">        &gt;&gt;&gt; met.get_progress(-2)</span>
-<span class="sd">        {&#39;losses&#39;: tensor(0.0145),</span>
-<span class="sd">        &#39;iteration&#39;: 4,</span>
-<span class="sd">        &#39;penalties&#39;: tensor(0.0180),</span>
-<span class="sd">        &#39;pixel_change_norm&#39;: tensor(2.2698),</span>
-<span class="sd">        &#39;gradient_norm&#39;: tensor(0.0268)}</span>
-
 <span class="sd">        Get current values:</span>
 
 <span class="sd">        &gt;&gt;&gt; met.get_progress(-1)</span>
@@ -1169,6 +1161,15 @@
 <span class="sd">        &#39;penalties&#39;: tensor(0.0174),</span>
 <span class="sd">        &#39;pixel_change_norm&#39;: None,</span>
 <span class="sd">        &#39;gradient_norm&#39;: None}</span>
+
+<span class="sd">        Get values from last iteration of synthesis:</span>
+
+<span class="sd">        &gt;&gt;&gt; met.get_progress(-2)</span>
+<span class="sd">        {&#39;losses&#39;: tensor(0.0145),</span>
+<span class="sd">        &#39;iteration&#39;: 4,</span>
+<span class="sd">        &#39;penalties&#39;: tensor(0.0180),</span>
+<span class="sd">        &#39;pixel_change_norm&#39;: tensor(2.2698),</span>
+<span class="sd">        &#39;gradient_norm&#39;: tensor(0.0268)}</span>
 
 <span class="sd">        When synthesis is run with ``store_progress=True``, this function also</span>
 <span class="sd">        returns the metamer from the corresponding iteration:</span>
@@ -1187,7 +1188,9 @@
 <span class="sd">        True</span>
 
 <span class="sd">        When synthesis is run with ``store_progress&gt;1``, this function returns the</span>
-<span class="sd">        metamer from the closest iteration:</span>
+<span class="sd">        metamer from the closest iteration. This might not be the specified iteration,</span>
+<span class="sd">        since we only cached the metamer every ``store_progress`` iterations (2, in</span>
+<span class="sd">        the following example):</span>
 
 <span class="sd">        &gt;&gt;&gt; met = po.Metamer(img, model)</span>
 <span class="sd">        &gt;&gt;&gt; met.synthesize(5, store_progress=2)</span>
@@ -1796,7 +1799,7 @@
 <span class="sd">        Examples</span>
 <span class="sd">        --------</span>
 <span class="sd">        If synthesize is called without ``store_progress``, then this attribute</span>
-<span class="sd">        just contains the metamer, though the number of dimensions is different:</span>
+<span class="sd">        just contains the metamer, though there will be an additional dimension:</span>
 
 <span class="sd">        &gt;&gt;&gt; import plenoptic as po</span>
 <span class="sd">        &gt;&gt;&gt; po.set_seed(0)</span>
