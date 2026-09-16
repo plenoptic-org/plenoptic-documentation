@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>plenoptic._synthesize.mad_competition &#8212; plenoptic 0.0.1.dev36 documentation</title>
+    <title>plenoptic._synthesize.mad_competition &#8212; plenoptic 0.0.1.dev29 documentation</title>
   
   
   
@@ -43,7 +43,7 @@
   <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=cb8930eaaf36d9849b67" />
 <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=cb8930eaaf36d9849b67" />
 
-    <script src="../../../_static/documentation_options.js?v=f2ee2990"></script>
+    <script src="../../../_static/documentation_options.js?v=7e3b5a16"></script>
     <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -141,8 +141,8 @@
       
     
     
-    <img src="../../../_static/Plenoptic_Logo_CMYK_Full_Wide.svg" class="logo__image only-light" alt="plenoptic 0.0.1.dev36 documentation - Home"/>
-    <img src="../../../_static/Plenoptic_Logo_CMYK_Full_DarkMode_Wide.svg" class="logo__image only-dark pst-js-only" alt="plenoptic 0.0.1.dev36 documentation - Home"/>
+    <img src="../../../_static/Plenoptic_Logo_CMYK_Full_Wide.svg" class="logo__image only-light" alt="plenoptic 0.0.1.dev29 documentation - Home"/>
+    <img src="../../../_static/Plenoptic_Logo_CMYK_Full_DarkMode_Wide.svg" class="logo__image only-dark pst-js-only" alt="plenoptic 0.0.1.dev29 documentation - Home"/>
   
   
 </a></div>
@@ -580,7 +580,7 @@
 <span class="sd">        ``optimized_metric`` loss. If ``None``, we pick a value so the two</span>
 <span class="sd">        initial losses are approximately equal in magnitude.</span>
 <span class="sd">    penalty_function</span>
-<span class="sd">        A function applied to the metamer during optimization, that returns</span>
+<span class="sd">        A function applied to the MAD image during optimization, that returns</span>
 <span class="sd">        a scalar penalty to be minimized. By penalizing certain properties of</span>
 <span class="sd">        the image, like pixels values outside an allowed range, we can constrain</span>
 <span class="sd">        those image properties. See :ref:`how-to-penalty` in the</span>
@@ -594,6 +594,60 @@
 <span class="sd">           competition: A methodology for comparing computational models of</span>
 <span class="sd">           perceptual discriminability. Journal of Vision, 8(12), 1–13.</span>
 <span class="sd">           https://dx.doi.org/10.1167/8.12.8</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    Synthesize and visualize MAD Competition between SSIM and MSE. Note that MAD</span>
+<span class="sd">    Competition requires two distance metrics (where a value of 0 means the inputs are</span>
+<span class="sd">    identical), and thus we must pass ``1 - ssim`` as our metric, since</span>
+<span class="sd">    :func:`~plenoptic.metric.ssim` is a similarity metric, and thus 0 corresponds to</span>
+<span class="sd">    &quot;completely different&quot; and 1 &quot;identical&quot;.</span>
+
+<span class="sd">    .. plot::</span>
+<span class="sd">      :context: reset</span>
+
+<span class="sd">      &gt;&gt;&gt; import plenoptic as po</span>
+<span class="sd">      &gt;&gt;&gt; import matplotlib.pyplot as plt</span>
+<span class="sd">      &gt;&gt;&gt; img = po.data.einstein()</span>
+<span class="sd">      &gt;&gt;&gt; def dissimilarity(x, y):</span>
+<span class="sd">      ...     return 1 - po.metric.ssim(x, y, weighted=True, pad=&quot;reflect&quot;)</span>
+<span class="sd">      &gt;&gt;&gt; mad = po.MADCompetition(img, dissimilarity, po.metric.mse, &quot;max&quot;, 1e6)</span>
+<span class="sd">      &gt;&gt;&gt; mad.synthesize(200)</span>
+<span class="sd">      &gt;&gt;&gt; fig, axes = plt.subplots(1, 3, figsize=(16, 4), width_ratios=[1, 1, 2])</span>
+<span class="sd">      &gt;&gt;&gt; po.plot.imshow(img, ax=axes[0], title=&quot;Target image&quot;)</span>
+<span class="sd">      &lt;Figure size ... with 3 Axes&gt;</span>
+<span class="sd">      &gt;&gt;&gt; axes[0].xaxis.set_visible(False)</span>
+<span class="sd">      &gt;&gt;&gt; axes[0].yaxis.set_visible(False)</span>
+<span class="sd">      &gt;&gt;&gt; po.plot.synthesis_status(mad, fig=fig, axes_idx={&quot;misc&quot;: 0})</span>
+<span class="sd">      &lt;Figure size ...&gt;</span>
+<span class="sd">      &gt;&gt;&gt; fig.subplots_adjust(wspace=0.3)</span>
+
+<span class="sd">    If :attr:`metric_tradeoff_lambda` is not specified, we will attempt to select a</span>
+<span class="sd">    reasonable value based on the values of the two metrics comparing ``image``</span>
+<span class="sd">    and some random image. You can use this as a starting point, but we recommend</span>
+<span class="sd">    adjusting it.</span>
+
+<span class="sd">    &gt;&gt;&gt; mad = po.MADCompetition(img, dissimilarity, po.metric.mse, &quot;max&quot;)</span>
+<span class="sd">    &gt;&gt;&gt; mad.metric_tradeoff_lambda</span>
+<span class="sd">    10.0</span>
+
+<span class="sd">    Set ``minmax`` to determine whether to minimize or maximize ``optimized_metric``.</span>
+<span class="sd">    Notice that its value, plotted in the rightmost subplot below, decreases, as opposed</span>
+<span class="sd">    to the increase seen above.</span>
+
+<span class="sd">    .. plot::</span>
+<span class="sd">      :context: close-figs</span>
+
+<span class="sd">      &gt;&gt;&gt; mad = po.MADCompetition(img, dissimilarity, po.metric.mse, &quot;min&quot;, 1e6)</span>
+<span class="sd">      &gt;&gt;&gt; mad.synthesize(200)</span>
+<span class="sd">      &gt;&gt;&gt; fig, axes = plt.subplots(1, 3, figsize=(16, 4), width_ratios=[1, 1, 2])</span>
+<span class="sd">      &gt;&gt;&gt; po.plot.imshow(img, ax=axes[0], title=&quot;Target image&quot;)</span>
+<span class="sd">      &lt;Figure size ... with 3 Axes&gt;</span>
+<span class="sd">      &gt;&gt;&gt; axes[0].xaxis.set_visible(False)</span>
+<span class="sd">      &gt;&gt;&gt; axes[0].yaxis.set_visible(False)</span>
+<span class="sd">      &gt;&gt;&gt; po.plot.synthesis_status(mad, fig=fig, axes_idx={&quot;misc&quot;: 0})</span>
+<span class="sd">      &lt;Figure size ...&gt;</span>
+<span class="sd">      &gt;&gt;&gt; fig.subplots_adjust(wspace=0.3)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
@@ -826,6 +880,55 @@
 <span class="sd">        ------</span>
 <span class="sd">        ValueError</span>
 <span class="sd">            If we find a NaN during optimization.</span>
+
+<span class="sd">        See Also</span>
+<span class="sd">        --------</span>
+<span class="sd">        :func:`~plenoptic.plot.synthesis_status`</span>
+<span class="sd">            Create a plot summarizing synthesis status at a given iteration.</span>
+<span class="sd">        :func:`~plenoptic.plot.synthesis_animate`</span>
+<span class="sd">            Create a video of the MAD image changing over the course of</span>
+<span class="sd">            synthesis.</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        &gt;&gt;&gt; import plenoptic as po</span>
+<span class="sd">        &gt;&gt;&gt; po.set_seed(0)</span>
+<span class="sd">        &gt;&gt;&gt; img = po.data.einstein()</span>
+<span class="sd">        &gt;&gt;&gt; def dissimilarity(x, y):</span>
+<span class="sd">        ...     return 1 - po.metric.ssim(x, y, weighted=True, pad=&quot;reflect&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; mad = po.MADCompetition(img, dissimilarity, po.metric.mse, &quot;max&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; # this isn&#39;t enough to run synthesis to completion, just an example</span>
+<span class="sd">        &gt;&gt;&gt; mad.synthesize(5)</span>
+<span class="sd">        &gt;&gt;&gt; mad.losses</span>
+<span class="sd">        tensor([-0.0142, -0.1498, -0.2685, -0.3714, -0.4603, -0.5369])</span>
+
+<span class="sd">        Set ``store_progress`` in order to examine the MAD image-in-progress over the</span>
+<span class="sd">        course of synthesis. (This also enables us to create a video of the MAD image</span>
+<span class="sd">        changing over the course of synthesis, see</span>
+<span class="sd">        :func:`~plenoptic.plot.synthesis_animate`.)</span>
+
+<span class="sd">        &gt;&gt;&gt; mad = po.MADCompetition(img, dissimilarity, po.metric.mse, &quot;max&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; # this isn&#39;t enough to run synthesis to completion, just an example</span>
+<span class="sd">        &gt;&gt;&gt; mad.synthesize(5, store_progress=2)</span>
+<span class="sd">        &gt;&gt;&gt; mad.saved_mad_image.shape</span>
+<span class="sd">        torch.Size([4, 1, 1, 256, 256])</span>
+<span class="sd">        &gt;&gt;&gt; # see loss, etc on the 4th iteration</span>
+<span class="sd">        &gt;&gt;&gt; progress = mad.get_progress(4)</span>
+<span class="sd">        &gt;&gt;&gt; progress.keys()</span>
+<span class="sd">        dict_keys([&#39;losses&#39;, ..., &#39;saved_mad_image&#39;, &#39;store_progress_iteration&#39;])</span>
+<span class="sd">        &gt;&gt;&gt; progress[&quot;losses&quot;]</span>
+<span class="sd">        tensor(-0.4511)</span>
+
+<span class="sd">        Adjust ``stop_criterion`` and ``stop_iters_to_check`` to change how convergence</span>
+<span class="sd">        is determined. In this case, we stop early by making ``stop_criterion`` fairly</span>
+<span class="sd">        large. In practice, you&#39;re more likely to make ``stop_criterion`` smaller to let</span>
+<span class="sd">        synthesis run for longer.</span>
+
+<span class="sd">        &gt;&gt;&gt; mad = po.MADCompetition(img, dissimilarity, po.metric.mse, &quot;max&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; # this isn&#39;t enough to run synthesis to completion, just an example</span>
+<span class="sd">        &gt;&gt;&gt; mad.synthesize(12, stop_criterion=0.1, stop_iters_to_check=2)</span>
+<span class="sd">        &gt;&gt;&gt; len(mad.losses)</span>
+<span class="sd">        6</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># if setup hasn&#39;t been called manually, call it now.</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mad_image</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_scheduler</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
@@ -946,6 +1049,65 @@
 <span class="sd">        -------</span>
 <span class="sd">        loss</span>
 <span class="sd">            1-element tensor containing the loss on this step.</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        &gt;&gt;&gt; import plenoptic as po</span>
+<span class="sd">        &gt;&gt;&gt; po.set_seed(0)</span>
+<span class="sd">        &gt;&gt;&gt; img = po.data.einstein()</span>
+<span class="sd">        &gt;&gt;&gt; def dissimilarity(x, y):</span>
+<span class="sd">        ...     return 1 - po.metric.ssim(x, y, weighted=True, pad=&quot;reflect&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; mad = po.MADCompetition(img, dissimilarity, po.metric.mse, &quot;max&quot;)</span>
+
+<span class="sd">        Before :meth:`setup` or :meth:`synthesize` is called, this returns an</span>
+<span class="sd">        empty tensor because the MAD image attribute hasn&#39;t been initialized:</span>
+
+<span class="sd">        &gt;&gt;&gt; mad.objective_function()</span>
+<span class="sd">        tensor([])</span>
+<span class="sd">        &gt;&gt;&gt; mad.synthesize(5, store_progress=True)</span>
+
+<span class="sd">        When called without any arguments, this returns the current loss:</span>
+
+<span class="sd">        &gt;&gt;&gt; mad.objective_function()</span>
+<span class="sd">        tensor([[-0.5369]], grad_fn=&lt;AddBackward0&gt;)</span>
+<span class="sd">        &gt;&gt;&gt; mad.losses[-1]</span>
+<span class="sd">        tensor(-0.5369)</span>
+
+<span class="sd">        Can be called with a different image. In the following example, we compute the</span>
+<span class="sd">        objective function on the initial MAD image, which thus matches the first stored</span>
+<span class="sd">        loss value (note that, because we called :meth:`synthesize` with</span>
+<span class="sd">        ``store_progress=True``, we cached the MAD image over the course of synthesis).</span>
+
+<span class="sd">        &gt;&gt;&gt; mad.objective_function(mad.saved_mad_image[0])</span>
+<span class="sd">        tensor([[-0.0142]], grad_fn=&lt;AddBackward0&gt;)</span>
+<span class="sd">        &gt;&gt;&gt; mad.losses[0]</span>
+<span class="sd">        tensor(-0.0142)</span>
+
+<span class="sd">        The objective function computes a weighted sum of three components:</span>
+
+<span class="sd">        - :attr:`optimized_metric_loss`, which is either being maximized or minimized,</span>
+<span class="sd">          depending on the value of :attr:`minmax` set at initialization.</span>
+
+<span class="sd">        - The square of the difference between :attr:`reference_metric_loss` and its</span>
+<span class="sd">          initial value. This is done to pin it to its initial value.</span>
+
+<span class="sd">        - :attr:`penalties`, the output of :attr:`penalty_function`, which will be</span>
+<span class="sd">          minimized.</span>
+
+<span class="sd">        &gt;&gt;&gt; opt_loss = mad.optimized_metric_loss[-1]</span>
+<span class="sd">        &gt;&gt;&gt; ref_loss = mad.reference_metric_loss[-1]</span>
+<span class="sd">        &gt;&gt;&gt; init_ref_loss = mad.reference_metric_loss[0]</span>
+<span class="sd">        &gt;&gt;&gt; penalty = mad.penalties[-1]</span>
+<span class="sd">        &gt;&gt;&gt; opt_loss, ref_loss, penalty</span>
+<span class="sd">        (tensor(0.7615), tensor(0.0187), tensor(2.2383))</span>
+<span class="sd">        &gt;&gt;&gt; # We maximize opt_loss by minizimizing its negative</span>
+<span class="sd">        &gt;&gt;&gt; opt_comp = {&quot;min&quot;: 1, &quot;max&quot;: -1}[mad.minmax] * opt_loss</span>
+<span class="sd">        &gt;&gt;&gt; ref_comp = mad.metric_tradeoff_lambda * (ref_loss - init_ref_loss).pow(2)</span>
+<span class="sd">        &gt;&gt;&gt; penalty_comp = mad.penalty_lambda * penalty</span>
+<span class="sd">        &gt;&gt;&gt; opt_comp + ref_comp + penalty_comp</span>
+<span class="sd">        tensor(-0.5369)</span>
+<span class="sd">        &gt;&gt;&gt; mad.objective_function()</span>
+<span class="sd">        tensor([[-0.5369]], grad_fn=&lt;AddBackward0&gt;)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_reference_metric_target</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
@@ -1032,6 +1194,109 @@
 <span class="sd">            If the iteration used for ``saved_mad_image`` is not the same as the</span>
 <span class="sd">            argument ``iteration`` (because e.g., you set ``iteration=3`` but</span>
 <span class="sd">            ``self.store_progress=2``).</span>
+
+<span class="sd">        See Also</span>
+<span class="sd">        --------</span>
+<span class="sd">        :func:`~plenoptic.plot.synthesis_status`</span>
+<span class="sd">            Create a plot summarizing synthesis status at a given iteration.</span>
+<span class="sd">        :func:`~plenoptic.plot.synthesis_animate`</span>
+<span class="sd">            Create a video of the MAD image changing over the course of</span>
+<span class="sd">            synthesis.</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        &gt;&gt;&gt; import plenoptic as po</span>
+<span class="sd">        &gt;&gt;&gt; po.set_seed(0)</span>
+<span class="sd">        &gt;&gt;&gt; img = po.data.einstein()</span>
+<span class="sd">        &gt;&gt;&gt; def dissimilarity(x, y):</span>
+<span class="sd">        ...     return 1 - po.metric.ssim(x, y, weighted=True, pad=&quot;reflect&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; mad = po.MADCompetition(img, dissimilarity, po.metric.mse, &quot;max&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; mad.synthesize(5)</span>
+
+<span class="sd">        Get values from the first iteration:</span>
+
+<span class="sd">        &gt;&gt;&gt; mad.get_progress(0)</span>
+<span class="sd">        {&#39;losses&#39;: tensor(-0.0142),</span>
+<span class="sd">        &#39;iteration&#39;: 0,</span>
+<span class="sd">        &#39;penalties&#39;: tensor(5.8395),</span>
+<span class="sd">        &#39;pixel_change_norm&#39;: tensor(2.5577),</span>
+<span class="sd">        &#39;gradient_norm&#39;: tensor(0.4831),</span>
+<span class="sd">        &#39;reference_metric_loss&#39;: tensor(0.0100),</span>
+<span class="sd">        &#39;optimized_metric_loss&#39;: tensor(0.5982)}</span>
+
+<span class="sd">        Get current values:</span>
+
+<span class="sd">        &gt;&gt;&gt; mad.get_progress(-1)</span>
+<span class="sd">        {&#39;losses&#39;: tensor(-0.5369),</span>
+<span class="sd">        &#39;iteration&#39;: 5,</span>
+<span class="sd">        &#39;penalties&#39;: tensor(2.2383),</span>
+<span class="sd">        &#39;pixel_change_norm&#39;: None,</span>
+<span class="sd">        &#39;gradient_norm&#39;: None,</span>
+<span class="sd">        &#39;reference_metric_loss&#39;: tensor(0.0187),</span>
+<span class="sd">        &#39;optimized_metric_loss&#39;: tensor(0.7615)}</span>
+
+<span class="sd">        Get values from last iteration of synthesis:</span>
+
+<span class="sd">        &gt;&gt;&gt; mad.get_progress(-2)</span>
+<span class="sd">        {&#39;losses&#39;: tensor(-0.4603),</span>
+<span class="sd">        &#39;iteration&#39;: 4,</span>
+<span class="sd">        &#39;penalties&#39;: tensor(2.7274),</span>
+<span class="sd">        &#39;pixel_change_norm&#39;: tensor(2.4336),</span>
+<span class="sd">        &#39;gradient_norm&#39;: tensor(0.3309),</span>
+<span class="sd">        &#39;reference_metric_loss&#39;: tensor(0.0167),</span>
+<span class="sd">        &#39;optimized_metric_loss&#39;: tensor(0.7335)}</span>
+
+<span class="sd">        When synthesis is run with ``store_progress=True``, this function also</span>
+<span class="sd">        returns the MAD image from the corresponding iteration:</span>
+
+<span class="sd">        &gt;&gt;&gt; mad = po.MADCompetition(img, dissimilarity, po.metric.mse, &quot;max&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; mad.synthesize(5, store_progress=True)</span>
+<span class="sd">        &gt;&gt;&gt; mad.get_progress(-1)</span>
+<span class="sd">        {&#39;losses&#39;: tensor(-0.5298),</span>
+<span class="sd">        &#39;iteration&#39;: 5,</span>
+<span class="sd">        &#39;penalties&#39;: tensor(2.3197),</span>
+<span class="sd">        &#39;pixel_change_norm&#39;: None,</span>
+<span class="sd">        &#39;gradient_norm&#39;: None,</span>
+<span class="sd">        &#39;reference_metric_loss&#39;: tensor(0.0187),</span>
+<span class="sd">        &#39;optimized_metric_loss&#39;: tensor(0.7626),</span>
+<span class="sd">        &#39;saved_mad_image&#39;: tensor([[[[ 0.0554, ...]]]], grad_fn=&lt;SelectBackward0&gt;),</span>
+<span class="sd">        &#39;store_progress_iteration&#39;: 5}</span>
+<span class="sd">        &gt;&gt;&gt; torch.equal(</span>
+<span class="sd">        ...     mad.saved_mad_image[-1], mad.get_progress(-1)[&quot;saved_mad_image&quot;]</span>
+<span class="sd">        ... )</span>
+<span class="sd">        True</span>
+
+<span class="sd">        When synthesis is run with ``store_progress&gt;1``, this function returns the MAD</span>
+<span class="sd">        image from the closest iteration. This might not be the specified iteration,</span>
+<span class="sd">        since we only cached the MAD image every ``store_progress`` iterations (2, in</span>
+<span class="sd">        the following example):</span>
+
+<span class="sd">        &gt;&gt;&gt; mad = po.MADCompetition(img, dissimilarity, po.metric.mse, &quot;max&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; mad.synthesize(5, store_progress=2)</span>
+<span class="sd">        &gt;&gt;&gt; mad.get_progress(-3)</span>
+<span class="sd">        {&#39;losses&#39;: tensor(-0.3482),</span>
+<span class="sd">        &#39;iteration&#39;: 3,</span>
+<span class="sd">        &#39;penalties&#39;: tensor(3.5309),</span>
+<span class="sd">        &#39;pixel_change_norm&#39;: tensor(2.4719),</span>
+<span class="sd">        &#39;gradient_norm&#39;: tensor(0.3763),</span>
+<span class="sd">        &#39;reference_metric_loss&#39;: tensor(0.0147),</span>
+<span class="sd">        &#39;optimized_metric_loss&#39;: tensor(0.7016),</span>
+<span class="sd">        &#39;saved_mad_image&#39;: tensor([[[[ 7.9802e-02, ...]]]], grad_fn=&lt;SelectBackward0&gt;),</span>
+<span class="sd">        &#39;store_progress_iteration&#39;: 4}</span>
+
+<span class="sd">        When we cannot grab the saved MAD image corresponding to the requested</span>
+<span class="sd">        iteration, ``iteration_selection`` controls how we determine &quot;closest&quot;:</span>
+
+<span class="sd">        &gt;&gt;&gt; mad.get_progress(-3, iteration_selection=&quot;floor&quot;)</span>
+<span class="sd">        {&#39;losses&#39;: tensor(-0.3482),</span>
+<span class="sd">        &#39;iteration&#39;: 3,</span>
+<span class="sd">        &#39;penalties&#39;: tensor(3.5309),</span>
+<span class="sd">        &#39;pixel_change_norm&#39;: tensor(2.4719),</span>
+<span class="sd">        &#39;gradient_norm&#39;: tensor(0.3763),</span>
+<span class="sd">        &#39;reference_metric_loss&#39;: tensor(0.0147),</span>
+<span class="sd">        &#39;optimized_metric_loss&#39;: tensor(0.7016),</span>
+<span class="sd">        &#39;saved_mad_image&#39;: tensor([[[[ 5.9717e-02, ...]]]], grad_fn=&lt;SelectBackward0&gt;),</span>
+<span class="sd">        &#39;store_progress_iteration&#39;: 2}</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">get_progress</span><span class="p">(</span>
             <span class="n">iteration</span><span class="p">,</span>
@@ -1201,6 +1466,21 @@
 <span class="sd">        ----------</span>
 <span class="sd">        file_path</span>
 <span class="sd">            The path to save the MADCompetition object to.</span>
+
+<span class="sd">        See Also</span>
+<span class="sd">        --------</span>
+<span class="sd">        load</span>
+<span class="sd">            Method to load in saved ``MADCompetition`` objects.</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        &gt;&gt;&gt; import plenoptic as po</span>
+<span class="sd">        &gt;&gt;&gt; img = po.data.einstein()</span>
+<span class="sd">        &gt;&gt;&gt; def dissimilarity(x, y):</span>
+<span class="sd">        ...     return 1 - po.metric.ssim(x, y, weighted=True, pad=&quot;reflect&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; mad = po.MADCompetition(img, dissimilarity, po.metric.mse, &quot;max&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; mad.synthesize(5, store_progress=True)</span>
+<span class="sd">        &gt;&gt;&gt; mad.save(&quot;mad.pt&quot;)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">save_io_attrs</span> <span class="o">=</span> <span class="p">[</span>
             <span class="p">(</span><span class="s2">&quot;_optimized_metric&quot;</span><span class="p">,</span> <span class="p">(</span><span class="s2">&quot;_image&quot;</span><span class="p">,</span> <span class="s2">&quot;_mad_image&quot;</span><span class="p">)),</span>
@@ -1255,6 +1535,23 @@
 <span class="sd">        tensor : torch.Tensor</span>
 <span class="sd">            Tensor whose dtype and device are the desired dtype and device for</span>
 <span class="sd">            all parameters and buffers in this module.</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        &gt;&gt;&gt; import plenoptic as po</span>
+<span class="sd">        &gt;&gt;&gt; img = po.data.einstein()</span>
+<span class="sd">        &gt;&gt;&gt; def dissimilarity(x, y):</span>
+<span class="sd">        ...     return 1 - po.metric.ssim(x, y, weighted=True, pad=&quot;reflect&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; mad = po.MADCompetition(img, dissimilarity, po.metric.mse, &quot;max&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; mad.image.dtype</span>
+<span class="sd">        torch.float32</span>
+<span class="sd">        &gt;&gt;&gt; mad.optimized_metric(mad.image, torch.rand_like(mad.image)).dtype</span>
+<span class="sd">        torch.float32</span>
+<span class="sd">        &gt;&gt;&gt; mad.to(torch.float64)</span>
+<span class="sd">        &gt;&gt;&gt; mad.image.dtype</span>
+<span class="sd">        torch.float64</span>
+<span class="sd">        &gt;&gt;&gt; mad.optimized_metric(mad.image, torch.rand_like(mad.image)).dtype</span>
+<span class="sd">        torch.float64</span>
 <span class="sd">        &quot;&quot;&quot;</span>  <span class="c1"># numpydoc ignore=PR01,PR02</span>
         <span class="n">attrs</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;_initial_image&quot;</span><span class="p">,</span> <span class="s2">&quot;_image&quot;</span><span class="p">,</span> <span class="s2">&quot;_mad_image&quot;</span><span class="p">,</span> <span class="s2">&quot;_saved_mad_image&quot;</span><span class="p">]</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">attrs</span><span class="o">=</span><span class="n">attrs</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
@@ -1366,19 +1663,76 @@
 
 <span class="sd">        Examples</span>
 <span class="sd">        --------</span>
+<span class="sd">        In order to load a saved ``MADCompetition`` object, we must first initialize</span>
+<span class="sd">        one using the same arguments. (We use float64 / &quot;double&quot; precision rather than</span>
+<span class="sd">        torch&#39;s default float32 because it increases reproducibility, see the</span>
+<span class="sd">        :ref:`Reproducibility &lt;reproduce&gt;` page of our documentations for more details.)</span>
+<span class="sd">        Here, we load in a cached example:</span>
+
 <span class="sd">        &gt;&gt;&gt; import plenoptic as po</span>
-<span class="sd">        &gt;&gt;&gt; img = po.data.einstein()</span>
+<span class="sd">        &gt;&gt;&gt; img = po.data.einstein().to(torch.float64)</span>
 <span class="sd">        &gt;&gt;&gt; def ds_ssim(x, y):</span>
-<span class="sd">        ...     return 1 - po.metric.ssim(x, y)</span>
-<span class="sd">        &gt;&gt;&gt; mad = po.MADCompetition(</span>
-<span class="sd">        ...     img, po.metric.mse, ds_ssim, &quot;min&quot;, metric_tradeoff_lambda=10</span>
+<span class="sd">        ...     return 1 - po.metric.ssim(x, y, weighted=True, pad=&quot;reflect&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; mad = po.MADCompetition(img, ds_ssim, po.metric.mse, &quot;max&quot;, 1e6)</span>
+<span class="sd">        &gt;&gt;&gt; print(mad.mad_image)</span>
+<span class="sd">        tensor([])</span>
+<span class="sd">        &gt;&gt;&gt; mad.load(po.data.fetch_data(&quot;example_mad.pt&quot;))</span>
+<span class="sd">        &gt;&gt;&gt; print(mad.mad_image)</span>
+<span class="sd">        tensor([[[[0.0230, ...]]]], dtype=torch.float64, requires_grad=True)</span>
+
+<span class="sd">        If the saved ``MADCompetition`` object lived on a CUDA device and you do not</span>
+<span class="sd">        have CUDA on the loading machine, use ``map_location`` to change device:</span>
+
+<span class="sd">        &gt;&gt;&gt; mad = po.MADCompetition(img, ds_ssim, po.metric.mse, &quot;max&quot;, 1e6)</span>
+<span class="sd">        &gt;&gt;&gt; mad.image.device</span>
+<span class="sd">        device(type=&#39;cpu&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; mad.load(po.data.fetch_data(&quot;example_mad-cuda.pt&quot;))</span>
+<span class="sd">        Traceback (most recent call last):</span>
+<span class="sd">        RuntimeError: Attempting to deserialize object on a CUDA device but</span>
+<span class="sd">        torch.cuda.is_available() is False...</span>
+<span class="sd">        &gt;&gt;&gt; mad.load(</span>
+<span class="sd">        ...     po.data.fetch_data(&quot;example_mad-cuda.pt&quot;),</span>
+<span class="sd">        ...     map_location=&quot;cpu&quot;,</span>
 <span class="sd">        ... )</span>
-<span class="sd">        &gt;&gt;&gt; mad.synthesize(max_iter=5, store_progress=True)</span>
-<span class="sd">        &gt;&gt;&gt; mad.save(&quot;mad.pt&quot;)</span>
-<span class="sd">        &gt;&gt;&gt; mad_copy = po.MADCompetition(</span>
-<span class="sd">        ...     img, po.metric.mse, ds_ssim, &quot;min&quot;, metric_tradeoff_lambda=10</span>
-<span class="sd">        ... )</span>
-<span class="sd">        &gt;&gt;&gt; mad_copy.load(&quot;mad.pt&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; print(mad.mad_image)</span>
+<span class="sd">        tensor([[[[0.0230, ...]]]], dtype=torch.float64, requires_grad=True)</span>
+
+<span class="sd">        If the loading ``MADCompetition`` object was not initialized with same values</span>
+<span class="sd">        as the saved object, an error will be raised:</span>
+
+<span class="sd">        &gt;&gt;&gt; rand_img = torch.rand_like(img)</span>
+<span class="sd">        &gt;&gt;&gt; mad = po.MADCompetition(rand_img, ds_ssim, po.metric.mse, &quot;max&quot;, 1e6)</span>
+<span class="sd">        &gt;&gt;&gt; mad.load(po.data.fetch_data(&quot;example_mad.pt&quot;))</span>
+<span class="sd">        Traceback (most recent call last):</span>
+<span class="sd">        ValueError: Saved and initialized attribute image have different values...</span>
+
+<span class="sd">        If the loading ``MADCompetition`` object has a different data type than the</span>
+<span class="sd">        saved object, an error will be raised:</span>
+
+<span class="sd">        &gt;&gt;&gt; mad = po.MADCompetition(img, ds_ssim, po.metric.mse, &quot;max&quot;, 1e6)</span>
+<span class="sd">        &gt;&gt;&gt; mad.to(torch.float32)</span>
+<span class="sd">        &gt;&gt;&gt; mad.load(po.data.fetch_data(&quot;example_mad.pt&quot;))</span>
+<span class="sd">        Traceback (most recent call last):</span>
+<span class="sd">        ValueError: Saved and initialized attribute image have different dtype...</span>
+
+<span class="sd">        If the name of the metrics or penalty function has changed (even if the</span>
+<span class="sd">        behavior is identical), an error will be raised:</span>
+
+<span class="sd">        &gt;&gt;&gt; def dissimilarity(x, y):</span>
+<span class="sd">        ...     return ds_ssim(x, y)</span>
+<span class="sd">        &gt;&gt;&gt; mad = po.MADCompetition(img, dissimilarity, po.metric.mse, &quot;max&quot;, 1e6)</span>
+<span class="sd">        &gt;&gt;&gt; mad.load(po.data.fetch_data(&quot;example_mad.pt&quot;))</span>
+<span class="sd">        Traceback (most recent call last):</span>
+<span class="sd">        ValueError: Saved and initialized optimized_metric have different names...</span>
+
+<span class="sd">        If you wish to proceed anyway, you can set ``raise_on_checks=False`` to turn the</span>
+<span class="sd">        errors into warnings. Do so at your own risk and read the resulting warning</span>
+<span class="sd">        messages in order to ensure the **only** differences are those you expect.</span>
+<span class="sd">        See :ref:`raise-on-checks` on the &quot;Reproducibility and Compatibility&quot; page of</span>
+<span class="sd">        the documentation for more info.</span>
+
+<span class="sd">        &gt;&gt;&gt; mad = po.MADCompetition(img, dissimilarity, po.metric.mse, &quot;max&quot;, 1e6)</span>
+<span class="sd">        &gt;&gt;&gt; mad.load(po.data.fetch_data(&quot;example_mad.pt&quot;), raise_on_checks=False)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">check_attributes</span> <span class="o">=</span> <span class="p">[</span>
             <span class="s2">&quot;_image&quot;</span><span class="p">,</span>
@@ -1500,7 +1854,7 @@
 <span class="sd">        :attr:`optimized_metric` loss over iterations.</span>
 
 <span class="sd">        That is, the value of ``optimized_metric(image, mad_image)``. Ideally, this is</span>
-<span class="sd">        either very different from ``optimized_metric(image, initial_image)``.</span>
+<span class="sd">        very different from ``optimized_metric(image, initial_image)``.</span>
 
 <span class="sd">        This tensor always lives on the CPU, regardless of the device of the</span>
 <span class="sd">        ``MADCompetition`` object.</span>
@@ -1551,6 +1905,46 @@
 
 <span class="sd">        This tensor always lives on the CPU, regardless of the device of the</span>
 <span class="sd">        ``MADCompetition`` object.</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        If synthesize is called without ``store_progress``, then this attribute</span>
+<span class="sd">        just contains the MAD image, though there will be an additional dimension:</span>
+
+<span class="sd">        &gt;&gt;&gt; import plenoptic as po</span>
+<span class="sd">        &gt;&gt;&gt; po.set_seed(0)</span>
+<span class="sd">        &gt;&gt;&gt; img = po.data.einstein()</span>
+<span class="sd">        &gt;&gt;&gt; def dissimilarity(x, y):</span>
+<span class="sd">        ...     return 1 - po.metric.ssim(x, y, weighted=True, pad=&quot;reflect&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; mad = po.MADCompetition(img, dissimilarity, po.metric.mse, &quot;max&quot;, 1e6)</span>
+<span class="sd">        &gt;&gt;&gt; mad.saved_mad_image</span>
+<span class="sd">        tensor([])</span>
+<span class="sd">        &gt;&gt;&gt; mad.synthesize(5)</span>
+<span class="sd">        &gt;&gt;&gt; mad.saved_mad_image</span>
+<span class="sd">        tensor([[[[[ 0.1316, ...]]]]], grad_fn=&lt;StackBackward0&gt;)</span>
+<span class="sd">        &gt;&gt;&gt; mad.mad_image</span>
+<span class="sd">        tensor([[[[ 0.1316, ...]]]], requires_grad=True)</span>
+<span class="sd">        &gt;&gt;&gt; mad.saved_mad_image.shape</span>
+<span class="sd">        torch.Size([1, 1, 1, 256, 256])</span>
+<span class="sd">        &gt;&gt;&gt; mad.mad_image.shape</span>
+<span class="sd">        torch.Size([1, 1, 256, 256])</span>
+
+<span class="sd">        If synthesize is called with ``store_progress=1``, then this attribute</span>
+<span class="sd">        contains the MAD image at each iteration, and ``losses[i]`` contains the error</span>
+<span class="sd">        for ``saved_mad_image[i]``.</span>
+
+<span class="sd">        &gt;&gt;&gt; mad = po.MADCompetition(img, dissimilarity, po.metric.mse, &quot;max&quot;, 1e6)</span>
+<span class="sd">        &gt;&gt;&gt; mad.synthesize(5, store_progress=True)</span>
+<span class="sd">        &gt;&gt;&gt; mad.saved_mad_image.shape</span>
+<span class="sd">        torch.Size([6, 1, 1, 256, 256])</span>
+<span class="sd">        &gt;&gt;&gt; mad.objective_function(mad.saved_mad_image[2])</span>
+<span class="sd">        tensor([[-0.1495]], grad_fn=&lt;AddBackward0&gt;)</span>
+<span class="sd">        &gt;&gt;&gt; mad.losses[2]</span>
+<span class="sd">        tensor(-0.1495)</span>
+
+<span class="sd">        (In the above example, ``saved_mad_image`` has 6 elements because it includes</span>
+<span class="sd">        the MAD image at the start of each of the 5 synthesis iterations, plus the</span>
+<span class="sd">        current one.)</span>
 <span class="sd">        &quot;&quot;&quot;</span>  <span class="c1"># numpydoc ignore=RT01</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mad_image</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
