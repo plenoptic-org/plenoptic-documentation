@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>plenoptic._synthesize.mad_competition &#8212; plenoptic 2.1.1.dev231 documentation</title>
+    <title>plenoptic._synthesize.mad_competition &#8212; plenoptic 2.1.1.dev233 documentation</title>
   
   
   
@@ -43,7 +43,7 @@
   <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=cb8930eaaf36d9849b67" />
 <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=cb8930eaaf36d9849b67" />
 
-    <script src="../../../_static/documentation_options.js?v=46a469c7"></script>
+    <script src="../../../_static/documentation_options.js?v=d52467b4"></script>
     <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -141,8 +141,8 @@
       
     
     
-    <img src="../../../_static/Plenoptic_Logo_CMYK_Full_Wide.svg" class="logo__image only-light" alt="plenoptic 2.1.1.dev231 documentation - Home"/>
-    <img src="../../../_static/Plenoptic_Logo_CMYK_Full_DarkMode_Wide.svg" class="logo__image only-dark pst-js-only" alt="plenoptic 2.1.1.dev231 documentation - Home"/>
+    <img src="../../../_static/Plenoptic_Logo_CMYK_Full_Wide.svg" class="logo__image only-light" alt="plenoptic 2.1.1.dev233 documentation - Home"/>
+    <img src="../../../_static/Plenoptic_Logo_CMYK_Full_DarkMode_Wide.svg" class="logo__image only-dark pst-js-only" alt="plenoptic 2.1.1.dev233 documentation - Home"/>
   
   
 </a></div>
@@ -1671,9 +1671,9 @@
 
 <span class="sd">        &gt;&gt;&gt; import plenoptic as po</span>
 <span class="sd">        &gt;&gt;&gt; img = po.data.einstein().to(torch.float64)</span>
-<span class="sd">        &gt;&gt;&gt; def dissimilarity(x, y):</span>
+<span class="sd">        &gt;&gt;&gt; def ds_ssim(x, y):</span>
 <span class="sd">        ...     return 1 - po.metric.ssim(x, y, weighted=True, pad=&quot;reflect&quot;)</span>
-<span class="sd">        &gt;&gt;&gt; mad = po.MADCompetition(img, dissimilarity, po.metric.mse, &quot;max&quot;, 1e6)</span>
+<span class="sd">        &gt;&gt;&gt; mad = po.MADCompetition(img, ds_ssim, po.metric.mse, &quot;max&quot;, 1e6)</span>
 <span class="sd">        &gt;&gt;&gt; print(mad.mad_image)</span>
 <span class="sd">        tensor([])</span>
 <span class="sd">        &gt;&gt;&gt; mad.load(po.data.fetch_data(&quot;example_mad.pt&quot;))</span>
@@ -1683,7 +1683,7 @@
 <span class="sd">        If the saved ``MADCompetition`` object lived on a CUDA device and you do not</span>
 <span class="sd">        have CUDA on the loading machine, use ``map_location`` to change device:</span>
 
-<span class="sd">        &gt;&gt;&gt; mad = po.MADCompetition(img, dissimilarity, po.metric.mse, &quot;max&quot;, 1e6)</span>
+<span class="sd">        &gt;&gt;&gt; mad = po.MADCompetition(img, ds_ssim, po.metric.mse, &quot;max&quot;, 1e6)</span>
 <span class="sd">        &gt;&gt;&gt; mad.image.device</span>
 <span class="sd">        device(type=&#39;cpu&#39;)</span>
 <span class="sd">        &gt;&gt;&gt; mad.load(po.data.fetch_data(&quot;example_mad-cuda.pt&quot;))</span>
@@ -1701,7 +1701,7 @@
 <span class="sd">        as the saved object, an error will be raised:</span>
 
 <span class="sd">        &gt;&gt;&gt; rand_img = torch.rand_like(img)</span>
-<span class="sd">        &gt;&gt;&gt; mad = po.MADCompetition(rand_img, dissimilarity, po.metric.mse, &quot;max&quot;, 1e6)</span>
+<span class="sd">        &gt;&gt;&gt; mad = po.MADCompetition(rand_img, ds_ssim, po.metric.mse, &quot;max&quot;, 1e6)</span>
 <span class="sd">        &gt;&gt;&gt; mad.load(po.data.fetch_data(&quot;example_mad.pt&quot;))</span>
 <span class="sd">        Traceback (most recent call last):</span>
 <span class="sd">        ValueError: Saved and initialized attribute image have different values...</span>
@@ -1709,11 +1709,30 @@
 <span class="sd">        If the loading ``MADCompetition`` object has a different data type than the</span>
 <span class="sd">        saved object, an error will be raised:</span>
 
-<span class="sd">        &gt;&gt;&gt; mad = po.MADCompetition(img, dissimilarity, po.metric.mse, &quot;max&quot;, 1e6)</span>
+<span class="sd">        &gt;&gt;&gt; mad = po.MADCompetition(img, ds_ssim, po.metric.mse, &quot;max&quot;, 1e6)</span>
 <span class="sd">        &gt;&gt;&gt; mad.to(torch.float32)</span>
 <span class="sd">        &gt;&gt;&gt; mad.load(po.data.fetch_data(&quot;example_mad.pt&quot;))</span>
 <span class="sd">        Traceback (most recent call last):</span>
 <span class="sd">        ValueError: Saved and initialized attribute image have different dtype...</span>
+
+<span class="sd">        If the name of the metrics or penalty function has changed (even if the</span>
+<span class="sd">        behavior is identical), an error will be raised:</span>
+
+<span class="sd">        &gt;&gt;&gt; def dissimilarity(x, y):</span>
+<span class="sd">        ...     return ds_ssim(x, y)</span>
+<span class="sd">        &gt;&gt;&gt; mad = po.MADCompetition(img, dissimilarity, po.metric.mse, &quot;max&quot;, 1e6)</span>
+<span class="sd">        &gt;&gt;&gt; mad.load(po.data.fetch_data(&quot;example_mad.pt&quot;))</span>
+<span class="sd">        Traceback (most recent call last):</span>
+<span class="sd">        ValueError: Saved and initialized optimized_metric have different names...</span>
+
+<span class="sd">        If you wish to proceed anyway, you can set ``raise_on_checks=False`` to turn the</span>
+<span class="sd">        errors into warnings. Do so at your own risk and read the resulting warning</span>
+<span class="sd">        messages in order to ensure the **only** differences are those you expect.</span>
+<span class="sd">        See :ref:`raise-on-checks` on the &quot;Reproducibility and Compatibility&quot; page of</span>
+<span class="sd">        the documentation for more info.</span>
+
+<span class="sd">        &gt;&gt;&gt; mad = po.MADCompetition(img, dissimilarity, po.metric.mse, &quot;max&quot;, 1e6)</span>
+<span class="sd">        &gt;&gt;&gt; mad.load(po.data.fetch_data(&quot;example_mad.pt&quot;), raise_on_checks=False)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">check_attributes</span> <span class="o">=</span> <span class="p">[</span>
             <span class="s2">&quot;_image&quot;</span><span class="p">,</span>
