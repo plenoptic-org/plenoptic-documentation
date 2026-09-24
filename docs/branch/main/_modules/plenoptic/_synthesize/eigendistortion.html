@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>plenoptic._synthesize.eigendistortion &#8212; plenoptic 0.0.1.dev29 documentation</title>
+    <title>plenoptic._synthesize.eigendistortion &#8212; plenoptic 0.0.1.dev32 documentation</title>
   
   
   
@@ -43,7 +43,7 @@
   <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=cb8930eaaf36d9849b67" />
 <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=cb8930eaaf36d9849b67" />
 
-    <script src="../../../_static/documentation_options.js?v=7e3b5a16"></script>
+    <script src="../../../_static/documentation_options.js?v=0e9f3337"></script>
     <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -141,8 +141,8 @@
       
     
     
-    <img src="../../../_static/Plenoptic_Logo_CMYK_Full_Wide.svg" class="logo__image only-light" alt="plenoptic 0.0.1.dev29 documentation - Home"/>
-    <img src="../../../_static/Plenoptic_Logo_CMYK_Full_DarkMode_Wide.svg" class="logo__image only-dark pst-js-only" alt="plenoptic 0.0.1.dev29 documentation - Home"/>
+    <img src="../../../_static/Plenoptic_Logo_CMYK_Full_Wide.svg" class="logo__image only-light" alt="plenoptic 0.0.1.dev32 documentation - Home"/>
+    <img src="../../../_static/Plenoptic_Logo_CMYK_Full_DarkMode_Wide.svg" class="logo__image only-dark pst-js-only" alt="plenoptic 0.0.1.dev32 documentation - Home"/>
   
   
 </a></div>
@@ -582,6 +582,26 @@
 <span class="sd">           neural information processing systems (pp. 3530-3539).</span>
 <span class="sd">           https://www.cns.nyu.edu/pub/lcv/berardino17c-final.pdf</span>
 <span class="sd">           https://www.cns.nyu.edu/~lcv/eigendistortions/</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    Synthesize and visualize the top and bottom eigendistortions for a simple</span>
+<span class="sd">    model:</span>
+
+<span class="sd">    .. plot::</span>
+<span class="sd">      :context: reset</span>
+
+<span class="sd">      &gt;&gt;&gt; import plenoptic as po</span>
+<span class="sd">      &gt;&gt;&gt; # Downsample image to save computation time.</span>
+<span class="sd">      &gt;&gt;&gt; img = po.process.blur_downsample(po.data.einstein(), n_scales=1)</span>
+<span class="sd">      &gt;&gt;&gt; po.set_seed(0)</span>
+<span class="sd">      &gt;&gt;&gt; model = po.models.Gaussian(10, pad_mode=&quot;circular&quot;).eval()</span>
+<span class="sd">      &gt;&gt;&gt; po.remove_grad(model)</span>
+<span class="sd">      &gt;&gt;&gt; eig = po.Eigendistortion(img, model)</span>
+<span class="sd">      &gt;&gt;&gt; eig.synthesize()</span>
+<span class="sd">      Top k=1 eigendists computed | Stop criterion 1.00E-07 reached.</span>
+<span class="sd">      &gt;&gt;&gt; po.plot.eigendistortion_imshow_all(eig, distortion_scale=20, zoom=2)</span>
+<span class="sd">      &lt;PyrFigure size ...&gt;</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">image</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
@@ -655,13 +675,17 @@
 <span class="sd">            computation. Ignored for other methods.</span>
 <span class="sd">        p</span>
 <span class="sd">            Oversampling parameter for randomized SVD. k+p vectors will be sampled,</span>
-<span class="sd">            and k will be returned. See docstring of ``_synthesize_randomized_svd``</span>
-<span class="sd">            for more details including algorithm reference.</span>
+<span class="sd">            and k will be returned. Increasing this value will increase the accuracy,</span>
+<span class="sd">            but will also increase the time required for synthesis. See docstring of</span>
+<span class="sd">            ``_synthesize_randomized_svd`` for more details including algorithm</span>
+<span class="sd">            reference.</span>
 <span class="sd">        q</span>
 <span class="sd">            Matrix power parameter for randomized SVD. This is an effective trick for</span>
-<span class="sd">            the algorithm to converge to the correct eigenvectors when the</span>
-<span class="sd">            eigenspectrum does not decay quickly. See ``_synthesize_randomized_svd``</span>
-<span class="sd">            for more details including algorithm reference.</span>
+<span class="sd">            the algorithm to converge to the correct eigenvectors when the eigenspectrum</span>
+<span class="sd">            does not decay quickly. Increasing this value will increase the accuracy</span>
+<span class="sd">            (though not as much as increasing ``p``), but will also increase the time</span>
+<span class="sd">            required for synthesis. See ``_synthesize_randomized_svd`` for more details</span>
+<span class="sd">            including algorithm reference.</span>
 <span class="sd">        stop_criterion</span>
 <span class="sd">            Used if ``method=&#39;power&#39;`` to check for convergence. If the L2-norm</span>
 <span class="sd">            of the eigenvalues has changed by less than this value from one</span>
@@ -675,9 +699,101 @@
 <span class="sd">        Warns</span>
 <span class="sd">        -----</span>
 <span class="sd">        UserWarning</span>
-<span class="sd">            If ``method == &quot;power&quot;`` but the Jacobian size is greater than 1e6 (which</span>
-<span class="sd">            depends on the number of elements in the model&#39;s representation and input</span>
-<span class="sd">            image), in which case we&#39;re worried about running out of memory.</span>
+<span class="sd">            Raised if ``method == &quot;exact&quot;`` but the Jacobian size is greater than 1e6,</span>
+<span class="sd">            in which case we&#39;re worried about running out of memory. The number of</span>
+<span class="sd">            elements in the Jacobian is the product of the number of elements in the</span>
+<span class="sd">            model output and :attr:`image`.</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        &gt;&gt;&gt; import plenoptic as po</span>
+<span class="sd">        &gt;&gt;&gt; # Decrease size of image to speed things up</span>
+<span class="sd">        &gt;&gt;&gt; img = po.process.blur_downsample(po.data.einstein(), n_scales=3)</span>
+<span class="sd">        &gt;&gt;&gt; img.shape</span>
+<span class="sd">        torch.Size([1, 1, 32, 32])</span>
+<span class="sd">        &gt;&gt;&gt; po.set_seed(0)</span>
+<span class="sd">        &gt;&gt;&gt; model = po.models.Gaussian(10, pad_mode=&quot;circular&quot;).eval()</span>
+<span class="sd">        &gt;&gt;&gt; po.remove_grad(model)</span>
+<span class="sd">        &gt;&gt;&gt; eig = po.Eigendistortion(img, model)</span>
+<span class="sd">        &gt;&gt;&gt; # this isn&#39;t enough to run synthesis to completion, just an example</span>
+<span class="sd">        &gt;&gt;&gt; eig.synthesize(max_iter=5)</span>
+<span class="sd">        &gt;&gt;&gt; # eigenvalue of the top and bottom eigendistortion</span>
+<span class="sd">        &gt;&gt;&gt; eig.eigenvalues</span>
+<span class="sd">        tensor([0.8080, 0.1384])</span>
+
+<span class="sd">        Set ``method`` to use different algorithms for finding the eigendistortions.</span>
+<span class="sd">        Note that, while ``&quot;power&quot;`` synthesizes the top and bottom ``k``</span>
+<span class="sd">        eigendistortions, ``&quot;randomized_svd&quot;`` only synthesizes the top ``k``.</span>
+
+<span class="sd">        &gt;&gt;&gt; eig = po.Eigendistortion(img, model)</span>
+<span class="sd">        &gt;&gt;&gt; # randomized_svd doesn&#39;t take a max_iter argument</span>
+<span class="sd">        &gt;&gt;&gt; eig.synthesize(&quot;randomized_svd&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; # eigenvalue of top eigendistortion</span>
+<span class="sd">        &gt;&gt;&gt; eig.eigenvalues</span>
+<span class="sd">        tensor(0.9799)</span>
+
+<span class="sd">        Note the eigenvalue found for the top distortion is different for the two</span>
+<span class="sd">        methods. In both cases, that is because we have not yet found the top</span>
+<span class="sd">        eigendistortion. In order to increase the synthesis accuracy, you can:</span>
+
+<span class="sd">        * With ``&quot;power&quot;``, increase ``max_iter`` to run synthesis until convergence</span>
+<span class="sd">          is reached. This will increase the duration required for synthesis. Note</span>
+<span class="sd">          that the bottom eigendistortion(s) need more iterations to synthesize than the</span>
+<span class="sd">          top and it has not converged in the following example.</span>
+
+<span class="sd">        &gt;&gt;&gt; eig = po.Eigendistortion(img, model)</span>
+<span class="sd">        &gt;&gt;&gt; eig.synthesize(max_iter=100)</span>
+<span class="sd">        Top k=1 eigendists computed | Stop criterion 1.00E-07 reached.</span>
+<span class="sd">        &gt;&gt;&gt; eig.eigenvalues</span>
+<span class="sd">        tensor([1.0000, 0.0039])</span>
+
+<span class="sd">        * With ``&quot;randomized_svd&quot;``, increase ``p`` and/or ``q``. This will decrease</span>
+<span class="sd">          the reported spectral approximation error while increasing the duration</span>
+<span class="sd">          of synthesis.</span>
+
+<span class="sd">        &gt;&gt;&gt; eig = po.Eigendistortion(img, model)</span>
+<span class="sd">        &gt;&gt;&gt; eig.synthesize(&quot;randomized_svd&quot;, p=20, q=10)</span>
+<span class="sd">        &gt;&gt;&gt; eig.eigenvalues</span>
+<span class="sd">        tensor(1.0000)</span>
+
+<span class="sd">        * Use the ``&quot;exact&quot;`` method. This explicitly computes the Jacobian, retrieving</span>
+<span class="sd">          all eigendistortions, and thus uses **a lot of memory**, and so is only</span>
+<span class="sd">          recommended for small images or models.</span>
+
+<span class="sd">        &gt;&gt;&gt; eig = po.Eigendistortion(img, model)</span>
+<span class="sd">        &gt;&gt;&gt; # exact doesn&#39;t take any arguments</span>
+<span class="sd">        &gt;&gt;&gt; eig.synthesize(&quot;exact&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; # eigenvalue of all eigendistortions</span>
+<span class="sd">        &gt;&gt;&gt; eig.eigenvalues</span>
+<span class="sd">        tensor([1.0000e+00, ...])</span>
+<span class="sd">        &gt;&gt;&gt; len(eig.eigenvalues)</span>
+<span class="sd">        1024</span>
+
+<span class="sd">        Set ``k`` to increase the number of eigendistortions found for ``&quot;power&quot;``</span>
+<span class="sd">        or ``&quot;randomized_svd&quot;``:</span>
+
+<span class="sd">        &gt;&gt;&gt; eig = po.Eigendistortion(img, model)</span>
+<span class="sd">        &gt;&gt;&gt; # this isn&#39;t enough to run synthesis to completion, just an example</span>
+<span class="sd">        &gt;&gt;&gt; eig.synthesize(max_iter=5, k=3)</span>
+<span class="sd">        &gt;&gt;&gt; # eigenvalue of 3 top and bottom eigendistortion</span>
+<span class="sd">        &gt;&gt;&gt; eig.eigenvalues</span>
+<span class="sd">        tensor([0.9256, 0.8508, 0.7679, 0.1576, 0.1425, 0.1576])</span>
+
+<span class="sd">        Adjust ``stop_criterion`` to change how convergence is determined for</span>
+<span class="sd">        ``&quot;power&quot;``. In this case, we stop early by making ``stop_criterion`` fairly</span>
+<span class="sd">        large. In practice, you&#39;re more likely to make ``stop_criterion`` smaller to let</span>
+<span class="sd">        synthesis run for longer.</span>
+
+<span class="sd">        &gt;&gt;&gt; eig = po.Eigendistortion(img, model)</span>
+<span class="sd">        &gt;&gt;&gt; # this isn&#39;t enough to run synthesis to completion, just an example</span>
+<span class="sd">        &gt;&gt;&gt; eig.synthesize(max_iter=5, stop_criterion=0.1)</span>
+<span class="sd">        Top k=1 eigendists computed | Stop criterion 1.00E-01 reached.</span>
+<span class="sd">        Bottom k=1 eigendists computed | Stop criterion 1.00E-01 reached.</span>
+<span class="sd">        &gt;&gt;&gt; # eigenvalues of the top and bottom eigendistortion, notice how they are not</span>
+<span class="sd">        &gt;&gt;&gt; # as high / low as when stop_criterion has a lower value (because synthesis</span>
+<span class="sd">        &gt;&gt;&gt; # has stopped early)</span>
+<span class="sd">        &gt;&gt;&gt; eig.eigenvalues</span>
+<span class="sd">        tensor([0.6565, 0.1321])</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">allowed_methods</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;power&quot;</span><span class="p">,</span> <span class="s2">&quot;exact&quot;</span><span class="p">,</span> <span class="s2">&quot;randomized_svd&quot;</span><span class="p">]</span>
         <span class="k">if</span> <span class="n">method</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">allowed_methods</span><span class="p">:</span>
@@ -996,13 +1112,26 @@
 <span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Save all relevant variables in .pt file.</span>
 
-<span class="sd">        See :meth:`load` docstring for an example of use.</span>
-
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        file_path : str</span>
+<span class="sd">        file_path</span>
 <span class="sd">            The path to save the Eigendistortion object to.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+
+<span class="sd">        See Also</span>
+<span class="sd">        --------</span>
+<span class="sd">        load</span>
+<span class="sd">            Method to load in saved ``Eigendistortion`` objects.</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        &gt;&gt;&gt; import plenoptic as po</span>
+<span class="sd">        &gt;&gt;&gt; img = po.data.einstein()</span>
+<span class="sd">        &gt;&gt;&gt; model = po.models.Gaussian(10, pad_mode=&quot;circular&quot;).eval()</span>
+<span class="sd">        &gt;&gt;&gt; po.remove_grad(model)</span>
+<span class="sd">        &gt;&gt;&gt; eig = po.Eigendistortion(img, model)</span>
+<span class="sd">        &gt;&gt;&gt; eig.synthesize(max_iter=5)</span>
+<span class="sd">        &gt;&gt;&gt; eig.save(&quot;eig.pt&quot;)</span>
+<span class="sd">        &quot;&quot;&quot;</span>  <span class="c1"># numpydoc ignore=ES01</span>
         <span class="n">save_io_attrs</span> <span class="o">=</span> <span class="p">[(</span><span class="s2">&quot;_model&quot;</span><span class="p">,</span> <span class="p">(</span><span class="s2">&quot;_image&quot;</span><span class="p">,))]</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="n">save_io_attrs</span><span class="p">)</span></div>
 
@@ -1036,8 +1165,6 @@
 <span class="sd">        with respect to the host if possible, e.g., moving CPU Tensors with</span>
 <span class="sd">        pinned memory to CUDA devices.</span>
 
-<span class="sd">        See :meth:`torch.nn.Module.to` for examples.</span>
-
 <span class="sd">        .. note::</span>
 <span class="sd">            This method modifies the module in-place.</span>
 
@@ -1051,6 +1178,23 @@
 <span class="sd">        tensor : torch.Tensor</span>
 <span class="sd">            Tensor whose dtype and device are the desired dtype and device for</span>
 <span class="sd">            all parameters and buffers in this module.</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        &gt;&gt;&gt; import plenoptic as po</span>
+<span class="sd">        &gt;&gt;&gt; img = po.data.einstein()</span>
+<span class="sd">        &gt;&gt;&gt; model = po.models.Gaussian(10, pad_mode=&quot;circular&quot;).eval()</span>
+<span class="sd">        &gt;&gt;&gt; po.remove_grad(model)</span>
+<span class="sd">        &gt;&gt;&gt; eig = po.Eigendistortion(img, model)</span>
+<span class="sd">        &gt;&gt;&gt; eig.image.dtype</span>
+<span class="sd">        torch.float32</span>
+<span class="sd">        &gt;&gt;&gt; eig.model(eig.image).dtype</span>
+<span class="sd">        torch.float32</span>
+<span class="sd">        &gt;&gt;&gt; eig.to(torch.float64)</span>
+<span class="sd">        &gt;&gt;&gt; eig.image.dtype</span>
+<span class="sd">        torch.float64</span>
+<span class="sd">        &gt;&gt;&gt; eig.model(eig.image).dtype</span>
+<span class="sd">        torch.float64</span>
 <span class="sd">        &quot;&quot;&quot;</span>  <span class="c1"># numpydoc ignore=PR01,PR02</span>
         <span class="n">attrs</span> <span class="o">=</span> <span class="p">[</span>
             <span class="s2">&quot;_jacobian&quot;</span><span class="p">,</span>
@@ -1166,15 +1310,85 @@
 
 <span class="sd">        Examples</span>
 <span class="sd">        --------</span>
+<span class="sd">        In order to load a saved ``Eigendistortion`` object, we must first initialize</span>
+<span class="sd">        one using the same arguments and same dtype. (We use float64 / &quot;double&quot;</span>
+<span class="sd">        precision rather than torch&#39;s default float32 because it increases</span>
+<span class="sd">        reproducibility, see the :ref:`Reproducibility &lt;reproduce&gt;` page of our</span>
+<span class="sd">        documentations for more details.) Here, we load in a cached example:</span>
+
 <span class="sd">        &gt;&gt;&gt; import plenoptic as po</span>
-<span class="sd">        &gt;&gt;&gt; img = po.data.einstein()</span>
-<span class="sd">        &gt;&gt;&gt; model = po.models.Gaussian(30).eval()</span>
-<span class="sd">        &gt;&gt;&gt; po.remove_grad(model)</span>
-<span class="sd">        &gt;&gt;&gt; eig = po.Eigendistortion(img, model)</span>
-<span class="sd">        &gt;&gt;&gt; eig.synthesize(max_iter=5)</span>
-<span class="sd">        &gt;&gt;&gt; eig.save(&quot;eig.pt&quot;)</span>
-<span class="sd">        &gt;&gt;&gt; eig_copy = po.Eigendistortion(img, model)</span>
-<span class="sd">        &gt;&gt;&gt; eig_copy.load(&quot;eig.pt&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; img = po.data.einstein().to(torch.float64)</span>
+<span class="sd">        &gt;&gt;&gt; lg = po.models.LuminanceGainControl(</span>
+<span class="sd">        ...     (31, 31), pad_mode=&quot;circular&quot;, pretrained=True, cache_filt=True</span>
+<span class="sd">        ... ).eval()</span>
+<span class="sd">        &gt;&gt;&gt; lg.to(torch.float64)</span>
+<span class="sd">        LuminanceGainControl(...)</span>
+<span class="sd">        &gt;&gt;&gt; po.remove_grad(lg)</span>
+<span class="sd">        &gt;&gt;&gt; eig = po.Eigendistortion(img, lg)</span>
+<span class="sd">        &gt;&gt;&gt; eig.eigendistortions</span>
+<span class="sd">        &gt;&gt;&gt; eig.load(po.data.fetch_data(&quot;example_eigendistortion.pt&quot;))</span>
+<span class="sd">        &gt;&gt;&gt; eig.eigendistortions</span>
+<span class="sd">        tensor([[[[-1.8766e-04, ...]]]], dtype=torch.float64)</span>
+
+<span class="sd">        If the saved ``Eigendistortion`` object lived on a CUDA device and you do not</span>
+<span class="sd">        have CUDA on the loading machine, use ``map_location`` to change device:</span>
+
+<span class="sd">        &gt;&gt;&gt; eig = po.Eigendistortion(img, lg)</span>
+<span class="sd">        &gt;&gt;&gt; eig.image.device</span>
+<span class="sd">        device(type=&#39;cpu&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; eig.load(po.data.fetch_data(&quot;example_eigendistortion-cuda.pt&quot;))</span>
+<span class="sd">        Traceback (most recent call last):</span>
+<span class="sd">        RuntimeError: Attempting to deserialize object on a CUDA device but</span>
+<span class="sd">        torch.cuda.is_available() is False...</span>
+<span class="sd">        &gt;&gt;&gt; eig.load(</span>
+<span class="sd">        ...     po.data.fetch_data(&quot;example_eigendistortion-cuda.pt&quot;),</span>
+<span class="sd">        ...     map_location=&quot;cpu&quot;,</span>
+<span class="sd">        ... )</span>
+<span class="sd">        &gt;&gt;&gt; eig.eigendistortions</span>
+<span class="sd">        tensor([[[[-1.8766e-04, ...]]]], dtype=torch.float64)</span>
+
+<span class="sd">        If the loading ``Eigendistortion`` object was not initialized with same values</span>
+<span class="sd">        as the saved object, an error will be raised:</span>
+
+<span class="sd">        &gt;&gt;&gt; eig = po.Eigendistortion(torch.rand_like(img), lg)</span>
+<span class="sd">        &gt;&gt;&gt; eig.load(po.data.fetch_data(&quot;example_eigendistortion.pt&quot;))</span>
+<span class="sd">        Traceback (most recent call last):</span>
+<span class="sd">        ValueError: Saved and initialized attribute image have different values...</span>
+
+<span class="sd">        If the loading ``Eigendistortion`` object has a different data type than the</span>
+<span class="sd">        saved object, an error will be raised:</span>
+
+<span class="sd">        &gt;&gt;&gt; eig = po.Eigendistortion(img, lg)</span>
+<span class="sd">        &gt;&gt;&gt; eig.to(torch.float32)</span>
+<span class="sd">        &gt;&gt;&gt; eig.load(po.data.fetch_data(&quot;example_eigendistortion.pt&quot;))</span>
+<span class="sd">        Traceback (most recent call last):</span>
+<span class="sd">        ValueError: Saved and initialized attribute image have different dtype...</span>
+
+<span class="sd">        If the name of the model has changed (even if their behavior is identical), an</span>
+<span class="sd">        error will be raised:</span>
+
+<span class="sd">        &gt;&gt;&gt; class WrongModel(torch.nn.Module):</span>
+<span class="sd">        ...     def forward(self, x):</span>
+<span class="sd">        ...         return lg(x)</span>
+<span class="sd">        &gt;&gt;&gt; lg.to(torch.float64)</span>
+<span class="sd">        LuminanceGainControl(...)</span>
+<span class="sd">        &gt;&gt;&gt; wrong_model = WrongModel().eval()</span>
+<span class="sd">        &gt;&gt;&gt; po.remove_grad(wrong_model)</span>
+<span class="sd">        &gt;&gt;&gt; eig = po.Eigendistortion(img, wrong_model)</span>
+<span class="sd">        &gt;&gt;&gt; eig.load(po.data.fetch_data(&quot;example_eigendistortion.pt&quot;))</span>
+<span class="sd">        Traceback (most recent call last):</span>
+<span class="sd">        ValueError: Saved and initialized model have different names...</span>
+
+<span class="sd">        If you wish to proceed anyway, you can set ``raise_on_checks=False`` to turn the</span>
+<span class="sd">        errors into warnings. Do so at your own risk and read the resulting warning</span>
+<span class="sd">        messages in order to ensure the **only** differences are those you expect.</span>
+<span class="sd">        See :ref:`raise-on-checks` on the &quot;Reproducibility and Compatibility&quot; page of</span>
+<span class="sd">        the documentation for more info.</span>
+
+<span class="sd">        &gt;&gt;&gt; eig = po.Eigendistortion(img, wrong_model)</span>
+<span class="sd">        &gt;&gt;&gt; eig.load(</span>
+<span class="sd">        ...     po.data.fetch_data(&quot;example_eigendistortion.pt&quot;), raise_on_checks=False</span>
+<span class="sd">        ... )</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">check_attributes</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;_image&quot;</span><span class="p">]</span>
         <span class="n">check_io_attrs</span> <span class="o">=</span> <span class="p">[(</span><span class="s2">&quot;_model&quot;</span><span class="p">,</span> <span class="p">(</span><span class="s2">&quot;_image&quot;</span><span class="p">,))]</span>
@@ -1220,6 +1434,38 @@
 
 <span class="sd">        Only set when :func:`synthesize` is run with ``method=&#39;exact&#39;``.</span>
 <span class="sd">        Else, ``None``.</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        Jacobian is empty at initialization:</span>
+
+<span class="sd">        &gt;&gt;&gt; import plenoptic as po</span>
+<span class="sd">        &gt;&gt;&gt; model = po.models.Gaussian(10, pad_mode=&quot;circular&quot;).eval()</span>
+<span class="sd">        &gt;&gt;&gt; po.remove_grad(model)</span>
+<span class="sd">        &gt;&gt;&gt; small_img = po.process.blur_downsample(po.data.einstein(), n_scales=3)</span>
+<span class="sd">        &gt;&gt;&gt; eig = po.Eigendistortion(small_img, model)</span>
+<span class="sd">        &gt;&gt;&gt; eig.jacobian</span>
+
+<span class="sd">        It is set when :func:`synthesize` is called with ``method=&quot;exact&quot;``:</span>
+
+<span class="sd">        &gt;&gt;&gt; eig.synthesize(&quot;exact&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; eig.jacobian</span>
+<span class="sd">        tensor([[0.0210, ..., 0.0210]])</span>
+<span class="sd">        &gt;&gt;&gt; # Jacobian size is (numel, numel), where numel is the number of elements</span>
+<span class="sd">        &gt;&gt;&gt; # in image</span>
+<span class="sd">        &gt;&gt;&gt; eig.image.shape</span>
+<span class="sd">        torch.Size([1, 1, 32, 32])</span>
+<span class="sd">        &gt;&gt;&gt; eig.image.numel()</span>
+<span class="sd">        1024</span>
+<span class="sd">        &gt;&gt;&gt; eig.jacobian.shape</span>
+<span class="sd">        torch.Size([1024, 1024])</span>
+
+<span class="sd">        If :func:`synthesize` is called with a different method, jacobian is not set.</span>
+
+<span class="sd">        &gt;&gt;&gt; small_img = po.process.blur_downsample(po.data.einstein(), n_scales=3)</span>
+<span class="sd">        &gt;&gt;&gt; eig = po.Eigendistortion(small_img, model)</span>
+<span class="sd">        &gt;&gt;&gt; eig.synthesize(max_iter=5)</span>
+<span class="sd">        &gt;&gt;&gt; eig.jacobian</span>
 <span class="sd">        &quot;&quot;&quot;</span>  <span class="c1"># numpydoc ignore=RT01</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_jacobian</span>
 
