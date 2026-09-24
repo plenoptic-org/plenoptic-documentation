@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>plenoptic.Eigendistortion &#8212; plenoptic 2.1.1.dev242 documentation</title>
+    <title>plenoptic.Eigendistortion &#8212; plenoptic 2.1.1.dev254 documentation</title>
   
   
   
@@ -44,7 +44,7 @@
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=cb8930eaaf36d9849b67" />
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=cb8930eaaf36d9849b67" />
 
-    <script src="../../_static/documentation_options.js?v=9442d430"></script>
+    <script src="../../_static/documentation_options.js?v=9f7c10a0"></script>
     <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -146,8 +146,8 @@
       
     
     
-    <img src="../../_static/Plenoptic_Logo_CMYK_Full_Wide.svg" class="logo__image only-light" alt="plenoptic 2.1.1.dev242 documentation - Home"/>
-    <img src="../../_static/Plenoptic_Logo_CMYK_Full_DarkMode_Wide.svg" class="logo__image only-dark pst-js-only" alt="plenoptic 2.1.1.dev242 documentation - Home"/>
+    <img src="../../_static/Plenoptic_Logo_CMYK_Full_Wide.svg" class="logo__image only-light" alt="plenoptic 2.1.1.dev254 documentation - Home"/>
+    <img src="../../_static/Plenoptic_Logo_CMYK_Full_DarkMode_Wide.svg" class="logo__image only-dark pst-js-only" alt="plenoptic 2.1.1.dev254 documentation - Home"/>
   
   
 </a></div>
@@ -701,6 +701,26 @@ neural information processing systems (pp. 3530-3539).
 <a class="reference external" href="https://www.cns.nyu.edu/~lcv/eigendistortions/">https://www.cns.nyu.edu/~lcv/eigendistortions/</a></p>
 </aside>
 </aside>
+<p class="rubric">Examples</p>
+<p>Synthesize and visualize the top and bottom eigendistortions for a simple
+model:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">plenoptic</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">po</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Downsample image to save computation time.</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">img</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">process</span><span class="o">.</span><span class="n">blur_downsample</span><span class="p">(</span><span class="n">po</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">einstein</span><span class="p">(),</span> <span class="n">n_scales</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">po</span><span class="o">.</span><span class="n">set_seed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Gaussian</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="n">pad_mode</span><span class="o">=</span><span class="s2">&quot;circular&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">po</span><span class="o">.</span><span class="n">remove_grad</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">eig</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">Eigendistortion</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">model</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">eig</span><span class="o">.</span><span class="n">synthesize</span><span class="p">()</span>
+<span class="go">Top k=1 eigendists computed | Stop criterion 1.00E-07 reached.</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">po</span><span class="o">.</span><span class="n">plot</span><span class="o">.</span><span class="n">eigendistortion_imshow_all</span><span class="p">(</span><span class="n">eig</span><span class="p">,</span> <span class="n">distortion_scale</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">zoom</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="go">&lt;PyrFigure size ...&gt;</span>
+</pre></div>
+</div>
+<p>(<a class="reference download internal" download="" href="../../_downloads/e4b06e236ab0d1d153e33b5b3734c577/plenoptic-Eigendistortion-1.png"><code class="xref download docutils literal notranslate"><span class="pre">png</span></code></a>, <a class="reference download internal" download="" href="../../_downloads/5a11a5a87ca593972b9570a3816f5d83/plenoptic-Eigendistortion-1.hires.png"><code class="xref download docutils literal notranslate"><span class="pre">hires.png</span></code></a>, <a class="reference download internal" download="" href="../../_downloads/af753624537e336327a4c19b04707d8f/plenoptic-Eigendistortion-1.pdf"><code class="xref download docutils literal notranslate"><span class="pre">pdf</span></code></a>)</p>
+<figure class="align-default">
+<img alt="../../_images/plenoptic-Eigendistortion-1.png" class="plot-directive" src="../../_images/plenoptic-Eigendistortion-1.png" />
+</figure>
 <p class="rubric">Methods</p>
 <div class="pst-scrollable-table-container"><table class="autosummary longtable table">
 <tbody>
@@ -840,15 +860,84 @@ dealing with a numerical issue.</p></li>
 </dl>
 </div>
 <p class="rubric">Examples</p>
+<p>In order to load a saved <code class="docutils literal notranslate"><span class="pre">Eigendistortion</span></code> object, we must first initialize
+one using the same arguments and same dtype. (We use float64 / “double”
+precision rather than torch’s default float32 because it increases
+reproducibility, see the <a class="reference internal" href="../../reference/reproducibility.html#reproduce"><span class="std std-ref">Reproducibility</span></a> page of our
+documentations for more details.) Here, we load in a cached example:</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">plenoptic</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">po</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">img</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">einstein</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Gaussian</span><span class="p">(</span><span class="mi">30</span><span class="p">)</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">po</span><span class="o">.</span><span class="n">remove_grad</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">eig</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">Eigendistortion</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">model</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">eig</span><span class="o">.</span><span class="n">synthesize</span><span class="p">(</span><span class="n">max_iter</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">eig</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">&quot;eig.pt&quot;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">eig_copy</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">Eigendistortion</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">model</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">eig_copy</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;eig.pt&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">img</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">einstein</span><span class="p">()</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">lg</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">LuminanceGainControl</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="p">(</span><span class="mi">31</span><span class="p">,</span> <span class="mi">31</span><span class="p">),</span> <span class="n">pad_mode</span><span class="o">=</span><span class="s2">&quot;circular&quot;</span><span class="p">,</span> <span class="n">pretrained</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">cache_filt</span><span class="o">=</span><span class="kc">True</span>
+<span class="gp">... </span><span class="p">)</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">lg</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+<span class="go">LuminanceGainControl(...)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">po</span><span class="o">.</span><span class="n">remove_grad</span><span class="p">(</span><span class="n">lg</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">eig</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">Eigendistortion</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">lg</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">eig</span><span class="o">.</span><span class="n">eigendistortions</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">eig</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">po</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">fetch_data</span><span class="p">(</span><span class="s2">&quot;example_eigendistortion.pt&quot;</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">eig</span><span class="o">.</span><span class="n">eigendistortions</span>
+<span class="go">tensor([[[[-1.8766e-04, ...]]]], dtype=torch.float64)</span>
+</pre></div>
+</div>
+<p>If the saved <code class="docutils literal notranslate"><span class="pre">Eigendistortion</span></code> object lived on a CUDA device and you do not
+have CUDA on the loading machine, use <code class="docutils literal notranslate"><span class="pre">map_location</span></code> to change device:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">eig</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">Eigendistortion</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">lg</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">eig</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">device</span>
+<span class="go">device(type=&#39;cpu&#39;)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">eig</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">po</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">fetch_data</span><span class="p">(</span><span class="s2">&quot;example_eigendistortion-cuda.pt&quot;</span><span class="p">))</span>
+<span class="gt">Traceback (most recent call last):</span>
+<span class="gr">RuntimeError</span>: <span class="n">Attempting to deserialize object on a CUDA device but</span>
+<span class="x">torch.cuda.is_available() is False...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">eig</span><span class="o">.</span><span class="n">load</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">po</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">fetch_data</span><span class="p">(</span><span class="s2">&quot;example_eigendistortion-cuda.pt&quot;</span><span class="p">),</span>
+<span class="gp">... </span>    <span class="n">map_location</span><span class="o">=</span><span class="s2">&quot;cpu&quot;</span><span class="p">,</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">eig</span><span class="o">.</span><span class="n">eigendistortions</span>
+<span class="go">tensor([[[[-1.8766e-04, ...]]]], dtype=torch.float64)</span>
+</pre></div>
+</div>
+<p>If the loading <code class="docutils literal notranslate"><span class="pre">Eigendistortion</span></code> object was not initialized with same values
+as the saved object, an error will be raised:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">eig</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">Eigendistortion</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">rand_like</span><span class="p">(</span><span class="n">img</span><span class="p">),</span> <span class="n">lg</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">eig</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">po</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">fetch_data</span><span class="p">(</span><span class="s2">&quot;example_eigendistortion.pt&quot;</span><span class="p">))</span>
+<span class="gt">Traceback (most recent call last):</span>
+<span class="gr">ValueError</span>: <span class="n">Saved and initialized attribute image have different values...</span>
+</pre></div>
+</div>
+<p>If the loading <code class="docutils literal notranslate"><span class="pre">Eigendistortion</span></code> object has a different data type than the
+saved object, an error will be raised:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">eig</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">Eigendistortion</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">lg</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">eig</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">eig</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">po</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">fetch_data</span><span class="p">(</span><span class="s2">&quot;example_eigendistortion.pt&quot;</span><span class="p">))</span>
+<span class="gt">Traceback (most recent call last):</span>
+<span class="gr">ValueError</span>: <span class="n">Saved and initialized attribute image have different dtype...</span>
+</pre></div>
+</div>
+<p>If the name of the model has changed (even if their behavior is identical), an
+error will be raised:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span><span class="w"> </span><span class="nc">WrongModel</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+<span class="gp">... </span>        <span class="k">return</span> <span class="n">lg</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">lg</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+<span class="go">LuminanceGainControl(...)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">wrong_model</span> <span class="o">=</span> <span class="n">WrongModel</span><span class="p">()</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">po</span><span class="o">.</span><span class="n">remove_grad</span><span class="p">(</span><span class="n">wrong_model</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">eig</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">Eigendistortion</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">wrong_model</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">eig</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">po</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">fetch_data</span><span class="p">(</span><span class="s2">&quot;example_eigendistortion.pt&quot;</span><span class="p">))</span>
+<span class="gt">Traceback (most recent call last):</span>
+<span class="gr">ValueError</span>: <span class="n">Saved and initialized model have different names...</span>
+</pre></div>
+</div>
+<p>If you wish to proceed anyway, you can set <code class="docutils literal notranslate"><span class="pre">raise_on_checks=False</span></code> to turn the
+errors into warnings. Do so at your own risk and read the resulting warning
+messages in order to ensure the <strong>only</strong> differences are those you expect.
+See <a class="reference internal" href="../../reference/reproducibility.html#raise-on-checks"><span class="std std-ref">raise_on_checks</span></a> on the “Reproducibility and Compatibility” page of
+the documentation for more info.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">eig</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">Eigendistortion</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">wrong_model</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">eig</span><span class="o">.</span><span class="n">load</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">po</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">fetch_data</span><span class="p">(</span><span class="s2">&quot;example_eigendistortion.pt&quot;</span><span class="p">),</span> <span class="n">raise_on_checks</span><span class="o">=</span><span class="kc">False</span>
+<span class="gp">... </span><span class="p">)</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -857,12 +946,28 @@ dealing with a numerical issue.</p></li>
 <dt class="sig sig-object py" id="plenoptic.Eigendistortion.save">
 <span class="sig-name descname"><span class="pre">save</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/plenoptic/_synthesize/eigendistortion.html#Eigendistortion.save"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#plenoptic.Eigendistortion.save" title="Link to this definition">#</a></dt>
 <dd><p>Save all relevant variables in .pt file.</p>
-<p>See <a class="reference internal" href="#plenoptic.Eigendistortion.load" title="plenoptic.Eigendistortion.load"><code class="xref py py-meth docutils literal notranslate"><span class="pre">load</span></code></a> docstring for an example of use.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>file_path</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></span>) – The path to save the Eigendistortion object to.</p>
 </dd>
 </dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference internal" href="#plenoptic.Eigendistortion.load" title="plenoptic.Eigendistortion.load"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load</span></code></a></dt><dd><p>Method to load in saved <code class="docutils literal notranslate"><span class="pre">Eigendistortion</span></code> objects.</p>
+</dd>
+</dl>
+</div>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">plenoptic</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">po</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">img</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">einstein</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Gaussian</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="n">pad_mode</span><span class="o">=</span><span class="s2">&quot;circular&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">po</span><span class="o">.</span><span class="n">remove_grad</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">eig</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">Eigendistortion</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">model</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">eig</span><span class="o">.</span><span class="n">synthesize</span><span class="p">(</span><span class="n">max_iter</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">eig</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">&quot;eig.pt&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py method">
@@ -883,12 +988,16 @@ approximate the top k eigendistortions and their corresponding eigenvalues.</p><
 <li><p><strong>max_iter</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></span> (default: <code class="docutils literal notranslate"><span class="pre">1000</span></code>)) – Maximum number of steps to run for <code class="docutils literal notranslate"><span class="pre">method='power'</span></code> in eigenvalue
 computation. Ignored for other methods.</p></li>
 <li><p><strong>p</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></span> (default: <code class="docutils literal notranslate"><span class="pre">5</span></code>)) – Oversampling parameter for randomized SVD. k+p vectors will be sampled,
-and k will be returned. See docstring of <code class="docutils literal notranslate"><span class="pre">_synthesize_randomized_svd</span></code>
-for more details including algorithm reference.</p></li>
+and k will be returned. Increasing this value will increase the accuracy,
+but will also increase the time required for synthesis. See docstring of
+<code class="docutils literal notranslate"><span class="pre">_synthesize_randomized_svd</span></code> for more details including algorithm
+reference.</p></li>
 <li><p><strong>q</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></span> (default: <code class="docutils literal notranslate"><span class="pre">2</span></code>)) – Matrix power parameter for randomized SVD. This is an effective trick for
-the algorithm to converge to the correct eigenvectors when the
-eigenspectrum does not decay quickly. See <code class="docutils literal notranslate"><span class="pre">_synthesize_randomized_svd</span></code>
-for more details including algorithm reference.</p></li>
+the algorithm to converge to the correct eigenvectors when the eigenspectrum
+does not decay quickly. Increasing this value will increase the accuracy
+(though not as much as increasing <code class="docutils literal notranslate"><span class="pre">p</span></code>), but will also increase the time
+required for synthesis. See <code class="docutils literal notranslate"><span class="pre">_synthesize_randomized_svd</span></code> for more details
+including algorithm reference.</p></li>
 <li><p><strong>stop_criterion</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a></span> (default: <code class="docutils literal notranslate"><span class="pre">1e-07</span></code>)) – Used if <code class="docutils literal notranslate"><span class="pre">method='power'</span></code> to check for convergence. If the L2-norm
 of the eigenvalues has changed by less than this value from one
 iteration to the next, we terminate synthesis.</p></li>
@@ -898,11 +1007,108 @@ iteration to the next, we terminate synthesis.</p></li>
 <dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/exceptions.html#ValueError" title="(in Python v3.14)"><strong>ValueError</strong></a> – If <code class="docutils literal notranslate"><span class="pre">method</span></code> takes an illegal value.</p>
 </dd>
 <dt class="field-odd">Warns<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>UserWarning</strong> – If <code class="docutils literal notranslate"><span class="pre">method</span> <span class="pre">==</span> <span class="pre">&quot;power&quot;</span></code> but the Jacobian size is greater than 1e6 (which
-depends on the number of elements in the model’s representation and input
-image), in which case we’re worried about running out of memory.</p>
+<dd class="field-odd"><p><strong>UserWarning</strong> – Raised if <code class="docutils literal notranslate"><span class="pre">method</span> <span class="pre">==</span> <span class="pre">&quot;exact&quot;</span></code> but the Jacobian size is greater than 1e6,
+in which case we’re worried about running out of memory. The number of
+elements in the Jacobian is the product of the number of elements in the
+model output and <a class="reference internal" href="#plenoptic.Eigendistortion.image" title="plenoptic.Eigendistortion.image"><code class="xref py py-attr docutils literal notranslate"><span class="pre">image</span></code></a>.</p>
 </dd>
 </dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">plenoptic</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">po</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Decrease size of image to speed things up</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">img</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">process</span><span class="o">.</span><span class="n">blur_downsample</span><span class="p">(</span><span class="n">po</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">einstein</span><span class="p">(),</span> <span class="n">n_scales</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">img</span><span class="o">.</span><span class="n">shape</span>
+<span class="go">torch.Size([1, 1, 32, 32])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">po</span><span class="o">.</span><span class="n">set_seed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Gaussian</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="n">pad_mode</span><span class="o">=</span><span class="s2">&quot;circular&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">po</span><span class="o">.</span><span class="n">remove_grad</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">eig</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">Eigendistortion</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">model</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># this isn&#39;t enough to run synthesis to completion, just an example</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">eig</span><span class="o">.</span><span class="n">synthesize</span><span class="p">(</span><span class="n">max_iter</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># eigenvalue of the top and bottom eigendistortion</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">eig</span><span class="o">.</span><span class="n">eigenvalues</span>
+<span class="go">tensor([0.8080, 0.1384])</span>
+</pre></div>
+</div>
+<p>Set <code class="docutils literal notranslate"><span class="pre">method</span></code> to use different algorithms for finding the eigendistortions.
+Note that, while <code class="docutils literal notranslate"><span class="pre">&quot;power&quot;</span></code> synthesizes the top and bottom <code class="docutils literal notranslate"><span class="pre">k</span></code>
+eigendistortions, <code class="docutils literal notranslate"><span class="pre">&quot;randomized_svd&quot;</span></code> only synthesizes the top <code class="docutils literal notranslate"><span class="pre">k</span></code>.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">eig</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">Eigendistortion</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">model</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># randomized_svd doesn&#39;t take a max_iter argument</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">eig</span><span class="o">.</span><span class="n">synthesize</span><span class="p">(</span><span class="s2">&quot;randomized_svd&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># eigenvalue of top eigendistortion</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">eig</span><span class="o">.</span><span class="n">eigenvalues</span>
+<span class="go">tensor(0.9799)</span>
+</pre></div>
+</div>
+<p>Note the eigenvalue found for the top distortion is different for the two
+methods. In both cases, that is because we have not yet found the top
+eigendistortion. In order to increase the synthesis accuracy, you can:</p>
+<ul class="simple">
+<li><p>With <code class="docutils literal notranslate"><span class="pre">&quot;power&quot;</span></code>, increase <code class="docutils literal notranslate"><span class="pre">max_iter</span></code> to run synthesis until convergence
+is reached. This will increase the duration required for synthesis. Note
+that the bottom eigendistortion(s) need more iterations to synthesize than the
+top and it has not converged in the following example.</p></li>
+</ul>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">eig</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">Eigendistortion</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">model</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">eig</span><span class="o">.</span><span class="n">synthesize</span><span class="p">(</span><span class="n">max_iter</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+<span class="go">Top k=1 eigendists computed | Stop criterion 1.00E-07 reached.</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">eig</span><span class="o">.</span><span class="n">eigenvalues</span>
+<span class="go">tensor([1.0000, 0.0039])</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>With <code class="docutils literal notranslate"><span class="pre">&quot;randomized_svd&quot;</span></code>, increase <code class="docutils literal notranslate"><span class="pre">p</span></code> and/or <code class="docutils literal notranslate"><span class="pre">q</span></code>. This will decrease
+the reported spectral approximation error while increasing the duration
+of synthesis.</p></li>
+</ul>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">eig</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">Eigendistortion</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">model</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">eig</span><span class="o">.</span><span class="n">synthesize</span><span class="p">(</span><span class="s2">&quot;randomized_svd&quot;</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">q</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">eig</span><span class="o">.</span><span class="n">eigenvalues</span>
+<span class="go">tensor(1.0000)</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Use the <code class="docutils literal notranslate"><span class="pre">&quot;exact&quot;</span></code> method. This explicitly computes the Jacobian, retrieving
+all eigendistortions, and thus uses <strong>a lot of memory</strong>, and so is only
+recommended for small images or models.</p></li>
+</ul>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">eig</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">Eigendistortion</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">model</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># exact doesn&#39;t take any arguments</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">eig</span><span class="o">.</span><span class="n">synthesize</span><span class="p">(</span><span class="s2">&quot;exact&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># eigenvalue of all eigendistortions</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">eig</span><span class="o">.</span><span class="n">eigenvalues</span>
+<span class="go">tensor([1.0000e+00, ...])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">len</span><span class="p">(</span><span class="n">eig</span><span class="o">.</span><span class="n">eigenvalues</span><span class="p">)</span>
+<span class="go">1024</span>
+</pre></div>
+</div>
+<p>Set <code class="docutils literal notranslate"><span class="pre">k</span></code> to increase the number of eigendistortions found for <code class="docutils literal notranslate"><span class="pre">&quot;power&quot;</span></code>
+or <code class="docutils literal notranslate"><span class="pre">&quot;randomized_svd&quot;</span></code>:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">eig</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">Eigendistortion</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">model</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># this isn&#39;t enough to run synthesis to completion, just an example</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">eig</span><span class="o">.</span><span class="n">synthesize</span><span class="p">(</span><span class="n">max_iter</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># eigenvalue of 3 top and bottom eigendistortion</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">eig</span><span class="o">.</span><span class="n">eigenvalues</span>
+<span class="go">tensor([0.9256, 0.8508, 0.7679, 0.1576, 0.1425, 0.1576])</span>
+</pre></div>
+</div>
+<p>Adjust <code class="docutils literal notranslate"><span class="pre">stop_criterion</span></code> to change how convergence is determined for
+<code class="docutils literal notranslate"><span class="pre">&quot;power&quot;</span></code>. In this case, we stop early by making <code class="docutils literal notranslate"><span class="pre">stop_criterion</span></code> fairly
+large. In practice, you’re more likely to make <code class="docutils literal notranslate"><span class="pre">stop_criterion</span></code> smaller to let
+synthesis run for longer.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">eig</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">Eigendistortion</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">model</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># this isn&#39;t enough to run synthesis to completion, just an example</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">eig</span><span class="o">.</span><span class="n">synthesize</span><span class="p">(</span><span class="n">max_iter</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">stop_criterion</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+<span class="go">Top k=1 eigendists computed | Stop criterion 1.00E-01 reached.</span>
+<span class="go">Bottom k=1 eigendists computed | Stop criterion 1.00E-01 reached.</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># eigenvalues of the top and bottom eigendistortion, notice how they are not</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># as high / low as when stop_criterion has a lower value (because synthesis</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># has stopped early)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">eig</span><span class="o">.</span><span class="n">eigenvalues</span>
+<span class="go">tensor([0.6565, 0.1321])</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py method">
@@ -927,7 +1133,6 @@ only cast the floating point parameters and buffers to <code class="docutils lit
 <cite>on_blocking`</cite> is set, it tries to convert/move asynchronously
 with respect to the host if possible, e.g., moving CPU Tensors with
 pinned memory to CUDA devices.</p>
-<p>See <a class="reference external" href="https://docs.pytorch.org/docs/stable/generated/torch.nn.Module.html#torch.nn.Module.to" title="(in PyTorch v2.14)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">torch.nn.Module.to</span></code></a> for examples.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>This method modifies the module in-place.</p>
@@ -943,6 +1148,23 @@ all parameters and buffers in this module.</p></li>
 </ul>
 </dd>
 </dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">plenoptic</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">po</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">img</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">einstein</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Gaussian</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="n">pad_mode</span><span class="o">=</span><span class="s2">&quot;circular&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">po</span><span class="o">.</span><span class="n">remove_grad</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">eig</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">Eigendistortion</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">model</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">eig</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">dtype</span>
+<span class="go">torch.float32</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">eig</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="n">eig</span><span class="o">.</span><span class="n">image</span><span class="p">)</span><span class="o">.</span><span class="n">dtype</span>
+<span class="go">torch.float32</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">eig</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">eig</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">dtype</span>
+<span class="go">torch.float64</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">eig</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="n">eig</span><span class="o">.</span><span class="n">image</span><span class="p">)</span><span class="o">.</span><span class="n">dtype</span>
+<span class="go">torch.float64</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py property">
@@ -977,6 +1199,37 @@ all parameters and buffers in this module.</p></li>
 <dd><p>Jacobian matrix of <a class="reference internal" href="#plenoptic.Eigendistortion.model" title="plenoptic.Eigendistortion.model"><code class="xref py py-attr docutils literal notranslate"><span class="pre">model</span></code></a> with respect to <a class="reference internal" href="#plenoptic.Eigendistortion.image" title="plenoptic.Eigendistortion.image"><code class="xref py py-attr docutils literal notranslate"><span class="pre">image</span></code></a>.</p>
 <p>Only set when <a class="reference internal" href="#plenoptic.Eigendistortion.synthesize" title="plenoptic.Eigendistortion.synthesize"><code class="xref py py-func docutils literal notranslate"><span class="pre">synthesize</span></code></a> is run with <code class="docutils literal notranslate"><span class="pre">method='exact'</span></code>.
 Else, <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p>
+<p class="rubric">Examples</p>
+<p>Jacobian is empty at initialization:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">plenoptic</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">po</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Gaussian</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="n">pad_mode</span><span class="o">=</span><span class="s2">&quot;circular&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">po</span><span class="o">.</span><span class="n">remove_grad</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">small_img</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">process</span><span class="o">.</span><span class="n">blur_downsample</span><span class="p">(</span><span class="n">po</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">einstein</span><span class="p">(),</span> <span class="n">n_scales</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">eig</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">Eigendistortion</span><span class="p">(</span><span class="n">small_img</span><span class="p">,</span> <span class="n">model</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">eig</span><span class="o">.</span><span class="n">jacobian</span>
+</pre></div>
+</div>
+<p>It is set when <a class="reference internal" href="#plenoptic.Eigendistortion.synthesize" title="plenoptic.Eigendistortion.synthesize"><code class="xref py py-func docutils literal notranslate"><span class="pre">synthesize</span></code></a> is called with <code class="docutils literal notranslate"><span class="pre">method=&quot;exact&quot;</span></code>:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">eig</span><span class="o">.</span><span class="n">synthesize</span><span class="p">(</span><span class="s2">&quot;exact&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">eig</span><span class="o">.</span><span class="n">jacobian</span>
+<span class="go">tensor([[0.0210, ..., 0.0210]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Jacobian size is (numel, numel), where numel is the number of elements</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># in image</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">eig</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">shape</span>
+<span class="go">torch.Size([1, 1, 32, 32])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">eig</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">numel</span><span class="p">()</span>
+<span class="go">1024</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">eig</span><span class="o">.</span><span class="n">jacobian</span><span class="o">.</span><span class="n">shape</span>
+<span class="go">torch.Size([1024, 1024])</span>
+</pre></div>
+</div>
+<p>If <a class="reference internal" href="#plenoptic.Eigendistortion.synthesize" title="plenoptic.Eigendistortion.synthesize"><code class="xref py py-func docutils literal notranslate"><span class="pre">synthesize</span></code></a> is called with a different method, jacobian is not set.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">small_img</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">process</span><span class="o">.</span><span class="n">blur_downsample</span><span class="p">(</span><span class="n">po</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">einstein</span><span class="p">(),</span> <span class="n">n_scales</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">eig</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">Eigendistortion</span><span class="p">(</span><span class="n">small_img</span><span class="p">,</span> <span class="n">model</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">eig</span><span class="o">.</span><span class="n">synthesize</span><span class="p">(</span><span class="n">max_iter</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">eig</span><span class="o">.</span><span class="n">jacobian</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py property">
