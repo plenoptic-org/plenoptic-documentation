@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>plenoptic.convert_float_to_int &#8212; plenoptic 0.0.1.dev32 documentation</title>
+    <title>plenoptic.convert_float_to_int &#8212; plenoptic 0.0.1.dev33 documentation</title>
   
   
   
@@ -44,7 +44,7 @@
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=cb8930eaaf36d9849b67" />
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=cb8930eaaf36d9849b67" />
 
-    <script src="../../_static/documentation_options.js?v=0e9f3337"></script>
+    <script src="../../_static/documentation_options.js?v=aae7b72e"></script>
     <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -144,8 +144,8 @@
       
     
     
-    <img src="../../_static/Plenoptic_Logo_CMYK_Full_Wide.svg" class="logo__image only-light" alt="plenoptic 0.0.1.dev32 documentation - Home"/>
-    <img src="../../_static/Plenoptic_Logo_CMYK_Full_DarkMode_Wide.svg" class="logo__image only-dark pst-js-only" alt="plenoptic 0.0.1.dev32 documentation - Home"/>
+    <img src="../../_static/Plenoptic_Logo_CMYK_Full_Wide.svg" class="logo__image only-light" alt="plenoptic 0.0.1.dev33 documentation - Home"/>
+    <img src="../../_static/Plenoptic_Logo_CMYK_Full_DarkMode_Wide.svg" class="logo__image only-dark pst-js-only" alt="plenoptic 0.0.1.dev33 documentation - Home"/>
   
   
 </a></div>
@@ -682,6 +682,38 @@ for 8 bit 65535 for 16 bit) and then converting it to the proper type.</p>
 <dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/exceptions.html#ValueError" title="(in Python v3.14)"><strong>ValueError</strong></a> – If <code class="docutils literal notranslate"><span class="pre">image</span></code> max is greater than 1.</p>
 </dd>
 </dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">plenoptic</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">po</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">img</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">einstein</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">img</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">img</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
+<span class="go">(tensor(0.0039), tensor(1.))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">int_img</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">convert_float_to_int</span><span class="p">(</span><span class="n">po</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">(</span><span class="n">img</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">int_img</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">int_img</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
+<span class="go">(np.uint8(1), np.uint8(255))</span>
+</pre></div>
+</div>
+<p>Input <code class="docutils literal notranslate"><span class="pre">image</span></code> must be a numpy array, not a torch tensor:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">po</span><span class="o">.</span><span class="n">convert_float_to_int</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
+<span class="gt">Traceback (most recent call last):</span>
+<span class="gr">AttributeError</span>: <span class="n">&#39;Tensor&#39; object has no attribute &#39;astype&#39;...</span>
+</pre></div>
+</div>
+<p>Integer images can be saved to disk in a standard image format, once
+they are the proper shape (2d for grayscale, 3d for color):</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">imageio.v3</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">iio</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">pyrtools</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pt</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">int_img</span> <span class="o">=</span> <span class="n">int_img</span><span class="o">.</span><span class="n">squeeze</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">int_img</span><span class="o">.</span><span class="n">shape</span>
+<span class="go">(256, 256)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">iio</span><span class="o">.</span><span class="n">imwrite</span><span class="p">(</span><span class="s2">&quot;test.png&quot;</span><span class="p">,</span> <span class="n">int_img</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">iio</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="s2">&quot;test.png&quot;</span><span class="p">))</span>
+<span class="go">&lt;PyrFigure size 256x320 with 1 Axes&gt;</span>
+</pre></div>
+</div>
+<p>(<a class="reference download internal" download="" href="../../_downloads/174a92e6e7a46fa84b8babb9bfe91b49/plenoptic-convert_float_to_int-2.png"><code class="xref download docutils literal notranslate"><span class="pre">png</span></code></a>, <a class="reference download internal" download="" href="../../_downloads/05051944bdaeea7ae3bbd713baa8d682/plenoptic-convert_float_to_int-2.hires.png"><code class="xref download docutils literal notranslate"><span class="pre">hires.png</span></code></a>, <a class="reference download internal" download="" href="../../_downloads/206bba2ccfd44f54740ea9676e503aaf/plenoptic-convert_float_to_int-2.pdf"><code class="xref download docutils literal notranslate"><span class="pre">pdf</span></code></a>)</p>
+<figure class="align-default">
+<img alt="../../_images/plenoptic-convert_float_to_int-2.png" class="plot-directive" src="../../_images/plenoptic-convert_float_to_int-2.png" />
+</figure>
 </dd></dl>
 
 </section>

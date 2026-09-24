@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>plenoptic.io &#8212; plenoptic 0.0.1.dev32 documentation</title>
+    <title>plenoptic.io &#8212; plenoptic 0.0.1.dev33 documentation</title>
   
   
   
@@ -43,7 +43,7 @@
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=cb8930eaaf36d9849b67" />
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=cb8930eaaf36d9849b67" />
 
-    <script src="../../_static/documentation_options.js?v=0e9f3337"></script>
+    <script src="../../_static/documentation_options.js?v=aae7b72e"></script>
     <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -141,8 +141,8 @@
       
     
     
-    <img src="../../_static/Plenoptic_Logo_CMYK_Full_Wide.svg" class="logo__image only-light" alt="plenoptic 0.0.1.dev32 documentation - Home"/>
-    <img src="../../_static/Plenoptic_Logo_CMYK_Full_DarkMode_Wide.svg" class="logo__image only-dark pst-js-only" alt="plenoptic 0.0.1.dev32 documentation - Home"/>
+    <img src="../../_static/Plenoptic_Logo_CMYK_Full_Wide.svg" class="logo__image only-light" alt="plenoptic 0.0.1.dev33 documentation - Home"/>
+    <img src="../../_static/Plenoptic_Logo_CMYK_Full_DarkMode_Wide.svg" class="logo__image only-dark pst-js-only" alt="plenoptic 0.0.1.dev33 documentation - Home"/>
   
   
 </a></div>
@@ -603,6 +603,12 @@
 <span class="sd">    This is used for debugging, it will print out information about the versions used,</span>
 <span class="sd">    names of the callable attributes, shapes of tensor attributes, etc.</span>
 
+<span class="sd">    .. warning::</span>
+<span class="sd">       This will call :func:`torch.load` on the specified path; it will not try to</span>
+<span class="sd">       initialize any plenoptic objects. We set ``weights_only=True``, so it should</span>
+<span class="sd">       be safe (it will not run any saved code), but will load the tensors into memory,</span>
+<span class="sd">       which may be a problem if they are large.</span>
+
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    file_path</span>
@@ -613,9 +619,120 @@
 <span class="sd">        CPU, you&#39;ll need this to make sure everything lines up</span>
 <span class="sd">        properly. This should be structured like the str you would</span>
 <span class="sd">        pass to :class:`torch.device`.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If we are unable to parse the saved object, in which case we believe it is not</span>
+<span class="sd">        a saved plenoptic synthesis object.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    The function prints out information about the versions of plenoptic and pytorch used</span>
+<span class="sd">    when saving the object (and the currently installed versions), as well the object</span>
+<span class="sd">    type, and then information about all of the attributes of the object, split into</span>
+<span class="sd">    separate groups for callables, tensors, and everything else.</span>
+
+<span class="sd">    &gt;&gt;&gt; import plenoptic as po</span>
+<span class="sd">    &gt;&gt;&gt; # Download one of our cached examples</span>
+<span class="sd">    &gt;&gt;&gt; saved_obj = po.data.fetch_data(&quot;example_mad.pt&quot;)</span>
+<span class="sd">    &gt;&gt;&gt; po.io.examine_saved_synthesis(saved_obj)</span>
+<span class="sd">    Metadata</span>
+<span class="sd">    --------</span>
+<span class="sd">    plenoptic version : ...</span>
+<span class="sd">    torch version     : ...</span>
+<span class="sd">    Saved object type : plenoptic.MADCompetition</span>
+<span class="sd">    &lt;BLANKLINE&gt;</span>
+<span class="sd">    Callables attributes</span>
+<span class="sd">    --------------------</span>
+<span class="sd">    optimized_metric : ...</span>
+<span class="sd">    reference_metric : ...</span>
+<span class="sd">    penalty_function : ...</span>
+<span class="sd">    optimizer        : ...</span>
+<span class="sd">    scheduler        : ...</span>
+<span class="sd">    &lt;BLANKLINE&gt;</span>
+<span class="sd">    Tensor attributes</span>
+<span class="sd">    -----------------</span>
+<span class="sd">    image         : torch.float64, shape torch.Size([1, 1, 256, 256])</span>
+<span class="sd">    mad_image     : torch.float64, shape torch.Size([1, 1, 256, 256])</span>
+<span class="sd">    initial_image : torch.float64, shape torch.Size([1, 1, 256, 256])</span>
+<span class="sd">    &lt;BLANKLINE&gt;</span>
+<span class="sd">    Other attributes</span>
+<span class="sd">    ----------------</span>
+<span class="sd">    loaded                  : True</span>
+<span class="sd">    losses                  : &lt;class &#39;list&#39;&gt; with length ...</span>
+<span class="sd">    penalties               : &lt;class &#39;list&#39;&gt; with length ...</span>
+<span class="sd">    gradient_norm           : &lt;class &#39;list&#39;&gt; with length ...</span>
+<span class="sd">    pixel_change_norm       : &lt;class &#39;list&#39;&gt; with length ...</span>
+<span class="sd">    store_progress          : ...</span>
+<span class="sd">    current_loss            : ...</span>
+<span class="sd">    current_penalty         : ...</span>
+<span class="sd">    penalty_lambda          : ...</span>
+<span class="sd">    image_shape             : &lt;class &#39;torch.Size&#39;&gt; with length 4</span>
+<span class="sd">    scheduler_step_arg      : False</span>
+<span class="sd">    optimized_metric_loss   : &lt;class &#39;list&#39;&gt; with length ...</span>
+<span class="sd">    reference_metric_loss   : &lt;class &#39;list&#39;&gt; with length ...</span>
+<span class="sd">    reference_metric_target : ...</span>
+<span class="sd">    metric_tradeoff_lambda  : ...</span>
+<span class="sd">    minmax                  : max</span>
+<span class="sd">    saved_mad_image         : &lt;class &#39;list&#39;&gt; with length ...</span>
+<span class="sd">    current_ref_metric      : ...</span>
+<span class="sd">    current_opt_metric      : ...</span>
+
+<span class="sd">    Because we must load in the torch object in order to retrieve the above information,</span>
+<span class="sd">    ``map_location`` must be set in order to examine an object that was saved from a</span>
+<span class="sd">    CUDA device if none is available on your current machine:</span>
+
+<span class="sd">    &gt;&gt;&gt; saved_obj = po.data.fetch_data(&quot;example_eigendistortion_color.pt&quot;)</span>
+<span class="sd">    &gt;&gt;&gt; po.io.examine_saved_synthesis(saved_obj)</span>
+<span class="sd">    Traceback (most recent call last):</span>
+<span class="sd">    RuntimeError: Attempting to deserialize object on a CUDA device but</span>
+<span class="sd">    torch.cuda.is_available() is False...</span>
+
+<span class="sd">    Note that the information about the attributes printed depends on the object type:</span>
+
+<span class="sd">    &gt;&gt;&gt; po.io.examine_saved_synthesis(saved_obj, map_location=&quot;cpu&quot;)</span>
+<span class="sd">    Metadata</span>
+<span class="sd">    --------</span>
+<span class="sd">    plenoptic version : ...</span>
+<span class="sd">    torch version     : ...</span>
+<span class="sd">    Saved object type : plenoptic.Eigendistortion</span>
+<span class="sd">    &lt;BLANKLINE&gt;</span>
+<span class="sd">    Callables attributes</span>
+<span class="sd">    --------------------</span>
+<span class="sd">    model : ...</span>
+<span class="sd">    &lt;BLANKLINE&gt;</span>
+<span class="sd">    Tensor attributes</span>
+<span class="sd">    -----------------</span>
+<span class="sd">    image_flat          : torch.float64, shape torch.Size([1200, 1])</span>
+<span class="sd">    image               : torch.float64, shape torch.Size([1, 3, 20, 20])</span>
+<span class="sd">    representation_flat : torch.float64, shape torch.Size([1296, 1])</span>
+<span class="sd">    eigendistortions    : torch.float64, shape torch.Size([2, 3, 20, 20])</span>
+<span class="sd">    eigenvalues         : torch.float64, shape torch.Size([2])</span>
+<span class="sd">    eigenindex          : torch.int64, shape torch.Size([2])</span>
+<span class="sd">    &lt;BLANKLINE&gt;</span>
+<span class="sd">    Other attributes</span>
+<span class="sd">    ----------------</span>
+<span class="sd">    loaded      : False</span>
+<span class="sd">    image_shape : &lt;class &#39;torch.Size&#39;&gt; with length 3</span>
+<span class="sd">    jacobian    : None</span>
+
+<span class="sd">    This only works for plenoptic synthesis objects, not arbitrary torch objects:</span>
+
+<span class="sd">    &gt;&gt;&gt; import torch</span>
+<span class="sd">    &gt;&gt;&gt; torch.save(torch.rand(1, 1, 32, 32), &quot;test.pt&quot;)</span>
+<span class="sd">    &gt;&gt;&gt; po.io.examine_saved_synthesis(&quot;test.pt&quot;)</span>
+<span class="sd">    Traceback (most recent call last):</span>
+<span class="sd">    ValueError: Unable to parse saved object -- is this a plenoptic synthesis object?...</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">load_dict</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="n">map_location</span><span class="o">=</span><span class="n">map_location</span><span class="p">,</span> <span class="n">weights_only</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">metadata</span> <span class="o">=</span> <span class="n">load_dict</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;save_metadata&quot;</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">metadata</span> <span class="o">=</span> <span class="n">load_dict</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;save_metadata&quot;</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">AttributeError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s2">&quot;Unable to parse saved object -- is this a plenoptic&quot;</span>
+            <span class="sa">f</span><span class="s2">&quot; synthesis object?</span><span class="se">\n\n</span><span class="s2">Original exception: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Metadata</span><span class="se">\n</span><span class="s2">--------&quot;</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span>
         <span class="sa">f</span><span class="s2">&quot;plenoptic version : </span><span class="si">{</span><span class="n">metadata</span><span class="p">[</span><span class="s1">&#39;plenoptic_version&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> &quot;</span>

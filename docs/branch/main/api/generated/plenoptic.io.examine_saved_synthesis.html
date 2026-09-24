@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>plenoptic.io.examine_saved_synthesis &#8212; plenoptic 0.0.1.dev32 documentation</title>
+    <title>plenoptic.io.examine_saved_synthesis &#8212; plenoptic 0.0.1.dev33 documentation</title>
   
   
   
@@ -44,7 +44,7 @@
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=cb8930eaaf36d9849b67" />
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=cb8930eaaf36d9849b67" />
 
-    <script src="../../_static/documentation_options.js?v=0e9f3337"></script>
+    <script src="../../_static/documentation_options.js?v=aae7b72e"></script>
     <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -144,8 +144,8 @@
       
     
     
-    <img src="../../_static/Plenoptic_Logo_CMYK_Full_Wide.svg" class="logo__image only-light" alt="plenoptic 0.0.1.dev32 documentation - Home"/>
-    <img src="../../_static/Plenoptic_Logo_CMYK_Full_DarkMode_Wide.svg" class="logo__image only-dark pst-js-only" alt="plenoptic 0.0.1.dev32 documentation - Home"/>
+    <img src="../../_static/Plenoptic_Logo_CMYK_Full_Wide.svg" class="logo__image only-light" alt="plenoptic 0.0.1.dev33 documentation - Home"/>
+    <img src="../../_static/Plenoptic_Logo_CMYK_Full_DarkMode_Wide.svg" class="logo__image only-dark pst-js-only" alt="plenoptic 0.0.1.dev33 documentation - Home"/>
   
   
 </a></div>
@@ -663,6 +663,13 @@
 <dd><p>Examine saved synthesis object.</p>
 <p>This is used for debugging, it will print out information about the versions used,
 names of the callable attributes, shapes of tensor attributes, etc.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>This will call <a class="reference external" href="https://docs.pytorch.org/docs/stable/generated/torch.load.html#torch.load" title="(in PyTorch v2.14)"><code class="xref py py-func docutils literal notranslate"><span class="pre">torch.load</span></code></a> on the specified path; it will not try to
+initialize any plenoptic objects. We set <code class="docutils literal notranslate"><span class="pre">weights_only=True</span></code>, so it should
+be safe (it will not run any saved code), but will load the tensors into memory,
+which may be a problem if they are large.</p>
+</div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -674,7 +681,109 @@ properly. This should be structured like the str you would
 pass to <a class="reference external" href="https://docs.pytorch.org/docs/stable/tensor_attributes.html#torch.device" title="(in PyTorch v2.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">torch.device</span></code></a>.</p></li>
 </ul>
 </dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/exceptions.html#ValueError" title="(in Python v3.14)"><strong>ValueError</strong></a> – If we are unable to parse the saved object, in which case we believe it is not
+    a saved plenoptic synthesis object.</p>
+</dd>
 </dl>
+<p class="rubric">Examples</p>
+<p>The function prints out information about the versions of plenoptic and pytorch used
+when saving the object (and the currently installed versions), as well the object
+type, and then information about all of the attributes of the object, split into
+separate groups for callables, tensors, and everything else.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">plenoptic</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">po</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Download one of our cached examples</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">saved_obj</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">fetch_data</span><span class="p">(</span><span class="s2">&quot;example_mad.pt&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">po</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">examine_saved_synthesis</span><span class="p">(</span><span class="n">saved_obj</span><span class="p">)</span>
+<span class="go">Metadata</span>
+<span class="go">--------</span>
+<span class="go">plenoptic version : ...</span>
+<span class="go">torch version     : ...</span>
+<span class="go">Saved object type : plenoptic.MADCompetition</span>
+
+<span class="go">Callables attributes</span>
+<span class="go">--------------------</span>
+<span class="go">optimized_metric : ...</span>
+<span class="go">reference_metric : ...</span>
+<span class="go">penalty_function : ...</span>
+<span class="go">optimizer        : ...</span>
+<span class="go">scheduler        : ...</span>
+
+<span class="go">Tensor attributes</span>
+<span class="go">-----------------</span>
+<span class="go">image         : torch.float64, shape torch.Size([1, 1, 256, 256])</span>
+<span class="go">mad_image     : torch.float64, shape torch.Size([1, 1, 256, 256])</span>
+<span class="go">initial_image : torch.float64, shape torch.Size([1, 1, 256, 256])</span>
+
+<span class="go">Other attributes</span>
+<span class="go">----------------</span>
+<span class="go">loaded                  : True</span>
+<span class="go">losses                  : &lt;class &#39;list&#39;&gt; with length ...</span>
+<span class="go">penalties               : &lt;class &#39;list&#39;&gt; with length ...</span>
+<span class="go">gradient_norm           : &lt;class &#39;list&#39;&gt; with length ...</span>
+<span class="go">pixel_change_norm       : &lt;class &#39;list&#39;&gt; with length ...</span>
+<span class="go">store_progress          : ...</span>
+<span class="go">current_loss            : ...</span>
+<span class="go">current_penalty         : ...</span>
+<span class="go">penalty_lambda          : ...</span>
+<span class="go">image_shape             : &lt;class &#39;torch.Size&#39;&gt; with length 4</span>
+<span class="go">scheduler_step_arg      : False</span>
+<span class="go">optimized_metric_loss   : &lt;class &#39;list&#39;&gt; with length ...</span>
+<span class="go">reference_metric_loss   : &lt;class &#39;list&#39;&gt; with length ...</span>
+<span class="go">reference_metric_target : ...</span>
+<span class="go">metric_tradeoff_lambda  : ...</span>
+<span class="go">minmax                  : max</span>
+<span class="go">saved_mad_image         : &lt;class &#39;list&#39;&gt; with length ...</span>
+<span class="go">current_ref_metric      : ...</span>
+<span class="go">current_opt_metric      : ...</span>
+</pre></div>
+</div>
+<p>Because we must load in the torch object in order to retrieve the above information,
+<code class="docutils literal notranslate"><span class="pre">map_location</span></code> must be set in order to examine an object that was saved from a
+CUDA device if none is available on your current machine:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">saved_obj</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">fetch_data</span><span class="p">(</span><span class="s2">&quot;example_eigendistortion_color.pt&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">po</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">examine_saved_synthesis</span><span class="p">(</span><span class="n">saved_obj</span><span class="p">)</span>
+<span class="gt">Traceback (most recent call last):</span>
+<span class="gr">RuntimeError</span>: <span class="n">Attempting to deserialize object on a CUDA device but</span>
+<span class="x">torch.cuda.is_available() is False...</span>
+</pre></div>
+</div>
+<p>Note that the information about the attributes printed depends on the object type:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">po</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">examine_saved_synthesis</span><span class="p">(</span><span class="n">saved_obj</span><span class="p">,</span> <span class="n">map_location</span><span class="o">=</span><span class="s2">&quot;cpu&quot;</span><span class="p">)</span>
+<span class="go">Metadata</span>
+<span class="go">--------</span>
+<span class="go">plenoptic version : ...</span>
+<span class="go">torch version     : ...</span>
+<span class="go">Saved object type : plenoptic.Eigendistortion</span>
+
+<span class="go">Callables attributes</span>
+<span class="go">--------------------</span>
+<span class="go">model : ...</span>
+
+<span class="go">Tensor attributes</span>
+<span class="go">-----------------</span>
+<span class="go">image_flat          : torch.float64, shape torch.Size([1200, 1])</span>
+<span class="go">image               : torch.float64, shape torch.Size([1, 3, 20, 20])</span>
+<span class="go">representation_flat : torch.float64, shape torch.Size([1296, 1])</span>
+<span class="go">eigendistortions    : torch.float64, shape torch.Size([2, 3, 20, 20])</span>
+<span class="go">eigenvalues         : torch.float64, shape torch.Size([2])</span>
+<span class="go">eigenindex          : torch.int64, shape torch.Size([2])</span>
+
+<span class="go">Other attributes</span>
+<span class="go">----------------</span>
+<span class="go">loaded      : False</span>
+<span class="go">image_shape : &lt;class &#39;torch.Size&#39;&gt; with length 3</span>
+<span class="go">jacobian    : None</span>
+</pre></div>
+</div>
+<p>This only works for plenoptic synthesis objects, not arbitrary torch objects:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">torch</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">32</span><span class="p">),</span> <span class="s2">&quot;test.pt&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">po</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">examine_saved_synthesis</span><span class="p">(</span><span class="s2">&quot;test.pt&quot;</span><span class="p">)</span>
+<span class="gt">Traceback (most recent call last):</span>
+<span class="gr">ValueError</span>: <span class="n">Unable to parse saved object -- is this a plenoptic synthesis object?...</span>
+</pre></div>
+</div>
 </dd></dl>
 
 </section>
