@@ -1,0 +1,491 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MAD Competition Usage &mdash; plenoptic 1.3.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/nbsphinx-code-cells.css?v=2aa19091" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=1f29e9d3"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=35a8b989"></script>
+      <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+      <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Steerable Pyramid" href="../models/03_Steerable_Pyramid.html" />
+    <link rel="prev" title="MAD Competition Conceptual Introduction" href="07_Simple_MAD.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+<div style="background-color: rgb(248, 215, 218); color: rgb(114, 28, 36); text-align: center;">
+  <div>
+    <div>This is documentation for <strong>an old version</strong>.
+      <a href="https://docs.plenoptic.org/" style="background-color: rgb(220, 53, 69); color: rgb(255, 255, 255); margin: 1rem; padding: 0.375rem 0.75rem; border-radius: 4px; display: inline-block; text-align: center;">Switch to stable version</a>
+    </div>
+  </div>
+</div>
+ 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            plenoptic
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Basic concepts</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../jupyter.html">Using Jupyter to Run Example Notebooks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../conceptual_intro.html">Conceptual Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../models.html">Model requirements</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../00_quickstart.html">Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../citation.html">Citation Guide and Bibliography</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Synthesis method introductions</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="02_Eigendistortions.html">Eigendistortions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="06_Metamer.html">Metamers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="07_Simple_MAD.html">MAD Competition Conceptual Introduction</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">MAD Competition Usage</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Models and metrics</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../models/03_Steerable_Pyramid.html">Steerable Pyramid</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../models/04_Perceptual_distance.html">Perceptual distance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../models/Metamer-Portilla-Simoncelli.html">Portilla-Simoncelli Texture Metamer</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Synthesis method examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../applications/09_Original_MAD.html">Reproducing Wang and Simoncelli, 2008 (MAD Competition)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../applications/Demo_Eigendistortion.html">Reproducing Berardino et al., 2017 (Eigendistortions)</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Advanced usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../synthesis.html">Synthesis object design</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tips.html">Tips and Tricks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../reproducibility.html">Reproducibility</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/modules.html">API Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/Display.html">Display and animate functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/Synthesis_extensions.html">Extending existing synthesis objects</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">plenoptic</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">MAD Competition Usage</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/tutorials/intro/08_MAD_Competition.nblink.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="MAD-Competition-Usage">
+<h1>MAD Competition Usage<a class="headerlink" href="#MAD-Competition-Usage" title="Link to this heading"></a></h1>
+<p>Maximum differentiation (MAD) competition comes from a paper published in 2008 by Zhou Wang and Eero Simoncelli (<a class="reference external" href="https://www.cns.nyu.edu/pub/lcv/wang08-preprint.pdf">reprint</a> from LCV website). In MAD Competition, the goal is to efficiently compare two competing perceptual metrics. Like the inputs for all synthesis methods in <code class="docutils literal notranslate"><span class="pre">plenoptic</span></code>, metrics operate on images and produce predictions related to perception. As originally conceived, the metrics in MAD competition are either similarity
+(e.g., SSIM) or distance (e.g., MSE) metrics: they take two images and return a scalar value that gives a perceptual similarity or distance. For distance metrics, the smaller this number is, the more perceptually similar the metric predicts they will be; for similarity metrics, the larger the number is, the more percpetually similar.</p>
+<p>In <code class="docutils literal notranslate"><span class="pre">plenoptic</span></code>, a single instantiation of <code class="docutils literal notranslate"><span class="pre">MADCompetition</span></code> synthesizes a single image, holding the <code class="docutils literal notranslate"><span class="pre">fixed_metric</span></code> constant while either maximizing or minimizing <code class="docutils literal notranslate"><span class="pre">synthesis_metric</span></code>, depending on the value of <code class="docutils literal notranslate"><span class="pre">synthesis_target</span></code>. A full set of MAD competition images consists of four images, maximizing and minimizing each of the two metrics. For each pair of images, one metric predicts they are perceptually identical, while the other metric predicts they are as dissimilar as possible. This
+set therefore allows us to efficiently compare the two models.</p>
+<p>In the paper, these images are generated by manually computing the gradients, projecting one gradient out of the other, and repeating until convergence was reached. This doesn’t work as well in the general case, so we instead optimize using the following objective function:</p>
+<div class="math notranslate nohighlight">
+\[t L_1(x, \hat{x}) + \lambda_1 [L_2(x, x+\epsilon) - L_2(x, \hat{x})]^2 + \lambda_2 \mathcal{B}(\hat{x})\]</div>
+<p>where <span class="math notranslate nohighlight">\(t\)</span> is 1 if <code class="docutils literal notranslate"><span class="pre">mad.synthesis_target</span></code> is <code class="docutils literal notranslate"><span class="pre">'min'</span></code> and -1 if it’s <code class="docutils literal notranslate"><span class="pre">'max'</span></code>, <span class="math notranslate nohighlight">\(L_1\)</span> is <code class="docutils literal notranslate"><span class="pre">mad.synthesis_metric</span></code>, <span class="math notranslate nohighlight">\(L_2\)</span> is <code class="docutils literal notranslate"><span class="pre">mad.fixed_metric</span></code>, <span class="math notranslate nohighlight">\(x\)</span> is <code class="docutils literal notranslate"><span class="pre">mad.reference_signal</span></code>, <span class="math notranslate nohighlight">\(\hat{x}\)</span> is <code class="docutils literal notranslate"><span class="pre">mad.synthesized_signal</span></code>, <span class="math notranslate nohighlight">\(\epsilon\)</span> is the initial noise, <span class="math notranslate nohighlight">\(\mathcal{B}\)</span> is the quadratic bound penalty, <span class="math notranslate nohighlight">\(\lambda_1\)</span> is <code class="docutils literal notranslate"><span class="pre">mad.metric_tradeoff_lambda</span></code> and <span class="math notranslate nohighlight">\(\lambda_2\)</span> is <code class="docutils literal notranslate"><span class="pre">mad.range_penalty_lambda</span></code>.</p>
+<p>That’s the general idea, now let’s explore how to use the <code class="docutils literal notranslate"><span class="pre">MADCompetition</span></code> class for generating these images</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">plenoptic</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">po</span>
+
+<span class="c1"># so that relative sizes of axes created by po.imshow and others look right</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s2">&quot;figure.dpi&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">72</span>
+
+<span class="o">%</span><span class="k">load_ext</span> autoreload
+<span class="o">%</span><span class="k">autoreload</span> 2
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+/mnt/sw/nix/store/29h1dijh98y9ar6n8hxv78v8zz2pqfzf-python-3.11.7-view/lib/python3.11/site-packages/numpy/core/getlimits.py:549: UserWarning: The value of the smallest subnormal for &lt;class &#39;numpy.float64&#39;&gt; type is zero.
+  setattr(self, word, getattr(machar, word).flat[0])
+/mnt/sw/nix/store/29h1dijh98y9ar6n8hxv78v8zz2pqfzf-python-3.11.7-view/lib/python3.11/site-packages/numpy/core/getlimits.py:89: UserWarning: The value of the smallest subnormal for &lt;class &#39;numpy.float64&#39;&gt; type is zero.
+  return self._float_to_str(self.smallest_subnormal)
+/mnt/sw/nix/store/29h1dijh98y9ar6n8hxv78v8zz2pqfzf-python-3.11.7-view/lib/python3.11/site-packages/numpy/core/getlimits.py:549: UserWarning: The value of the smallest subnormal for &lt;class &#39;numpy.float32&#39;&gt; type is zero.
+  setattr(self, word, getattr(machar, word).flat[0])
+/mnt/sw/nix/store/29h1dijh98y9ar6n8hxv78v8zz2pqfzf-python-3.11.7-view/lib/python3.11/site-packages/numpy/core/getlimits.py:89: UserWarning: The value of the smallest subnormal for &lt;class &#39;numpy.float32&#39;&gt; type is zero.
+  return self._float_to_str(self.smallest_subnormal)
+</pre></div></div>
+</div>
+<section id="Basic-usage">
+<h2>Basic usage<a class="headerlink" href="#Basic-usage" title="Link to this heading"></a></h2>
+<p>As with all our synthesis methods, we start by grabbing a target image and initalizing our models.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">img</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">curie</span><span class="p">()</span>
+<span class="n">po</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">img</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/tutorials_intro_08_MAD_Competition_3_0.png" src="../../_images/tutorials_intro_08_MAD_Competition_3_0.png" />
+</div>
+</div>
+<p>To start, we’ll demonstrate MAD competition as described in the paper, using two metrics: SSIM (structural similarity index, described <a class="reference external" href="https://www.cns.nyu.edu/pub/lcv/wang03-preprint.pdf">here</a>) and MSE (mean-squared error), implementations for both of which are found in <code class="docutils literal notranslate"><span class="pre">plenoptic.metric</span></code>. We use the weighted version of SSIM described in the MAD Competition paper, hence the keyword argumentpassed to <code class="docutils literal notranslate"><span class="pre">ssim</span></code> below. Note also that we use <code class="docutils literal notranslate"><span class="pre">1-SSIM</span></code>: SSIM measures similarity (so that 0
+means completely different and 1 means identical), but <code class="docutils literal notranslate"><span class="pre">MADCompetition</span></code> expects <a class="reference external" href="https://en.wikipedia.org/wiki/Metric_(mathematics)">metrics</a>, which return 0 if and only if the two inputs are identical.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">model1</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">):</span>
+    <span class="k">return</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">po</span><span class="o">.</span><span class="n">metric</span><span class="o">.</span><span class="n">ssim</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">weighted</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">pad</span><span class="o">=</span><span class="s2">&quot;reflect&quot;</span><span class="p">)</span>
+
+
+<span class="n">model2</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">metric</span><span class="o">.</span><span class="n">mse</span>
+</pre></div>
+</div>
+</div>
+<p>To intitialize the method, we only need to specify the target image, the two metrics, and the target. To start, we will hold MSE constant, while minimizing SSIM.</p>
+<p>Note that, as described in the first block, we synthesize these images by optimizing a tradeoff between the loss of these two metrics, weighted by the <code class="docutils literal notranslate"><span class="pre">metric_tradeoff_lambda</span></code>. If that argument is unset, we default to something we think is reasonable, but in practice, we often need to experiment and find the appropriate value, trying out different values until the fixed metric stays constant while the synthesis metric decreases or increases as desired.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mad</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">synth</span><span class="o">.</span><span class="n">MADCompetition</span><span class="p">(</span>
+    <span class="n">img</span><span class="p">,</span>
+    <span class="n">optimized_metric</span><span class="o">=</span><span class="n">model1</span><span class="p">,</span>
+    <span class="n">reference_metric</span><span class="o">=</span><span class="n">model2</span><span class="p">,</span>
+    <span class="n">minmax</span><span class="o">=</span><span class="s2">&quot;min&quot;</span><span class="p">,</span>
+    <span class="n">metric_tradeoff_lambda</span><span class="o">=</span><span class="mi">10000</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="c1"># optionally, set a different initial noise value:</span>
+<span class="n">mad</span><span class="o">.</span><span class="n">setup</span><span class="p">(</span><span class="mf">0.04</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>At the most basic, all we need to do is call <code class="docutils literal notranslate"><span class="pre">mad.synthesize()</span></code>. Let’s do that and then view the outcome. There are several additional arguments to <code class="docutils literal notranslate"><span class="pre">synthesize()</span></code> but none are required.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">warnings</span><span class="o">.</span><span class="n">catch_warnings</span><span class="p">():</span>
+    <span class="c1"># we suppress the warning telling us that our image falls outside of the (0, 1)</span>
+    <span class="c1"># range, which will happen briefly during synthesis.</span>
+    <span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">)</span>
+    <span class="n">mad</span><span class="o">.</span><span class="n">synthesize</span><span class="p">(</span><span class="n">max_iter</span><span class="o">=</span><span class="mi">200</span><span class="p">)</span>
+<span class="n">fig</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">synth</span><span class="o">.</span><span class="n">mad_competition</span><span class="o">.</span><span class="n">plot_synthesis_status</span><span class="p">(</span><span class="n">mad</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "7d97ae79c1fd4dc489ce5a478b9d5dcf", "version_major": 2, "version_minor": 0}</script></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/tutorials_intro_08_MAD_Competition_9_1.png" src="../../_images/tutorials_intro_08_MAD_Competition_9_1.png" />
+</div>
+</div>
+<p>We can see from the loss plot that SSIM’s loss has decreased, while MSE’s, other than a brief dip in the beginning, is staying roughly constant.</p>
+<p>As described in the opening paragraph, a full set of MAD competition synthesized images consists of four images. In order to create the other images, we must create a new instance of <code class="docutils literal notranslate"><span class="pre">MADCompetition</span></code>. Let’s do that for the other images now:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mad_ssim_max</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">synth</span><span class="o">.</span><span class="n">MADCompetition</span><span class="p">(</span>
+    <span class="n">img</span><span class="p">,</span>
+    <span class="n">optimized_metric</span><span class="o">=</span><span class="n">model1</span><span class="p">,</span>
+    <span class="n">reference_metric</span><span class="o">=</span><span class="n">model2</span><span class="p">,</span>
+    <span class="n">minmax</span><span class="o">=</span><span class="s2">&quot;max&quot;</span><span class="p">,</span>
+    <span class="n">metric_tradeoff_lambda</span><span class="o">=</span><span class="mf">1e6</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">mad_ssim_max</span><span class="o">.</span><span class="n">setup</span><span class="p">(</span><span class="mf">0.04</span><span class="p">)</span>
+<span class="k">with</span> <span class="n">warnings</span><span class="o">.</span><span class="n">catch_warnings</span><span class="p">():</span>
+    <span class="c1"># we suppress the warning telling us that our image falls outside of the</span>
+    <span class="c1"># (0, 1) range, which will happen briefly during synthesis.</span>
+    <span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">)</span>
+    <span class="n">mad_ssim_max</span><span class="o">.</span><span class="n">synthesize</span><span class="p">(</span><span class="n">max_iter</span><span class="o">=</span><span class="mi">200</span><span class="p">)</span>
+<span class="n">fig</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">synth</span><span class="o">.</span><span class="n">mad_competition</span><span class="o">.</span><span class="n">plot_synthesis_status</span><span class="p">(</span><span class="n">mad_ssim_max</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "5ad4c7e023bf4bcbadb6c0ff54c0eba6", "version_major": 2, "version_minor": 0}</script></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/tutorials_intro_08_MAD_Competition_11_1.png" src="../../_images/tutorials_intro_08_MAD_Competition_11_1.png" />
+</div>
+</div>
+<p>We’re making progress, but it doesn’t look like <code class="docutils literal notranslate"><span class="pre">SSIM</span></code> has quite saturated. Let’s see if we can make more progress!</p>
+<p>To continue synthesis, we can simply call <code class="docutils literal notranslate"><span class="pre">mad.synthesize()</span></code> again, and we then pick up right where we left off.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">warnings</span><span class="o">.</span><span class="n">catch_warnings</span><span class="p">():</span>
+    <span class="c1"># we suppress the warning telling us that our image falls outside of the (0, 1)</span>
+    <span class="c1"># range, which will happen briefly during synthesis.</span>
+    <span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">)</span>
+    <span class="n">mad_ssim_max</span><span class="o">.</span><span class="n">synthesize</span><span class="p">(</span><span class="n">max_iter</span><span class="o">=</span><span class="mi">300</span><span class="p">)</span>
+<span class="n">fig</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">synth</span><span class="o">.</span><span class="n">mad_competition</span><span class="o">.</span><span class="n">plot_synthesis_status</span><span class="p">(</span><span class="n">mad_ssim_max</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "4055f6a85e354a869662926e45de1b94", "version_major": 2, "version_minor": 0}</script></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/tutorials_intro_08_MAD_Competition_13_1.png" src="../../_images/tutorials_intro_08_MAD_Competition_13_1.png" />
+</div>
+</div>
+<p>Next, let’s hold SSIM constant while changing MSE. This will require changing the <code class="docutils literal notranslate"><span class="pre">metric_tradeoff_lambda</span></code>. We also set <code class="docutils literal notranslate"><span class="pre">stop_criterion</span></code> explicitly, to a smaller value, to allow the synthesis to continue longer.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mad_mse_min</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">synth</span><span class="o">.</span><span class="n">MADCompetition</span><span class="p">(</span>
+    <span class="n">img</span><span class="p">,</span>
+    <span class="n">optimized_metric</span><span class="o">=</span><span class="n">model2</span><span class="p">,</span>
+    <span class="n">reference_metric</span><span class="o">=</span><span class="n">model1</span><span class="p">,</span>
+    <span class="n">minmax</span><span class="o">=</span><span class="s2">&quot;min&quot;</span><span class="p">,</span>
+    <span class="n">metric_tradeoff_lambda</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">mad_mse_min</span><span class="o">.</span><span class="n">setup</span><span class="p">(</span><span class="mf">0.04</span><span class="p">)</span>
+<span class="k">with</span> <span class="n">warnings</span><span class="o">.</span><span class="n">catch_warnings</span><span class="p">():</span>
+    <span class="c1"># we suppress the warning telling us that our image falls outside of the (0, 1)</span>
+    <span class="c1"># range, which will happen briefly during synthesis.</span>
+    <span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">)</span>
+    <span class="n">mad_mse_min</span><span class="o">.</span><span class="n">synthesize</span><span class="p">(</span><span class="n">max_iter</span><span class="o">=</span><span class="mi">400</span><span class="p">,</span> <span class="n">stop_criterion</span><span class="o">=</span><span class="mf">1e-6</span><span class="p">)</span>
+<span class="n">fig</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">synth</span><span class="o">.</span><span class="n">mad_competition</span><span class="o">.</span><span class="n">plot_synthesis_status</span><span class="p">(</span><span class="n">mad_mse_min</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "d46d63b3cc044852bfadad7b503dcfc0", "version_major": 2, "version_minor": 0}</script></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/tutorials_intro_08_MAD_Competition_15_1.png" src="../../_images/tutorials_intro_08_MAD_Competition_15_1.png" />
+</div>
+</div>
+<p>Maximizing MSE has the same issue; after playing around with it, we use a slightly larger <code class="docutils literal notranslate"><span class="pre">metric_tradeoff_lambda</span></code> than above.</p>
+<p>In general, finding an appropriate hyperparameter here will require some consideration on the part of the user and some testing of different values.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mad_mse_max</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">synth</span><span class="o">.</span><span class="n">MADCompetition</span><span class="p">(</span>
+    <span class="n">img</span><span class="p">,</span>
+    <span class="n">optimized_metric</span><span class="o">=</span><span class="n">model2</span><span class="p">,</span>
+    <span class="n">reference_metric</span><span class="o">=</span><span class="n">model1</span><span class="p">,</span>
+    <span class="n">minmax</span><span class="o">=</span><span class="s2">&quot;max&quot;</span><span class="p">,</span>
+    <span class="n">metric_tradeoff_lambda</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">mad_mse_max</span><span class="o">.</span><span class="n">setup</span><span class="p">(</span><span class="mf">0.04</span><span class="p">)</span>
+<span class="k">with</span> <span class="n">warnings</span><span class="o">.</span><span class="n">catch_warnings</span><span class="p">():</span>
+    <span class="c1"># we suppress the warning telling us that our image falls outside of the (0, 1)</span>
+    <span class="c1"># range, which will happen briefly during synthesis.</span>
+    <span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">)</span>
+    <span class="n">mad_mse_max</span><span class="o">.</span><span class="n">synthesize</span><span class="p">(</span><span class="n">max_iter</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span> <span class="n">stop_criterion</span><span class="o">=</span><span class="mf">1e-6</span><span class="p">)</span>
+<span class="n">fig</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">synth</span><span class="o">.</span><span class="n">mad_competition</span><span class="o">.</span><span class="n">plot_synthesis_status</span><span class="p">(</span><span class="n">mad_mse_max</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "e049c053154b43b4a1b025fec101305f", "version_major": 2, "version_minor": 0}</script></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/tutorials_intro_08_MAD_Competition_17_1.png" src="../../_images/tutorials_intro_08_MAD_Competition_17_1.png" />
+</div>
+</div>
+<p>The image above has increased the local contrast in different parts of the image, which SSIM generally doesn’t care about but MSE does. For example, the collar, which in the original image is two different shades of gray, here is black and white. Similarly with the eyes, hair, and lips.</p>
+<p>While above we displayed the synthesized image and the loss together, these are actually handled by two helper functions and can be called separately, as axes-level figures. They have additional arguments that may be worth playing around with:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span> <span class="n">gridspec_kw</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;width_ratios&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]})</span>
+<span class="n">po</span><span class="o">.</span><span class="n">synth</span><span class="o">.</span><span class="n">mad_competition</span><span class="o">.</span><span class="n">display_mad_image</span><span class="p">(</span><span class="n">mad</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">zoom</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+<span class="n">po</span><span class="o">.</span><span class="n">synth</span><span class="o">.</span><span class="n">mad_competition</span><span class="o">.</span><span class="n">plot_loss</span><span class="p">(</span><span class="n">mad</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">iteration</span><span class="o">=-</span><span class="mi">100</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&lt;Axes: xlabel=&#39;Synthesis iteration&#39;, ylabel=&#39;Optimized metric loss&#39;&gt;
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/tutorials_intro_08_MAD_Competition_19_1.png" src="../../_images/tutorials_intro_08_MAD_Competition_19_1.png" />
+</div>
+</div>
+<p>We also provide helper functions to plot a full set of MAD images together, either displaying all their synthesized images or their losses (note that we’re calling our metric <code class="docutils literal notranslate"><span class="pre">SDSIM</span></code> because it’s now the structural <em>dis</em>-similarity):</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">po</span><span class="o">.</span><span class="n">synth</span><span class="o">.</span><span class="n">mad_competition</span><span class="o">.</span><span class="n">display_mad_image_all</span><span class="p">(</span>
+    <span class="n">mad</span><span class="p">,</span> <span class="n">mad_mse_min</span><span class="p">,</span> <span class="n">mad_ssim_max</span><span class="p">,</span> <span class="n">mad_mse_max</span><span class="p">,</span> <span class="s2">&quot;SDSIM&quot;</span>
+<span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/tutorials_intro_08_MAD_Competition_21_0.png" src="../../_images/tutorials_intro_08_MAD_Competition_21_0.png" />
+</div>
+</div>
+<p>The top row shows the reference and initial images, our picture of Marie Curie and that same image plus some normally-distributed noise. The next row of images has the same MSE as the right image in the top row (when compared against the reference image), but different SDSIM values. The left image has the lowest SDSIM and is thus considered the best image, while the right image has the highest SDSIM and is thus considered the worst. The next row of images has the same SDSIM as the right image in
+the top, but different MSE values. The left has the lowest MSE and is thus considered the best, while the right has highest MSE and is thus considered the worst.</p>
+<p>So MSE considers the first three images to be approximately equivalent in quality, while SDSIM considers the first image and the last two to be equivalent.</p>
+<p>From the following plot, we can see that we generally manage to hold the fixed metric constant (dashed line for SDSIM in the right plot, solid line for MSE in the left) while increasing the target metric.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">po</span><span class="o">.</span><span class="n">synth</span><span class="o">.</span><span class="n">mad_competition</span><span class="o">.</span><span class="n">plot_loss_all</span><span class="p">(</span>
+    <span class="n">mad</span><span class="p">,</span> <span class="n">mad_mse_min</span><span class="p">,</span> <span class="n">mad_ssim_max</span><span class="p">,</span> <span class="n">mad_mse_max</span><span class="p">,</span> <span class="s2">&quot;SDSIM&quot;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/tutorials_intro_08_MAD_Competition_23_0.png" src="../../_images/tutorials_intro_08_MAD_Competition_23_0.png" />
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/tutorials_intro_08_MAD_Competition_23_1.png" src="../../_images/tutorials_intro_08_MAD_Competition_23_1.png" />
+</div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="07_Simple_MAD.html" class="btn btn-neutral float-left" title="MAD Competition Conceptual Introduction" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../models/03_Steerable_Pyramid.html" class="btn btn-neutral float-right" title="Steerable Pyramid" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2019, Plenoptic authors.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

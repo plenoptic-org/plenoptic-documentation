@@ -1,0 +1,1151 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>How to use custom penalty functions &#8212; plenoptic 2.1.1.dev229 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=cb8930eaaf36d9849b67" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=cb8930eaaf36d9849b67" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=9c3e77be" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=fe04b56e" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="../../_static/scripts/fontawesome.js?digest=cb8930eaaf36d9849b67"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=cb8930eaaf36d9849b67" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=cb8930eaaf36d9849b67" />
+
+    <script src="../../_static/documentation_options.js?v=01f88a8c"></script>
+    <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=6dbb43f8"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../_static/togglebutton.js?v=b8b12719"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
+    <script type="application/vnd.jupyter.widget-state+json">{"state": {"9e516a1537094c21b563af1ae107c888": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "adb19d94ce75415682c9f4fb68f85079": {"model_name": "ProgressStyleModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "ProgressStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "bar_color": null, "description_width": ""}}, "42e85f906772463f87e47ae8e6b1e7fe": {"model_name": "FloatProgressModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "FloatProgressModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "ProgressView", "bar_style": "success", "description": "", "description_allow_html": false, "layout": "IPY_MODEL_9e516a1537094c21b563af1ae107c888", "max": 4000.0, "min": 0.0, "orientation": "horizontal", "style": "IPY_MODEL_adb19d94ce75415682c9f4fb68f85079", "tabbable": null, "tooltip": null, "value": 4000.0}}, "72499813781f44d6b7f208837bb3cda2": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "2af1172fb75446ae8ad22b9449c62066": {"model_name": "HTMLStyleModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "background": null, "description_width": "", "font_size": null, "text_color": null}}, "86a400cf0df749568793bc506716c9f4": {"model_name": "HTMLModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "HTMLView", "description": "", "description_allow_html": false, "layout": "IPY_MODEL_72499813781f44d6b7f208837bb3cda2", "placeholder": "\u200b", "style": "IPY_MODEL_2af1172fb75446ae8ad22b9449c62066", "tabbable": null, "tooltip": null, "value": "100%"}}, "bc170a23a3614e36b2c1776a289d0eed": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "33705a65dd92490cb0a5d7d304be71f0": {"model_name": "HTMLStyleModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "background": null, "description_width": "", "font_size": null, "text_color": null}}, "cf72cda402534f8295c24badcd37c023": {"model_name": "HTMLModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "HTMLView", "description": "", "description_allow_html": false, "layout": "IPY_MODEL_bc170a23a3614e36b2c1776a289d0eed", "placeholder": "\u200b", "style": "IPY_MODEL_33705a65dd92490cb0a5d7d304be71f0", "tabbable": null, "tooltip": null, "value": "\u20074000/4000\u2007[00:14&lt;00:00,\u2007294.74it/s,\u2007loss=1.0586e-07,\u2007learning_rate=0.01,\u2007penalty=9.6900e-12,\u2007gradient_norm=6.2475e-07,\u2007pixel_change_norm=5.0311e-03]"}}, "35ae9f83684341a29fd5da705f44df5f": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "1eb0844d8004490faff27cfcd117795f": {"model_name": "HBoxModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HBoxModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "HBoxView", "box_style": "", "children": ["IPY_MODEL_86a400cf0df749568793bc506716c9f4", "IPY_MODEL_42e85f906772463f87e47ae8e6b1e7fe", "IPY_MODEL_cf72cda402534f8295c24badcd37c023"], "layout": "IPY_MODEL_35ae9f83684341a29fd5da705f44df5f", "tabbable": null, "tooltip": null}}, "cde95621b816434c81d3e055ae5090ec": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "bafb8ed8f41840f595c896071edb1f7a": {"model_name": "ProgressStyleModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "ProgressStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "bar_color": null, "description_width": ""}}, "ebe0cc9d90db47cf81fb061d40ebca07": {"model_name": "FloatProgressModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "FloatProgressModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "ProgressView", "bar_style": "success", "description": "", "description_allow_html": false, "layout": "IPY_MODEL_cde95621b816434c81d3e055ae5090ec", "max": 4000.0, "min": 0.0, "orientation": "horizontal", "style": "IPY_MODEL_bafb8ed8f41840f595c896071edb1f7a", "tabbable": null, "tooltip": null, "value": 4000.0}}, "ee6bfc2cadff42aea2096c8d6fec1f0d": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "14ad1638bfe7409eacafa25b64f7aa1f": {"model_name": "HTMLStyleModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "background": null, "description_width": "", "font_size": null, "text_color": null}}, "9ffc61b527a04f86a37bd27431ceb99a": {"model_name": "HTMLModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "HTMLView", "description": "", "description_allow_html": false, "layout": "IPY_MODEL_ee6bfc2cadff42aea2096c8d6fec1f0d", "placeholder": "\u200b", "style": "IPY_MODEL_14ad1638bfe7409eacafa25b64f7aa1f", "tabbable": null, "tooltip": null, "value": "100%"}}, "d6391b061cfc45849f49b274c7324489": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "7d834769d2454368825daf2ba75fe273": {"model_name": "HTMLStyleModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "background": null, "description_width": "", "font_size": null, "text_color": null}}, "7a883fe37d04467298968541f0fc14cc": {"model_name": "HTMLModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "HTMLView", "description": "", "description_allow_html": false, "layout": "IPY_MODEL_d6391b061cfc45849f49b274c7324489", "placeholder": "\u200b", "style": "IPY_MODEL_7d834769d2454368825daf2ba75fe273", "tabbable": null, "tooltip": null, "value": "\u20074000/4000\u2007[00:13&lt;00:00,\u2007316.97it/s,\u2007loss=2.1479e-05,\u2007learning_rate=0.01,\u2007penalty=7.3900e-07,\u2007gradient_norm=1.7083e-04,\u2007pixel_change_norm=4.9958e-02]"}}, "31eefe81c5a94e5fb7f83e4dcf36bf94": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "7ef42a40b95d4487a5d22036fa203c62": {"model_name": "HBoxModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HBoxModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "HBoxView", "box_style": "", "children": ["IPY_MODEL_9ffc61b527a04f86a37bd27431ceb99a", "IPY_MODEL_ebe0cc9d90db47cf81fb061d40ebca07", "IPY_MODEL_7a883fe37d04467298968541f0fc14cc"], "layout": "IPY_MODEL_31eefe81c5a94e5fb7f83e4dcf36bf94", "tabbable": null, "tooltip": null}}, "c1967217b6994b2b8fc9c641b60f2e32": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "f7c73bcc10784b7385938a071eeb2d28": {"model_name": "ProgressStyleModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "ProgressStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "bar_color": null, "description_width": ""}}, "0c2ed914a4f24877b543d80d5e169a98": {"model_name": "FloatProgressModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "FloatProgressModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "ProgressView", "bar_style": "success", "description": "", "description_allow_html": false, "layout": "IPY_MODEL_c1967217b6994b2b8fc9c641b60f2e32", "max": 4000.0, "min": 0.0, "orientation": "horizontal", "style": "IPY_MODEL_f7c73bcc10784b7385938a071eeb2d28", "tabbable": null, "tooltip": null, "value": 4000.0}}, "edb7ee487d2e4805a429b0185d8e86c0": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "05737d74967e4ffca7b3f93030cb3df8": {"model_name": "HTMLStyleModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "background": null, "description_width": "", "font_size": null, "text_color": null}}, "9f89c553f2d444b68d1302dab99ca1cc": {"model_name": "HTMLModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "HTMLView", "description": "", "description_allow_html": false, "layout": "IPY_MODEL_edb7ee487d2e4805a429b0185d8e86c0", "placeholder": "\u200b", "style": "IPY_MODEL_05737d74967e4ffca7b3f93030cb3df8", "tabbable": null, "tooltip": null, "value": "100%"}}, "e4551844564d4e2185bdbe4b034c0b40": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "f039a67cc40f43a09783f336fc97dd8a": {"model_name": "HTMLStyleModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "background": null, "description_width": "", "font_size": null, "text_color": null}}, "fbb0ba9913d845558fe3d8bc80d59280": {"model_name": "HTMLModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "HTMLView", "description": "", "description_allow_html": false, "layout": "IPY_MODEL_e4551844564d4e2185bdbe4b034c0b40", "placeholder": "\u200b", "style": "IPY_MODEL_f039a67cc40f43a09783f336fc97dd8a", "tabbable": null, "tooltip": null, "value": "\u20074000/4000\u2007[00:14&lt;00:00,\u2007303.31it/s,\u2007loss=-2.0737e+07,\u2007learning_rate=0.01,\u2007penalty=-2.0737e+08,\u2007gradient_norm=2.8801e+03,\u2007pixel_change_norm=3.1422e+00]"}}, "b81720fee9f74fc7bb68fcba2fc6204f": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "59caca23328c466b9a03211167dd43ea": {"model_name": "HBoxModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HBoxModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "HBoxView", "box_style": "", "children": ["IPY_MODEL_9f89c553f2d444b68d1302dab99ca1cc", "IPY_MODEL_0c2ed914a4f24877b543d80d5e169a98", "IPY_MODEL_fbb0ba9913d845558fe3d8bc80d59280"], "layout": "IPY_MODEL_b81720fee9f74fc7bb68fcba2fc6204f", "tabbable": null, "tooltip": null}}, "7eb7c317b33a449f906bc5396611c664": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "1037f3fee9d2483092c7dcf976d19bdc": {"model_name": "ProgressStyleModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "ProgressStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "bar_color": null, "description_width": ""}}, "56480e528da34e7ba6098b4d4628153f": {"model_name": "FloatProgressModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "FloatProgressModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "ProgressView", "bar_style": "success", "description": "", "description_allow_html": false, "layout": "IPY_MODEL_7eb7c317b33a449f906bc5396611c664", "max": 4000.0, "min": 0.0, "orientation": "horizontal", "style": "IPY_MODEL_1037f3fee9d2483092c7dcf976d19bdc", "tabbable": null, "tooltip": null, "value": 4000.0}}, "541f671ffb974d51b7b0168cfb6e013b": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "373c591399f2491ba7a639c36a7d582c": {"model_name": "HTMLStyleModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "background": null, "description_width": "", "font_size": null, "text_color": null}}, "5289338907c0472caabdd27b10957a4c": {"model_name": "HTMLModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "HTMLView", "description": "", "description_allow_html": false, "layout": "IPY_MODEL_541f671ffb974d51b7b0168cfb6e013b", "placeholder": "\u200b", "style": "IPY_MODEL_373c591399f2491ba7a639c36a7d582c", "tabbable": null, "tooltip": null, "value": "100%"}}, "20320674d82041caab7e1613a5098b70": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "f110706d67654dc7918deb6d161239e3": {"model_name": "HTMLStyleModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "background": null, "description_width": "", "font_size": null, "text_color": null}}, "6e679c2790864046a4b13b9ab4dd9a68": {"model_name": "HTMLModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "HTMLView", "description": "", "description_allow_html": false, "layout": "IPY_MODEL_20320674d82041caab7e1613a5098b70", "placeholder": "\u200b", "style": "IPY_MODEL_f110706d67654dc7918deb6d161239e3", "tabbable": null, "tooltip": null, "value": "\u20074000/4000\u2007[00:17&lt;00:00,\u2007239.39it/s,\u2007loss=3.3607e-05,\u2007learning_rate=0.01,\u2007penalty=2.4224e-04,\u2007gradient_norm=1.3691e-04,\u2007pixel_change_norm=8.0838e-02]"}}, "14f1131de81649109f802b5a9f58cae5": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "efdb7bdeefe641b89ebdb738e5adb6a5": {"model_name": "HBoxModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HBoxModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "HBoxView", "box_style": "", "children": ["IPY_MODEL_5289338907c0472caabdd27b10957a4c", "IPY_MODEL_56480e528da34e7ba6098b4d4628153f", "IPY_MODEL_6e679c2790864046a4b13b9ab4dd9a68"], "layout": "IPY_MODEL_14f1131de81649109f802b5a9f58cae5", "tabbable": null, "tooltip": null}}, "7652345e52784a0285c964eca13fff71": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "e546e7b4127349e090a093d4cde2e751": {"model_name": "ProgressStyleModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "ProgressStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "bar_color": null, "description_width": ""}}, "8c72ab039fd24a2b9a5216de3fa9a000": {"model_name": "FloatProgressModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "FloatProgressModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "ProgressView", "bar_style": "success", "description": "", "description_allow_html": false, "layout": "IPY_MODEL_7652345e52784a0285c964eca13fff71", "max": 4000.0, "min": 0.0, "orientation": "horizontal", "style": "IPY_MODEL_e546e7b4127349e090a093d4cde2e751", "tabbable": null, "tooltip": null, "value": 4000.0}}, "6bccbd5364094806ac9acb053d2dfe5a": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "52db3ac6535c41d1a08d4a9d63673db3": {"model_name": "HTMLStyleModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "background": null, "description_width": "", "font_size": null, "text_color": null}}, "4eb4fd9744cb4161aa18d15a92dde9c5": {"model_name": "HTMLModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "HTMLView", "description": "", "description_allow_html": false, "layout": "IPY_MODEL_6bccbd5364094806ac9acb053d2dfe5a", "placeholder": "\u200b", "style": "IPY_MODEL_52db3ac6535c41d1a08d4a9d63673db3", "tabbable": null, "tooltip": null, "value": "100%"}}, "fdb0a04ad7ee44168bd5013edc35fb35": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "cf18ffeba2ad46dea2abbc6e8cfc0fe3": {"model_name": "HTMLStyleModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "background": null, "description_width": "", "font_size": null, "text_color": null}}, "4da2f9375649443b949f0a74c1280971": {"model_name": "HTMLModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "HTMLView", "description": "", "description_allow_html": false, "layout": "IPY_MODEL_fdb0a04ad7ee44168bd5013edc35fb35", "placeholder": "\u200b", "style": "IPY_MODEL_cf18ffeba2ad46dea2abbc6e8cfc0fe3", "tabbable": null, "tooltip": null, "value": "\u20074000/4000\u2007[00:19&lt;00:00,\u2007291.05it/s,\u2007loss=1.0570e-05,\u2007learning_rate=0.01,\u2007penalty=3.2126e-04,\u2007gradient_norm=5.1139e-05,\u2007pixel_change_norm=1.4374e-01]"}}, "066f306b3f204983962ee25e11a23934": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "13d7fbaa19704c3d8ce079380936e8a3": {"model_name": "HBoxModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HBoxModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "HBoxView", "box_style": "", "children": ["IPY_MODEL_4eb4fd9744cb4161aa18d15a92dde9c5", "IPY_MODEL_8c72ab039fd24a2b9a5216de3fa9a000", "IPY_MODEL_4da2f9375649443b949f0a74c1280971"], "layout": "IPY_MODEL_066f306b3f204983962ee25e11a23934", "tabbable": null, "tooltip": null}}, "5c677df15ee04884ad8117c01af1feb1": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "314bdc4337d14484a5df2eca74d61957": {"model_name": "ProgressStyleModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "ProgressStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "bar_color": null, "description_width": ""}}, "58aa9f62242f4aad9f891f676956de71": {"model_name": "FloatProgressModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "FloatProgressModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "ProgressView", "bar_style": "success", "description": "", "description_allow_html": false, "layout": "IPY_MODEL_5c677df15ee04884ad8117c01af1feb1", "max": 4000.0, "min": 0.0, "orientation": "horizontal", "style": "IPY_MODEL_314bdc4337d14484a5df2eca74d61957", "tabbable": null, "tooltip": null, "value": 4000.0}}, "a0d7889b63294a378aecd8602a546ff7": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "b91c48ae7e404a05b8f54c6dc1e445c1": {"model_name": "HTMLStyleModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "background": null, "description_width": "", "font_size": null, "text_color": null}}, "e2c603b18bf14e31bde3e9710be4155c": {"model_name": "HTMLModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "HTMLView", "description": "", "description_allow_html": false, "layout": "IPY_MODEL_a0d7889b63294a378aecd8602a546ff7", "placeholder": "\u200b", "style": "IPY_MODEL_b91c48ae7e404a05b8f54c6dc1e445c1", "tabbable": null, "tooltip": null, "value": "100%"}}, "ddb557ac9efc4740a9edc6dff6761a4b": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "9e3b69d24b774933a2d7d2cf6b60c8c9": {"model_name": "HTMLStyleModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "background": null, "description_width": "", "font_size": null, "text_color": null}}, "0f011d79f00a428b9bb9613b9c5c8b9e": {"model_name": "HTMLModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "HTMLView", "description": "", "description_allow_html": false, "layout": "IPY_MODEL_ddb557ac9efc4740a9edc6dff6761a4b", "placeholder": "\u200b", "style": "IPY_MODEL_9e3b69d24b774933a2d7d2cf6b60c8c9", "tabbable": null, "tooltip": null, "value": "\u20074000/4000\u2007[00:19&lt;00:00,\u2007151.03it/s,\u2007loss=1.3354e-07,\u2007learning_rate=0.01,\u2007penalty=4.5124e-02,\u2007gradient_norm=3.4396e-08,\u2007pixel_change_norm=1.2525e-03]"}}, "6bfe4fbbbdaf453fb4524b518c11394a": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "83603b52501a444793c2680479222f65": {"model_name": "HBoxModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HBoxModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "HBoxView", "box_style": "", "children": ["IPY_MODEL_e2c603b18bf14e31bde3e9710be4155c", "IPY_MODEL_58aa9f62242f4aad9f891f676956de71", "IPY_MODEL_0f011d79f00a428b9bb9613b9c5c8b9e"], "layout": "IPY_MODEL_6bfe4fbbbdaf453fb4524b518c11394a", "tabbable": null, "tooltip": null}}, "8b364ed8da2a470aab89ade9edb93dde": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "e04677aea18b42f7a0aaf18cc85983cc": {"model_name": "ProgressStyleModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "ProgressStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "bar_color": null, "description_width": ""}}, "a0c4aded425e4b478b84f3a9d2de9f31": {"model_name": "FloatProgressModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "FloatProgressModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "ProgressView", "bar_style": "success", "description": "", "description_allow_html": false, "layout": "IPY_MODEL_8b364ed8da2a470aab89ade9edb93dde", "max": 4000.0, "min": 0.0, "orientation": "horizontal", "style": "IPY_MODEL_e04677aea18b42f7a0aaf18cc85983cc", "tabbable": null, "tooltip": null, "value": 4000.0}}, "55e0b4c169404bc5b5e4ff1e29b2838c": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "31634d9a513c4482a13f8dc5eff3cc1e": {"model_name": "HTMLStyleModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "background": null, "description_width": "", "font_size": null, "text_color": null}}, "08c579d477874f629b84c3c6fc47f8b6": {"model_name": "HTMLModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "HTMLView", "description": "", "description_allow_html": false, "layout": "IPY_MODEL_55e0b4c169404bc5b5e4ff1e29b2838c", "placeholder": "\u200b", "style": "IPY_MODEL_31634d9a513c4482a13f8dc5eff3cc1e", "tabbable": null, "tooltip": null, "value": "100%"}}, "1d81720c5e944fc0b5c64ca28f793bca": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "a8b43b2c14384696836b373091996c7c": {"model_name": "HTMLStyleModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "background": null, "description_width": "", "font_size": null, "text_color": null}}, "c50a541eb89a45d79919afd4065f92d2": {"model_name": "HTMLModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "HTMLView", "description": "", "description_allow_html": false, "layout": "IPY_MODEL_1d81720c5e944fc0b5c64ca28f793bca", "placeholder": "\u200b", "style": "IPY_MODEL_a8b43b2c14384696836b373091996c7c", "tabbable": null, "tooltip": null, "value": "\u20074000/4000\u2007[00:18&lt;00:00,\u2007250.35it/s,\u2007loss=9.6092e+01,\u2007learning_rate=0.01,\u2007penalty=9.6084e-05,\u2007gradient_norm=2.5358e+02,\u2007pixel_change_norm=2.9351e-02]"}}, "770fce0e40c641c1add3216379fb9cb3": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "8a25970890054d0bad3aad3df93eeb8c": {"model_name": "HBoxModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HBoxModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "HBoxView", "box_style": "", "children": ["IPY_MODEL_08c579d477874f629b84c3c6fc47f8b6", "IPY_MODEL_a0c4aded425e4b478b84f3a9d2de9f31", "IPY_MODEL_c50a541eb89a45d79919afd4065f92d2"], "layout": "IPY_MODEL_770fce0e40c641c1add3216379fb9cb3", "tabbable": null, "tooltip": null}}}, "version_major": 2, "version_minor": 0}</script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script crossorigin="anonymous" data-jupyter-widgets-cdn="https://cdn.jsdelivr.net/npm/" src="https://cdn.jsdelivr.net/npm/@jupyter-widgets/html-manager@1.0.6/dist/embed-amd.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'user_guide/intermediate_synthesis/how_to_penalty';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_version = '0.21.0';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://docs.plenoptic.org/docs/branch/main/_static/version_switcher.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = '2.1.1';
+        DOCUMENTATION_OPTIONS.show_version_warning_banner =
+            true;
+        </script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <script defer="defer" src="../../_static/custom-icon.js?v=0bae05a2"></script>
+    <link rel="icon" href="../../_static/plenoptic.ico"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Reproducing Berardino et al., 2017 (Eigendistortions)" href="../reproduce/Demo_Eigendistortion.html" />
+    <link rel="prev" title="More than just texture metamers" href="../models_and_metrics/portilla_simoncelli/advanced_usage/ps_extensions.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="2.1.1" />
+  
+    
+    <script src="../../_static/searchtools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script src="../../searchindex.js"></script>
+  
+  </head>
+  <body data-default-mode="">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class=" navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/Plenoptic_Logo_CMYK_Full_Wide.svg" class="logo__image only-light" alt="plenoptic 2.1.1.dev229 documentation - Home"/>
+    <img src="../../_static/Plenoptic_Logo_CMYK_Full_DarkMode_Wide.svg" class="logo__image only-dark pst-js-only" alt="plenoptic 2.1.1.dev229 documentation - Home"/>
+  
+  
+</a></div>
+    
+      <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-2"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-2"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-2"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-2">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+    
+  </div>
+  
+  <div class=" navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../getting_started/index.html">
+    Getting started
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../api/index.html">
+    API
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../reference/index.html">
+    Reference
+  </a>
+</li>
+
+            <li class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button"
+                data-bs-toggle="dropdown" aria-expanded="false"
+                aria-controls="pst-nav-more-links">
+                    More
+                </button>
+                <ul id="pst-nav-more-links" class="dropdown-menu">
+                    
+<li class=" ">
+  <a class="nav-link dropdown-item nav-external" href="https://github.com/plenoptic-org/plenoptic/releases">
+    Changelog
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../developers/index.html">
+    For developers
+  </a>
+</li>
+
+                </ul>
+            </li>
+            
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://plenoptic.org" title="Home" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-solid fa-house fa-lg" aria-hidden="true"></i><span class="visually-hidden">Home</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/plenoptic-org/plenoptic" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fab fa-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://pypi.org/project/plenoptic" title="PyPI" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-custom fa-lg" data-prefix="fa-custom" data-icon="pypi" aria-hidden="true"></i><span class="visually-hidden">PyPI</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../getting_started/index.html">
+    Getting started
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../api/index.html">
+    API
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../reference/index.html">
+    Reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://github.com/plenoptic-org/plenoptic/releases">
+    Changelog
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../developers/index.html">
+    For developers
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://plenoptic.org" title="Home" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-solid fa-house fa-lg" aria-hidden="true"></i><span class="visually-hidden">Home</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/plenoptic-org/plenoptic" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fab fa-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://pypi.org/project/plenoptic" title="PyPI" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-custom fa-lg" data-prefix="fa-custom" data-icon="pypi" aria-hidden="true"></i><span class="visually-hidden">PyPI</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item pst-sidebar-collapse"><button id="pst-collapse-sidebar-button" aria-expanded="true" aria-controls="pst-primary-sidebar">
+  <svg class="pst-icon" role="img" aria-hidden="true" focusable="false" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+    <path fill="currentColor" d="M3 15.5C2.36232 15.5 1.74874 15.2564 1.28478 14.8189C0.820828 14.3815 0.541576 13.7832 0.504167 13.1467L0.5 13L0.5 3C0.499965 2.36232 0.743605 1.74874 1.18107 1.28478C1.61854 0.820828 2.21676 0.541576 2.85333 0.504167L3 0.5L13 0.5C13.6377 0.499965 14.2513 0.743605 14.7152 1.18107C15.1792 1.61854 15.4584 2.21676 15.4958 2.85333L15.5 3L15.5 13C15.5 13.6377 15.2564 14.2513 14.8189 14.7152C14.3815 15.1792 13.7832 15.4584 13.1467 15.4958L13 15.5L3 15.5ZM3 13.8333L10.5 13.8333L10.5 2.16667L3 2.16667C2.79589 2.16669 2.59889 2.24163 2.44636 2.37726C2.29383 2.5129 2.19638 2.69979 2.1725 2.9025L2.16667 3L2.16667 13C2.16669 13.2041 2.24163 13.4011 2.37726 13.5536C2.5129 13.7062 2.69979 13.8036 2.9025 13.8275L3 13.8333ZM6.65583 10.325L6.5775 10.2558L4.91083 8.58917C4.76735 8.44567 4.68116 8.25476 4.66843 8.05223C4.65569 7.84971 4.71729 7.6495 4.84167 7.48917L4.91083 7.41083L6.5775 5.74417C6.72747 5.59471 6.9287 5.50794 7.14032 5.50148C7.35194 5.49502 7.55809 5.56935 7.7169 5.70937C7.8757 5.8494 7.97525 6.04463 7.99533 6.25539C8.01541 6.46616 7.95451 6.67667 7.825 6.84417L7.75583 6.9225L6.67917 8L7.75583 9.0775C7.89931 9.22099 7.98551 9.41191 7.99824 9.61443C8.01097 9.81695 7.94938 10.0172 7.825 10.1775L7.75583 10.2558C7.61234 10.3993 7.42142 10.4855 7.2189 10.4982C7.01638 10.511 6.81617 10.4494 6.65583 10.325Z"/>
+  </svg>
+  <span class="pst-collapse-sidebar-label">Collapse Sidebar</span>
+  <span class="pst-expand-sidebar-label">Expand Sidebar</span>
+</button></div>
+        <div class="sidebar-primary-item">
+
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><p aria-level="2" class="caption" role="heading"><span class="caption-text">Synthesis method introductions</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../synthesis/Eigendistortions.html">Eigendistortions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../synthesis/MAD_Competition_1.html">MAD Competition Conceptual Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../synthesis/MAD_Competition_2.html">MAD Competition Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../synthesis/Metamer.html">Metamers</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Models and metrics</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../models_and_metrics/Perceptual_distance.html">Perceptual distance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../models_and_metrics/Steerable_Pyramid.html">Steerable Pyramid</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../models_and_metrics/deep_nets.html">Using Deep Neural Networks with plenoptic</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../models_and_metrics/portilla_simoncelli/ps_index.html">Portilla-Simoncelli Texture Model</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../models_and_metrics/portilla_simoncelli/getting_started/index.html">Getting started</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../models_and_metrics/portilla_simoncelli/getting_started/ps_intro.html">What is a visual texture?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../models_and_metrics/portilla_simoncelli/getting_started/ps_basic_synthesis.html">Using the Portilla-Simoncelli model in plenoptic</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../models_and_metrics/portilla_simoncelli/understanding/index.html">Understanding the Model</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../models_and_metrics/portilla_simoncelli/understanding/ps_examples.html">Example Portilla-Simoncelli metamers from different texture classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../models_and_metrics/portilla_simoncelli/understanding/ps_understand_stats.html">Understanding Portilla-Simoncelli model statistics</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../models_and_metrics/portilla_simoncelli/technical_details/index.html">Technical details</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../models_and_metrics/portilla_simoncelli/technical_details/ps_optimization.html">Portilla-Simoncelli optimization details</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../models_and_metrics/portilla_simoncelli/technical_details/ps_limitations.html">Portilla-Simoncelli Model Limitations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../models_and_metrics/portilla_simoncelli/technical_details/ps_matlab_differences.html">Notable differences between Matlab and Plenoptic Implementations</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../models_and_metrics/portilla_simoncelli/advanced_usage/index.html">Advanced usage</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../models_and_metrics/portilla_simoncelli/advanced_usage/ps_extensions.html">More than just texture metamers</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Intermediate usage</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">How to use custom penalty functions</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Reproducing examples from the literature</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../reproduce/Demo_Eigendistortion.html">Reproducing Berardino et al., 2017 (Eigendistortions)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reproduce/Original_MAD.html">Reproducing Wang and Simoncelli, 2008 (MAD Competition)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reproduce/feather2023.html">Reproducing ResNet50 Image Metamers from Feather et al., 2023</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../reproduce/synthesizing_adversarial_examples/adversarial_index.html">Synthesizing Adversarial Examples</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../reproduce/synthesizing_adversarial_examples/adversarial_examples_mad.html">Synthesize adversarial examples using MAD Competition</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../reproduce/synthesizing_adversarial_examples/adversarial_examples_metamer.html">Synthesize adversarial examples using Metamer</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Advanced Usage</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../advanced/Display.html">Display and animate functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/Synthesis_extensions.html">Extending existing synthesis objects</a></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../index.html" class="nav-link">User Guide</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">How to use custom penalty functions</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <div class="important admonition">
+<p class="admonition-title">Run this notebook yourself!</p>
+<p>Download the executed notebook: <strong><a class="reference download internal" download="" href="../../_downloads/959657400b6d74994f02ac2190940cc1/how_to_penalty.ipynb"><code class="xref download myst-nb docutils literal notranslate"><span class="pre">how_to_penalty.ipynb</span></code></a></strong>!</p>
+<p>Run it in your browser: <strong><a class="binder reference external" href="https://mybinder.org/v2/gh/plenoptic-org/plenoptic-binder/HEAD?urlpath=%2Fdoc%2Ftree%2Fplenoptic%2Fnotebooks%2Fhow_to_penalty.ipynb">how_to_penalty.ipynb</a></strong>!</p>
+</div>
+<section class="tex2jax_ignore mathjax_ignore" id="how-to-use-custom-penalty-functions">
+<span id="how-to-penalty"></span><h1>How to use custom penalty functions<a class="headerlink" href="#how-to-use-custom-penalty-functions" title="Link to this heading">#</a></h1>
+<p>Plenoptic’s <a class="reference internal" href="../../api/generated/plenoptic.Metamer.html#plenoptic.Metamer" title="plenoptic.Metamer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Metamer</span></code></a> and <a class="reference internal" href="../../api/generated/plenoptic.MADCompetition.html#plenoptic.MADCompetition" title="plenoptic.MADCompetition"><code class="xref py py-class docutils literal notranslate"><span class="pre">MADCompetition</span></code></a> objects allow users to specify a <a class="reference internal" href="../../api/generated/plenoptic.Metamer.html#plenoptic.Metamer.penalty_function" title="plenoptic.Metamer.penalty_function"><code class="xref py py-attr docutils literal notranslate"><span class="pre">penalty_function</span></code></a> at initialization. In this notebook, we’ll walk through the process of creating a custom penalty function and explain best practices. We will do so for <a class="reference internal" href="../../api/generated/plenoptic.Metamer.html#plenoptic.Metamer" title="plenoptic.Metamer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Metamer</span></code></a>, but a similar procedure can be applied to <a class="reference internal" href="../../api/generated/plenoptic.MADCompetition.html#plenoptic.MADCompetition" title="plenoptic.MADCompetition"><code class="xref py py-class docutils literal notranslate"><span class="pre">MADCompetition</span></code></a>. We will refer to the stimuli as “images”, but the same procedure will work with other stimulus types as well.</p>
+<p>When synthesizing a metamer, we are searching for a new image whose model representation matches that of a target image. Plenoptic performs this procedure as an iterative optimization function, minimizing the objective function:</p>
+<div class="math notranslate nohighlight">
+\[ L(M(x), M(\hat{x})) + \lambda P(\hat{x}) \]</div>
+<p>where:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(M\)</span> is <a class="reference internal" href="../../api/generated/plenoptic.Metamer.html#plenoptic.Metamer.model" title="plenoptic.Metamer.model"><code class="xref py py-attr docutils literal notranslate"><span class="pre">model</span></code></a>, the model whose representation we are trying to match.</p></li>
+<li><p><span class="math notranslate nohighlight">\(x\)</span> is <a class="reference internal" href="../../api/generated/plenoptic.Metamer.html#plenoptic.Metamer.image" title="plenoptic.Metamer.image"><code class="xref py py-attr docutils literal notranslate"><span class="pre">image</span></code></a>, the image whose model representation we are trying to match.</p></li>
+<li><p><span class="math notranslate nohighlight">\(\hat{x}\)</span> is <a class="reference internal" href="../../api/generated/plenoptic.Metamer.html#plenoptic.Metamer.metamer" title="plenoptic.Metamer.metamer"><code class="xref py py-attr docutils literal notranslate"><span class="pre">metamer</span></code></a>, the image we are synthesizing.</p></li>
+<li><p><span class="math notranslate nohighlight">\(L\)</span> is <a class="reference internal" href="../../api/generated/plenoptic.Metamer.html#plenoptic.Metamer.loss_function" title="plenoptic.Metamer.loss_function"><code class="xref py py-attr docutils literal notranslate"><span class="pre">loss_function</span></code></a>, a function which accepts two tensors and returns a scalar, which defines how different two representation tensors are (by default, <a class="reference internal" href="../../api/generated/plenoptic.loss.mse.html#plenoptic.loss.mse" title="plenoptic.loss.mse"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.loss.mse</span></code></a>).</p></li>
+<li><p><span class="math notranslate nohighlight">\(P\)</span> is <a class="reference internal" href="../../api/generated/plenoptic.Metamer.html#plenoptic.Metamer.penalty_function" title="plenoptic.Metamer.penalty_function"><code class="xref py py-attr docutils literal notranslate"><span class="pre">penalty_function</span></code></a>, a function which accepts a single tensor and returns a scalar, and the focus of this notebook (by default, <a class="reference internal" href="../../api/generated/plenoptic.regularize.penalize_range.html#plenoptic.regularize.penalize_range" title="plenoptic.regularize.penalize_range"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.regularize.penalize_range</span></code></a>).</p></li>
+<li><p><span class="math notranslate nohighlight">\(\lambda\)</span> is <a class="reference internal" href="../../api/generated/plenoptic.Metamer.html#plenoptic.Metamer.penalty_lambda" title="plenoptic.Metamer.penalty_lambda"><code class="xref py py-attr docutils literal notranslate"><span class="pre">penalty_lambda</span></code></a>, a scalar that controls the balance between <a class="reference internal" href="../../api/generated/plenoptic.Metamer.html#plenoptic.Metamer.loss_function" title="plenoptic.Metamer.loss_function"><code class="xref py py-attr docutils literal notranslate"><span class="pre">loss_function</span></code></a> and <a class="reference internal" href="../../api/generated/plenoptic.Metamer.html#plenoptic.Metamer.penalty_function" title="plenoptic.Metamer.penalty_function"><code class="xref py py-attr docutils literal notranslate"><span class="pre">penalty_function</span></code></a> (by default, <code class="docutils literal notranslate"><span class="pre">0.1</span></code>).</p></li>
+</ul>
+<p>All of the above are arguments passed at initialization of the <a class="reference internal" href="../../api/generated/plenoptic.Metamer.html#plenoptic.Metamer" title="plenoptic.Metamer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Metamer</span></code></a> object except <span class="math notranslate nohighlight">\(\hat{x}\)</span> / <a class="reference internal" href="../../api/generated/plenoptic.Metamer.html#plenoptic.Metamer.metamer" title="plenoptic.Metamer.metamer"><code class="xref py py-attr docutils literal notranslate"><span class="pre">metamer</span></code></a>.</p>
+<p>Thus, the metamer synthesis procedure balances the importance of two components, the metamer loss and the penalty. If you are familiar with optimization, you probably recognize that the penalty term is biasing the metamer optimization procedure: there is no guarantee that we can find an image that satisfies both criteria. That is, we may not be able to find a metamer such that the metamer loss and the penalty are both zero.</p>
+<p>The default penalty function, <a class="reference internal" href="../../api/generated/plenoptic.regularize.penalize_range.html#plenoptic.regularize.penalize_range" title="plenoptic.regularize.penalize_range"><code class="xref py py-func docutils literal notranslate"><span class="pre">penalize_range</span></code></a>, places a quadratic penalty on any pixel values outside of the range <span class="math notranslate nohighlight">\([0, 1]\)</span>. This is the default because all synthesized images need to be displayed, and a range of <span class="math notranslate nohighlight">\([0, 1]\)</span> (when dealing with floats) or <span class="math notranslate nohighlight">\([0, 255]\)</span> (when dealing with 8-bit integers) are typically used to represent the displayable range of values.</p>
+<p>It is likely that we can find images that have minimal values for both the metamer loss and this default penalty. However, we cannot assume that is the case for more complicated penalty functions. This notebook will show some strategies to find good solutions, but you may find yourself in a situation where you have to choose which term to prioritize. If so, it is important to remember: for an image to be a model metamer, its metamer loss <strong>must</strong> be zero (see <a class="reference internal" href="../models_and_metrics/portilla_simoncelli/technical_details/ps_optimization.html#good-enough"><span class="std std-ref">What is a “good” metamer?</span></a> and <a class="reference internal" href="../reproduce/feather2023.html#feather-synthesis-success"><span class="std std-ref">Synthesis success?</span></a> for discussion on what “zero” means in practice). If your scientific reasoning depends on your images being model metamers, this is non-negotiable. However, depending on your scientific question, it is likely that your penalty doesn’t need to be met exactly, and you are thus encouraged to prioritize metamer loss.</p>
+<p>In this notebook, we’ll show how to change this penalty to restrict the metamer’s pixel values to different ranges. We will cover three distinct points in this notebook, all of which are important to understand when using custom penalty functions:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#penalty-basics"><span class="std std-ref">Basic requirements and usage</span></a>: a penalty function must be a differentiable callable that accepts a single tensor and returns a single scalar, and is specified using the <a class="reference internal" href="../../api/generated/plenoptic.Metamer.html#plenoptic.Metamer.penalty_function" title="plenoptic.Metamer.penalty_function"><code class="xref py py-attr docutils literal notranslate"><span class="pre">penalty_function</span></code></a> argument at initialization.</p></li>
+<li><p><a class="reference internal" href="#penalty-well-behaved"><span class="std std-ref">Designing a well-behaved penalty function</span></a>: a penalty function should have a finite minimum value which corresponds to the behavior you wish to encourage. This section additionally demonstrates how to combine multiple penalty functions with addition.</p></li>
+<li><p><a class="reference internal" href="#penalty-lambda"><span class="std std-ref">Selecting the proper <a class="reference internal" href="../../api/generated/plenoptic.Metamer.html#plenoptic.Metamer.penalty_lambda" title="plenoptic.Metamer.penalty_lambda"><code class="xref py py-attr docutils literal notranslate"><span class="pre">penalty_lambda</span></code></a> value</span></a>: if the value is too small, the penalty will have no effect on metamer synthesis, whereas if it is too large, the penalty will dominate the objective function and the resulting image will not be a model metamer.</p></li>
+</ul>
+<div class="admonition-what-other-penalties-can-i-use admonition">
+<p class="admonition-title">What other penalties can I use?</p>
+<p>This notebook demonstrates the technical requirements for <a class="reference internal" href="../../api/generated/plenoptic.Metamer.html#plenoptic.Metamer.penalty_function" title="plenoptic.Metamer.penalty_function"><code class="xref py py-attr docutils literal notranslate"><span class="pre">penalty_function</span></code></a>: it must be a differentiable function that accept a single tensor (the metamer-in-progress) and return a single scalar. <strong>Which</strong> function to use depends on your scientific question and what you’re interested in. The other notebooks in this section demonstrate some additional uses of penalty functions beyond controlling the range of allowed pixel values. Additionally, see <a class="reference internal" href="../reproduce/synthesizing_adversarial_examples/adversarial_examples_metamer.html#adversarial-examples-metamer"><span class="std std-ref">Synthesize adversarial examples using Metamer</span></a> for an example using <a class="reference internal" href="../../api/generated/plenoptic.Metamer.html#plenoptic.Metamer" title="plenoptic.Metamer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Metamer</span></code></a> with <a class="reference internal" href="../../api/generated/plenoptic.Metamer.html#plenoptic.Metamer.penalty_function" title="plenoptic.Metamer.penalty_function"><code class="xref py py-attr docutils literal notranslate"><span class="pre">penalty_function</span></code></a> to generate deep net adversarial examples.</p>
+<p>As far as the developers of plenoptic are aware, this use of penalties to bias metamer synthesis is novel, so we do not know of any existing examples in the literature. We presented a poster about it at the <a class="reference external" href="https://2026.ccneuro.org/">Cognitive Computational Neuroscience 2026</a> conference, <span class="bibtex-citation" id="id1"><a class="reference internal" href="../../reference/citation.html#id18" title="William F. Broderick, Erica Shook, Daniel Herrera-Esposito, and Eero P. Simoncelli. Biasing optimization to find more informative model metamers. CCN 2026, August 2026. URL: https://osf.io/r7jps/, doi:10.17605/OSF.IO/R7JPS.">Broderick <em>et al.</em>, 2026</a></span> (poster available <a class="reference external" href="https://dx.doi.org/10.17605/OSF.IO/R7JPS">here</a>), which shows three distinct uses of penalty functions in metamer synthesis.</p>
+<p>If you are aware of examples of a similar use of penalties in the literature, please <a class="reference external" href="https://github.com/plenoptic-org/plenoptic/discussions/new?category=general">tell us</a>. We would also be very interested in <a class="reference external" href="https://github.com/plenoptic-org/plenoptic/discussions/new?category=show-and-tell">hearing from users</a> who have used this procedure themselves!</p>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">plenoptic</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">po</span>
+
+<span class="n">DEVICE</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s2">&quot;cuda&quot;</span> <span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">()</span> <span class="k">else</span> <span class="s2">&quot;cpu&quot;</span><span class="p">)</span>
+
+<span class="c1"># so that relative sizes of axes created by po.plot.imshow and others look right</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s2">&quot;figure.dpi&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">72</span>
+
+<span class="c1"># The default value of 4000 for MAX_ITER here will lead to reasonable results, but will</span>
+<span class="c1"># take too long if you don&#39;t have a GPU. If synthesis is taking a long time on your</span>
+<span class="c1"># machine, set this to a lower value, but know that synthesis has ended early. View the</span>
+<span class="c1"># website online to see what completed synthesis looks like.</span>
+<span class="n">MAX_ITER</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;MAX_ITER&quot;</span><span class="p">,</span> <span class="mi">4000</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>The following hidden cell creates some plotting functions that we’ll reuse throughout this notebook, expand it if you’re interested in the details.</p>
+<div class="cell tag_hide-input docutils container">
+<details class="admonition hide above-input">
+<summary aria-label="Toggle hidden content">
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">create_metamer_figure</span><span class="p">(</span><span class="n">met</span><span class="p">,</span> <span class="n">suptitle</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create figure to summarize metamer synthesis and pixel values.&quot;&quot;&quot;</span>
+    <span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="mi">11</span><span class="p">))</span>
+    <span class="n">axes</span> <span class="o">=</span> <span class="n">axes</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+    <span class="n">included_plots</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;synthesis_imshow&quot;</span><span class="p">,</span> <span class="s2">&quot;synthesis_histogram&quot;</span><span class="p">]</span>
+    <span class="n">axes_idx</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">included_plots</span><span class="p">)}</span>
+    <span class="n">po</span><span class="o">.</span><span class="n">plot</span><span class="o">.</span><span class="n">synthesis_status</span><span class="p">(</span>
+        <span class="n">met</span><span class="p">,</span>
+        <span class="n">fig</span><span class="o">=</span><span class="n">fig</span><span class="p">,</span>
+        <span class="n">included_plots</span><span class="o">=</span><span class="n">included_plots</span><span class="p">,</span>
+        <span class="n">axes_idx</span><span class="o">=</span><span class="n">axes_idx</span><span class="p">,</span>
+        <span class="n">synthesis_imshow_kwargs</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;vrange&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)},</span>
+    <span class="p">)</span>
+    <span class="n">image_axes</span> <span class="o">=</span> <span class="p">[</span><span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">axes</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">axes</span><span class="p">[</span><span class="mi">4</span><span class="p">]]</span>
+    <span class="n">imgs</span> <span class="o">=</span> <span class="p">[</span><span class="n">met</span><span class="o">.</span><span class="n">image</span><span class="p">,</span> <span class="n">met</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="n">met</span><span class="o">.</span><span class="n">image</span><span class="p">),</span> <span class="n">met</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="n">met</span><span class="o">.</span><span class="n">metamer</span><span class="p">)]</span>
+    <span class="n">titles</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Target image&quot;</span><span class="p">,</span> <span class="s2">&quot;Representation of target&quot;</span><span class="p">,</span> <span class="s2">&quot;Representation of metamer&quot;</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">ax</span><span class="p">,</span> <span class="n">im</span><span class="p">,</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">image_axes</span><span class="p">,</span> <span class="n">imgs</span><span class="p">,</span> <span class="n">titles</span><span class="p">):</span>
+        <span class="n">po</span><span class="o">.</span><span class="n">plot</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">im</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="n">t</span><span class="p">,</span> <span class="n">zoom</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">vrange</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">yaxis</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">axes</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="n">suptitle</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="s2">&quot;xx-large&quot;</span><span class="p">,</span> <span class="n">fontweight</span><span class="o">=</span><span class="s2">&quot;bold&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">fig</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">plot_penalty</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">custom_penalty</span><span class="p">,</span> <span class="n">x_vlines</span><span class="p">,</span> <span class="n">x_range</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Plot penalty over range of values.&quot;&quot;&quot;</span>
+    <span class="c1"># Create a 1d tensor of values with specified range</span>
+    <span class="n">vals</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">*</span><span class="n">x_range</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+    <span class="c1"># Take advantage of broadcasting to create a single tensor of shape (100, 1, 256,</span>
+    <span class="c1"># 256) whose elements along the batch dimension are images with uniform pixel values</span>
+    <span class="n">imgs</span> <span class="o">=</span> <span class="n">vals</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">vals</span><span class="p">),</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">torch</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
+    <span class="c1"># torch vmap allows us to apply custom_penalty independently across the 0th</span>
+    <span class="c1"># dimension, so that we&#39;re applying it separately to each of our synthetic images.</span>
+    <span class="n">penalties</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">vmap</span><span class="p">(</span><span class="n">custom_penalty</span><span class="p">)(</span><span class="n">imgs</span><span class="p">)</span>
+    <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">po</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">(</span><span class="n">vals</span><span class="p">),</span> <span class="n">po</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">(</span><span class="n">penalties</span><span class="p">))</span>
+    <span class="c1"># Let&#39;s add some vertical lines showing where our min and max allowed values are.</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">penalties</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">any</span><span class="p">():</span>
+        <span class="n">ylim</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="n">ax</span><span class="o">.</span><span class="n">get_ylim</span><span class="p">()[</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="mi">1000</span><span class="p">,</span> <span class="n">ax</span><span class="o">.</span><span class="n">get_ylim</span><span class="p">()[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="k">elif</span> <span class="ow">not</span> <span class="p">(</span><span class="n">penalties</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">any</span><span class="p">():</span>
+        <span class="n">ylim</span> <span class="o">=</span> <span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">get_ylim</span><span class="p">()[</span><span class="mi">0</span><span class="p">],</span> <span class="o">-</span><span class="n">ax</span><span class="o">.</span><span class="n">get_ylim</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="mi">1000</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">ylim</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">get_ylim</span><span class="p">()</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">vlines</span><span class="p">(</span><span class="n">x_vlines</span><span class="p">,</span> <span class="o">*</span><span class="n">ylim</span><span class="p">,</span> <span class="s2">&quot;k&quot;</span><span class="p">,</span> <span class="s2">&quot;dashed&quot;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">ylim</span><span class="o">=</span><span class="n">ylim</span><span class="p">,</span> <span class="n">xlabel</span><span class="o">=</span><span class="s2">&quot;Pixel value&quot;</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="s2">&quot;Penalty value&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">fig</span>
+</pre></div>
+</div>
+</div>
+</details>
+</div>
+<section id="default-metamer-behavior">
+<h2>Default <a class="reference internal" href="../../api/generated/plenoptic.Metamer.html#plenoptic.Metamer" title="plenoptic.Metamer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Metamer</span></code></a> behavior<a class="headerlink" href="#default-metamer-behavior" title="Link to this heading">#</a></h2>
+<p>In this notebook, we’ll use a simple <a class="reference internal" href="../../api/generated/plenoptic.models.Gaussian.html#plenoptic.models.Gaussian" title="plenoptic.models.Gaussian"><code class="xref py py-class docutils literal notranslate"><span class="pre">Gaussian</span></code></a> model. This model just convolves a Gaussian kernel across the entire image. It is thus a low-pass model, only caring about low frequencies and disregarding high frequencies.</p>
+<p>First, let’s see what metamer synthesis with the default penalty function looks like:</p>
+<div class="cell docutils container" id="default-penalty-figure">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">model</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Gaussian</span><span class="p">(</span><span class="mi">30</span><span class="p">,</span> <span class="n">cache_filt</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
+<span class="n">po</span><span class="o">.</span><span class="n">remove_grad</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+<span class="n">model</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">DEVICE</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+<span class="n">img</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">einstein</span><span class="p">()</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">DEVICE</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+<span class="n">met</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">Metamer</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">model</span><span class="p">)</span>
+<span class="n">met</span><span class="o">.</span><span class="n">synthesize</span><span class="p">(</span><span class="n">MAX_ITER</span><span class="p">,</span> <span class="n">stop_criterion</span><span class="o">=</span><span class="mf">1e-16</span><span class="p">)</span>
+
+<span class="c1"># This plotting function was created in a hidden cell at the top of the notebook, expand</span>
+<span class="c1"># it if you&#39;re interested in the details.</span>
+<span class="n">create_metamer_figure</span><span class="p">(</span><span class="n">met</span><span class="p">,</span> <span class="s2">&quot;Default penalty&quot;</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<script type="application/vnd.jupyter.widget-view+json">{"version_major": 2, "version_minor": 0, "model_id": "1eb0844d8004490faff27cfcd117795f"}</script><img alt="../../_images/4171882015cc1d84b74d46010a16e722df0280f2e4075f166ff3f49b908fc47d.png" src="../../_images/4171882015cc1d84b74d46010a16e722df0280f2e4075f166ff3f49b908fc47d.png" />
+</div>
+</div>
+<p>In the above figure, the top row shows: the target image, the metamer, and a histogram of pixel values in those two images. The bottom row shows the model representation of the top two images. We can see that the two representations on the bottom match and thus the two images on the top are metamers.</p>
+<p>By looking at the histogram (and the “range” section in the title of the images on the top row), we can see that the pixel values in our metamer vary between 0 and 1 and, since it was initialized with a patch of uniformly-distributed noise, those pixels are widely distributed between those values.</p>
+</section>
+<section id="basic-penalty-function-requirements-and-usage">
+<h2>Basic penalty function requirements and usage<a class="headerlink" href="#basic-penalty-function-requirements-and-usage" title="Link to this heading">#</a></h2>
+<p id="penalty-basics">All penalty functions in plenoptic must be callables that take the synthesized image as input and return some scalar penalty. We can write a custom penalty that makes use of the <a class="reference internal" href="../../api/generated/plenoptic.regularize.penalize_range.html#plenoptic.regularize.penalize_range" title="plenoptic.regularize.penalize_range"><code class="xref py py-func docutils literal notranslate"><span class="pre">penalize_range</span></code></a> function to penalize pixel values that fall outside some narrower range instead:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Create custom_penalty function, that penalizes pixels outside of [0.1, 0.9] range</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">custom_penalty</span><span class="p">(</span><span class="n">image</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">po</span><span class="o">.</span><span class="n">regularize</span><span class="o">.</span><span class="n">penalize_range</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">allowed_range</span><span class="o">=</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Our <code class="docutils literal notranslate"><span class="pre">custom_penalty</span></code> accepts a single tensor and returns a scalar, quadratic penalty on any values it contains outside of 0.1 to 0.9:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">custom_penalty</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>tensor(9.6853, device=&#39;cuda:0&#39;, dtype=torch.float64)
+</pre></div>
+</div>
+</div>
+</div>
+<p>To understand the penalty’s behavior, let’s plot its output on some synthetic images. The following helper function constructs images the same shape as <code class="docutils literal notranslate"><span class="pre">img</span></code> but whose pixel values all have the same value, and we’ll have these values range from <span class="math notranslate nohighlight">\(-0.2\)</span> to <span class="math notranslate nohighlight">\(1.2\)</span>:</p>
+<div class="cell docutils container" id="well-behaved-range-penalty">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># This plotting function was created in a hidden cell at the top of the notebook, expand</span>
+<span class="c1"># it if you&#39;re interested in the details.</span>
+<span class="n">plot_penalty</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">custom_penalty</span><span class="p">,</span> <span class="n">x_vlines</span><span class="o">=</span><span class="p">[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">],</span> <span class="n">x_range</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">1.2</span><span class="p">));</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../_images/7a8d8760b415b27ab288f16dfcdc272f7770f5b853843f6fd15a64f50c83dd74.png" src="../../_images/7a8d8760b415b27ab288f16dfcdc272f7770f5b853843f6fd15a64f50c83dd74.png" />
+</div>
+</div>
+<p>In the above plot, the penalty value is on the y-axis and the pixel value of the penalized image is on the x-axis. The goal of this penalty is to encourage the pixel values to lie within the range <span class="math notranslate nohighlight">\([0.1, 0.9]\)</span>. We can see that the penalty value is 0 within the allowed range, whose boundaries are marked by the vertical dashed lines. Outside that range, we see the penalty rise sharply.</p>
+<p>The slope / derivative of the penalty function tells us where its gradient will move the pixel values during the synthesis procedure: the slope is positive above <span class="math notranslate nohighlight">\(0.9\)</span>, zero within the allowed range, and negative below <span class="math notranslate nohighlight">\(0.1\)</span>. Therefore, the penalty will not affect any pixel values that fall between <span class="math notranslate nohighlight">\(0.1\)</span> and <span class="math notranslate nohighlight">\(0.9\)</span>, while increasing those below that range and decreasing those above it (because we are minimizing the penalty, the effect on the pixels has the opposite sign of the gradient). Furthermore, the slope increases in magnitude the further away you get from the allowed range, so this penalty will have a strong effect on those values, while smoothly decreasing in strength as the pixels get closer to the boundaries.</p>
+<p>Now that we understand its behavior, we can pass this <code class="docutils literal notranslate"><span class="pre">custom_penalty</span></code> to the <a class="reference internal" href="../../api/generated/plenoptic.Metamer.html#plenoptic.Metamer" title="plenoptic.Metamer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Metamer</span></code></a> class at initialization and call the <a class="reference internal" href="../../api/generated/plenoptic.Metamer.html#plenoptic.Metamer.synthesize" title="plenoptic.Metamer.synthesize"><code class="xref py py-meth docutils literal notranslate"><span class="pre">synthesize</span></code></a> method in the same manner as before:</p>
+<div class="dropdown note admonition">
+<p class="admonition-title">Multi-stage synthesis</p>
+<p>In the examples in this notebook, we will always call <a class="reference internal" href="../../api/generated/plenoptic.Metamer.html#plenoptic.Metamer.synthesize" title="plenoptic.Metamer.synthesize"><code class="xref py py-func docutils literal notranslate"><span class="pre">synthesize</span></code></a> once, simultaneously optimizing for the metamer loss and our custom penalty. For more complex penalty functions, however, we have often found better performance by breaking up the synthesis into multiple stages. That is, first call <a class="reference internal" href="../../api/generated/plenoptic.Metamer.html#plenoptic.Metamer.synthesize" title="plenoptic.Metamer.synthesize"><code class="xref py py-func docutils literal notranslate"><span class="pre">synthesize</span></code></a> without the custom penalty and then using the resulting un-penalized metamer to initialize a second synthesis procedure, like so:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">met</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">Metamer</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">model</span><span class="p">)</span>
+<span class="n">met</span><span class="o">.</span><span class="n">synthesize</span><span class="p">(</span><span class="mi">1000</span><span class="p">,</span> <span class="n">stop_criterion</span><span class="o">=</span><span class="mf">1e-16</span><span class="p">)</span>
+<span class="n">met_penalty</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">Metamer</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">penalty_function</span><span class="o">=</span><span class="n">custom_penalty</span><span class="p">)</span>
+<span class="n">met</span><span class="o">.</span><span class="n">setup</span><span class="p">(</span><span class="n">initial_image</span><span class="o">=</span><span class="n">met</span><span class="o">.</span><span class="n">metamer</span><span class="p">)</span>
+<span class="n">met</span><span class="o">.</span><span class="n">synthesize</span><span class="p">(</span><span class="mi">1000</span><span class="p">,</span> <span class="n">stop_criterion</span><span class="o">=</span><span class="mf">1e-16</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>You are encouraged to try both methods and see which performs best for your use case.</p>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">met</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">Metamer</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">penalty_function</span><span class="o">=</span><span class="n">custom_penalty</span><span class="p">)</span>
+<span class="n">met</span><span class="o">.</span><span class="n">synthesize</span><span class="p">(</span><span class="n">MAX_ITER</span><span class="p">,</span> <span class="n">stop_criterion</span><span class="o">=</span><span class="mf">1e-16</span><span class="p">)</span>
+
+<span class="n">create_metamer_figure</span><span class="p">(</span><span class="n">met</span><span class="p">,</span> <span class="s2">&quot;Narrower allowed range&quot;</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<script type="application/vnd.jupyter.widget-view+json">{"version_major": 2, "version_minor": 0, "model_id": "7ef42a40b95d4487a5d22036fa203c62"}</script><img alt="../../_images/60a7794071a60ff50b9d5a7274e7efc3845bd34ad5c846ed0cd8270a6b9c4fe7.png" src="../../_images/60a7794071a60ff50b9d5a7274e7efc3845bd34ad5c846ed0cd8270a6b9c4fe7.png" />
+</div>
+</div>
+<p>The figure above has the same structure as earlier, and we can see that the new metamer’s pixel values all fall within this narrower range of <span class="math notranslate nohighlight">\([0.1, 0.9]\)</span>. By looking at the second row, we can see that this image is still a metamer: the representation still looks identical to that of the target image.</p>
+<div class="dropdown admonition">
+<p class="admonition-title">Why not clamp?</p>
+<p>If you are familiar with the machine learning literature, you may be wondering, “why not just use <a class="reference external" href="https://docs.pytorch.org/docs/stable/generated/torch.clamp.html#torch.clamp" title="(in PyTorch v2.14)"><code class="xref py py-func docutils literal notranslate"><span class="pre">torch.clamp</span></code></a> to constrain the pixel values?” This would accomplish the same goal as this example, but in our experience the quadratic range penalty works more reliably across different models. (In particular, in <span class="bibtex-citation" id="id2"><a class="reference internal" href="../../reference/citation.html#id17" title="William F Broderick, Gizem Rufo, Jonathan Winawer, and Eero P Simoncelli. Foveated metamers of the early visual system. eLife, October 2025. URL: http://dx.doi.org/10.7554/eLife.90554.2, doi:10.7554/elife.90554.2.">Broderick <em>et al.</em>, 2025</a></span>, using <a class="reference internal" href="../../api/generated/plenoptic.regularize.penalize_range.html#plenoptic.regularize.penalize_range" title="plenoptic.regularize.penalize_range"><code class="xref py py-func docutils literal notranslate"><span class="pre">penalize_range</span></code></a> led to decreased metamer loss compared to clamping.)</p>
+<p>Additionally, and more importantly, <a class="reference external" href="https://docs.pytorch.org/docs/stable/generated/torch.clamp.html#torch.clamp" title="(in PyTorch v2.14)"><code class="xref py py-func docutils literal notranslate"><span class="pre">torch.clamp</span></code></a> is not nearly as flexible as using a penalty function! While it would allow you to keep the pixel values within ranges like <span class="math notranslate nohighlight">\([0, 1]\)</span> or <span class="math notranslate nohighlight">\([0.1, 0.9]\)</span>, it would not easily support constraining the pixel values to two disjoint ranges, as we will see in the rest of this notebook, let alone other, more complex penalty functions.</p>
+</div>
+</section>
+<section id="designing-a-well-behaved-penalty-function">
+<h2>Designing a well-behaved penalty function<a class="headerlink" href="#designing-a-well-behaved-penalty-function" title="Link to this heading">#</a></h2>
+<p id="penalty-well-behaved">The example shown above is relatively simple. However, for optimization to behave well, it is important that:</p>
+<ol class="arabic simple">
+<li><p>penalties have some minimum value (i.e., they cannot go to negative infinity).</p></li>
+<li><p>this minimum value corresponds to the desired property (e.g., all pixels lie within the desired range).</p></li>
+</ol>
+<p>Furthermore, it is generally convenient to have this minimum value be zero.</p>
+<p>If the first condition above is violated, then the penalty can overwhelm the loss in the objective function, preventing a metamer from being found. The second is required in order for the solution found by the synthesis procedure to have the desired property.</p>
+<p>To see why, let’s say that we wanted to encourage all pixel values to lie <em>outside</em> the range <span class="math notranslate nohighlight">\([0.4, 0.6]\)</span>. That is, we want to maximize the value from <code class="docutils literal notranslate"><span class="pre">po.regularize.penalize_range(image,</span> <span class="pre">allowed_range=(0.4,</span> <span class="pre">0.6))</span></code>. The standard way to maximize a function in optimization frameworks is to minimize its negative value, so we can return the negative of the output from <a class="reference internal" href="../../api/generated/plenoptic.regularize.penalize_range.html#plenoptic.regularize.penalize_range" title="plenoptic.regularize.penalize_range"><code class="xref py py-func docutils literal notranslate"><span class="pre">penalize_range</span></code></a> instead:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">custom_penalty</span><span class="p">(</span><span class="n">image</span><span class="p">):</span>
+    <span class="n">penalty</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">regularize</span><span class="o">.</span><span class="n">penalize_range</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">allowed_range</span><span class="o">=</span><span class="p">(</span><span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">))</span>
+    <span class="k">return</span> <span class="o">-</span><span class="n">penalty</span>
+
+
+<span class="n">plot_penalty</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">custom_penalty</span><span class="p">,</span> <span class="p">[</span><span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">],</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">));</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../_images/e37083700781cbf17fc7d5980a795037d358cf90bd0e129563417cdce7c2798f.png" src="../../_images/e37083700781cbf17fc7d5980a795037d358cf90bd0e129563417cdce7c2798f.png" />
+</div>
+</div>
+<p>We are trying to minimize the value of <code class="docutils literal notranslate"><span class="pre">custom_penalty</span></code>. Thus, a large negative number is better than 0 (or any positive number). In the plot above, we can see that the penalty is 0 in the allowed range marked by the dashed line and rapidly decreases beyond that range. Thus, the penalty will encourage pixels to lie outside of <span class="math notranslate nohighlight">\([0.4, 0.6]\)</span>. Let’s see the effect of our penalty on metamer synthesis:</p>
+<div class="cell docutils container" id="unbalanced-penalty">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">met</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">Metamer</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">penalty_function</span><span class="o">=</span><span class="n">custom_penalty</span><span class="p">)</span>
+<span class="n">met</span><span class="o">.</span><span class="n">synthesize</span><span class="p">(</span><span class="n">MAX_ITER</span><span class="p">,</span> <span class="n">stop_criterion</span><span class="o">=</span><span class="mf">1e-16</span><span class="p">)</span>
+
+<span class="n">create_metamer_figure</span><span class="p">(</span><span class="n">met</span><span class="p">,</span> <span class="s2">&quot;Encourage pixels outside [0.4, 0.6] -- metamer failure&quot;</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<script type="application/vnd.jupyter.widget-view+json">{"version_major": 2, "version_minor": 0, "model_id": "59caca23328c466b9a03211167dd43ea"}</script><img alt="../../_images/b6901dc04785c4a7dc4cd9753506fb3416d136f826110f4606248a1c4c9aa0be.png" src="../../_images/b6901dc04785c4a7dc4cd9753506fb3416d136f826110f4606248a1c4c9aa0be.png" />
+</div>
+</div>
+<p>Oh no! Our model representations do not look at all identical here.</p>
+<p>To see why this is, let’s use <a class="reference internal" href="../../api/generated/plenoptic.plot.synthesis_loss.html#plenoptic.plot.synthesis_loss" title="plenoptic.plot.synthesis_loss"><code class="xref py py-func docutils literal notranslate"><span class="pre">plenoptic.plot.synthesis_loss</span></code></a> to plot our metamer loss alongside our penalty value:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ax</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">plot</span><span class="o">.</span><span class="n">synthesis_loss</span><span class="p">(</span><span class="n">met</span><span class="p">,</span> <span class="n">plot_penalties</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="c1"># convert this to symlog scale, so we can see negative values.</span>
+<span class="n">ax</span><span class="p">[</span><span class="s2">&quot;loss&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">set_yscale</span><span class="p">(</span><span class="s2">&quot;symlog&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../_images/2f0b68a00f8dde2ecc506f119afc84e86c6c7c7d989cb14257fb458aea80a53a.png" src="../../_images/2f0b68a00f8dde2ecc506f119afc84e86c6c7c7d989cb14257fb458aea80a53a.png" />
+</div>
+</div>
+<p>The penalty value is a large negative value and still going lower, whereas the metamer loss has actually increased. Remember that our optimization problem is minimizing the weighted sum of these two numbers; since the metamer loss is bounded below by 0, the penalty has become much more important to the optimization problem, and it can effectively ignore the metamer loss.</p>
+<p>Returning to our discussion at the <a class="reference internal" href="#how-to-penalty"><span class="std std-ref">beginning of the notebook</span></a>, by design, our penalty function is biasing the optimization procedure. Here, however, because the magnitude of the penalty is so much larger than that of the metamer loss, it is biasing the optimization procedure too much, preventing us from finding a solution whose metamer loss is small.</p>
+<p>To fix this, we need to change the plot above so that it looks that of the well-behaved penalty. That is, we must remap its range from <span class="math notranslate nohighlight">\((-\infty, 0]\)</span>, where 0 corresponds to the values we want to avoid, to <span class="math notranslate nohighlight">\([0, \infty)\)</span> (or <span class="math notranslate nohighlight">\([0, x]\)</span>, for some finite <span class="math notranslate nohighlight">\(x\)</span>), where 0 corresponds to the values we want to encourage. Fortunately, the <a class="reference external" href="https://en.wikipedia.org/wiki/Exponential_function">exponential function</a> will do this for us, remapping <span class="math notranslate nohighlight">\((-\infty, 0]\)</span> to <span class="math notranslate nohighlight">\([0, 1]\)</span>:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">custom_penalty</span><span class="p">(</span><span class="n">image</span><span class="p">):</span>
+    <span class="n">penalty</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">regularize</span><span class="o">.</span><span class="n">penalize_range</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">allowed_range</span><span class="o">=</span><span class="p">(</span><span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">penalty</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="admonition-the-remapping-function admonition">
+<p class="admonition-title">The remapping function</p>
+<p>Using <code class="docutils literal notranslate"><span class="pre">torch.exp(-penalty)</span></code> performs the desired remapping in this case because <code class="docutils literal notranslate"><span class="pre">penalty</span></code> is always non-positive. If the range of the penalty we were remapping included both positive and negative values, we would need some other function.</p>
+<p>The goal of this remapping is that the output of your custom penalty should have a finite minimum, which corresponds to the property you wish to encourage.</p>
+</div>
+<p>There’s one addition subtlety here: if <code class="docutils literal notranslate"><span class="pre">penalty</span></code> in our function definition above gets too large, <code class="docutils literal notranslate"><span class="pre">torch.exp</span></code> becomes effectively zero and so the penalty has no effect:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">penalty</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">regularize</span><span class="o">.</span><span class="n">penalize_range</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">rand_like</span><span class="p">(</span><span class="n">img</span><span class="p">),</span> <span class="n">allowed_range</span><span class="o">=</span><span class="p">(</span><span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">penalty</span><span class="o">.</span><span class="n">item</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">penalty</span><span class="p">)</span><span class="o">.</span><span class="n">item</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2813.1204728042076
+0.0
+</pre></div>
+</div>
+</div>
+</div>
+<p>To avoid this, let’s approximately rescale the input to <code class="docutils literal notranslate"><span class="pre">torch.exp</span></code> so that it never gets too large:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">custom_penalty</span><span class="p">(</span><span class="n">image</span><span class="p">):</span>
+    <span class="n">penalty</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">regularize</span><span class="o">.</span><span class="n">penalize_range</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">allowed_range</span><span class="o">=</span><span class="p">(</span><span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">penalty</span> <span class="o">/</span> <span class="mi">1000</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>With this modification, our custom penalty returns more reasonable values for the types of inputs it is likely to see:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plot_penalty</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">custom_penalty</span><span class="p">,</span> <span class="p">[</span><span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">],</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">));</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../_images/89aa4bc0b6967a2008e5bc5176eb9992eb8f7fb991f4fc4c4e933c3b9973afc2.png" src="../../_images/89aa4bc0b6967a2008e5bc5176eb9992eb8f7fb991f4fc4c4e933c3b9973afc2.png" />
+</div>
+</div>
+<p>In the above plot we can see that our penalty now varies between 0 and 1, with the maximum occurring within the disallowed values, and decreasing gradually as you move outside the range.</p>
+<p>One final modification: when synthesizing images, it is generally desirable for all pixel values to lie within <span class="math notranslate nohighlight">\([0, 1]\)</span>, so they can be displayed (which is why this is plenoptic’s default behavior, as discussed at the top of this notebook). To ensure that, let’s modify our penalty one last time, summing together the two penalties that encourage these two different behaviors.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">custom_penalty</span><span class="p">(</span><span class="n">image</span><span class="p">):</span>
+    <span class="n">penalty_one</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">regularize</span><span class="o">.</span><span class="n">penalize_range</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">allowed_range</span><span class="o">=</span><span class="p">(</span><span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">))</span>
+    <span class="n">penalty_two</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">regularize</span><span class="o">.</span><span class="n">penalize_range</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">allowed_range</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">penalty_one</span> <span class="o">/</span> <span class="mi">1000</span><span class="p">)</span> <span class="o">+</span> <span class="n">penalty_two</span>
+
+
+<span class="n">plot_penalty</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">custom_penalty</span><span class="p">,</span> <span class="p">[</span><span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">],</span> <span class="n">x_range</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mf">0.01</span><span class="p">,</span> <span class="mf">1.01</span><span class="p">]);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../_images/f8b16cfcdbdac4424a0975a35b776b94da4fb2805d67c2a7fbdc58293b72f325.png" src="../../_images/f8b16cfcdbdac4424a0975a35b776b94da4fb2805d67c2a7fbdc58293b72f325.png" />
+</div>
+</div>
+<p>In the plot above, we can see that the penalty takes a smaller value when the input satisfies both of our constraints above (that is, all pixel values lie within either <span class="math notranslate nohighlight">\([0, 0.4]\)</span> or <span class="math notranslate nohighlight">\([0.6, 1]\)</span>), gradually increases as we move towards <span class="math notranslate nohighlight">\(0.4\)</span> or <span class="math notranslate nohighlight">\(0.6\)</span> and increases sharply as we move outside <span class="math notranslate nohighlight">\([0, 1]\)</span> (note the range of x-values!).</p>
+<p>Now let’s use the function for metamer synthesis:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">met</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">Metamer</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">penalty_function</span><span class="o">=</span><span class="n">custom_penalty</span><span class="p">)</span>
+<span class="n">met</span><span class="o">.</span><span class="n">synthesize</span><span class="p">(</span><span class="n">MAX_ITER</span><span class="p">,</span> <span class="n">stop_criterion</span><span class="o">=</span><span class="mf">1e-16</span><span class="p">)</span>
+
+<span class="n">create_metamer_figure</span><span class="p">(</span>
+    <span class="n">met</span><span class="p">,</span> <span class="s2">&quot;Encourage pixels outside [0.4, 0.6] -- good penalty, not quite a metamer&quot;</span>
+<span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<script type="application/vnd.jupyter.widget-view+json">{"version_major": 2, "version_minor": 0, "model_id": "efdb7bdeefe641b89ebdb738e5adb6a5"}</script><img alt="../../_images/e63bb715e3bb9f54ae1e66a31517111e925ed32f95bc176897e0f8df3bc85f5d.png" src="../../_images/e63bb715e3bb9f54ae1e66a31517111e925ed32f95bc176897e0f8df3bc85f5d.png" />
+</div>
+</div>
+<p>And now we can see that the model metamer pixel values mostly lie outside the range <span class="math notranslate nohighlight">\([0.4, 0.6]\)</span> and within <span class="math notranslate nohighlight">\([0, 1]\)</span>. We can see a couple of other interesting results of our penalty function:</p>
+<ul class="simple">
+<li><p>We have no pixels outside of <span class="math notranslate nohighlight">\([0, 1]\)</span>, but we do have some pixels in <span class="math notranslate nohighlight">\([0.4, 0.6]\)</span>. If we look at our penalty plot above, we can see that the magnitude of the penalty is much larger for values outside <span class="math notranslate nohighlight">\([0, 1]\)</span> than for those within <span class="math notranslate nohighlight">\([0.4, 0.6]\)</span>, so it makes sense that we would see an asymmetry in the resulting metamer. If we do not wish this to be the case, we could multiply the components of the penalty (e.g., <code class="docutils literal notranslate"><span class="pre">penalty_two</span></code>) by some scalar to increase or decrease their relative importance.</p></li>
+<li><p>More subtly, it looks like the pixel values are being pushed to a bimodal distribution, clumping near the values 0 and 1, instead of being uniformly distributed within <span class="math notranslate nohighlight">\([0, 0.4]\)</span> and <span class="math notranslate nohighlight">\([0.6, 1]\)</span>. Again, returning to the penalty plot above can help explain this: we see that the penalty decreases very gradually as you move away from <span class="math notranslate nohighlight">\(0.4\)</span> or <span class="math notranslate nohighlight">\(0.6\)</span>, and so it only approaches a value and a slope of zero as you near <span class="math notranslate nohighlight">\(0.2\)</span> / <span class="math notranslate nohighlight">\(0.8\)</span>. If we do not wish to see this bimodal distribution, we could instead pick a penalty whose value decreases more rapidly within the allowed range (for example, changing <code class="docutils literal notranslate"><span class="pre">custom_penalty</span></code> above to use <code class="docutils literal notranslate"><span class="pre">penalty_one</span> <span class="pre">=</span> <span class="pre">plenoptic.regularize.penalize_range(image,</span> <span class="pre">allowed_range=(0.45,</span> <span class="pre">0.65)</span></code> or replacing the <code class="docutils literal notranslate"><span class="pre">torch.exp(-penalty_one</span> <span class="pre">/</span> <span class="pre">1000)</span></code> with different function entirely, such as a narrow Gaussian centered at 0.5).</p></li>
+</ul>
+<p>We probably could’ve predicted the above two points by thinking more carefully through the plot of the penalty as a function of the pixel values. This hopefully demonstrates the utility of thinking about your penalty’s value and how it will affect your synthesis. When the penalty is operating on pixel values, its behavior is relatively easy to check, but you are encouraged to try any custom penalties on a variety of inputs to better understand their behavior before using them for synthesis!</p>
+<p>However, importantly, if you look at the metamer representation image on the second row, you can see that it is not identical to the target representation just next to it (there are faint circles scattered across the image) – that is, we’ve failed to find a metamer. We’ll address that in the next section.</p>
+</section>
+<section id="selecting-the-proper-penalty-lambda-value">
+<h2>Selecting the proper <a class="reference internal" href="../../api/generated/plenoptic.Metamer.html#plenoptic.Metamer.penalty_lambda" title="plenoptic.Metamer.penalty_lambda"><code class="xref py py-attr docutils literal notranslate"><span class="pre">penalty_lambda</span></code></a> value<a class="headerlink" href="#selecting-the-proper-penalty-lambda-value" title="Link to this heading">#</a></h2>
+<p id="penalty-lambda">In the previous example, we synthesized an image that satisfied the penalty function, but we gave up some of the metamer quality. As discussed at the top of this notebook, that’s bad, and results from the penalty playing too large of a role in the objective function. This is the same situation we saw with our <a class="reference internal" href="#unbalanced-penalty"><span class="std std-ref">initial attempt</span></a> at the penalty encouraging pixel values to lie outside <span class="math notranslate nohighlight">\([0.4, 0.6]\)</span>, though much subtler.</p>
+<p>In order to increase the relative importance of the metamer loss (over the penalty) in the objective function, we can use the <a class="reference internal" href="../../api/generated/plenoptic.Metamer.html#plenoptic.Metamer.penalty_lambda" title="plenoptic.Metamer.penalty_lambda"><code class="xref py py-attr docutils literal notranslate"><span class="pre">penalty_lambda</span></code></a> argument at initialization. This argument operates similarly to <a class="reference internal" href="../../api/generated/plenoptic.MADCompetition.html#plenoptic.MADCompetition.metric_tradeoff_lambda" title="plenoptic.MADCompetition.metric_tradeoff_lambda"><code class="xref py py-attr docutils literal notranslate"><span class="pre">metric_tradeoff_lambda</span></code></a> from <a class="reference internal" href="../../api/generated/plenoptic.MADCompetition.html#plenoptic.MADCompetition" title="plenoptic.MADCompetition"><code class="xref py py-class docutils literal notranslate"><span class="pre">MADCompetition</span></code></a>, and allows us to control the balance of these components in the objective function.</p>
+<p>This value defaults to 0.1, which you can see by looking at the docstring. Let’s try decreasing it:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">met</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">Metamer</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">penalty_function</span><span class="o">=</span><span class="n">custom_penalty</span><span class="p">,</span> <span class="n">penalty_lambda</span><span class="o">=</span><span class="mf">0.025</span><span class="p">)</span>
+<span class="n">met</span><span class="o">.</span><span class="n">synthesize</span><span class="p">(</span><span class="n">MAX_ITER</span><span class="p">,</span> <span class="n">stop_criterion</span><span class="o">=</span><span class="mf">1e-16</span><span class="p">)</span>
+
+<span class="n">create_metamer_figure</span><span class="p">(</span>
+    <span class="n">met</span><span class="p">,</span> <span class="s2">&quot;Encourage pixels outside [0.4, 0.6] -- good penalty_lambda value&quot;</span>
+<span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<script type="application/vnd.jupyter.widget-view+json">{"version_major": 2, "version_minor": 0, "model_id": "13d7fbaa19704c3d8ce079380936e8a3"}</script><img alt="../../_images/72e135cf45ae65e9905c3736e51b8e7dd531b68220be9a2ef8463a5b4884c69a.png" src="../../_images/72e135cf45ae65e9905c3736e51b8e7dd531b68220be9a2ef8463a5b4884c69a.png" />
+</div>
+</div>
+<p>In the above plots, we can see that the metamer is of good quality (the two bottom images match), and that we have mostly managed to satisfy the constraints from our penalty (most pixel values lie outside the range <span class="math notranslate nohighlight">\([0.4, 0.6]\)</span> and within <span class="math notranslate nohighlight">\([0, 1]\)</span>.)</p>
+<p>If we continued to decrease <a class="reference internal" href="../../api/generated/plenoptic.Metamer.html#plenoptic.Metamer.penalty_lambda" title="plenoptic.Metamer.penalty_lambda"><code class="xref py py-attr docutils literal notranslate"><span class="pre">penalty_lambda</span></code></a>, eventually we’d reach a point where the penalty was having no effect at all:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">met_small</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">Metamer</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">penalty_function</span><span class="o">=</span><span class="n">custom_penalty</span><span class="p">,</span> <span class="n">penalty_lambda</span><span class="o">=</span><span class="mf">1e-6</span><span class="p">)</span>
+<span class="n">met_small</span><span class="o">.</span><span class="n">synthesize</span><span class="p">(</span><span class="n">MAX_ITER</span><span class="p">,</span> <span class="n">stop_criterion</span><span class="o">=</span><span class="mf">1e-16</span><span class="p">)</span>
+
+<span class="n">create_metamer_figure</span><span class="p">(</span>
+    <span class="n">met_small</span><span class="p">,</span> <span class="s2">&quot;Encourage pixels outside [0.4, 0.6] -- penalty_lambda too small&quot;</span>
+<span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<script type="application/vnd.jupyter.widget-view+json">{"version_major": 2, "version_minor": 0, "model_id": "83603b52501a444793c2680479222f65"}</script><img alt="../../_images/5fa5ad5de8781c8e8bf74acc87e9d26d756b4c4e7791ba1cfe1f3729f34d9b77.png" src="../../_images/5fa5ad5de8781c8e8bf74acc87e9d26d756b4c4e7791ba1cfe1f3729f34d9b77.png" />
+</div>
+</div>
+<p>While we have a good metamer, we can see that many pixel values in our metamer lie between 0.4 and 0.6 and, indeed, the histogram looks a lot like the <a class="reference internal" href="#default-penalty-figure"><span class="std std-ref">one for the metamer synthesized</span></a> using the default penalty.</p>
+<p>Conversely, for a very large lambda, the objective function will focus exclusively on minimizing the penalty, ignoring the metamer loss entirely:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">met_large</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">Metamer</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">penalty_function</span><span class="o">=</span><span class="n">custom_penalty</span><span class="p">,</span> <span class="n">penalty_lambda</span><span class="o">=</span><span class="mf">1e6</span><span class="p">)</span>
+<span class="n">met_large</span><span class="o">.</span><span class="n">synthesize</span><span class="p">(</span><span class="n">MAX_ITER</span><span class="p">,</span> <span class="n">stop_criterion</span><span class="o">=</span><span class="mf">1e-16</span><span class="p">)</span>
+
+<span class="n">create_metamer_figure</span><span class="p">(</span>
+    <span class="n">met_large</span><span class="p">,</span> <span class="s2">&quot;Encourage pixels outside [0.4, 0.6] -- penalty_lambda too large&quot;</span>
+<span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<script type="application/vnd.jupyter.widget-view+json">{"version_major": 2, "version_minor": 0, "model_id": "8a25970890054d0bad3aad3df93eeb8c"}</script><img alt="../../_images/074572b0987068ff1afbbf2f2d39d9097a20b23597ab269aef23a42ec23b2831.png" src="../../_images/074572b0987068ff1afbbf2f2d39d9097a20b23597ab269aef23a42ec23b2831.png" />
+</div>
+</div>
+<p>While we have satisfied our constraint (all pixel values lie within <span class="math notranslate nohighlight">\([0, 0.4]\)</span> or <span class="math notranslate nohighlight">\([0.6, 1]\)</span>), we have not successfully found a model metamer.</p>
+<p>In all cases, the actual penalty values start at approximately the same value. Because of their relative importance in the objective function, their final value will vary: the larger lambda is, the lower the penalty will become, but at the potential cost of the metamer loss remaining high.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span> <span class="n">sharey</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">po</span><span class="o">.</span><span class="n">plot</span><span class="o">.</span><span class="n">synthesis_loss</span><span class="p">(</span><span class="n">met</span><span class="p">,</span> <span class="n">plot_penalties</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Lambda just right&quot;</span><span class="p">)</span>
+<span class="n">po</span><span class="o">.</span><span class="n">plot</span><span class="o">.</span><span class="n">synthesis_loss</span><span class="p">(</span><span class="n">met_small</span><span class="p">,</span> <span class="n">plot_penalties</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Lambda too small&quot;</span><span class="p">)</span>
+<span class="n">po</span><span class="o">.</span><span class="n">plot</span><span class="o">.</span><span class="n">synthesis_loss</span><span class="p">(</span><span class="n">met_large</span><span class="p">,</span> <span class="n">plot_penalties</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">axes</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Lambda too large&quot;</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../_images/2bd8443f7c804df0929a376f4c2b521d0ce7b163e4a4fe0a51a1cb669783ea05.png" src="../../_images/2bd8443f7c804df0929a376f4c2b521d0ce7b163e4a4fe0a51a1cb669783ea05.png" />
+</div>
+</div>
+<p>Remember from the <a class="reference internal" href="#how-to-penalty"><span class="std std-ref">beginning of the notebook</span></a> that our objective function balances the contribution of these components. Finding the right lambda value so that neither overwhelms the other is key!</p>
+</section>
+<section id="concluding-thoughts">
+<h2>Concluding thoughts<a class="headerlink" href="#concluding-thoughts" title="Link to this heading">#</a></h2>
+<p>When trying out a new penalty function, you are encouraged to first ensure it complies to best practices, and then try out different values for <a class="reference internal" href="../../api/generated/plenoptic.Metamer.html#plenoptic.Metamer.penalty_lambda" title="plenoptic.Metamer.penalty_lambda"><code class="xref py py-attr docutils literal notranslate"><span class="pre">penalty_lambda</span></code></a> to find which one allows you to minimize both the penalty <em>and</em> the metamer loss.</p>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="../models_and_metrics/portilla_simoncelli/advanced_usage/ps_extensions.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">More than just texture metamers</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../reproduce/Demo_Eigendistortion.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Reproducing Berardino et al., 2017 (Eigendistortions)</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#default-metamer-behavior">Default <code class="xref py py-class docutils literal notranslate"><span class="pre">Metamer</span></code> behavior</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#basic-penalty-function-requirements-and-usage">Basic penalty function requirements and usage</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#designing-a-well-behaved-penalty-function">Designing a well-behaved penalty function</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#selecting-the-proper-penalty-lambda-value">Selecting the proper <code class="xref py py-attr docutils literal notranslate"><span class="pre">penalty_lambda</span></code> value</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#concluding-thoughts">Concluding thoughts</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../_static/scripts/bootstrap.js?digest=cb8930eaaf36d9849b67"></script>
+<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=cb8930eaaf36d9849b67"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2019-2025, Plenoptic authors.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.1.0.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.21.0.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>
