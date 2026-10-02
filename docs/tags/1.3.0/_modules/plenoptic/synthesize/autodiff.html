@@ -1,0 +1,348 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>plenoptic.synthesize.autodiff &mdash; plenoptic 1.3.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/plot_directive.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-design.min.css?v=95c83b7e" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=1f29e9d3"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../_static/copybutton.js?v=35a8b989"></script>
+      <script src="../../../_static/design-tabs.js?v=f930bc37"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+<div style="background-color: rgb(248, 215, 218); color: rgb(114, 28, 36); text-align: center;">
+  <div>
+    <div>This is documentation for <strong>an old version</strong>.
+      <a href="https://docs.plenoptic.org/" style="background-color: rgb(220, 53, 69); color: rgb(255, 255, 255); margin: 1rem; padding: 0.375rem 0.75rem; border-radius: 4px; display: inline-block; text-align: center;">Switch to stable version</a>
+    </div>
+  </div>
+</div>
+ 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            plenoptic
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Basic concepts</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../jupyter.html">Using Jupyter to Run Example Notebooks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../conceptual_intro.html">Conceptual Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../models.html">Model requirements</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/00_quickstart.html">Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../citation.html">Citation Guide and Bibliography</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Synthesis method introductions</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/intro/02_Eigendistortions.html">Eigendistortions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/intro/06_Metamer.html">Metamers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/intro/07_Simple_MAD.html">MAD Competition Conceptual Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/intro/08_MAD_Competition.html">MAD Competition Usage</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Models and metrics</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/models/03_Steerable_Pyramid.html">Steerable Pyramid</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/models/04_Perceptual_distance.html">Perceptual distance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/models/Metamer-Portilla-Simoncelli.html">Portilla-Simoncelli Texture Metamer</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Synthesis method examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/applications/09_Original_MAD.html">Reproducing Wang and Simoncelli, 2008 (MAD Competition)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/applications/Demo_Eigendistortion.html">Reproducing Berardino et al., 2017 (Eigendistortions)</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Advanced usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../synthesis.html">Synthesis object design</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tips.html">Tips and Tricks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../reproducibility.html">Reproducibility</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/modules.html">API Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/advanced/Display.html">Display and animate functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/advanced/Synthesis_extensions.html">Extending existing synthesis objects</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">plenoptic</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">plenoptic.synthesize.autodiff</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for plenoptic.synthesize.autodiff</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Helper functions for comptuing Jacobian and related outputs.</span>
+
+<span class="sd">Not intended for users to interact with directly; users should use</span>
+<span class="sd">:class:`~plenoptic.synthesize.eigendistortion.Eigendistortion`.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">torch</span><span class="w"> </span><span class="kn">import</span> <span class="n">Tensor</span>
+
+
+<div class="viewcode-block" id="jacobian">
+<a class="viewcode-back" href="../../../api/plenoptic.synthesize.html#plenoptic.synthesize.autodiff.jacobian">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">jacobian</span><span class="p">(</span><span class="n">y</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Explicitly compute the full Jacobian matrix.</span>
+
+<span class="sd">    N.B. This is only recommended for small input sizes (e.g. fewer than 10,000</span>
+<span class="sd">    elements).</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    y</span>
+<span class="sd">        Model output with gradient attached. Must be a vector, of shape</span>
+<span class="sd">        ``torch.Size([m, 1])``.</span>
+<span class="sd">    x</span>
+<span class="sd">        Tensor with gradient function model input with gradient attached. Must</span>
+<span class="sd">        be a vector, of shape ``torch.Size([n, 1])``.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    J</span>
+<span class="sd">        Jacobian matrix with ``torch.Size([m, n])``.</span>
+
+<span class="sd">    Warns</span>
+<span class="sd">    -----</span>
+<span class="sd">    UserWarning</span>
+<span class="sd">        If ``x`` has more than 1e4 elements, in which case we believe that this</span>
+<span class="sd">        calculation will take too long.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">x</span><span class="o">.</span><span class="n">numel</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mf">1e4</span><span class="p">:</span>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+            <span class="s2">&quot;Calculation of Jacobian with input dimensionality greater than&quot;</span>
+            <span class="s2">&quot; 1E4 may take too long; consideran iterative method (e.g. power&quot;</span>
+            <span class="s2">&quot; method, randomized svd) instead.&quot;</span>
+        <span class="p">)</span>
+
+    <span class="n">J</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span>
+            <span class="p">[</span>
+                <span class="n">torch</span><span class="o">.</span><span class="n">autograd</span><span class="o">.</span><span class="n">grad</span><span class="p">(</span>
+                    <span class="p">[</span><span class="n">y</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()],</span> <span class="p">[</span><span class="n">x</span><span class="p">],</span> <span class="n">retain_graph</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">create_graph</span><span class="o">=</span><span class="kc">True</span>
+                <span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">y</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+            <span class="p">],</span>
+            <span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="o">.</span><span class="n">squeeze</span><span class="p">()</span>
+        <span class="o">.</span><span class="n">t</span><span class="p">()</span>
+    <span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">y</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>  <span class="c1"># need to return a 2D tensor even if y dimensionality is 1</span>
+        <span class="n">J</span> <span class="o">=</span> <span class="n">J</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">J</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span></div>
+
+
+
+<div class="viewcode-block" id="vector_jacobian_product">
+<a class="viewcode-back" href="../../../api/plenoptic.synthesize.html#plenoptic.synthesize.autodiff.vector_jacobian_product">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">vector_jacobian_product</span><span class="p">(</span>
+    <span class="n">y</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span>
+    <span class="n">x</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span>
+    <span class="n">U</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span>
+    <span class="n">retain_graph</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="n">create_graph</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="n">detach</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Compute vector Jacobian product :math:`\text{vjp} = u^T(\partial y/\partial x)`.</span>
+
+<span class="sd">    Backward Mode Auto-Differentiation (``Lop`` in Theano).</span>
+
+<span class="sd">    Note on efficiency: When this function is used in the context of power iteration for</span>
+<span class="sd">    computing eigenvectors, the vector output will be repeatedly fed back into this</span>
+<span class="sd">    method and :meth:`jacobian_vector_product`. To prevent the accumulation of gradient</span>
+<span class="sd">    history in this vector (especially on GPU), we need to ensure the computation graph</span>
+<span class="sd">    is not kept in memory after each iteration. We can do this by detaching the output,</span>
+<span class="sd">    as well as carefully specifying where/when to retain the created graph.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    y</span>
+<span class="sd">        Output with gradient attached, ``torch.Size([m, 1])``.</span>
+<span class="sd">    x</span>
+<span class="sd">        Input with gradient attached, ``torch.Size([n, 1])``.</span>
+<span class="sd">    U</span>
+<span class="sd">        Direction, shape is ``torch.Size([m, k])``, i.e. same dim as output tensor.</span>
+<span class="sd">        ``k`` is the number of directions.</span>
+<span class="sd">    retain_graph</span>
+<span class="sd">        Whether or not to keep graph after doing one :meth:`vector_jacobian_product`.</span>
+<span class="sd">        Must be set to True if ``k&gt;1``.</span>
+<span class="sd">    create_graph</span>
+<span class="sd">        Whether or not to create computational graph. Usually should be set to True</span>
+<span class="sd">        unless you&#39;re reusing the graph like in the second step</span>
+<span class="sd">        of :meth:`jacobian_vector_product`.</span>
+<span class="sd">    detach</span>
+<span class="sd">        As with ``create_graph``, only necessary to be True when reusing the output</span>
+<span class="sd">        like we do in the 2nd step of :meth:`jacobian_vector_product`.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    vJ</span>
+<span class="sd">        Vector-Jacobian product, ``torch.Size([m, k])``.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">assert</span> <span class="n">y</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span>
+    <span class="k">assert</span> <span class="n">U</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">y</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="n">k</span> <span class="o">=</span> <span class="n">U</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">product</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">k</span><span class="p">):</span>
+        <span class="p">(</span><span class="n">grad_x</span><span class="p">,)</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">autograd</span><span class="o">.</span><span class="n">grad</span><span class="p">(</span>
+            <span class="n">y</span><span class="p">,</span>
+            <span class="n">x</span><span class="p">,</span>
+            <span class="n">U</span><span class="p">[:,</span> <span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span>
+            <span class="n">retain_graph</span><span class="o">=</span><span class="n">retain_graph</span><span class="p">,</span>
+            <span class="n">create_graph</span><span class="o">=</span><span class="n">create_graph</span><span class="p">,</span>
+            <span class="n">allow_unused</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">product</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">grad_x</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">))</span>
+
+    <span class="n">vJ</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">(</span><span class="n">product</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">detach</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">vJ</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">vJ</span></div>
+
+
+
+<div class="viewcode-block" id="jacobian_vector_product">
+<a class="viewcode-back" href="../../../api/plenoptic.synthesize.html#plenoptic.synthesize.autodiff.jacobian_vector_product">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">jacobian_vector_product</span><span class="p">(</span>
+    <span class="n">y</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span> <span class="n">V</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span> <span class="n">dummy_vec</span><span class="p">:</span> <span class="n">Tensor</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Compute Jacobian Vector Product: :math:`\text{jvp} = (\partial y/\partial x) v`.</span>
+
+<span class="sd">    Forward Mode Auto-Differentiation (``Rop`` in Theano). PyTorch does not natively</span>
+<span class="sd">    support this operation; this function essentially calls backward mode autodiff</span>
+<span class="sd">    twice, as described in [1]_.</span>
+
+<span class="sd">    See :meth:`vector_jacobian_product()` docstring on why we and pass arguments for</span>
+<span class="sd">    ``retain_graph`` and ``create_graph``.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    y</span>
+<span class="sd">        Model output with gradient attached, shape is ``torch.Size([m, 1])``.</span>
+<span class="sd">    x</span>
+<span class="sd">        Model input with gradient attached, shape is ``torch.Size([n, 1])``, i.e. same</span>
+<span class="sd">        dim as input tensor.</span>
+<span class="sd">    V</span>
+<span class="sd">        Directions in which to compute product, shape is ``torch.Size([n, k])`` where</span>
+<span class="sd">        ``k`` is the number of vectors to compute.</span>
+<span class="sd">    dummy_vec</span>
+<span class="sd">        Vector with which to do jvp trick [1]_, shape matches ``y``. If argument exists,</span>
+<span class="sd">        then use some pre-allocated, cached vector, otherwise create a new one and move</span>
+<span class="sd">        to ``y.device``.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    Jv</span>
+<span class="sd">        Jacobian-vector product, ``torch.Size([n, k])``.</span>
+
+<span class="sd">    References</span>
+<span class="sd">    ----------</span>
+<span class="sd">    .. [1] https://j-towns.github.io/2017/06/12/A-new-trick.html</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">assert</span> <span class="n">y</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span>
+    <span class="k">assert</span> <span class="n">V</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="n">dummy_vec</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">dummy_vec</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">requires_grad</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="c1"># do vjp twice to get jvp; set detach = False first; dummy_vec must be non-zero and</span>
+    <span class="c1"># is only there as a helper</span>
+    <span class="n">g</span> <span class="o">=</span> <span class="n">vector_jacobian_product</span><span class="p">(</span>
+        <span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">dummy_vec</span><span class="p">,</span> <span class="n">retain_graph</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">create_graph</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">detach</span><span class="o">=</span><span class="kc">False</span>
+    <span class="p">)</span>
+    <span class="n">Jv</span> <span class="o">=</span> <span class="n">vector_jacobian_product</span><span class="p">(</span>
+        <span class="n">g</span><span class="p">,</span> <span class="n">dummy_vec</span><span class="p">,</span> <span class="n">V</span><span class="p">,</span> <span class="n">retain_graph</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">create_graph</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">detach</span><span class="o">=</span><span class="kc">True</span>
+    <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">Jv</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2019, Plenoptic authors.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
