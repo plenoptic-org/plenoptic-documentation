@@ -6,7 +6,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>plenoptic.loss &#8212; plenoptic 2.1.1.dev259 documentation</title>
+    <title>plenoptic.loss &#8212; plenoptic 2.1.2.dev2 documentation</title>
   
   
   
@@ -42,7 +42,7 @@
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=64cc4de3f052d77215f0" />
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=64cc4de3f052d77215f0" />
 
-    <script src="../../_static/documentation_options.js?v=e4e6bd11"></script>
+    <script src="../../_static/documentation_options.js?v=2f6bee0b"></script>
     <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -57,7 +57,7 @@
     <script>
         DOCUMENTATION_OPTIONS.theme_version = '0.22.0';
         DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://docs.plenoptic.org/docs/branch/main/_static/version_switcher.json';
-        DOCUMENTATION_OPTIONS.theme_switcher_version_match = '2.1.1';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = '2.1.2';
         DOCUMENTATION_OPTIONS.show_version_warning_banner =
             true;
         </script>
@@ -68,7 +68,7 @@
     <link rel="search" title="Search" href="../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="2.1.1" />
+  <meta name="docsearch:version" content="2.1.2" />
   
     
     <script src="../../_static/searchtools.js"></script>
@@ -140,8 +140,8 @@
       
     
     
-    <img src="../../_static/Plenoptic_Logo_CMYK_Full_Wide.svg" class="logo__image only-light" alt="plenoptic 2.1.1.dev259 documentation - Home"/>
-    <img src="../../_static/Plenoptic_Logo_CMYK_Full_DarkMode_Wide.svg" class="logo__image only-dark pst-js-only" alt="plenoptic 2.1.1.dev259 documentation - Home"/>
+    <img src="../../_static/Plenoptic_Logo_CMYK_Full_Wide.svg" class="logo__image only-light" alt="plenoptic 2.1.2.dev2 documentation - Home"/>
+    <img src="../../_static/Plenoptic_Logo_CMYK_Full_DarkMode_Wide.svg" class="logo__image only-dark pst-js-only" alt="plenoptic 2.1.2.dev2 documentation - Home"/>
   
   
 </a></div>
@@ -547,6 +547,25 @@
 <span class="sd">    ----------</span>
 <span class="sd">    seed</span>
 <span class="sd">        The seed to set. If ``None``, do nothing.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    This function sets both the torch and numpy random number generator seeds, so</span>
+<span class="sd">    that any calls to their random functions returns the same output:</span>
+
+<span class="sd">    &gt;&gt;&gt; import plenoptic as po</span>
+<span class="sd">    &gt;&gt;&gt; import torch</span>
+<span class="sd">    &gt;&gt;&gt; import numpy as np</span>
+<span class="sd">    &gt;&gt;&gt; po.set_seed(0)</span>
+<span class="sd">    &gt;&gt;&gt; torch.rand(1)</span>
+<span class="sd">    tensor([0.4963])</span>
+<span class="sd">    &gt;&gt;&gt; np.random.rand(1)</span>
+<span class="sd">    array([0.5488135])</span>
+<span class="sd">    &gt;&gt;&gt; po.set_seed(0)</span>
+<span class="sd">    &gt;&gt;&gt; np.random.rand(1)</span>
+<span class="sd">    array([0.5488135])</span>
+<span class="sd">    &gt;&gt;&gt; torch.rand(1)</span>
+<span class="sd">    tensor([0.4963])</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">seed</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="c1"># random initialization</span>
@@ -585,6 +604,17 @@
 <span class="sd">    -------</span>
 <span class="sd">    loss</span>
 <span class="sd">        The mean-squared error between ``synth_rep`` and ``ref_rep``.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; import plenoptic as po</span>
+<span class="sd">    &gt;&gt;&gt; import torch</span>
+<span class="sd">    &gt;&gt;&gt; a = torch.as_tensor([2, 4, 6, 8, 10], dtype=torch.float32)</span>
+<span class="sd">    &gt;&gt;&gt; b = torch.ones_like(a)</span>
+<span class="sd">    &gt;&gt;&gt; po.loss.mse(a, b)</span>
+<span class="sd">    tensor(33.)</span>
+<span class="sd">    &gt;&gt;&gt; (a - b).pow(2).mean()</span>
+<span class="sd">    tensor(33.)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">pow</span><span class="p">(</span><span class="n">synth_rep</span> <span class="o">-</span> <span class="n">ref_rep</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span></div>
 
@@ -618,6 +648,17 @@
 <span class="sd">    -------</span>
 <span class="sd">    loss</span>
 <span class="sd">        The L2-norm of the difference between ``ref_rep`` and ``synth_rep``.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; import plenoptic as po</span>
+<span class="sd">    &gt;&gt;&gt; import torch</span>
+<span class="sd">    &gt;&gt;&gt; a = torch.as_tensor([2, 4, 6, 8, 10], dtype=torch.float32)</span>
+<span class="sd">    &gt;&gt;&gt; b = torch.ones_like(a)</span>
+<span class="sd">    &gt;&gt;&gt; po.loss.l2_norm(a, b)</span>
+<span class="sd">    tensor(12.8452)</span>
+<span class="sd">    &gt;&gt;&gt; (a - b).pow(2).sum().sqrt()</span>
+<span class="sd">    tensor(12.8452)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">vector_norm</span><span class="p">(</span><span class="n">ref_rep</span> <span class="o">-</span> <span class="n">synth_rep</span><span class="p">,</span> <span class="nb">ord</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span></div>
 
@@ -658,6 +699,24 @@
 <span class="sd">    loss</span>
 <span class="sd">        Ratio of the squared l2-norm of the difference between ``ref_rep`` and</span>
 <span class="sd">        ``synth_rep`` to the squared l2-norm of ``ref_rep``.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; import plenoptic as po</span>
+<span class="sd">    &gt;&gt;&gt; import torch</span>
+<span class="sd">    &gt;&gt;&gt; a = torch.as_tensor([2, 4, 6, 8, 10], dtype=torch.float32)</span>
+<span class="sd">    &gt;&gt;&gt; b = 2 * torch.ones_like(a)</span>
+<span class="sd">    &gt;&gt;&gt; po.loss.relative_sse(a, b)</span>
+<span class="sd">    tensor(6.0000)</span>
+<span class="sd">    &gt;&gt;&gt; numerator = (a - b).pow(2).sum()</span>
+<span class="sd">    &gt;&gt;&gt; denominator = b.pow(2).sum()</span>
+<span class="sd">    &gt;&gt;&gt; numerator / denominator</span>
+<span class="sd">    tensor(6.0000)</span>
+<span class="sd">    &gt;&gt;&gt; # numerator is equivalent to the l2-norm loss squared</span>
+<span class="sd">    &gt;&gt;&gt; numerator</span>
+<span class="sd">    tensor(120.0000)</span>
+<span class="sd">    &gt;&gt;&gt; po.loss.l2_norm(a, b).pow(2)</span>
+<span class="sd">    tensor(120.0000)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="p">(</span>
         <span class="n">torch</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">vector_norm</span><span class="p">(</span><span class="n">ref_rep</span> <span class="o">-</span> <span class="n">synth_rep</span><span class="p">,</span> <span class="nb">ord</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span>

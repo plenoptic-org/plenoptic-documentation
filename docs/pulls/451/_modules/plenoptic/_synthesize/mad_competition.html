@@ -6,7 +6,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>plenoptic._synthesize.mad_competition &#8212; plenoptic 2.1.1.dev259 documentation</title>
+    <title>plenoptic._synthesize.mad_competition &#8212; plenoptic 2.1.2.dev2 documentation</title>
   
   
   
@@ -42,7 +42,7 @@
   <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=64cc4de3f052d77215f0" />
 <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=64cc4de3f052d77215f0" />
 
-    <script src="../../../_static/documentation_options.js?v=e4e6bd11"></script>
+    <script src="../../../_static/documentation_options.js?v=2f6bee0b"></script>
     <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -57,7 +57,7 @@
     <script>
         DOCUMENTATION_OPTIONS.theme_version = '0.22.0';
         DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://docs.plenoptic.org/docs/branch/main/_static/version_switcher.json';
-        DOCUMENTATION_OPTIONS.theme_switcher_version_match = '2.1.1';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = '2.1.2';
         DOCUMENTATION_OPTIONS.show_version_warning_banner =
             true;
         </script>
@@ -68,7 +68,7 @@
     <link rel="search" title="Search" href="../../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="2.1.1" />
+  <meta name="docsearch:version" content="2.1.2" />
   
     
     <script src="../../../_static/searchtools.js"></script>
@@ -140,8 +140,8 @@
       
     
     
-    <img src="../../../_static/Plenoptic_Logo_CMYK_Full_Wide.svg" class="logo__image only-light" alt="plenoptic 2.1.1.dev259 documentation - Home"/>
-    <img src="../../../_static/Plenoptic_Logo_CMYK_Full_DarkMode_Wide.svg" class="logo__image only-dark pst-js-only" alt="plenoptic 2.1.1.dev259 documentation - Home"/>
+    <img src="../../../_static/Plenoptic_Logo_CMYK_Full_Wide.svg" class="logo__image only-light" alt="plenoptic 2.1.2.dev2 documentation - Home"/>
+    <img src="../../../_static/Plenoptic_Logo_CMYK_Full_DarkMode_Wide.svg" class="logo__image only-dark pst-js-only" alt="plenoptic 2.1.2.dev2 documentation - Home"/>
   
   
 </a></div>
@@ -602,6 +602,10 @@
 <span class="sd">    :func:`~plenoptic.metric.ssim` is a similarity metric, and thus 0 corresponds to</span>
 <span class="sd">    &quot;completely different&quot; and 1 &quot;identical&quot;.</span>
 
+<span class="sd">    .. attention::</span>
+<span class="sd">       For all of these examples, synthesis has not been run to completion. These</span>
+<span class="sd">       examples just demonstrate basic usage.</span>
+
 <span class="sd">    .. plot::</span>
 <span class="sd">      :context: reset</span>
 
@@ -612,14 +616,17 @@
 <span class="sd">      ...     return 1 - po.metric.ssim(x, y, weighted=True, pad=&quot;reflect&quot;)</span>
 <span class="sd">      &gt;&gt;&gt; mad = po.MADCompetition(img, dissimilarity, po.metric.mse, &quot;max&quot;, 1e6)</span>
 <span class="sd">      &gt;&gt;&gt; mad.synthesize(200)</span>
-<span class="sd">      &gt;&gt;&gt; fig, axes = plt.subplots(1, 3, figsize=(16, 4), width_ratios=[1, 1, 2])</span>
-<span class="sd">      &gt;&gt;&gt; po.plot.imshow(img, ax=axes[0], title=&quot;Target image&quot;)</span>
-<span class="sd">      &lt;Figure size ... with 3 Axes&gt;</span>
-<span class="sd">      &gt;&gt;&gt; axes[0].xaxis.set_visible(False)</span>
-<span class="sd">      &gt;&gt;&gt; axes[0].yaxis.set_visible(False)</span>
-<span class="sd">      &gt;&gt;&gt; po.plot.synthesis_status(mad, fig=fig, axes_idx={&quot;misc&quot;: 0})</span>
+<span class="sd">      &gt;&gt;&gt; # Define a helper function for this, since we&#39;ll use it in the other examples</span>
+<span class="sd">      &gt;&gt;&gt; def example_figure(mad):</span>
+<span class="sd">      ...     fig, axes = plt.subplots(1, 3, figsize=(16, 4), width_ratios=[1, 1, 2])</span>
+<span class="sd">      ...     po.plot.imshow(img, ax=axes[0], title=&quot;Target image&quot;)</span>
+<span class="sd">      ...     axes[0].xaxis.set_visible(False)</span>
+<span class="sd">      ...     axes[0].yaxis.set_visible(False)</span>
+<span class="sd">      ...     po.plot.synthesis_status(mad, fig=fig, axes_idx={&quot;misc&quot;: 0})</span>
+<span class="sd">      ...     fig.subplots_adjust(wspace=0.3)</span>
+<span class="sd">      ...     return fig</span>
+<span class="sd">      &gt;&gt;&gt; example_figure(mad)</span>
 <span class="sd">      &lt;Figure size ...&gt;</span>
-<span class="sd">      &gt;&gt;&gt; fig.subplots_adjust(wspace=0.3)</span>
 
 <span class="sd">    If :attr:`metric_tradeoff_lambda` is not specified, we will attempt to select a</span>
 <span class="sd">    reasonable value based on the values of the two metrics comparing ``image``</span>
@@ -639,14 +646,47 @@
 
 <span class="sd">      &gt;&gt;&gt; mad = po.MADCompetition(img, dissimilarity, po.metric.mse, &quot;min&quot;, 1e6)</span>
 <span class="sd">      &gt;&gt;&gt; mad.synthesize(200)</span>
-<span class="sd">      &gt;&gt;&gt; fig, axes = plt.subplots(1, 3, figsize=(16, 4), width_ratios=[1, 1, 2])</span>
-<span class="sd">      &gt;&gt;&gt; po.plot.imshow(img, ax=axes[0], title=&quot;Target image&quot;)</span>
-<span class="sd">      &lt;Figure size ... with 3 Axes&gt;</span>
-<span class="sd">      &gt;&gt;&gt; axes[0].xaxis.set_visible(False)</span>
-<span class="sd">      &gt;&gt;&gt; axes[0].yaxis.set_visible(False)</span>
-<span class="sd">      &gt;&gt;&gt; po.plot.synthesis_status(mad, fig=fig, axes_idx={&quot;misc&quot;: 0})</span>
+<span class="sd">      &gt;&gt;&gt; example_figure(mad)</span>
 <span class="sd">      &lt;Figure size ...&gt;</span>
-<span class="sd">      &gt;&gt;&gt; fig.subplots_adjust(wspace=0.3)</span>
+
+<span class="sd">    Change the penalty function. A penalty function must accept one tensor and return a</span>
+<span class="sd">    scalar. See :ref:`how-to-penalty` for more information about penalty functions. Note</span>
+<span class="sd">    the different ranges in the title of the subplots showing the MAD images in the</span>
+<span class="sd">    following two examples.</span>
+
+<span class="sd">    .. plot::</span>
+<span class="sd">      :context: close-figs</span>
+
+<span class="sd">      &gt;&gt;&gt; # Penalty encourages metamer pixel values to lie between 0.1 and 0.9</span>
+<span class="sd">      &gt;&gt;&gt; def penalty(x):</span>
+<span class="sd">      ...     return po.regularize.penalize_range(x, [0.1, 0.9])</span>
+<span class="sd">      &gt;&gt;&gt; penalty(img)</span>
+<span class="sd">      tensor(9.6853)</span>
+<span class="sd">      &gt;&gt;&gt; mad = po.MADCompetition(</span>
+<span class="sd">      ...     img, dissimilarity, po.metric.mse, &quot;min&quot;, 1e6, penalty_function=penalty</span>
+<span class="sd">      ... )</span>
+<span class="sd">      &gt;&gt;&gt; mad.synthesize(200)</span>
+<span class="sd">      &gt;&gt;&gt; example_figure(mad)</span>
+<span class="sd">      &lt;Figure size ...&gt;</span>
+
+<span class="sd">    Change the contribution of the penalty to the objective function.</span>
+<span class="sd">    :attr:`penalty_lambda` must be a non-negative scalar.</span>
+
+<span class="sd">    .. plot::</span>
+<span class="sd">      :context: close-figs</span>
+
+<span class="sd">      &gt;&gt;&gt; mad = po.MADCompetition(</span>
+<span class="sd">      ...     img,</span>
+<span class="sd">      ...     dissimilarity,</span>
+<span class="sd">      ...     po.metric.mse,</span>
+<span class="sd">      ...     &quot;min&quot;,</span>
+<span class="sd">      ...     1e6,</span>
+<span class="sd">      ...     penalty_function=penalty,</span>
+<span class="sd">      ...     penalty_lambda=0.01,</span>
+<span class="sd">      ... )</span>
+<span class="sd">      &gt;&gt;&gt; mad.synthesize(200)</span>
+<span class="sd">      &gt;&gt;&gt; example_figure(mad)</span>
+<span class="sd">      &lt;Figure size ...&gt;</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
