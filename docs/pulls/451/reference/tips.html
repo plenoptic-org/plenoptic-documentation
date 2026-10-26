@@ -7,7 +7,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Tips and Tricks &#8212; plenoptic 2.1.2.dev2 documentation</title>
+    <title>Tips and Tricks &#8212; plenoptic 2.1.3.dev2 documentation</title>
   
   
   
@@ -36,7 +36,7 @@
     <link rel="stylesheet" type="text/css" href="../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
     <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
-    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=fe04b56e" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=9ae6f342" />
   
   <!-- So that users can add custom icons -->
   <script defer src="../_static/scripts/fontawesome.js?digest=18bd87630a240e9c25be"></script>
@@ -44,7 +44,7 @@
   <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=18bd87630a240e9c25be" />
 <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=18bd87630a240e9c25be" />
 
-    <script src="../_static/documentation_options.js?v=2f6bee0b"></script>
+    <script src="../_static/documentation_options.js?v=b0297a91"></script>
     <script src="../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -59,7 +59,7 @@
     <script>
         DOCUMENTATION_OPTIONS.theme_version = '0.23.0';
         DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://docs.plenoptic.org/docs/branch/main/_static/version_switcher.json';
-        DOCUMENTATION_OPTIONS.theme_switcher_version_match = '2.1.2';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = '2.1.3';
         DOCUMENTATION_OPTIONS.show_version_warning_banner =
             true;
         </script>
@@ -73,7 +73,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="color-scheme" content="light dark"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="2.1.2" />
+  <meta name="docsearch:version" content="2.1.3" />
   
     
     <script src="../_static/searchtools.js"></script>
@@ -145,8 +145,8 @@
       
     
     
-    <img src="../_static/Plenoptic_Logo_CMYK_Full_Wide.svg" class="logo__image only-light" alt="plenoptic 2.1.2.dev2 documentation - Home"/>
-    <img src="../_static/Plenoptic_Logo_CMYK_Full_DarkMode_Wide.svg" class="logo__image only-dark pst-js-only" alt="plenoptic 2.1.2.dev2 documentation - Home"/>
+    <img src="../_static/Plenoptic_Logo_CMYK_Full_Wide.svg" class="logo__image only-light" alt="plenoptic 2.1.3.dev2 documentation - Home"/>
+    <img src="../_static/Plenoptic_Logo_CMYK_Full_DarkMode_Wide.svg" class="logo__image only-dark pst-js-only" alt="plenoptic 2.1.3.dev2 documentation - Home"/>
   
   
 </a></div>
@@ -576,7 +576,7 @@
 <p>You can also improve your chances of finding a good synthesis by tweaking the model. For example, the loss function used for metamer synthesis by default is mean-squared error. This implicitly weights all aspects of the model’s representation equally. Thus, if there are portions of the representation whose magnitudes are significantly smaller than the others, they might not be matched at the same rate as the others. You can address this using coarse-to-fine synthesis or picking a more suitable loss function, but it’s generally a good idea for all of a model’s representation to have roughly the same magnitude. You can do this in a variety of ways:</p>
 <ul class="simple">
 <li><p>Principled: compose your representation of statistics that you know lie within the same range. For example, use correlations instead of covariances (see the Portilla-Simoncelli model, and in particular <a class="reference internal" href="../user_guide/models_and_metrics/portilla_simoncelli/technical_details/ps_matlab_differences.html#ps-mat-diffs"><span class="std std-ref">how plenoptic’s implementation differs from matlab</span></a> for an example of this).</p></li>
-<li><p>Empirical: measure your model’s representation on a dataset of relevant natural images and then use this output to z-score your model’s representation on each pass (see <span class="bibtex-citation" id="id1"><a class="reference internal" href="citation.html#id38" title="Corey M. Ziemba and Eero P. Simoncelli. Opposing effects of selectivity and invariance in peripheral vision. Nature Communications, jul 2021. URL: https://doi.org/10.1038/s41467-021-24880-5, doi:10.1038/s41467-021-24880-5.">Ziemba and Simoncelli, 2021</a></span> for an example; this is what the Van Hateren database is used for).</p></li>
+<li><p>Empirical: measure your model’s representation on a dataset of relevant natural images and then use this output to z-score your model’s representation on each pass (see <span class="bibtex-citation" id="id1"><a class="reference internal" href="citation.html#id39" title="Corey M. Ziemba and Eero P. Simoncelli. Opposing effects of selectivity and invariance in peripheral vision. Nature Communications, jul 2021. URL: https://doi.org/10.1038/s41467-021-24880-5, doi:10.1038/s41467-021-24880-5.">Ziemba and Simoncelli, 2021</a></span> for an example; this is what the Van Hateren database is used for).</p></li>
 <li><p>In the middle: normalize statistics based on their value in the original image (note: not the image the model is taking as input! this will likely make optimization very difficult). The <a class="reference internal" href="../api/generated/plenoptic.loss.groupwise_relative_l2_norm_factory.html#plenoptic.loss.groupwise_relative_l2_norm_factory" title="plenoptic.loss.groupwise_relative_l2_norm_factory"><code class="xref py py-func docutils literal notranslate"><span class="pre">groupwise_relative_l2_norm_factory</span></code></a> function will perform this when computing the loss, and allows for further tweaking.</p></li>
 <li><p>Hacky: try reweighting different components of your model representation so that optimization matches some statistics more closely than others (see the <a class="reference internal" href="../user_guide/models_and_metrics/portilla_simoncelli/technical_details/ps_optimization.html#ps-loss-function"><span class="std std-ref">Portilla-Simoncelli custom loss function</span></a> for an example). This can be useful if some part of your representation is more perceptually important than others.</p></li>
 </ul>
@@ -691,7 +691,7 @@
         <div class="footer-item">
 
   <p class="sphinx-version">
-    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.1.0.
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.1.1.
   </p>
 </div>
       
