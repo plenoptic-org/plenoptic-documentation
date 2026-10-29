@@ -1,0 +1,535 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Reproducing Berardino et al., 2017 (Eigendistortions) &mdash; plenoptic 1.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/nbsphinx-code-cells.css?v=2aa19091" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=8d563738"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+      <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Synthesis object design" href="../../synthesis.html" />
+    <link rel="prev" title="Reproducing Wang and Simoncelli, 2008 (MAD Competition)" href="09_Original_MAD.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+<div style="background-color: rgb(248, 215, 218); color: rgb(114, 28, 36); text-align: center;">
+  <div>
+    <div>This is documentation for <strong>an old version</strong>.
+      <a href="https://docs.plenoptic.org/" style="background-color: rgb(220, 53, 69); color: rgb(255, 255, 255); margin: 1rem; padding: 0.375rem 0.75rem; border-radius: 4px; display: inline-block; text-align: center;">Switch to stable version</a>
+    </div>
+  </div>
+</div>
+ 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            plenoptic
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Basic concepts</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../conceptual_intro.html">Conceptual Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../models.html">Model requirements</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../00_quickstart.html">Quickstart</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Synthesis method introductions</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../intro/02_Eigendistortions.html">Eigendistortions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intro/05_Geodesics.html">Representational Geodesic</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intro/06_Metamer.html">Metamers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intro/07_Simple_MAD.html">MAD Competition Conceptual Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intro/08_MAD_Competition.html">MAD Competition Usage</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Models and metrics</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../models/03_Steerable_Pyramid.html">Steerable Pyramid</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../models/04_Perceptual_distance.html">Perceptual distance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../models/Metamer-Portilla-Simoncelli.html">Portilla-Simoncelli Texture Metamer</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Synthesis method examples</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="09_Original_MAD.html">Reproducing Wang and Simoncelli, 2008 (MAD Competition)</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Reproducing Berardino et al., 2017 (Eigendistortions)</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Advanced usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../synthesis.html">Synthesis object design</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tips.html">Tips and Tricks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../reproducibility.html">Reproducibility</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/modules.html">Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/Display.html">Display and animate functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/Synthesis_extensions.html">Extending existing synthesis objects</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">plenoptic</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Reproducing Berardino et al., 2017 (Eigendistortions)</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/tutorials/applications/Demo_Eigendistortion.nblink.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <p><strong>Run notebook online with Binder:</strong><a class="reference external" href="https://mybinder.org/v2/gh/LabForComputationalVision/plenoptic/1.0.0?filepath=examples/Demo_Eigendistortion.ipynb"><img alt="Binder" src="http://mybinder.org/badge_logo.svg" /></a></p>
+<section id="Reproducing-Berardino-et-al.,-2017-(Eigendistortions)">
+<h1>Reproducing Berardino et al., 2017 (Eigendistortions)<a class="headerlink" href="#Reproducing-Berardino-et-al.,-2017-(Eigendistortions)" title="Link to this heading"></a></h1>
+<p>Author: Lyndon Duong, Jan 2021</p>
+<p>In this demo, we will be reproducing eigendistortions first presented in <a class="reference external" href="https://arxiv.org/abs/1710.02266">Berardino et al 2017</a>. We’ll be using a Front End model of the human visual system (called “On-Off” in the paper), as well as an early layer of VGG16. The Front End model is a simple convolutional neural network with a normalization nonlinearity, loosely based on biological retinal/geniculate circuitry.</p>
+<p><img alt="Front-end model" src="../../_images/front_end_model.png" /></p>
+<p>This signal-flow diagram shows an input being decomposed into two channels, with each being luminance and contrast normalized, and ending with a ReLu.</p>
+<section id="What-do-eigendistortions-tell-us?">
+<h2>What do eigendistortions tell us?<a class="headerlink" href="#What-do-eigendistortions-tell-us?" title="Link to this heading"></a></h2>
+<p>Our perception is influenced by our internal representation (neural responses) of the external world. Eigendistortions are rank-ordered directions in image space, along which a model’s responses are more sensitive. <code class="docutils literal notranslate"><span class="pre">Plenoptic</span></code>’s <code class="docutils literal notranslate"><span class="pre">Eigendistortion</span></code> object provides an easy way to synthesize eigendistortions for any PyTorch model.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">plenoptic.synthesize</span> <span class="kn">import</span> <span class="n">Eigendistortion</span>
+<span class="kn">from</span> <span class="nn">plenoptic.simulate.models</span> <span class="kn">import</span> <span class="n">OnOff</span>
+<span class="kn">from</span> <span class="nn">torchvision.models</span> <span class="kn">import</span> <span class="n">vgg16</span>
+<span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">from</span> <span class="nn">torch</span> <span class="kn">import</span> <span class="n">nn</span>
+<span class="kn">import</span> <span class="nn">plenoptic</span> <span class="k">as</span> <span class="nn">po</span>
+
+<span class="n">device</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s2">&quot;cuda&quot;</span> <span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">()</span> <span class="k">else</span> <span class="s2">&quot;cpu&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;device: &quot;</span><span class="p">,</span> <span class="n">device</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+device:  cuda
+</pre></div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">max_iter_frontend</span> <span class="o">=</span> <span class="mi">2000</span>
+<span class="n">max_iter_vgg</span> <span class="o">=</span> <span class="mi">5000</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="Input-preprocessing">
+<h2>Input preprocessing<a class="headerlink" href="#Input-preprocessing" title="Link to this heading"></a></h2>
+<p>Let’s load the parrot image used in the paper, display it, and cast it as a <code class="docutils literal notranslate"><span class="pre">float32</span></code> tensor.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">image</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">load_images</span><span class="p">(</span><span class="s1">&#39;../data/Parrot.png&#39;</span><span class="p">,</span> <span class="n">as_gray</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">zoom</span> <span class="o">=</span> <span class="mi">1</span>
+
+<span class="k">def</span> <span class="nf">crop</span><span class="p">(</span><span class="n">img</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns 2D numpy as image as 4D tensor Shape((b, c, h, w))&quot;&quot;&quot;</span>
+    <span class="n">img_tensor</span> <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">clone</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">img_tensor</span><span class="p">[</span><span class="o">...</span><span class="p">,:</span><span class="mi">254</span><span class="p">,:</span><span class="mi">254</span><span class="p">]</span>  <span class="c1"># crop to same size</span>
+
+<span class="n">image_tensor</span> <span class="o">=</span> <span class="n">crop</span><span class="p">(</span><span class="n">image</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Torch image shape:&quot;</span><span class="p">,</span> <span class="n">image_tensor</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+
+<span class="c1"># reduce size of image if we&#39;re on CPU, otherwise this will take too long</span>
+<span class="k">if</span> <span class="n">device</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s1">&#39;cpu&#39;</span><span class="p">:</span>
+    <span class="n">image_tensor</span> <span class="o">=</span> <span class="n">image_tensor</span><span class="p">[</span><span class="o">...</span><span class="p">,</span><span class="mi">100</span><span class="p">:</span><span class="mi">164</span><span class="p">,</span><span class="mi">100</span><span class="p">:</span><span class="mi">164</span><span class="p">]</span>
+    <span class="c1"># want to zoom so this is displayed at same size</span>
+    <span class="n">zoom</span> <span class="o">=</span> <span class="mi">256</span> <span class="o">/</span> <span class="mi">64</span>
+
+<span class="n">po</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">image_tensor</span><span class="p">,</span> <span class="n">zoom</span><span class="o">=</span><span class="n">zoom</span><span class="p">);</span>
+<br/></pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+/mnt/home/wbroderick/plenoptic/plenoptic/tools/data.py:126: UserWarning: Creating a tensor from a list of numpy.ndarrays is extremely slow. Please consider converting the list to a single numpy.ndarray with numpy.array() before converting to a tensor. (Triggered internally at /opt/conda/conda-bld/pytorch_1670525553989/work/torch/csrc/utils/tensor_new.cpp:230.)
+  images = torch.tensor(images, dtype=torch.float32)
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Torch image shape: torch.Size([1, 1, 254, 254])
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/tutorials_applications_Demo_Eigendistortion_4_2.png" src="../../_images/tutorials_applications_Demo_Eigendistortion_4_2.png" />
+</div>
+</div>
+<p>Since the Front-end OnOff model only has two channel outputs, we can easily visualize the feature maps. We’ll apply a circular mask to this model’s inputs to avoid edge artifacts in the synthesis method.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mdl_f</span> <span class="o">=</span> <span class="n">OnOff</span><span class="p">(</span><span class="n">kernel_size</span><span class="o">=</span><span class="p">(</span><span class="mi">31</span><span class="p">,</span> <span class="mi">31</span><span class="p">),</span> <span class="n">pretrained</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">apply_mask</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">po</span><span class="o">.</span><span class="n">tools</span><span class="o">.</span><span class="n">remove_grad</span><span class="p">(</span><span class="n">mdl_f</span><span class="p">)</span>
+<span class="n">mdl_f</span> <span class="o">=</span> <span class="n">mdl_f</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+
+<span class="n">response_f</span> <span class="o">=</span> <span class="n">mdl_f</span><span class="p">(</span><span class="n">image_tensor</span><span class="p">)</span>
+<span class="n">po</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">response_f</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;on channel response&#39;</span><span class="p">,</span> <span class="s1">&#39;off channel response&#39;</span><span class="p">],</span> <span class="n">zoom</span><span class="o">=</span><span class="n">zoom</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+/mnt/home/wbroderick/plenoptic/plenoptic/simulate/models/frontend.py:388: UserWarning: pretrained is True but cache_filt is False. Set cache_filt to True for efficiency unless you are fine-tuning.
+  warn(&#34;pretrained is True but cache_filt is False. Set cache_filt to &#34;
+/mnt/home/wbroderick/miniconda3/envs/plenoptic/lib/python3.7/site-packages/torch/functional.py:504: UserWarning: torch.meshgrid: in an upcoming release, it will be required to pass the indexing argument. (Triggered internally at /opt/conda/conda-bld/pytorch_1670525553989/work/aten/src/ATen/native/TensorShape.cpp:3190.)
+  return _VF.meshgrid(tensors, **kwargs)  # type: ignore[attr-defined]
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/tutorials_applications_Demo_Eigendistortion_6_1.png" src="../../_images/tutorials_applications_Demo_Eigendistortion_6_1.png" />
+</div>
+</div>
+</section>
+<section id="Synthesizing-eigendistortions">
+<h2>Synthesizing eigendistortions<a class="headerlink" href="#Synthesizing-eigendistortions" title="Link to this heading"></a></h2>
+<section id="Front-end-model:-eigendistortion-synthesis">
+<h3>Front-end model: eigendistortion synthesis<a class="headerlink" href="#Front-end-model:-eigendistortion-synthesis" title="Link to this heading"></a></h3>
+<p>Now that we have our Front End model set up, we can synthesize eigendistortions! This is done easily just by calling <code class="docutils literal notranslate"><span class="pre">.synthesis()</span></code> after instantiating the <code class="docutils literal notranslate"><span class="pre">Eigendistortion</span></code> object. We’ll synthesize the top and bottom <code class="docutils literal notranslate"><span class="pre">k</span></code>, representing the most- and least-noticeable eigendistortions for this model.</p>
+<p>The paper synthesizes the top and bottom <code class="docutils literal notranslate"><span class="pre">k=1</span></code> eigendistortions, but we’ll set <code class="docutils literal notranslate"><span class="pre">k&gt;1</span></code> so the algorithm converges/stabilizes faster. We highly recommended running the following block on GPU, otherwise we suggest cropping the image to a smaller size.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># synthesize the top and bottom k distortions</span>
+<span class="n">eigendist_f</span> <span class="o">=</span> <span class="n">Eigendistortion</span><span class="p">(</span><span class="n">image</span><span class="o">=</span><span class="n">image_tensor</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="n">mdl_f</span><span class="p">)</span>
+<span class="n">eigendist_f</span><span class="o">.</span><span class="n">synthesize</span><span class="p">(</span><span class="n">k</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;power&#39;</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="n">max_iter_frontend</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+
+Initializing Eigendistortion -- Input dim: 64516 | Output dim: 129032
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+/mnt/home/wbroderick/plenoptic/plenoptic/tools/validate.py:179: UserWarning: model is in training mode, you probably want to call eval() to switch to evaluation mode
+  &#34;model is in training mode, you probably want to call eval()&#34;
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "3ede60e0b532476d8e5533870de85203", "version_major": 2, "version_minor": 0}</script></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Top k=3 eigendists computed | Tolerance 1.00E-07 reached.
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "d1a01e7aafee4d17abcd9ddae6c358ae", "version_major": 2, "version_minor": 0}</script></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Bottom k=3 eigendists computed | Tolerance 1.00E-07 reached.
+</pre></div></div>
+</div>
+</section>
+<section id="Front-end-model:-eigendistortion-display">
+<h3>Front-end model: eigendistortion display<a class="headerlink" href="#Front-end-model:-eigendistortion-display" title="Link to this heading"></a></h3>
+<p>Once synthesized, we can plot the distortion on the image using <code class="docutils literal notranslate"><span class="pre">Eigendistortion</span></code>’s built-in display method. Feel free to adjust the constants <code class="docutils literal notranslate"><span class="pre">alpha_max</span></code> and <code class="docutils literal notranslate"><span class="pre">alpha_min</span></code> that scale the amount of each distortion on the image.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">po</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">eigendist_f</span><span class="o">.</span><span class="n">eigendistortions</span><span class="p">[[</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">]]</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">keepdim</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span> <span class="n">vrange</span><span class="o">=</span><span class="s1">&#39;auto1&#39;</span><span class="p">,</span>
+          <span class="n">title</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;most-noticeable distortion&quot;</span><span class="p">,</span> <span class="s2">&quot;least-noticeable&quot;</span><span class="p">],</span> <span class="n">zoom</span><span class="o">=</span><span class="n">zoom</span><span class="p">)</span>
+
+<span class="n">alpha_max</span><span class="p">,</span> <span class="n">alpha_min</span> <span class="o">=</span> <span class="mf">3.</span><span class="p">,</span> <span class="mf">4.</span>
+<span class="n">f_max</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">synth</span><span class="o">.</span><span class="n">eigendistortion</span><span class="o">.</span><span class="n">display_eigendistortion</span><span class="p">(</span><span class="n">eigendist_f</span><span class="p">,</span> <span class="n">eigenindex</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="n">alpha_max</span><span class="p">,</span>
+                                                         <span class="n">title</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;img + </span><span class="si">{</span><span class="n">alpha_max</span><span class="si">}</span><span class="s1"> * max_dist&#39;</span><span class="p">,</span> <span class="n">zoom</span><span class="o">=</span><span class="n">zoom</span><span class="p">)</span>
+<span class="n">f_min</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">synth</span><span class="o">.</span><span class="n">eigendistortion</span><span class="o">.</span><span class="n">display_eigendistortion</span><span class="p">(</span><span class="n">eigendist_f</span><span class="p">,</span> <span class="n">eigenindex</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="n">alpha_min</span><span class="p">,</span>
+                                                         <span class="n">title</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;img + </span><span class="si">{</span><span class="n">alpha_min</span><span class="si">}</span><span class="s1"> * min_dist&#39;</span><span class="p">,</span> <span class="n">zoom</span><span class="o">=</span><span class="n">zoom</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/tutorials_applications_Demo_Eigendistortion_10_0.png" src="../../_images/tutorials_applications_Demo_Eigendistortion_10_0.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/tutorials_applications_Demo_Eigendistortion_10_1.png" src="../../_images/tutorials_applications_Demo_Eigendistortion_10_1.png" />
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/tutorials_applications_Demo_Eigendistortion_10_2.png" src="../../_images/tutorials_applications_Demo_Eigendistortion_10_2.png" />
+</div>
+</div>
+</section>
+<section id="VGG16:-eigendistortion-synthesis">
+<h3>VGG16: eigendistortion synthesis<a class="headerlink" href="#VGG16:-eigendistortion-synthesis" title="Link to this heading"></a></h3>
+<p>Following the lead of Berardino et al. (2017), let’s compare the Front End model’s eigendistortion to those of an early layer of VGG16! VGG16 takes as input color images, so we’ll need to repeat the grayscale parrot along the RGB color dimension.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Create a class that takes the nth layer output of a given model</span>
+<span class="k">class</span> <span class="nc">NthLayerVGG16</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Wrapper to get the response of an intermediate layer of VGG16&quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">layer</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s1">&#39;cpu&#39;</span><span class="p">)):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        layer: int</span>
+<span class="sd">            Which model response layer to output</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">vgg16</span><span class="p">(</span><span class="n">pretrained</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">progress</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+        <span class="n">features</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">features</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">features</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">ModuleList</span><span class="p">(</span><span class="n">features</span><span class="p">)</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">layer</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">layer</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">features</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">layer</span> <span class="o">=</span> <span class="n">layer</span>
+
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">ii</span><span class="p">,</span> <span class="n">mdl</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">features</span><span class="p">):</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">mdl</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">ii</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">layer</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">x</span>
+</pre></div>
+</div>
+</div>
+<p>VGG16 was trained on pre-processed ImageNet images with approximately zero mean and unit stdev, so we can preprocess our Parrot image the same way.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># VGG16</span>
+<span class="k">def</span> <span class="nf">normalize</span><span class="p">(</span><span class="n">img_tensor</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;standardize the image for vgg16&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">img_tensor</span><span class="o">-</span><span class="n">img_tensor</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span><span class="o">/</span> <span class="n">img_tensor</span><span class="o">.</span><span class="n">std</span><span class="p">()</span>
+<span class="n">image_tensor</span> <span class="o">=</span> <span class="n">normalize</span><span class="p">(</span><span class="n">crop</span><span class="p">(</span><span class="n">image</span><span class="p">))</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+
+<span class="c1"># reduce size of image if we&#39;re on CPU, otherwise this will take too long</span>
+<span class="k">if</span> <span class="n">device</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s1">&#39;cpu&#39;</span><span class="p">:</span>
+    <span class="n">image_tensor</span> <span class="o">=</span> <span class="n">image_tensor</span><span class="p">[</span><span class="o">...</span><span class="p">,</span><span class="mi">100</span><span class="p">:</span><span class="mi">164</span><span class="p">,</span><span class="mi">100</span><span class="p">:</span><span class="mi">164</span><span class="p">]</span>
+    <span class="c1"># want to zoom so this is displayed at same size</span>
+    <span class="n">zoom</span> <span class="o">=</span> <span class="mi">256</span> <span class="o">/</span> <span class="mi">64</span>
+
+<span class="n">image_tensor3</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">([</span><span class="n">image_tensor</span><span class="p">]</span><span class="o">*</span><span class="mi">3</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+
+<span class="c1"># &quot;layer 3&quot; according to Berardino et al (2017)</span>
+<span class="n">mdl_v</span> <span class="o">=</span> <span class="n">NthLayerVGG16</span><span class="p">(</span><span class="n">layer</span><span class="o">=</span><span class="mi">11</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span>
+<span class="n">po</span><span class="o">.</span><span class="n">tools</span><span class="o">.</span><span class="n">remove_grad</span><span class="p">(</span><span class="n">mdl_v</span><span class="p">)</span>
+
+<span class="n">eigendist_v</span> <span class="o">=</span> <span class="n">Eigendistortion</span><span class="p">(</span><span class="n">image</span><span class="o">=</span><span class="n">image_tensor3</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="n">mdl_v</span><span class="p">)</span>
+<span class="n">eigendist_v</span><span class="o">.</span><span class="n">synthesize</span><span class="p">(</span><span class="n">k</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;power&#39;</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="n">max_iter_vgg</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+Downloading: &#34;https://download.pytorch.org/models/vgg16-397923af.pth&#34; to /mnt/home/wbroderick/.cache/torch/hub/checkpoints/vgg16-397923af.pth
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "56cc71e27d5e4f1aaa61cd670cf98e1b", "version_major": 2, "version_minor": 0}</script></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+
+Initializing Eigendistortion -- Input dim: 193548 | Output dim: 1016064
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "cc77e9c1d8f6418ca84f2852a8b990d9", "version_major": 2, "version_minor": 0}</script></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "c6680b28d1af4c338f91ab1dbf1ff004", "version_major": 2, "version_minor": 0}</script></div>
+</div>
+</section>
+<section id="VGG16:-eigendistortion-display">
+<h3>VGG16: eigendistortion display<a class="headerlink" href="#VGG16:-eigendistortion-display" title="Link to this heading"></a></h3>
+<p>We can now display the most- and least-noticeable eigendistortions as before, then compare their quality to those of the Front-end model.</p>
+<p>Since the distortions here were synthesized using a pre-processed (normalized) imagea, we can easily pass a function to unprocess the image. Since the previous eigendistortions were grayscale, we’ll just take the mean across RGB channels for VGG16-synthesized eigendistortions and display them as grayscale too.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">po</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">eigendist_v</span><span class="o">.</span><span class="n">eigendistortions</span><span class="p">[[</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">]]</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">keepdim</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span> <span class="n">vrange</span><span class="o">=</span><span class="s1">&#39;auto1&#39;</span><span class="p">,</span>
+          <span class="n">title</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;most-noticeable distortion&quot;</span><span class="p">,</span> <span class="s2">&quot;least-noticeable&quot;</span><span class="p">],</span> <span class="n">zoom</span><span class="o">=</span><span class="n">zoom</span><span class="p">)</span>
+
+<span class="c1"># create an image processing function to unnormalize the image and avg the channels to grayscale</span>
+<span class="n">unnormalize</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="p">(</span><span class="n">x</span><span class="o">*</span><span class="n">image</span><span class="o">.</span><span class="n">std</span><span class="p">()</span> <span class="o">+</span> <span class="n">image</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">keepdims</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">alpha_max</span><span class="p">,</span> <span class="n">alpha_min</span> <span class="o">=</span> <span class="mf">15.</span><span class="p">,</span> <span class="mf">100.</span>
+
+<span class="n">v_max</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">synth</span><span class="o">.</span><span class="n">eigendistortion</span><span class="o">.</span><span class="n">display_eigendistortion</span><span class="p">(</span><span class="n">eigendist_v</span><span class="p">,</span> <span class="n">eigenindex</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="n">alpha_max</span><span class="p">,</span>
+                                                         <span class="n">process_image</span><span class="o">=</span><span class="n">unnormalize</span><span class="p">,</span>
+                                                         <span class="n">title</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;img + </span><span class="si">{</span><span class="n">alpha_max</span><span class="si">}</span><span class="s1"> * most_noticeable_dist&#39;</span><span class="p">,</span>
+                                                         <span class="n">zoom</span><span class="o">=</span><span class="n">zoom</span><span class="p">)</span>
+<span class="n">v_min</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">synth</span><span class="o">.</span><span class="n">eigendistortion</span><span class="o">.</span><span class="n">display_eigendistortion</span><span class="p">(</span><span class="n">eigendist_v</span><span class="p">,</span> <span class="n">eigenindex</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="n">alpha_min</span><span class="p">,</span>
+                                                         <span class="n">process_image</span><span class="o">=</span><span class="n">unnormalize</span><span class="p">,</span>
+                                                         <span class="n">title</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;img + </span><span class="si">{</span><span class="n">alpha_min</span><span class="si">}</span><span class="s1"> * least_noticeable_dist&#39;</span><span class="p">,</span>
+                                                         <span class="n">zoom</span><span class="o">=</span><span class="n">zoom</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/tutorials_applications_Demo_Eigendistortion_16_0.png" src="../../_images/tutorials_applications_Demo_Eigendistortion_16_0.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/tutorials_applications_Demo_Eigendistortion_16_1.png" src="../../_images/tutorials_applications_Demo_Eigendistortion_16_1.png" />
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/tutorials_applications_Demo_Eigendistortion_16_2.png" src="../../_images/tutorials_applications_Demo_Eigendistortion_16_2.png" />
+</div>
+</div>
+</section>
+</section>
+<section id="Final-thoughts">
+<h2>Final thoughts<a class="headerlink" href="#Final-thoughts" title="Link to this heading"></a></h2>
+<p>To rigorously test which of these model’s representations are more human-like, we’ll have to conduct a perceptual experiment. For now, we’ll just leave it to you to eyeball and decide which distortions are more or less noticeable!</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="09_Original_MAD.html" class="btn btn-neutral float-left" title="Reproducing Wang and Simoncelli, 2008 (MAD Competition)" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../../synthesis.html" class="btn btn-neutral float-right" title="Synthesis object design" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2019, Lab for Computational Vision.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
