@@ -75,16 +75,32 @@ Before we begin: everyone finds `git` confusing the first few (dozen) times they
 You'll need a local copy of `plenoptic` which keeps up-to-date with any changes you make. To do so, you will need to fork and clone `plenoptic`.
 
 1. Go to the [plenoptic repo](https://github.com/plenoptic-org/plenoptic/) and click on the `Fork` button at the top right of the page. This creates a copy of plenoptic in your Github account.
-2. You should then clone *your fork* to your local machine and create an editable installation. You will also add the upstream version, which makes it easy to keep your `plenoptic` up to date with the canonical version. To do so, run the lines of code below, also outlined in our [docs](source):
+2. You should then clone *your fork* to your local machine and create an editable installation. You will also add the upstream version, which makes it easy to keep your `plenoptic` up to date with the canonical version. To do so, run the lines of code below, also outlined in our [docs](source). It is recommended to set up an [SSH key](https://docs.github.com/en/authentication/connecting-to-github-with-ssh) through GitHub and clone with SSH rather than HTTPS, but both options are listed below:
 
-```bash
-# replace with your personal GitHub username
-git clone https://github.com/github-username/plenoptic.git
-cd plenoptic
-# add the upstream branch. you will now have two remotes:
-# your fork (origin) and the canonical version (upstream)
-git remote add upstream https://github.com/plenoptic-org/plenoptic.git
+::::{tab-set}
+:::{tab-item} SSH
+
+```{code-block} console
+$ # replace github-username with your personal username
+$ git clone git@github.com:github-username/plenoptic.git
+$ cd plenoptic
+$ # add the upstream branch. you will now have two remotes:
+$ # your fork (origin) and the canonical version (upstream)
+$ git remote add upstream git@github.com:plenoptic-org/plenoptic.git
 ```
+:::
+:::{tab-item} HTTPS
+
+```{code-block} console
+$ # replace with your personal GitHub username
+$ git clone https://github.com/github-username/plenoptic.git
+$ cd plenoptic
+$ # add the upstream branch. you will now have two remotes:
+$ # your fork (origin) and the canonical version (upstream)
+$ remote add upstream https://github.com/plenoptic-org/plenoptic.git
+```
+:::
+::::
 
 3. You will then want to install all the `docs` and `devs` optional dependencies, so that you can run tests and build the documentation. To do so, make a virtual environment and run the installation from within the copy of `plenoptic` on your machine.
 
@@ -532,11 +548,28 @@ the standard `jupyter` install as long as you have `nbclient>=0.5.5`.
 
 Occasionally, we want to include one or more synthesis calls within a tutorial
 notebook that take a long time to run (for example, because we're reproducing a
-result from the literature). In order to avoid having the documentation build
-take a long time, we instead write a regression test (in
-`tests/test_uploaded_files.py`), which runs the synthesis, saves the output, and
+result from the literature). There are two issues here: this will make our CI
+take along time and may take an unreasonable amount of time on a user's laptop
+if they try to follow the notebook (and do not have a GPU available).
+
+There are two possible solutions, each of which is covered in a following
+section:
+- Run the synthesis in a test, cache the outputs, and retrieve them in the
+  notebook.
+- Have the notebook's number of iterations controlled by the environmental
+  variable `MAX_ITER`.
+
+One or the other of these should be used if a notebook takes more than 5 minutes
+on a CPU. In both cases, some amount of text in the notebook is required as an
+explanation to the user. See existing notebooks for examples.
+
+#### Cache and retrieve outputs.
+
+To cache and retrieve outputs, write a regression test (in
+`tests/test_uploaded_files.py`) which runs the synthesis, saves the output, and
 compares it against a cached version stored in our OSF project. See
-`tests/test_uploaded_files.py` to see how these tests look. Some important notes:
+`tests/test_uploaded_files.py` to see how these tests look. Some important
+notes:
 
 - The new tests should be added to the `TestTutorialNotebooks` class in
   `test_uploaded_files.py`.
@@ -571,14 +604,42 @@ We have a linter that checks the conditions above.
 
 `pytest` does not run the tests found under `TestTutorialNotebooks` by default,
 since they take a long time. In order to run them, you must explicitly set the
-environment variable `RUN_REGRESSION_SYNTH=1` when calling pytest.
+environment variable `RUN_REGRESSION_SYNTH=1` when calling pytest and have a GPU
+available.
+
+An alternative method is used for the series of datasaurus notebooks found in
+`docs/user_guide/intermediate_synthesis/datasaurus/`. The synthesis calls in
+those notebooks do not take long to run, and so happen in the notebook. However,
+we still wish to check them for reproducibility, and we cannot guarantee
+reproducibility across devices (in particular, synthesis run on the Jenkins node
+and the Github Actions runner give different results). We have a [removed
+cell](https://myst-nb.readthedocs.io/en/latest/render/hiding.html#remove-parts-of-cells)
+at the bottom of the notebook which checks the notebook's synthesis against the
+cached file created by the tests, but it is only run if the environmental
+variable `DATASAURUS_CHECK` is set. This is done in `jenkins/Jenkinsfile`, so
+during the actual build of the documentation, but will not be done when the
+notebooks are run on the Github Action runners for other tests or when run
+locally.
+
+#### Use `MAX_ITER` environmental variable
+
+Another approach is to have the number of synthesis iterations (the `max_iter`
+argument accepted by all `synthesize` <!-- skip-lint --> methods) controlled by an environmental
+variable, `MAX_ITER`. In this case, `MAX_ITER` should be set at the top of the
+notebook, with some default value: `MAX_ITER = int(os.environ.get("MAX_ITER", 500))`,
+accompanied by some text explaining what's going on to the user.
+
+This is useful because the "run notebooks" job in `ci.yml`, which runs all of
+our notebooks on the CPU, sets `MAX_ITER=10`, drastically reducing the duration
+of these runs.
+
+See `docs/user_guide/models_and_metrics/deep_nets.md` and
+`docs/tutorials/introductory_tutorial.md` for examples.
 
 (exact-reproducibility)=
 #### Exact reproducibility
 
 Exact reproducibility with pytorch is hard. See [issue #368](https://github.com/plenoptic-org/plenoptic/issues/368) for some details, but the tl;dr is: you should not expect to get the same outputs (or even, within floating point precision) when running synthesis for long enough (seems to be > 1000 iterations) on devices with different CUDA versions and driver versions. Small differences in the output of e.g., `torch.einsum` / `torch.matmul` will lead to small differences in the gradient, which will accumulate and eventually lead to fairly different optimization outputs.
-
-To deal with this, your regression tests should save their output into the `uploaded_files` folder after synthesis (and before checking). The contents of that folder will be made available as [Jenkins artifacts](https://www.jenkins.io/doc/pipeline/tour/tests-and-artifacts/), which you can then download after the test. This will allow you to download the output of any failing test, manually verify the results look good, and then upload them to the OSF to test against.
 
 To deal with this, all tests for reproducibility should use dtype `torch.float64` (rather than the default `torch.float32`). Additionally, these regression tests should save their output into the `uploaded_files` folder after synthesis (and before checking). The contents of that folder will be made available as [Jenkins artifacts](https://www.jenkins.io/doc/pipeline/tour/tests-and-artifacts/), which you can then download after the test. This will allow you to download the output of any failing test, manually verify the results look good, and then upload them to the OSF to test against.
 
