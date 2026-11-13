@@ -1,0 +1,824 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>plenoptic.synthesize.eigendistortion &mdash; plenoptic 1.0.2 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/plot_directive.css?v=7f9a90b1" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=1ed6394b"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../_static/copybutton.js?v=f281be69"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+<div style="background-color: rgb(248, 215, 218); color: rgb(114, 28, 36); text-align: center;">
+  <div>
+    <div>This is documentation for <strong>an old version</strong>.
+      <a href="https://docs.plenoptic.org/" style="background-color: rgb(220, 53, 69); color: rgb(255, 255, 255); margin: 1rem; padding: 0.375rem 0.75rem; border-radius: 4px; display: inline-block; text-align: center;">Switch to stable version</a>
+    </div>
+  </div>
+</div>
+ 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            plenoptic
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Basic concepts</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../conceptual_intro.html">Conceptual Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../models.html">Model requirements</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/00_quickstart.html">Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../citation.html">Citation Guide</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Synthesis method introductions</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/intro/02_Eigendistortions.html">Eigendistortions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/intro/05_Geodesics.html">Representational Geodesic</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/intro/06_Metamer.html">Metamers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/intro/07_Simple_MAD.html">MAD Competition Conceptual Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/intro/08_MAD_Competition.html">MAD Competition Usage</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Models and metrics</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/models/03_Steerable_Pyramid.html">Steerable Pyramid</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/models/04_Perceptual_distance.html">Perceptual distance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/models/Metamer-Portilla-Simoncelli.html">Portilla-Simoncelli Texture Metamer</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Synthesis method examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/applications/09_Original_MAD.html">Reproducing Wang and Simoncelli, 2008 (MAD Competition)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/applications/Demo_Eigendistortion.html">Reproducing Berardino et al., 2017 (Eigendistortions)</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Advanced usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../synthesis.html">Synthesis object design</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tips.html">Tips and Tricks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../reproducibility.html">Reproducibility</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/modules.html">API Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/advanced/Display.html">Display and animate functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/advanced/Synthesis_extensions.html">Extending existing synthesis objects</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">plenoptic</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">plenoptic.synthesize.eigendistortion</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for plenoptic.synthesize.eigendistortion</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Optional</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
+<span class="kn">from</span> <span class="nn">typing_extensions</span> <span class="kn">import</span> <span class="n">Literal</span>
+
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span>
+<span class="kn">from</span> <span class="nn">matplotlib.figure</span> <span class="kn">import</span> <span class="n">Figure</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">from</span> <span class="nn">torch</span> <span class="kn">import</span> <span class="n">Tensor</span>
+<span class="kn">from</span> <span class="nn">tqdm.auto</span> <span class="kn">import</span> <span class="n">tqdm</span>
+
+<span class="kn">from</span> <span class="nn">.synthesis</span> <span class="kn">import</span> <span class="n">Synthesis</span>
+<span class="kn">from</span> <span class="nn">.autodiff</span> <span class="kn">import</span> <span class="n">jacobian</span><span class="p">,</span> <span class="n">vector_jacobian_product</span><span class="p">,</span> <span class="n">jacobian_vector_product</span>
+<span class="kn">from</span> <span class="nn">..tools.display</span> <span class="kn">import</span> <span class="n">imshow</span>
+<span class="kn">from</span> <span class="nn">..tools.validate</span> <span class="kn">import</span> <span class="n">validate_input</span><span class="p">,</span> <span class="n">validate_model</span>
+
+
+<div class="viewcode-block" id="fisher_info_matrix_vector_product">
+<a class="viewcode-back" href="../../../api/plenoptic.synthesize.html#plenoptic.synthesize.eigendistortion.fisher_info_matrix_vector_product">[docs]</a>
+<span class="k">def</span> <span class="nf">fisher_info_matrix_vector_product</span><span class="p">(</span>
+    <span class="n">y</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span> <span class="n">v</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span> <span class="n">dummy_vec</span><span class="p">:</span> <span class="n">Tensor</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Compute Fisher Information Matrix Vector Product: :math:`Fv`</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    y</span>
+<span class="sd">        Output tensor with gradient attached</span>
+<span class="sd">    x</span>
+<span class="sd">        Input tensor with gradient attached</span>
+<span class="sd">    v</span>
+<span class="sd">        The vectors with which to compute Fisher vector products</span>
+<span class="sd">    dummy_vec</span>
+<span class="sd">        Dummy vector for Jacobian vector product trick</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    Fv</span>
+<span class="sd">        Vector, Fisher vector product</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    Under white Gaussian noise assumption, :math:`F` is matrix multiplication of Jacobian transpose and Jacobian:</span>
+<span class="sd">    :math:`F = J^T J`. Hence:</span>
+<span class="sd">    :math:`Fv = J^T (Jv)`</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">Jv</span> <span class="o">=</span> <span class="n">jacobian_vector_product</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">dummy_vec</span><span class="p">)</span>
+    <span class="n">Fv</span> <span class="o">=</span> <span class="n">vector_jacobian_product</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">Jv</span><span class="p">,</span> <span class="n">detach</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">Fv</span></div>
+
+
+
+<div class="viewcode-block" id="fisher_info_matrix_eigenvalue">
+<a class="viewcode-back" href="../../../api/plenoptic.synthesize.html#plenoptic.synthesize.eigendistortion.fisher_info_matrix_eigenvalue">[docs]</a>
+<span class="k">def</span> <span class="nf">fisher_info_matrix_eigenvalue</span><span class="p">(</span>
+    <span class="n">y</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span> <span class="n">v</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span> <span class="n">dummy_vec</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Tensor</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Compute the eigenvalues of the Fisher Information Matrix corresponding to eigenvectors in v</span>
+<span class="sd">    :math:`\lambda= v^T F v`</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">dummy_vec</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">dummy_vec</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">requires_grad</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="n">Fv</span> <span class="o">=</span> <span class="n">fisher_info_matrix_vector_product</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">dummy_vec</span><span class="p">)</span>
+
+    <span class="c1"># compute eigenvalues for all vectors in v</span>
+    <span class="n">lmbda</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">a</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">b</span><span class="p">)</span> <span class="k">for</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">Fv</span><span class="o">.</span><span class="n">T</span><span class="p">)])</span>
+    <span class="k">return</span> <span class="n">lmbda</span></div>
+
+
+
+<div class="viewcode-block" id="Eigendistortion">
+<a class="viewcode-back" href="../../../api/plenoptic.synthesize.html#plenoptic.synthesize.eigendistortion.Eigendistortion">[docs]</a>
+<span class="k">class</span> <span class="nc">Eigendistortion</span><span class="p">(</span><span class="n">Synthesis</span><span class="p">):</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Synthesis object to compute eigendistortions induced by a model on a given input image.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    image</span>
+<span class="sd">        Image, torch.Size(batch=1, channel, height, width). We currently do not support batches of images,</span>
+<span class="sd">        as each image requires its own optimization.</span>
+<span class="sd">    model</span>
+<span class="sd">        Torch model with defined forward and backward operations.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    batch_size: int</span>
+<span class="sd">    n_channels: int</span>
+<span class="sd">    im_height: int</span>
+<span class="sd">    im_width: int</span>
+<span class="sd">    jacobian: Tensor</span>
+<span class="sd">        Is only set when :func:`synthesize` is run with ``method=&#39;exact&#39;``. Default to ``None``.</span>
+<span class="sd">    eigendistortions: Tensor</span>
+<span class="sd">        Tensor of eigendistortions (eigenvectors of Fisher matrix), ordered by</span>
+<span class="sd">        eigenvalue, with Size((n_distortions, n_channels, im_height,</span>
+<span class="sd">        im_width)).</span>
+<span class="sd">    eigenvalues: Tensor</span>
+<span class="sd">        Tensor of eigenvalues corresponding to each eigendistortion, listed in decreasing order.</span>
+<span class="sd">    eigenindex: listlike</span>
+<span class="sd">        Index of each eigenvector/eigenvalue.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    This is a method for comparing image representations in terms of their ability to explain perceptual sensitivity</span>
+<span class="sd">    in humans. It estimates eigenvectors of the FIM. A model, :math:`y = f(x)`, is a deterministic (and differentiable)</span>
+<span class="sd">    mapping from the input pixels :math:`x \in \mathbb{R}^n` to a mean output response vector :math:`y\in \mathbb{</span>
+<span class="sd">    R}^m`, where we assume additive white Gaussian noise in the response space.</span>
+<span class="sd">    The Jacobian matrix at x is:</span>
+<span class="sd">        :math:`J(x) = J = dydx`,       :math:`J\in\mathbb{R}^{m \times n}` (ie. output_dim x input_dim)</span>
+<span class="sd">    is the matrix of all first-order partial derivatives of the vector-valued function f.</span>
+<span class="sd">    The Fisher Information Matrix (FIM) at x, under white Gaussian noise in the response space, is:</span>
+<span class="sd">        :math:`F = J^T J`</span>
+<span class="sd">    It is a quadratic approximation of the discriminability of distortions relative to :math:`x`.</span>
+
+<span class="sd">    References</span>
+<span class="sd">    ----------</span>
+<span class="sd">    .. [1] Berardino, A., Laparra, V., Ballé, J. and Simoncelli, E., 2017.</span>
+<span class="sd">           Eigen-distortions of hierarchical representations. In Advances in</span>
+<span class="sd">           neural information processing systems (pp. 3530-3539).</span>
+<span class="sd">           http://www.cns.nyu.edu/pub/lcv/berardino17c-final.pdf</span>
+<span class="sd">           http://www.cns.nyu.edu/~lcv/eigendistortions/</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">image</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+        <span class="n">validate_input</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">no_batch</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">validate_model</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">image_shape</span><span class="o">=</span><span class="n">image</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span>
+                       <span class="n">image_dtype</span><span class="o">=</span><span class="n">image</span><span class="o">.</span><span class="n">dtype</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">image</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+
+        <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">batch_size</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">n_channels</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">im_height</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">im_width</span><span class="p">,</span>
+        <span class="p">)</span> <span class="o">=</span> <span class="n">image</span><span class="o">.</span><span class="n">shape</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_model</span> <span class="o">=</span> <span class="n">model</span>
+        <span class="c1"># flatten and attach gradient and reshape to image</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_image_flat</span> <span class="o">=</span> <span class="n">image</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">requires_grad_</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_init_representation</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
+
+        <span class="nb">print</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Initializing Eigendistortion -- &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;Input dim: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_image_flat</span><span class="o">.</span><span class="n">squeeze</span><span class="p">())</span><span class="si">}</span><span class="s2"> | Output dim: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_representation_flat</span><span class="o">.</span><span class="n">squeeze</span><span class="p">())</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_jacobian</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_eigendistortions</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_eigenvalues</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_eigenindex</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">def</span> <span class="nf">_init_representation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">image</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set self._representation_flat, based on model and image &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_image</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_image_flat</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="o">*</span><span class="n">image</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+        <span class="n">image_representation</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">image_representation</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_representation_flat</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">(</span>
+                <span class="p">[</span><span class="n">s</span><span class="o">.</span><span class="n">squeeze</span><span class="p">()</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">image_representation</span><span class="p">]</span>
+            <span class="p">)</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_representation_flat</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">image_representation</span><span class="o">.</span><span class="n">squeeze</span><span class="p">()</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+            <span class="p">)</span>
+
+<div class="viewcode-block" id="Eigendistortion.synthesize">
+<a class="viewcode-back" href="../../../api/plenoptic.synthesize.html#plenoptic.synthesize.eigendistortion.Eigendistortion.synthesize">[docs]</a>
+    <span class="k">def</span> <span class="nf">synthesize</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">method</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;exact&quot;</span><span class="p">,</span> <span class="s2">&quot;power&quot;</span><span class="p">,</span> <span class="s2">&quot;randomized_svd&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;power&quot;</span><span class="p">,</span>
+        <span class="n">k</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="n">max_iter</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">,</span>
+        <span class="n">p</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span>
+        <span class="n">q</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
+        <span class="n">stop_criterion</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e-7</span><span class="p">,</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Compute eigendistortions of Fisher Information Matrix with given input image.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        method</span>
+<span class="sd">            Eigensolver method. &#39;exact&#39; tries to do eigendecomposition directly (</span>
+<span class="sd">            not recommended for very large inputs). &#39;power&#39; (default) uses the power method to compute first and</span>
+<span class="sd">            last eigendistortions, with maximum number of iterations dictated by n_steps. &#39;randomized_svd&#39; uses</span>
+<span class="sd">            randomized SVD to approximate the top k eigendistortions and their corresponding eigenvalues.</span>
+<span class="sd">        k</span>
+<span class="sd">            How many vectors to return using block power method or svd.</span>
+<span class="sd">        max_iter</span>
+<span class="sd">            Maximum number of steps to run for ``method=&#39;power&#39;`` in eigenvalue computation. Ignored</span>
+<span class="sd">            for other methods.</span>
+<span class="sd">        p</span>
+<span class="sd">            Oversampling parameter for randomized SVD. k+p vectors will be sampled, and k will be returned. See</span>
+<span class="sd">            docstring of ``_synthesize_randomized_svd`` for more details including algorithm reference.</span>
+<span class="sd">        q</span>
+<span class="sd">            Matrix power parameter for randomized SVD. This is an effective trick for the algorithm to converge to</span>
+<span class="sd">            the correct eigenvectors when the eigenspectrum does not decay quickly. See</span>
+<span class="sd">            ``_synthesize_randomized_svd`` for more details including algorithm reference.</span>
+<span class="sd">        stop_criterion</span>
+<span class="sd">            Used if ``method=&#39;power&#39;`` to check for convergence. If the L2-norm</span>
+<span class="sd">            of the eigenvalues has changed by less than this value from one</span>
+<span class="sd">            iteration to the next, we terminate synthesis.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">allowed_methods</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;power&quot;</span><span class="p">,</span> <span class="s2">&quot;exact&quot;</span><span class="p">,</span> <span class="s2">&quot;randomized_svd&quot;</span><span class="p">]</span>
+        <span class="k">assert</span> <span class="n">method</span> <span class="ow">in</span> <span class="n">allowed_methods</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;method must be in </span><span class="si">{</span><span class="n">allowed_methods</span><span class="si">}</span><span class="s2">&quot;</span>
+
+        <span class="k">if</span> <span class="p">(</span>
+            <span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;exact&quot;</span>
+            <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_representation_flat</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_image_flat</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mf">1e6</span>
+        <span class="p">):</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+                <span class="s2">&quot;Jacobian &gt; 1e6 elements and may cause out-of-memory. Use method =  {&#39;power&#39;, &#39;randomized_svd&#39;}.&quot;</span>
+            <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;exact&quot;</span><span class="p">:</span>  <span class="c1"># compute exact Jacobian</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Computing all eigendistortions&quot;</span><span class="p">)</span>
+            <span class="n">eig_vals</span><span class="p">,</span> <span class="n">eig_vecs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_synthesize_exact</span><span class="p">()</span>
+            <span class="n">eig_vecs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_vector_to_image</span><span class="p">(</span><span class="n">eig_vecs</span><span class="o">.</span><span class="n">detach</span><span class="p">())</span>
+            <span class="n">eig_vecs_ind</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">eig_vecs</span><span class="p">))</span>
+
+        <span class="k">elif</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;randomized_svd&quot;</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Estimating top k=</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2"> eigendistortions using randomized SVD&quot;</span><span class="p">)</span>
+            <span class="n">lmbda_new</span><span class="p">,</span> <span class="n">v_new</span><span class="p">,</span> <span class="n">error_approx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_synthesize_randomized_svd</span><span class="p">(</span>
+                <span class="n">k</span><span class="o">=</span><span class="n">k</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="n">p</span><span class="p">,</span> <span class="n">q</span><span class="o">=</span><span class="n">q</span>
+            <span class="p">)</span>
+            <span class="n">eig_vecs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_vector_to_image</span><span class="p">(</span><span class="n">v_new</span><span class="o">.</span><span class="n">detach</span><span class="p">())</span>
+            <span class="n">eig_vals</span> <span class="o">=</span> <span class="n">lmbda_new</span><span class="o">.</span><span class="n">squeeze</span><span class="p">()</span>
+            <span class="n">eig_vecs_ind</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">k</span><span class="p">)</span>
+
+            <span class="c1"># display the approximate estimation error of the range space</span>
+            <span class="nb">print</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Randomized SVD complete! Estimated spectral approximation error = </span><span class="si">{</span><span class="n">error_approx</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span>  <span class="c1"># method == &#39;power&#39;</span>
+
+            <span class="k">assert</span> <span class="n">max_iter</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;max_iter must be greater than zero&quot;</span>
+
+            <span class="n">lmbda_max</span><span class="p">,</span> <span class="n">v_max</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_synthesize_power</span><span class="p">(</span>
+                <span class="n">k</span><span class="o">=</span><span class="n">k</span><span class="p">,</span> <span class="n">shift</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="n">stop_criterion</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="n">max_iter</span>
+            <span class="p">)</span>
+            <span class="n">lmbda_min</span><span class="p">,</span> <span class="n">v_min</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_synthesize_power</span><span class="p">(</span>
+                <span class="n">k</span><span class="o">=</span><span class="n">k</span><span class="p">,</span> <span class="n">shift</span><span class="o">=</span><span class="n">lmbda_max</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">tol</span><span class="o">=</span><span class="n">stop_criterion</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="n">max_iter</span>
+            <span class="p">)</span>
+            <span class="n">n</span> <span class="o">=</span> <span class="n">v_max</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+            <span class="n">eig_vecs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_vector_to_image</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">((</span><span class="n">v_max</span><span class="p">,</span> <span class="n">v_min</span><span class="p">),</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">detach</span><span class="p">())</span>
+            <span class="n">eig_vals</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">([</span><span class="n">lmbda_max</span><span class="p">,</span> <span class="n">lmbda_min</span><span class="p">])</span><span class="o">.</span><span class="n">squeeze</span><span class="p">()</span>
+            <span class="n">eig_vecs_ind</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">((</span><span class="n">torch</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">k</span><span class="p">),</span> <span class="n">torch</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="n">k</span><span class="p">,</span> <span class="n">n</span><span class="p">)))</span>
+
+        <span class="c1"># reshape to (n x num_chans x h x w)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_eigendistortions</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="n">eig_vecs</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">eig_vecs</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span> <span class="k">else</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_eigenvalues</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">eig_vals</span><span class="o">.</span><span class="n">detach</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_eigenindex</span> <span class="o">=</span> <span class="n">eig_vecs_ind</span></div>
+
+
+    <span class="k">def</span> <span class="nf">_synthesize_exact</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">Tensor</span><span class="p">]:</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Eigendecomposition of explicitly computed Fisher Information Matrix.</span>
+
+<span class="sd">        To be used when the input is small (e.g. less than 70x70 image on cluster or 30x30 on your own machine). This</span>
+<span class="sd">        method obviates the power iteration and its related algorithms (e.g. Lanczos). This method computes the</span>
+<span class="sd">        Fisher Information Matrix by explicitly computing the Jacobian of the representation wrt the input.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        eig_vals</span>
+<span class="sd">            Eigenvalues in decreasing order.</span>
+<span class="sd">        eig_vecs</span>
+<span class="sd">            Eigenvectors in 2D tensor, whose cols are eigenvectors (i.e. eigendistortions) corresponding to eigenvalues.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">J</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_jacobian</span><span class="p">()</span>
+        <span class="n">F</span> <span class="o">=</span> <span class="n">J</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">J</span>
+        <span class="n">eig_vals</span><span class="p">,</span> <span class="n">eig_vecs</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">eigh</span><span class="p">(</span><span class="n">F</span><span class="p">,</span> <span class="n">UPLO</span><span class="o">=</span><span class="s2">&quot;U&quot;</span><span class="p">)</span>
+        <span class="n">eig_vecs</span> <span class="o">=</span> <span class="n">eig_vecs</span><span class="o">.</span><span class="n">flip</span><span class="p">(</span><span class="n">dims</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,))</span>
+        <span class="n">eig_vals</span> <span class="o">=</span> <span class="n">eig_vals</span><span class="o">.</span><span class="n">flip</span><span class="p">(</span><span class="n">dims</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,))</span>
+        <span class="k">return</span> <span class="n">eig_vals</span><span class="p">,</span> <span class="n">eig_vecs</span>
+
+<div class="viewcode-block" id="Eigendistortion.compute_jacobian">
+<a class="viewcode-back" href="../../../api/plenoptic.synthesize.html#plenoptic.synthesize.eigendistortion.Eigendistortion.compute_jacobian">[docs]</a>
+    <span class="k">def</span> <span class="nf">compute_jacobian</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Calls autodiff.jacobian and returns jacobian. Will throw error if input too big.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        J</span>
+<span class="sd">            Jacobian of representation wrt input.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">jacobian</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">J</span> <span class="o">=</span> <span class="n">jacobian</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_representation_flat</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_image_flat</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_jacobian</span> <span class="o">=</span> <span class="n">J</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Jacobian already computed, returning self.jacobian&quot;</span><span class="p">)</span>
+            <span class="n">J</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">jacobian</span>
+
+        <span class="k">return</span> <span class="n">J</span></div>
+
+
+    <span class="k">def</span> <span class="nf">_synthesize_power</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">shift</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span> <span class="n">tol</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">max_iter</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">Tensor</span><span class="p">]:</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Use power method (or orthogonal iteration when k&gt;1) to obtain largest (smallest) eigenvalue/vector pairs.</span>
+
+<span class="sd">        Apply the algorithm to approximate the extremal eigenvalues and eigenvectors of the Fisher</span>
+<span class="sd">        Information Matrix, without explicitly representing that matrix.</span>
+
+<span class="sd">        This method repeatedly calls ``fisher_info_matrix_vector_product()`` with a single (`k=1`), or multiple</span>
+<span class="sd">        (`k&gt;1`) vectors.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        k</span>
+<span class="sd">            Number of top and bottom eigendistortions to synthesize; i.e. if k=2, then the top 2 and bottom 2 will</span>
+<span class="sd">            be returned. When `k&gt;1`, multiple eigendistortions are synthesized, and each power iteration step is</span>
+<span class="sd">            followed by a QR orthogonalization step to ensure the vectors are orthonormal.</span>
+<span class="sd">        shift</span>
+<span class="sd">            When `shift=0`, this function estimates the top `k` eigenvalue/vector pairs. When `shift` is set to the</span>
+<span class="sd">            estimated top eigenvalue this function will estimate the smallest eigenval/eigenvector pairs.</span>
+<span class="sd">        tol</span>
+<span class="sd">            Tolerance value.</span>
+<span class="sd">        max_iter</span>
+<span class="sd">            Maximum number of steps.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        lmbda</span>
+<span class="sd">            Eigenvalue corresponding to final vector of power iteration.</span>
+<span class="sd">        v</span>
+<span class="sd">            Final eigenvector(s) (i.e. eigendistortions) of power (orthogonal) iteration procedure.</span>
+
+<span class="sd">        References</span>
+<span class="sd">        ----------</span>
+<span class="sd">        [1] Orthogonal iteration; Algorithm 8.2.8 Golub and Van Loan, Matrix Computations, 3rd Ed.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_image_flat</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_representation_flat</span>
+
+        <span class="c1"># note: v is an n x k matrix where k is number of eigendists to be synthesized!</span>
+        <span class="n">v</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">k</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">x</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">x</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
+        <span class="n">v</span> <span class="o">=</span> <span class="n">v</span> <span class="o">/</span> <span class="n">torch</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">vector_norm</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">keepdim</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="nb">ord</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+        <span class="n">_dummy_vec</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">requires_grad</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>  <span class="c1"># cache a dummy vec for jvp</span>
+        <span class="n">Fv</span> <span class="o">=</span> <span class="n">fisher_info_matrix_vector_product</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">_dummy_vec</span><span class="p">)</span>
+        <span class="n">v</span> <span class="o">=</span> <span class="n">Fv</span> <span class="o">/</span> <span class="n">torch</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">vector_norm</span><span class="p">(</span><span class="n">Fv</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">keepdim</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="nb">ord</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+        <span class="n">lmbda</span> <span class="o">=</span> <span class="n">fisher_info_matrix_eigenvalue</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">_dummy_vec</span><span class="p">)</span>
+
+        <span class="n">d_lambda</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="s2">&quot;inf&quot;</span><span class="p">))</span>
+        <span class="n">lmbda_new</span><span class="p">,</span> <span class="n">v_new</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span>
+        <span class="n">desc</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;Top&quot;</span> <span class="k">if</span> <span class="n">shift</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">else</span> <span class="s2">&quot;Bottom&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot; k=</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2"> eigendists&quot;</span>
+        <span class="n">pbar</span> <span class="o">=</span> <span class="n">tqdm</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">max_iter</span><span class="p">),</span> <span class="n">desc</span><span class="o">=</span><span class="n">desc</span><span class="p">)</span>
+        <span class="n">postfix_dict</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;delta_eigenval&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">}</span>
+
+        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">pbar</span><span class="p">:</span>
+            <span class="n">postfix_dict</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span><span class="n">delta_eigenval</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">d_lambda</span><span class="o">.</span><span class="n">item</span><span class="p">()</span><span class="si">:</span><span class="s2">.2E</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">))</span>
+            <span class="n">pbar</span><span class="o">.</span><span class="n">set_postfix</span><span class="p">(</span><span class="o">**</span><span class="n">postfix_dict</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">d_lambda</span> <span class="o">&lt;=</span> <span class="n">tol</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">desc</span><span class="si">}</span><span class="s2"> computed | Stop criterion </span><span class="si">{</span><span class="n">tol</span><span class="si">:</span><span class="s2">.2E</span><span class="si">}</span><span class="s2"> reached.&quot;</span><span class="p">)</span>
+                <span class="k">break</span>
+
+            <span class="n">Fv</span> <span class="o">=</span> <span class="n">fisher_info_matrix_vector_product</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">_dummy_vec</span><span class="p">)</span>
+            <span class="n">Fv</span> <span class="o">=</span> <span class="n">Fv</span> <span class="o">-</span> <span class="n">shift</span> <span class="o">*</span> <span class="n">v</span>  <span class="c1"># optionally shift: (F - shift*I)v</span>
+
+            <span class="n">v_new</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">qr</span><span class="p">(</span><span class="n">Fv</span><span class="p">,</span> <span class="s2">&quot;reduced&quot;</span><span class="p">)</span>  <span class="c1"># (ortho)normalize vector(s)</span>
+
+            <span class="n">lmbda_new</span> <span class="o">=</span> <span class="n">fisher_info_matrix_eigenvalue</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">v_new</span><span class="p">,</span> <span class="n">_dummy_vec</span><span class="p">)</span>
+
+            <span class="n">d_lambda</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">vector_norm</span><span class="p">(</span><span class="n">lmbda</span> <span class="o">-</span> <span class="n">lmbda_new</span><span class="p">,</span> <span class="nb">ord</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>  <span class="c1"># stability of eigenspace</span>
+            <span class="n">v</span> <span class="o">=</span> <span class="n">v_new</span>
+            <span class="n">lmbda</span> <span class="o">=</span> <span class="n">lmbda_new</span>
+
+        <span class="n">pbar</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="n">lmbda_new</span><span class="p">,</span> <span class="n">v_new</span>
+
+    <span class="k">def</span> <span class="nf">_synthesize_randomized_svd</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">p</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">q</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">Tensor</span><span class="p">,</span> <span class="n">Tensor</span><span class="p">]:</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Synthesize eigendistortions using randomized truncated SVD.</span>
+
+<span class="sd">        This method approximates the column space of the Fisher Info Matrix, projects the FIM into that column space,</span>
+<span class="sd">        then computes its SVD.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        k</span>
+<span class="sd">            Number of eigenvecs (rank of factorization) to be returned.</span>
+<span class="sd">        p</span>
+<span class="sd">            Oversampling parameter, recommended to be 5.</span>
+<span class="sd">        q</span>
+<span class="sd">            Matrix power iteration. Used to squeeze the eigen spectrum for more accurate approximation.</span>
+<span class="sd">            Recommended to be 2.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        S</span>
+<span class="sd">            Eigenvalues, Size((n, )).</span>
+<span class="sd">        V</span>
+<span class="sd">            Eigendistortions, Size((n, k)).</span>
+<span class="sd">        error_approx</span>
+<span class="sd">            Estimate of the approximation error. Defined as the expected error</span>
+<span class="sd">            between the true subspace and approximated subspace.</span>
+
+<span class="sd">        References</span>
+<span class="sd">        -----</span>
+<span class="sd">        [1] Halko, Martinsson, Tropp, Finding structure with randomness: Probabilistic algorithms for constructing</span>
+<span class="sd">        approximate matrix decompositions, SIAM Rev. 53:2, pp. 217-288 https://arxiv.org/abs/0909.4061 (2011)</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_image_flat</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_representation_flat</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+        <span class="n">P</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">k</span> <span class="o">+</span> <span class="n">p</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+        <span class="c1"># orthogonalize first for numerical stability</span>
+        <span class="n">P</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">qr</span><span class="p">(</span><span class="n">P</span><span class="p">,</span> <span class="s2">&quot;reduced&quot;</span><span class="p">)</span>
+        <span class="n">_dummy_vec</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">requires_grad</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">Z</span> <span class="o">=</span> <span class="n">fisher_info_matrix_vector_product</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">_dummy_vec</span><span class="p">)</span>
+
+        <span class="c1"># optional power iteration to squeeze the spectrum for more accurate</span>
+        <span class="c1"># estimate</span>
+        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">q</span><span class="p">):</span>
+            <span class="n">Z</span> <span class="o">=</span> <span class="n">fisher_info_matrix_vector_product</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">Z</span><span class="p">,</span> <span class="n">_dummy_vec</span><span class="p">)</span>
+
+        <span class="n">Q</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">qr</span><span class="p">(</span><span class="n">Z</span><span class="p">,</span> <span class="s2">&quot;reduced&quot;</span><span class="p">)</span>
+        <span class="c1"># B = Q.T @ A @ Q</span>
+        <span class="n">B</span> <span class="o">=</span> <span class="n">Q</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">fisher_info_matrix_vector_product</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">Q</span><span class="p">,</span> <span class="n">_dummy_vec</span><span class="p">)</span>
+        <span class="n">_</span><span class="p">,</span> <span class="n">S</span><span class="p">,</span> <span class="n">Vh</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">svd</span><span class="p">(</span><span class="n">B</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>  <span class="c1"># eigendecomp of small matrix</span>
+        <span class="n">V</span> <span class="o">=</span> <span class="n">Vh</span><span class="o">.</span><span class="n">T</span>
+        <span class="n">V</span> <span class="o">=</span> <span class="n">Q</span> <span class="o">@</span> <span class="n">V</span>  <span class="c1"># lift up to original dimensionality</span>
+
+        <span class="c1"># estimate error in Q estimate of range space</span>
+        <span class="n">omega</span> <span class="o">=</span> <span class="n">fisher_info_matrix_vector_product</span><span class="p">(</span>
+            <span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">device</span><span class="p">),</span> <span class="n">_dummy_vec</span>
+        <span class="p">)</span>
+        <span class="n">error_approx</span> <span class="o">=</span> <span class="n">omega</span> <span class="o">-</span> <span class="p">(</span><span class="n">Q</span> <span class="o">@</span> <span class="n">Q</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">omega</span><span class="p">)</span>
+        <span class="n">error_approx</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">vector_norm</span><span class="p">(</span><span class="n">error_approx</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="nb">ord</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="n">S</span><span class="p">[:</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">clone</span><span class="p">(),</span> <span class="n">V</span><span class="p">[:,</span> <span class="p">:</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">clone</span><span class="p">(),</span> <span class="n">error_approx</span>  <span class="c1"># truncate</span>
+
+    <span class="k">def</span> <span class="nf">_vector_to_image</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vecs</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Tensor</span><span class="p">]:</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Reshapes eigenvectors back into correct image dimensions.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        vecs</span>
+<span class="sd">            Eigendistortion tensor with ``torch.Size([N, num_distortions])``. Each distortion will be reshaped into the</span>
+<span class="sd">            original image shape and placed in a list.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        imgs</span>
+<span class="sd">            List of Tensor images, each with ``torch.Size(img_height, im_width)``.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">imgs</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">vecs</span><span class="p">[:,</span> <span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">n_channels</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">im_height</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">im_width</span><span class="p">))</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">vecs</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="p">]</span>
+        <span class="k">return</span> <span class="n">imgs</span>
+
+    <span class="k">def</span> <span class="nf">_indexer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">idx</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Maps eigenindex to arg index (0-indexed)&quot;&quot;&quot;</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_image_flat</span><span class="p">)</span>
+        <span class="n">idx_range</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+        <span class="n">i</span> <span class="o">=</span> <span class="n">idx_range</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
+
+        <span class="n">all_idx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">eigenindex</span>
+        <span class="k">assert</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">all_idx</span><span class="p">,</span> <span class="s2">&quot;eigenindex must be the index of one of the vectors&quot;</span>
+        <span class="k">assert</span> <span class="p">(</span>
+            <span class="n">all_idx</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">all_idx</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+        <span class="p">),</span> <span class="s2">&quot;No eigendistortions synthesized&quot;</span>
+        <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">all_idx</span> <span class="o">==</span> <span class="n">i</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
+
+<div class="viewcode-block" id="Eigendistortion.save">
+<a class="viewcode-back" href="../../../api/plenoptic.synthesize.html#plenoptic.synthesize.eigendistortion.Eigendistortion.save">[docs]</a>
+    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Save all relevant variables in .pt file.</span>
+
+<span class="sd">        See ``load`` docstring for an example of use.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        file_path : str</span>
+<span class="sd">            The path to save the Eigendistortion object to</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="n">attrs</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Eigendistortion.to">
+<a class="viewcode-back" href="../../../api/plenoptic.synthesize.html#plenoptic.synthesize.eigendistortion.Eigendistortion.to">[docs]</a>
+    <span class="k">def</span> <span class="nf">to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Moves and/or casts the parameters and buffers.</span>
+
+<span class="sd">        This can be called as</span>
+
+<span class="sd">        .. function:: to(device=None, dtype=None, non_blocking=False)</span>
+
+<span class="sd">        .. function:: to(dtype, non_blocking=False)</span>
+
+<span class="sd">        .. function:: to(tensor, non_blocking=False)</span>
+
+<span class="sd">        Its signature is similar to :meth:`torch.Tensor.to`, but only accepts</span>
+<span class="sd">        floating point desired :attr:`dtype` s. In addition, this method will</span>
+<span class="sd">        only cast the floating point parameters and buffers to :attr:`dtype`</span>
+<span class="sd">        (if given). The integral parameters and buffers will be moved</span>
+<span class="sd">        :attr:`device`, if that is given, but with dtypes unchanged. When</span>
+<span class="sd">        :attr:`non_blocking` is set, it tries to convert/move asynchronously</span>
+<span class="sd">        with respect to the host if possible, e.g., moving CPU Tensors with</span>
+<span class="sd">        pinned memory to CUDA devices.</span>
+
+<span class="sd">        See below for examples.</span>
+
+<span class="sd">        .. note::</span>
+<span class="sd">            This method modifies the module in-place.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            device (:class:`torch.device`): the desired device of the parameters</span>
+<span class="sd">                and buffers in this module</span>
+<span class="sd">            dtype (:class:`torch.dtype`): the desired floating point type of</span>
+<span class="sd">                the floating point parameters and buffers in this module</span>
+<span class="sd">            tensor (torch.Tensor): Tensor whose dtype and device are the desired</span>
+<span class="sd">                dtype and device for all parameters and buffers in this module</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">attrs</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;_jacobian&quot;</span><span class="p">,</span> <span class="s2">&quot;_eigendistortions&quot;</span><span class="p">,</span> <span class="s2">&quot;_eigenvalues&quot;</span><span class="p">,</span>
+                 <span class="s2">&quot;_eigenindex&quot;</span><span class="p">,</span> <span class="s2">&quot;_model&quot;</span><span class="p">,</span> <span class="s2">&quot;_image&quot;</span><span class="p">,</span> <span class="s2">&quot;_image_flat&quot;</span><span class="p">,</span>
+                 <span class="s2">&quot;_representation_flat&quot;</span><span class="p">]</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">attrs</span><span class="o">=</span><span class="n">attrs</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Eigendistortion.load">
+<a class="viewcode-back" href="../../../api/plenoptic.synthesize.html#plenoptic.synthesize.eigendistortion.Eigendistortion.load">[docs]</a>
+    <span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+             <span class="n">map_location</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+             <span class="o">**</span><span class="n">pickle_load_args</span><span class="p">):</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Load all relevant stuff from a .pt file.</span>
+
+<span class="sd">        This should be called by an initialized ``Eigendistortion`` object --</span>
+<span class="sd">        we will ensure that ``image`` and ``model`` are identical.</span>
+
+<span class="sd">        Note this operates in place and so doesn&#39;t return anything.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        file_path : str</span>
+<span class="sd">            The path to load the synthesis object from</span>
+<span class="sd">        map_location : str, optional</span>
+<span class="sd">            map_location argument to pass to ``torch.load``. If you save</span>
+<span class="sd">            stuff that was being run on a GPU and are loading onto a</span>
+<span class="sd">            CPU, you&#39;ll need this to make sure everything lines up</span>
+<span class="sd">            properly. This should be structured like the str you would</span>
+<span class="sd">            pass to ``torch.device``</span>
+<span class="sd">        pickle_load_args :</span>
+<span class="sd">            any additional kwargs will be added to ``pickle_module.load`` via</span>
+<span class="sd">            ``torch.load``, see that function&#39;s docstring for details.</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        &gt;&gt;&gt; geo = po.synth.Geodesic(img_a, img_b, model)</span>
+<span class="sd">        &gt;&gt;&gt; geo.synthesize(max_iter=10, store_progress=True)</span>
+<span class="sd">        &gt;&gt;&gt; geo.save(&#39;geo.pt&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; geo_copy = po.synth.Geodesic(img_a, img_b, model)</span>
+<span class="sd">        &gt;&gt;&gt; geo_copy.load(&#39;geo.pt&#39;)</span>
+
+<span class="sd">        Note that you must create a new instance of the Synthesis object and</span>
+<span class="sd">        *then* load.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">check_attributes</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;_image&#39;</span><span class="p">,</span> <span class="s1">&#39;_representation_flat&#39;</span><span class="p">]</span>
+        <span class="n">check_loss_functions</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="n">map_location</span><span class="o">=</span><span class="n">map_location</span><span class="p">,</span>
+                     <span class="n">check_attributes</span><span class="o">=</span><span class="n">check_attributes</span><span class="p">,</span>
+                     <span class="n">check_loss_functions</span><span class="o">=</span><span class="n">check_loss_functions</span><span class="p">,</span>
+                     <span class="o">**</span><span class="n">pickle_load_args</span><span class="p">)</span>
+        <span class="c1"># make these require a grad again</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_image_flat</span><span class="o">.</span><span class="n">requires_grad_</span><span class="p">()</span>
+        <span class="c1"># we need _representation_flat and _image_flat to be connected in the</span>
+        <span class="c1"># computation graph for the autograd calls to work, so we reinitialize</span>
+        <span class="c1"># it here</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_init_representation</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="p">)</span></div>
+
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">model</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_model</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">image</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_image</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">jacobian</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Is only set when :func:`synthesize` is run with ``method=&#39;exact&#39;``. Default to ``None``. &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_jacobian</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">eigendistortions</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Tensor of eigendistortions (eigenvectors of Fisher matrix), ordered by eigenvalue. &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_eigendistortions</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">eigenvalues</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Tensor of eigenvalues corresponding to each eigendistortion, listed in decreasing order. &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_eigenvalues</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">eigenindex</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Index of each eigenvector/eigenvalue. &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_eigenindex</span></div>
+
+
+
+<div class="viewcode-block" id="display_eigendistortion">
+<a class="viewcode-back" href="../../../api/plenoptic.synthesize.html#plenoptic.synthesize.eigendistortion.display_eigendistortion">[docs]</a>
+<span class="k">def</span> <span class="nf">display_eigendistortion</span><span class="p">(</span>
+    <span class="n">eigendistortion</span><span class="p">:</span> <span class="n">Eigendistortion</span><span class="p">,</span>
+    <span class="n">eigenindex</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="n">alpha</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">5.0</span><span class="p">,</span>
+    <span class="n">process_image</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">Tensor</span><span class="p">],</span> <span class="n">Tensor</span><span class="p">]</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">,</span>
+    <span class="n">ax</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">matplotlib</span><span class="o">.</span><span class="n">pyplot</span><span class="o">.</span><span class="n">axis</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">plot_complex</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;rectangular&quot;</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Figure</span><span class="p">:</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Displays specified eigendistortion added to the image.</span>
+
+<span class="sd">    If image or eigendistortions have 3 channels, then it is assumed to be a color image and it is converted to</span>
+<span class="sd">    grayscale. This is merely for display convenience and may change in the future.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    eigendistortion</span>
+<span class="sd">        Eigendistortion object whose synthesized eigendistortion we want to display</span>
+<span class="sd">    eigenindex</span>
+<span class="sd">        Index of eigendistortion to plot. E.g. If there are 10 eigenvectors, 0 will index the first one, and</span>
+<span class="sd">        -1 or 9 will index the last one.</span>
+<span class="sd">    alpha</span>
+<span class="sd">        Amount by which to scale eigendistortion for `image + (alpha * eigendistortion)` for display.</span>
+<span class="sd">    process_image</span>
+<span class="sd">        A function to process the image+alpha*distortion before clamping between 0,1. E.g. multiplying by the</span>
+<span class="sd">        stdev ImageNet then adding the mean of ImageNet to undo image preprocessing.</span>
+<span class="sd">    ax</span>
+<span class="sd">        Axis handle on which to plot.</span>
+<span class="sd">    plot_complex</span>
+<span class="sd">        Parameter for :meth:`plenoptic.imshow` determining how to handle complex values. Defaults to &#39;rectangular&#39;,</span>
+<span class="sd">        which plots real and complex components as separate images. Can also be &#39;polar&#39; or &#39;logpolar&#39;; see that</span>
+<span class="sd">        method&#39;s docstring for details.</span>
+<span class="sd">    kwargs</span>
+<span class="sd">        Additional arguments for :meth:`po.imshow()`.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    fig</span>
+<span class="sd">        matplotlib Figure handle returned by plenoptic.imshow()</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># reshape so channel dim is last</span>
+    <span class="n">im_shape</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">eigendistortion</span><span class="o">.</span><span class="n">n_channels</span><span class="p">,</span>
+        <span class="n">eigendistortion</span><span class="o">.</span><span class="n">im_height</span><span class="p">,</span>
+        <span class="n">eigendistortion</span><span class="o">.</span><span class="n">im_width</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">image</span> <span class="o">=</span> <span class="n">eigendistortion</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">*</span><span class="n">im_shape</span><span class="p">)</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span>
+    <span class="n">dist</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">eigendistortion</span><span class="o">.</span><span class="n">eigendistortions</span><span class="p">[</span><span class="n">eigendistortion</span><span class="o">.</span><span class="n">_indexer</span><span class="p">(</span><span class="n">eigenindex</span><span class="p">)]</span>
+        <span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="o">.</span><span class="n">cpu</span><span class="p">()</span>
+    <span class="p">)</span>
+
+    <span class="n">img_processed</span> <span class="o">=</span> <span class="n">process_image</span><span class="p">(</span><span class="n">image</span> <span class="o">+</span> <span class="n">alpha</span> <span class="o">*</span> <span class="n">dist</span><span class="p">)</span>
+    <span class="n">to_plot</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">clamp</span><span class="p">(</span><span class="n">img_processed</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">fig</span> <span class="o">=</span> <span class="n">imshow</span><span class="p">(</span><span class="n">to_plot</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">plot_complex</span><span class="o">=</span><span class="n">plot_complex</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">fig</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2019, Plenoptic authors.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
