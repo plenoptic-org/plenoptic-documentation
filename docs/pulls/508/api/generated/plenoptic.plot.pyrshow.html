@@ -7,7 +7,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>plenoptic.plot.pyrshow &#8212; plenoptic 2.1.3.dev62 documentation</title>
+    <title>plenoptic.plot.pyrshow &#8212; plenoptic 2.1.3.dev65 documentation</title>
   
   
   
@@ -44,7 +44,7 @@
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=75c7c72ae941e8b558d8" />
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=75c7c72ae941e8b558d8" />
 
-    <script src="../../_static/documentation_options.js?v=27488bd7"></script>
+    <script src="../../_static/documentation_options.js?v=ecc11b1a"></script>
     <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -145,8 +145,8 @@
       
     
     
-    <img src="../../_static/Plenoptic_Logo_CMYK_Full_Wide.svg" class="logo__image only-light" alt="plenoptic 2.1.3.dev62 documentation - Home"/>
-    <img src="../../_static/Plenoptic_Logo_CMYK_Full_DarkMode_Wide.svg" class="logo__image only-dark pst-js-only" alt="plenoptic 2.1.3.dev62 documentation - Home"/>
+    <img src="../../_static/Plenoptic_Logo_CMYK_Full_Wide.svg" class="logo__image only-light" alt="plenoptic 2.1.3.dev65 documentation - Home"/>
+    <img src="../../_static/Plenoptic_Logo_CMYK_Full_DarkMode_Wide.svg" class="logo__image only-dark pst-js-only" alt="plenoptic 2.1.3.dev65 documentation - Home"/>
   
   
 </a></div>
@@ -679,6 +679,10 @@ the minimum and maximum value of the colormap, respectively. If a list
 of 2-tuples, must have one per image, and each image’s vmin/vmax is specified
 by the corresponding 2-tuple. If a string:</p>
 <ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;autoNpyr&quot;</span></code>: where <code class="docutils literal notranslate"><span class="pre">N</span></code> is an integer. Each scale (row) have the same
+vmin/vmax, which are computed using the corresponding <code class="docutils literal notranslate"><span class="pre">&quot;autoN&quot;</span></code> method
+described above. The lowpass and highpass residuals vmin/vmax are computed
+independently, as <code class="docutils literal notranslate"><span class="pre">&quot;indepN&quot;</span></code>.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">&quot;auto0&quot;</span></code>: all images have same vmin/vmax, which have the same absolute
 value, and come from the minimum or maximum across all
 images, whichever has the larger absolute value</p></li>
@@ -701,9 +705,6 @@ method described above.</p></li>
 but the vmin/vmax are computed across the real and imaginary parts in each
 column. Note: Is not compatible with <code class="docutils literal notranslate"><span class="pre">show_residuals=True</span></code>. Plot the
 residuals separately.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">&quot;autoNpyr&quot;</span></code>: where <code class="docutils literal notranslate"><span class="pre">N</span></code> is an integer. Same as <code class="docutils literal notranslate"><span class="pre">&quot;autoNrow&quot;</span></code> except
-the lowpass and highpass residuals vmin/vmax are computed independently,
-as <code class="docutils literal notranslate"><span class="pre">&quot;indepN&quot;</span></code>.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">&quot;indep0&quot;</span></code>: each image has an independent vmin/vmax, which have the
 same absolute value, which comes from either their
 minimum or maximum value, whichever has the larger
@@ -753,29 +754,71 @@ size of the largest image.</p></li>
 <span class="gp">... </span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">coeffs</span> <span class="o">=</span> <span class="n">spyr</span><span class="p">(</span><span class="n">einstein</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">po</span><span class="o">.</span><span class="n">plot</span><span class="o">.</span><span class="n">pyrshow</span><span class="p">(</span><span class="n">coeffs</span><span class="p">,</span> <span class="n">vrange</span><span class="o">=</span><span class="s2">&quot;auto1pyr&quot;</span><span class="p">)</span>
-<span class="go">&lt;PyrFigure size ... with 1 Axes&gt;</span>
+<span class="go">&lt;PyrFigure size ... with 11 Axes&gt;</span>
 </pre></div>
 </div>
 <figure class="align-default">
 <img alt="../../_images/plenoptic-plot-pyrshow-1.png" class="plot-directive" src="../../_images/plenoptic-plot-pyrshow-1.png" />
 </figure>
-<p>Note that here we are using vrange “auto1pyr”, which computes the
+<p>Note that here we are using vrange <code class="docutils literal notranslate"><span class="pre">&quot;auto1pyr&quot;</span></code>, which computes the
 vmin/vmax independently for each scale but uses the same vrange across
 orientations. The highpass and low pass residual’s vranges are computed
 independently.</p>
+<p>Note that plotting with <code class="docutils literal notranslate"><span class="pre">'vrange</span> <span class="pre">=</span> <span class="pre">autoNrow'</span></code> and <code class="docutils literal notranslate"><span class="pre">'show_residuals=False'</span></code>
+gives the same result as <code class="docutils literal notranslate"><span class="pre">&quot;autoNpyr&quot;</span></code> just without the residuals:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">po</span><span class="o">.</span><span class="n">plot</span><span class="o">.</span><span class="n">pyrshow</span><span class="p">(</span><span class="n">coeffs</span><span class="p">,</span> <span class="n">vrange</span><span class="o">=</span><span class="s2">&quot;auto1row&quot;</span><span class="p">,</span> <span class="n">show_residuals</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="go">&lt;PyrFigure size ... with 9 Axes&gt;</span>
+</pre></div>
+</div>
+<figure class="align-default">
+<img alt="../../_images/plenoptic-plot-pyrshow-2.png" class="plot-directive" src="../../_images/plenoptic-plot-pyrshow-2.png" />
+</figure>
+<p>and we can plot the residuals separately using <code class="docutils literal notranslate"><span class="pre">&quot;imshow&quot;</span></code>:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">residuals</span> <span class="o">=</span> <span class="p">[</span><span class="n">coeffs</span><span class="p">[</span><span class="s2">&quot;residual_highpass&quot;</span><span class="p">],</span> <span class="n">coeffs</span><span class="p">[</span><span class="s2">&quot;residual_lowpass&quot;</span><span class="p">]]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">po</span><span class="o">.</span><span class="n">plot</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">residuals</span><span class="p">)</span>
+<span class="go">&lt;PyrFigure size ... with 2 Axes&gt;</span>
+</pre></div>
+</div>
+<figure class="align-default">
+<img alt="../../_images/plenoptic-plot-pyrshow-3.png" class="plot-directive" src="../../_images/plenoptic-plot-pyrshow-3.png" />
+</figure>
 <p>Plot the coefficients of a complex steerable pyramid:</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">spyr</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">process</span><span class="o">.</span><span class="n">SteerablePyramidFreq</span><span class="p">(</span>
 <span class="gp">... </span>    <span class="n">einstein</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">:],</span> <span class="n">height</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">is_complex</span><span class="o">=</span><span class="kc">True</span>
 <span class="gp">... </span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">coeffs</span> <span class="o">=</span> <span class="n">spyr</span><span class="p">(</span><span class="n">einstein</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">po</span><span class="o">.</span><span class="n">plot</span><span class="o">.</span><span class="n">pyrshow</span><span class="p">(</span><span class="n">coeffs</span><span class="p">)</span>
-<span class="go">&lt;PyrFigure size ... with 1 Axes&gt;</span>
+<span class="go">&lt;PyrFigure size ... with 20 Axes&gt;</span>
 </pre></div>
 </div>
 <figure class="align-default">
-<img alt="../../_images/plenoptic-plot-pyrshow-2.png" class="plot-directive" src="../../_images/plenoptic-plot-pyrshow-2.png" />
+<img alt="../../_images/plenoptic-plot-pyrshow-4.png" class="plot-directive" src="../../_images/plenoptic-plot-pyrshow-4.png" />
 </figure>
 <p>Note that the images alternate between real and imaginary parts.</p>
+<p>We can also plot such that the vmin/vmax are the same across orientations
+but computed independently for the real and imaginary parts using vrange
+<code class="docutils literal notranslate"><span class="pre">&quot;autoNcolcomplex&quot;</span></code>:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">spyr</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">process</span><span class="o">.</span><span class="n">SteerablePyramidFreq</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">einstein</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">:],</span> <span class="n">height</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">is_complex</span><span class="o">=</span><span class="kc">True</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">coeffs</span> <span class="o">=</span> <span class="n">spyr</span><span class="p">(</span><span class="n">einstein</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">po</span><span class="o">.</span><span class="n">plot</span><span class="o">.</span><span class="n">pyrshow</span><span class="p">(</span><span class="n">coeffs</span><span class="p">,</span> <span class="n">vrange</span><span class="o">=</span><span class="s2">&quot;auto1colcomplex&quot;</span><span class="p">,</span> <span class="n">show_residuals</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="go">&lt;PyrFigure size ... with 20 Axes&gt;</span>
+</pre></div>
+</div>
+<figure class="align-default">
+<img alt="../../_images/plenoptic-plot-pyrshow-5.png" class="plot-directive" src="../../_images/plenoptic-plot-pyrshow-5.png" />
+</figure>
+<p>Note that to use <code class="docutils literal notranslate"><span class="pre">&quot;autoNcolcomplex&quot;</span></code> you must set <code class="docutils literal notranslate"><span class="pre">show_residuals=False</span></code>.
+You can the plot the residuals separately using <code class="docutils literal notranslate"><span class="pre">&quot;imshow&quot;</span></code>:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">residuals</span> <span class="o">=</span> <span class="p">[</span><span class="n">coeffs</span><span class="p">[</span><span class="s2">&quot;residual_highpass&quot;</span><span class="p">],</span> <span class="n">coeffs</span><span class="p">[</span><span class="s2">&quot;residual_lowpass&quot;</span><span class="p">]]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">po</span><span class="o">.</span><span class="n">plot</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">residuals</span><span class="p">)</span>
+<span class="go">&lt;PyrFigure size ... with 2 Axes&gt;</span>
+</pre></div>
+</div>
+<figure class="align-default">
+<img alt="../../_images/plenoptic-plot-pyrshow-6.png" class="plot-directive" src="../../_images/plenoptic-plot-pyrshow-6.png" />
+</figure>
 </dd></dl>
 
 </section>

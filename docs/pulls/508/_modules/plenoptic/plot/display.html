@@ -6,7 +6,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>plenoptic.plot.display &#8212; plenoptic 2.1.3.dev62 documentation</title>
+    <title>plenoptic.plot.display &#8212; plenoptic 2.1.3.dev65 documentation</title>
   
   
   
@@ -43,7 +43,7 @@
   <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=75c7c72ae941e8b558d8" />
 <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=75c7c72ae941e8b558d8" />
 
-    <script src="../../../_static/documentation_options.js?v=27488bd7"></script>
+    <script src="../../../_static/documentation_options.js?v=ecc11b1a"></script>
     <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -142,8 +142,8 @@
       
     
     
-    <img src="../../../_static/Plenoptic_Logo_CMYK_Full_Wide.svg" class="logo__image only-light" alt="plenoptic 2.1.3.dev62 documentation - Home"/>
-    <img src="../../../_static/Plenoptic_Logo_CMYK_Full_DarkMode_Wide.svg" class="logo__image only-dark pst-js-only" alt="plenoptic 2.1.3.dev62 documentation - Home"/>
+    <img src="../../../_static/Plenoptic_Logo_CMYK_Full_Wide.svg" class="logo__image only-light" alt="plenoptic 2.1.3.dev65 documentation - Home"/>
+    <img src="../../../_static/Plenoptic_Logo_CMYK_Full_DarkMode_Wide.svg" class="logo__image only-dark pst-js-only" alt="plenoptic 2.1.3.dev65 documentation - Home"/>
   
   
 </a></div>
@@ -634,8 +634,8 @@
 <span class="sd">           ``vmin``, ``vmax`` args in :external:func:`matplotlib.pyplot.imshow`).</span>
 
 <span class="sd">        If a 2-tuple, specifies the image values vmin/vmax that are mapped to</span>
-<span class="sd">        the minimum and maximum value of the colormap, respectively. If a list</span>
-<span class="sd">        by the corresponding 2-tuple. If a string:</span>
+<span class="sd">        the minimum and maximum value of the colormap, respectively. If a list,</span>
+<span class="sd">        must contain a 2-tuple specifying the values for each image. If a string:</span>
 
 <span class="sd">        * ``&quot;auto0&quot;``: all images have same vmin/vmax, which have the same absolute</span>
 <span class="sd">          value, and come from the minimum or maximum across all</span>
@@ -859,7 +859,7 @@
 
 <span class="sd">    If you are plotting multiple rows and columns of images, you can set the rows to</span>
 <span class="sd">    have the same range using ``&quot;autoNrow&quot;``. ``&quot;autoN&quot;`` specifies the method of</span>
-<span class="sd">    computing the range and images in each row have this value.</span>
+<span class="sd">    computing the range. Note the different ranges in the two rows below:</span>
 
 <span class="sd">    .. plot::</span>
 <span class="sd">        :context: close-figs</span>
@@ -868,18 +868,21 @@
 <span class="sd">        ...     [einstein, curie, einstein * 2, curie * 2]</span>
 <span class="sd">        ... )</span>
 <span class="sd">        &gt;&gt;&gt; po.plot.imshow(einstein_curie_scaled, vrange=&quot;auto1row&quot;, col_wrap=2)</span>
-<span class="sd">        &lt;PyrFigure size ... with 2 Axes&gt;</span>
+<span class="sd">        &lt;PyrFigure size ... with 4 Axes&gt;</span>
 
-<span class="sd">    Similarly, you can set the columns to have the same range using ``&quot;autoNcol&quot;``.</span>
+<span class="sd">    Similarly, you can set the columns to have the same range using ``&quot;autoNcol&quot;``:</span>
 
 <span class="sd">    .. plot::</span>
 <span class="sd">        :context: close-figs</span>
 
 <span class="sd">        &gt;&gt;&gt; po.plot.imshow(einstein_curie_scaled, vrange=&quot;auto1col&quot;, col_wrap=2)</span>
-<span class="sd">        &lt;PyrFigure size ... with 2 Axes&gt;</span>
+<span class="sd">        &lt;PyrFigure size ... with 4 Axes&gt;</span>
+
+<span class="sd">    See the Examples Section in :func:`~plenoptic.plot.pyrshow` for an example using</span>
+<span class="sd">    ``&quot;autoNcolcomplex&quot;`` to plot complex images with the same vmin/vmax across columns.</span>
 
 <span class="sd">    You can also specify each image&#39;s range explicitly by passing a list of 2-tuples,</span>
-<span class="sd">    one for each image.</span>
+<span class="sd">    one for each image:</span>
 
 <span class="sd">    .. plot::</span>
 <span class="sd">        :context: close-figs</span>
@@ -887,7 +890,7 @@
 <span class="sd">        &gt;&gt;&gt; einstein_curie = torch.cat([einstein, curie, einstein, curie])</span>
 <span class="sd">        &gt;&gt;&gt; vrange_list = [(0, 1), (0, 2), (0, 3), (0, 4)]</span>
 <span class="sd">        &gt;&gt;&gt; po.plot.imshow(einstein_curie, vrange=vrange_list, col_wrap=2)</span>
-<span class="sd">        &lt;PyrFigure size ... with 2 Axes&gt;</span>
+<span class="sd">        &lt;PyrFigure size ... with 4 Axes&gt;</span>
 
 <span class="sd">    The ``zoom`` argument allows users to set the ratio of display to image pixels,</span>
 <span class="sd">    increasing or decreasing the size of the resulting plot:</span>
@@ -1190,9 +1193,10 @@
 <span class="sd">        Whether to loop the animation or just play it once.</span>
 <span class="sd">    vrange : ``tuple`` or ``list`` or ``str``</span>
 <span class="sd">        .. attention::</span>
-<span class="sd">           this only affects the behavior for grayscale images. RGB images</span>
-<span class="sd">           will always be displayed with vrange [0, 1] (for floats) or [0, 255]</span>
-<span class="sd">           (for ints), because of how matplotlib handles them.</span>
+<span class="sd">           This argument only affects behavior for grayscale images. RGB</span>
+<span class="sd">           images will always be displayed with vrange [0, 1] (for floats) or</span>
+<span class="sd">           [0, 255] (for ints), because of how matplotlib handles them (see</span>
+<span class="sd">           :external:func:`matplotlib.pyplot.imshow`).</span>
 
 <span class="sd">        If a 2-tuple, specifies the image values vmin/vmax that are mapped to</span>
 <span class="sd">        the minimum and maximum value of the colormap, respectively. If a list</span>
@@ -1369,24 +1373,29 @@
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
 <span class="sd">    Animate a single grayscale video. Here we add noise to the Einstein image to</span>
-<span class="sd">    create a video of 20 frames and set vrange to [0,1].</span>
+<span class="sd">    create a video of 20 frames and set vrange to [0,1]. Note the shape of ``video``</span>
+<span class="sd">    must be 5d: ``(batch, channel, frames, height, width)``.</span>
 
 <span class="sd">    .. plot::</span>
 <span class="sd">      :context: reset</span>
 
 <span class="sd">        &gt;&gt;&gt; import plenoptic as po</span>
 <span class="sd">        &gt;&gt;&gt; import torch</span>
-<span class="sd">        &gt;&gt;&gt; einstein_noisy = po.data.einstein()</span>
-<span class="sd">        &gt;&gt;&gt; images = torch.tensor(einstein_noisy)</span>
-<span class="sd">        &gt;&gt;&gt; for ii in range(20):</span>
-<span class="sd">        ...     einstein_noisy = einstein_noisy + torch.randn_like(einstein_noisy) * 0.1</span>
-<span class="sd">        ...     images = torch.hstack([images, einstein_noisy])</span>
-<span class="sd">        &gt;&gt;&gt; images = images.unsqueeze(0)  # Add batch dimension</span>
+<span class="sd">        &gt;&gt;&gt; n_frames = 20</span>
+<span class="sd">        &gt;&gt;&gt; # create a tensor with 20 identical einstein images</span>
+<span class="sd">        &gt;&gt;&gt; images = po.data.einstein().repeat(1, 1, n_frames, 1, 1)</span>
+<span class="sd">        &gt;&gt;&gt; # create the noise strength vector</span>
+<span class="sd">        &gt;&gt;&gt; noise = torch.linspace(0, 1, n_frames).reshape(1, 1, n_frames, 1, 1)</span>
+<span class="sd">        &gt;&gt;&gt; # add the einstein image to the noise</span>
+<span class="sd">        &gt;&gt;&gt; images = images + noise * torch.rand_like(images)</span>
 <span class="sd">        &gt;&gt;&gt; ani = po.plot.animshow(images, vrange=(0, 1))</span>
 <span class="sd">        &gt;&gt;&gt; # Save the video (here we&#39;re saving it as a .gif)</span>
 <span class="sd">        &gt;&gt;&gt; ani.save(&quot;noisy_einstein.gif&quot;)</span>
 
 <span class="sd">    .. image:: noisy_einstein.gif</span>
+
+<span class="sd">    Most of the other arguments behave the same as :func:`plenoptic.plot.imshow`,</span>
+<span class="sd">    see that docstring for examples.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">video</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
         <span class="n">video</span> <span class="o">=</span> <span class="p">[</span><span class="n">video</span><span class="p">]</span>
@@ -1499,6 +1508,11 @@
 <span class="sd">        of 2-tuples, must have one per image, and each image&#39;s vmin/vmax is specified</span>
 <span class="sd">        by the corresponding 2-tuple. If a string:</span>
 
+<span class="sd">        * ``&quot;autoNpyr&quot;``: where ``N`` is an integer. Each scale (row) have the same</span>
+<span class="sd">          vmin/vmax, which are computed using the corresponding ``&quot;autoN&quot;`` method</span>
+<span class="sd">          described above. The lowpass and highpass residuals vmin/vmax are computed</span>
+<span class="sd">          independently, as ``&quot;indepN&quot;``.</span>
+
 <span class="sd">        * ``&quot;auto0&quot;``: all images have same vmin/vmax, which have the same absolute</span>
 <span class="sd">          value, and come from the minimum or maximum across all</span>
 <span class="sd">          images, whichever has the larger absolute value</span>
@@ -1527,10 +1541,6 @@
 <span class="sd">          but the vmin/vmax are computed across the real and imaginary parts in each</span>
 <span class="sd">          column. Note: Is not compatible with ``show_residuals=True``. Plot the</span>
 <span class="sd">          residuals separately.</span>
-
-<span class="sd">        * ``&quot;autoNpyr&quot;``: where ``N`` is an integer. Same as ``&quot;autoNrow&quot;`` except</span>
-<span class="sd">          the lowpass and highpass residuals vmin/vmax are computed independently,</span>
-<span class="sd">          as ``&quot;indepN&quot;``.</span>
 
 <span class="sd">        * ``&quot;indep0&quot;``: each image has an independent vmin/vmax, which have the</span>
 <span class="sd">          same absolute value, which comes from either their</span>
@@ -1593,12 +1603,30 @@
 <span class="sd">        ... )</span>
 <span class="sd">        &gt;&gt;&gt; coeffs = spyr(einstein)</span>
 <span class="sd">        &gt;&gt;&gt; po.plot.pyrshow(coeffs, vrange=&quot;auto1pyr&quot;)</span>
-<span class="sd">        &lt;PyrFigure size ... with 1 Axes&gt;</span>
+<span class="sd">        &lt;PyrFigure size ... with 11 Axes&gt;</span>
 
-<span class="sd">    Note that here we are using vrange &quot;auto1pyr&quot;, which computes the</span>
+<span class="sd">    Note that here we are using vrange ``&quot;auto1pyr&quot;``, which computes the</span>
 <span class="sd">    vmin/vmax independently for each scale but uses the same vrange across</span>
 <span class="sd">    orientations. The highpass and low pass residual&#39;s vranges are computed</span>
 <span class="sd">    independently.</span>
+
+<span class="sd">    Note that plotting with ``&#39;vrange = autoNrow&#39;`` and ``&#39;show_residuals=False&#39;``</span>
+<span class="sd">    gives the same result as ``&quot;autoNpyr&quot;`` just without the residuals:</span>
+
+<span class="sd">    .. plot::</span>
+<span class="sd">       :context: close-figs</span>
+
+<span class="sd">       &gt;&gt;&gt; po.plot.pyrshow(coeffs, vrange=&quot;auto1row&quot;, show_residuals=False)</span>
+<span class="sd">       &lt;PyrFigure size ... with 9 Axes&gt;</span>
+
+<span class="sd">    and we can plot the residuals separately using ``&quot;imshow&quot;``:</span>
+
+<span class="sd">    .. plot::</span>
+<span class="sd">       :context: close-figs</span>
+
+<span class="sd">        &gt;&gt;&gt; residuals = [coeffs[&quot;residual_highpass&quot;], coeffs[&quot;residual_lowpass&quot;]]</span>
+<span class="sd">        &gt;&gt;&gt; po.plot.imshow(residuals)</span>
+<span class="sd">        &lt;PyrFigure size ... with 2 Axes&gt;</span>
 
 <span class="sd">    Plot the coefficients of a complex steerable pyramid:</span>
 
@@ -1610,9 +1638,33 @@
 <span class="sd">        ... )</span>
 <span class="sd">        &gt;&gt;&gt; coeffs = spyr(einstein)</span>
 <span class="sd">        &gt;&gt;&gt; po.plot.pyrshow(coeffs)</span>
-<span class="sd">        &lt;PyrFigure size ... with 1 Axes&gt;</span>
+<span class="sd">        &lt;PyrFigure size ... with 20 Axes&gt;</span>
 
 <span class="sd">    Note that the images alternate between real and imaginary parts.</span>
+
+<span class="sd">    We can also plot such that the vmin/vmax are the same across orientations</span>
+<span class="sd">    but computed independently for the real and imaginary parts using vrange</span>
+<span class="sd">    ``&quot;autoNcolcomplex&quot;``:</span>
+
+<span class="sd">    .. plot::</span>
+<span class="sd">       :context: close-figs</span>
+
+<span class="sd">        &gt;&gt;&gt; spyr = po.process.SteerablePyramidFreq(</span>
+<span class="sd">        ...     einstein.shape[-2:], height=3, order=2, is_complex=True</span>
+<span class="sd">        ... )</span>
+<span class="sd">        &gt;&gt;&gt; coeffs = spyr(einstein)</span>
+<span class="sd">        &gt;&gt;&gt; po.plot.pyrshow(coeffs, vrange=&quot;auto1colcomplex&quot;, show_residuals=False)</span>
+<span class="sd">        &lt;PyrFigure size ... with 20 Axes&gt;</span>
+
+<span class="sd">    Note that to use ``&quot;autoNcolcomplex&quot;`` you must set ``show_residuals=False``.</span>
+<span class="sd">    You can the plot the residuals separately using ``&quot;imshow&quot;``:</span>
+
+<span class="sd">    .. plot::</span>
+<span class="sd">       :context: close-figs</span>
+
+<span class="sd">        &gt;&gt;&gt; residuals = [coeffs[&quot;residual_highpass&quot;], coeffs[&quot;residual_lowpass&quot;]]</span>
+<span class="sd">        &gt;&gt;&gt; po.plot.imshow(residuals)</span>
+<span class="sd">        &lt;PyrFigure size ... with 2 Axes&gt;</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">pyr_coeffvis</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">pyr_coeffs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
